@@ -15,10 +15,10 @@ export default function AuthorLayout({ children, content }: Props) {
     occupation,
     company,
     email,
-    twitter,
-    bluesky,
     linkedin,
     github,
+    instagram,
+    website,
   } = content;
 
   return (
@@ -48,6 +48,7 @@ export default function AuthorLayout({ children, content }: Props) {
             <div className="flex space-x-3 pt-6">
               {/* TODO: Add website icon */}
               <SocialIcon kind="mail" href={`mailto:${email}`} />
+              <SocialIcon kind="instagram" href={instagram} />
               <SocialIcon kind="github" href={github} />
               <SocialIcon kind="linkedin" href={linkedin} />
             </div>
