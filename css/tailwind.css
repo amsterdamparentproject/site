@@ -11,6 +11,29 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   /* Colors */
+
+  /* $white: #F7EEE6;
+    $goldenrod: #E1AD37; // logo accent
+    $charcoal: #303633;
+    $violet: #B185A7;
+    $soft-green: #3F6455;
+    $sand: #D7C3AC; */
+  --color-brand-white: oklch(0.954 0.0145 64.34);
+  --color-brand-dark-white: oklch(0.9133 0.0275 63.93);
+
+  --color-brand-goldenrod: oklch(0.7759 0.1416 83.56);
+
+  --color-brand-violet: oklch(0.6865 0.2856 318.34);
+
+  --color-brand-soft-green: oklch(0.4705 0.0492 166.84);
+  --color-brand-green: oklch(0.334 0.0492 166.84);
+
+  --color-brand-sand: oklch(0.8278 0.0386 71.14);
+  --color-brand-dark-sand: oklch(0.6814 0.0716 69.04);
+
+  --color-brand-soft-charcoal: oklch(0.4439 0.0131 167.27);
+  --color-brand-charcoal: oklch(0.3261 0.0097 164.34);
+
   /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
   --color-primary-50: oklch(0.971 0.014 343.198);
   --color-primary-100: oklch(0.948 0.028 342.258);
@@ -67,14 +90,14 @@
 
   a,
   button {
-    outline-color: var(--color-primary-500);
+    outline-color: var(--color-brand-violet);
   }
 
   a:focus-visible,
   button:focus-visible {
     outline: 2px solid;
     border-radius: var(--radius-sm);
-    outline-color: var(--color-primary-500);
+    outline-color: var(--color-brand-violet);
   }
 }
 

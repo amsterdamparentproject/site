@@ -2,7 +2,7 @@ import "css/tailwind.css";
 import "pliny/search/algolia.css";
 import "remark-github-blockquote-alert/alert.css";
 
-import { Space_Grotesk } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import { Analytics, AnalyticsConfig } from "pliny/analytics";
 import { SearchProvider, SearchConfig } from "pliny/search";
 import Header from "@/components/Header";
@@ -12,7 +12,7 @@ import siteMetadata from "@/data/siteMetadata";
 import { ThemeProviders } from "./theme-providers";
 import { Metadata } from "next";
 
-const space_grotesk = Space_Grotesk({
+const quicksand = Quicksand({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-space-grotesk",
@@ -68,7 +68,7 @@ export default function RootLayout({
   return (
     <html
       lang={siteMetadata.language}
-      className={`${space_grotesk.variable} scroll-smooth`}
+      className={`${quicksand.variable} scroll-smooth`}
       suppressHydrationWarning
     >
       <link
@@ -113,7 +113,7 @@ export default function RootLayout({
         type="application/rss+xml"
         href={`${basePath}/feed.xml`}
       />
-      <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
+      <body className="bg-brand-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-brand-charcoal dark:text-white">
         <ThemeProviders>
           <Analytics
             analyticsConfig={siteMetadata.analytics as AnalyticsConfig}

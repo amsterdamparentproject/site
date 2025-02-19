@@ -1,5 +1,18 @@
 {
-  "sleep": 1,
+  "sleep": 2,
   "partner": 1,
-  "relationships": 1
+  "relationships": 1,
+  "physical-health": 2,
+  "phyiscal-therapy": 1,
+  "free-resources": 3,
+  "milestones": 1,
+  "motor-skills": 1,
+  "personal-goals": 2,
+  "mental-health": 2,
+  "worklife-balance": 2,
+  "newborn": 2,
+  "family": 2,
+  "friends": 2,
+  "social": 2,
+  "routine": 1
 }

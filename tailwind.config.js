@@ -7,36 +7,73 @@ module.exports = {
       typography: ({ theme }) => ({
         DEFAULT: {
           css: {
+            p: {
+              color: theme("--color-brand-charcoal"),
+            },
             a: {
-              color: theme("--color-primary-500"),
+              color: theme("--color-brand-violet"),
               "&:hover": {
-                color: theme("--color-primary-600"),
+                color: theme("--color-brand-goldenrod"),
               },
               code: { color: theme("--color-primary-400") },
             },
             "h1,h2": {
+              color: theme("--color-brand-charcoal"),
               fontWeight: "700",
               letterSpacing: theme("--tracking-tight"),
             },
             h3: {
               fontWeight: "600",
             },
-            code: {
-              color: theme("--color-indigo-500"),
+            "b, strong": {
+              color: theme("--color-brand-charcoal"),
+            },
+            blockquote: {
+              backgroundColor: theme("--color-brand-soft-green"),
+              borderColor: theme("--color-brand-goldenrod"),
+              p: {
+                "&:first-of-type::before": { content: "none" },
+                "&:first-of-type::after": { content: "none" },
+                color: theme("--color-brand-white"),
+                "b, strong": {
+                  color: theme("--color-brand-goldenrod"),
+                },
+                fontStyle: "normal",
+                fontSize: "1.1em",
+                padding: "1.5em",
+              },
             },
           },
         },
         invert: {
           css: {
-            a: {
-              color: theme("--color-pink-500"),
-              "&:hover": {
-                color: theme("--color-primary-400"),
+            "p,ul,ol,span": {
+              color: theme("--color-brand-white"),
+              strong: {
+                color: theme("--color-brand-white"),
               },
-              code: { color: theme("--color-primary-400") },
+            },
+            a: {
+              color: theme("--color-brand-violet"),
+              "&:hover": {
+                color: theme("--color-brand-goldenrod"),
+              },
             },
             "h1,h2,h3,h4,h5,h6": {
-              color: theme("--color-gray-100"),
+              color: theme("--color-brand-white"),
+            },
+            "b, strong": {
+              color: theme("--color-brand-white"),
+            },
+            blockquote: {
+              backgroundColor: theme("--color-brand-soft-charcoal"),
+              borderColor: theme("--color-brand-goldenrod"),
+              p: {
+                color: theme("--color-brand-white"),
+                "b, strong": {
+                  color: theme("--color-brand-goldenrod"),
+                },
+              },
             },
           },
         },
