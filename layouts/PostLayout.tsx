@@ -11,8 +11,6 @@ import siteMetadata from "@/data/siteMetadata";
 import ScrollTopAndComment from "@/components/ScrollTopAndComment";
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`;
-const discussUrl = (path) =>
-  `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.siteUrl}/${path}`)}`;
 
 const postDateTemplate: Intl.DateTimeFormatOptions = {
   weekday: "long",
@@ -88,6 +86,10 @@ export default function PostLayout({
                         <dd className="text-gray-900 dark:text-gray-100">
                           {author.name}
                         </dd>
+                        <dt className="sr-only">Title</dt>
+                        <dd className="text-gray-900 dark:text-gray-100">
+                          {author.occupation}
+                        </dd>
                         <dt className="sr-only">Website</dt>
                         <dd>
                           {author.website && (
@@ -120,21 +122,6 @@ export default function PostLayout({
               <div className="prose dark:prose-invert max-w-none pt-10 pb-8">
                 {children}
               </div>
-              <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
-                <Link href={discussUrl(path)} rel="nofollow">
-                  Discuss on Twitter
-                </Link>
-                {` • `}
-                <Link href={editUrl(filePath)}>View on GitHub</Link>
-              </div>
-              {siteMetadata.comments && (
-                <div
-                  className="pt-6 pb-6 text-center text-gray-700 dark:text-gray-300"
-                  id="comment"
-                >
-                  <Comments slug={slug} />
-                </div>
-              )}
             </div>
             <footer>
               <div className="divide-gray-200 text-sm leading-5 font-medium xl:col-start-1 xl:row-start-2 xl:divide-y dark:divide-gray-700">
