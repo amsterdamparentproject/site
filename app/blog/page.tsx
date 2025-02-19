@@ -24,7 +24,7 @@ export default async function BlogPage(props: {
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
-      title="All Posts"
+      title="Dear Dr. Mom: Expert Advice from Parenting Professionals"
     />
   );
 }
