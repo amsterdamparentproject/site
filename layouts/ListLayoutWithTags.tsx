@@ -9,6 +9,7 @@ import Link from "@/components/Link";
 import Tag from "@/components/Tag";
 import siteMetadata from "@/data/siteMetadata";
 import tagData from "app/tag-data.json";
+import SearchButton from "@/components/SearchButton";
 
 interface PaginationProps {
   totalPages: number;
@@ -102,6 +103,8 @@ export default function ListLayoutWithTags({
         <div className="flex sm:space-x-24">
           <div className="hidden h-full max-h-screen max-w-[280px] min-w-[280px] flex-wrap overflow-auto rounded-sm pt-5 sm:flex">
             <div className="px-6 py-4">
+              <SearchButton />
+              <br />
               {pathname.startsWith("/blog") ? (
                 <h3 className="text-brand-soft-green dark:text-brand-goldenrod font-bold uppercase">
                   Dear Dr. Mom

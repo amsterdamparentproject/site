@@ -3,7 +3,8 @@
 import Image from "@/components/Image";
 import { useTheme } from "next-themes";
 
-function Logo({ size }) {
+function Logo(Props) {
+  const { size, style } = Props;
   const { resolvedTheme } = useTheme();
   let src;
 
@@ -25,6 +26,7 @@ function Logo({ size }) {
       width={Number(size)}
       height={Number(size)}
       alt="Logo"
+      className={style}
     />
   );
 }

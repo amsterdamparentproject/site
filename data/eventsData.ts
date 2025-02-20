@@ -23,6 +23,14 @@ const eventsData: Event[] = [
     description: `Learn how to build a virtual or local support network when family isn’t nearby. In partnership with Hey Momie.`,
     comingSoon: true,
   },
+  {
+    title: "Panel: Navigating Career Transitions in Tech",
+    description: `Let's discuss reintegration, reskilling, and resilience as parent professionals. In partnership with SheSharp.`,
+    date: new Date("6 March 2025"),
+    href: "https://pages.beamery.com/uber/page/uber-tech-x-shesharp-panel",
+    imgSrc:
+      "/static/images/calendar/shesharp/navigating-career-transitions.png",
+  },
 ];
 
 export default eventsData;

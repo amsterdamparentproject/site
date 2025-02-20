@@ -2,6 +2,7 @@ import Link from "./Link";
 import siteMetadata from "@/data/siteMetadata";
 import SocialIcon from "@/components/social-icons";
 import NewsletterForm from "pliny/ui/NewsletterForm";
+import SearchButton from "./SearchButton";
 
 export default function Footer() {
   return (

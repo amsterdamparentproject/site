@@ -4,12 +4,11 @@ import Logo from "./Logo";
 import Link from "./Link";
 import MobileNav from "./MobileNav";
 import ThemeSwitch from "./ThemeSwitch";
-import SearchButton from "./SearchButton";
 import SocialIcon from "@/components/social-icons";
 
 const Header = () => {
   let headerClass =
-    "flex items-center w-full bg-brand-white dark:bg-brand-charcoal justify-between py-10";
+    "flex items-center w-full bg-brand-white dark:bg-brand-charcoal justify-between pt-10 pb-6 md:pb-8";
   if (siteMetadata.stickyNav) {
     headerClass += " sticky top-0 z-50";
   }
@@ -22,7 +21,7 @@ const Header = () => {
             <Logo size="50" />
           </div>
           {typeof siteMetadata.headerTitle === "string" ? (
-            <div className="hidden h-6 text-2xl font-semibold sm:block">
+            <div className="hidden h-6 text-2xl font-semibold md:block">
               {siteMetadata.headerTitle}
             </div>
           ) : (
@@ -38,13 +37,12 @@ const Header = () => {
               <Link
                 key={link.title}
                 href={link.href}
-                className="hover:text-primary-500 dark:hover:text-primary-400 m-1 font-medium text-gray-900 dark:text-gray-100"
+                className="hover:text-brand-soft-green dark:hover:text-primary-400 m-1 font-medium text-gray-900 dark:text-gray-100"
               >
                 {link.title}
               </Link>
             ))}
         </div>
-        <SearchButton />
         <SocialIcon kind="instagram" href={siteMetadata.instagram} size={5} />
         <ThemeSwitch />
         <MobileNav />

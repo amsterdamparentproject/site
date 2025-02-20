@@ -5,7 +5,40 @@ import ShowcaseButton from "@/components/ShowcaseButton";
 import siteMetadata from "@/data/siteMetadata";
 import eventsData from "@/data/eventsData";
 
-const MAX_DISPLAY = 3;
+const getCurrentEvents = (events) => {
+  return events.filter((event) => {
+    const today = new Date();
+    return event.date > today;
+  });
+};
+
+const createEventList = (events, MAX_DISPLAY = 3) => {
+  let currentEvents = getCurrentEvents(events);
+
+  currentEvents = currentEvents.sort((a, b) => {
+    if (a.date < b.date) {
+      return -1;
+    }
+    if (a.date > b.date) {
+      return 1;
+    }
+    return 0;
+  });
+
+  const comingSoonEvents = events.filter((event) => {
+    return event.comingSoon;
+  });
+
+  if (currentEvents.length < MAX_DISPLAY) {
+    const comingSoonFillers = comingSoonEvents.slice(
+      0,
+      MAX_DISPLAY - currentEvents.length,
+    );
+    return currentEvents.concat(comingSoonFillers);
+  } else {
+    return currentEvents;
+  }
+};
 
 export default function Home({ posts }) {
   const latestPost = posts[0];
@@ -19,16 +52,14 @@ export default function Home({ posts }) {
           key="container"
           className="flex flex-col items-center space-y-2 pt-6 pb-8 md:space-y-5"
         >
-          {/* <h1 className="justify-center text-2xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            Amsterdam Parent Project
-          </h1>
-          <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            {siteMetadata.description}
-          </p> */}
-          <h2 className="text-md mb-2 font-bold text-brand-charcoal dark:text-brand-goldenrod">
-            Upcoming events & programs
+          <Logo size="100" style="hidden md:block" />
+          <div className="h-6 text-2xl pt-0 mb-8 text-brand-soft-green font-semibold md:hidden">
+            {siteMetadata.headerTitle}
+          </div>
+          <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
+            What's next
           </h2>
-          {eventsData.slice(0, MAX_DISPLAY).map((event) => (
+          {createEventList(eventsData).map((event) => (
             <ShowcaseButton
               key={event.title}
               href={event.href ? event.href : "/calendar"}
@@ -40,14 +71,14 @@ export default function Home({ posts }) {
           <div className="flex justify-end text-base leading-6 font-medium">
             <Link
               href="/calendar"
-              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-white dark:hover:text-brand-goldenrod"
+              className="text-brand-charcoal hover:text-brand-goldenrod dark:text-brand-white dark:hover:text-brand-goldenrod"
               aria-label="All events"
             >
               See all &rarr;
             </Link>
           </div>
 
-          <h2 className="text-md mt-6 mb-2 font-bold text-brand-charcoal dark:text-brand-goldenrod">
+          <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             Latest expert advice
           </h2>
           <ShowcaseButton
@@ -58,14 +89,14 @@ export default function Home({ posts }) {
           <div className="flex justify-end text-base leading-6 font-medium">
             <Link
               href="/blog"
-              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-white dark:hover:text-brand-goldenrod"
+              className="text-brand-charcoal hover:text-brand-goldenrod dark:text-brand-white dark:hover:text-brand-goldenrod"
               aria-label="All advice"
             >
               See all &rarr;
             </Link>
           </div>
 
-          <h2 className="text-md mt-6 mb-2 font-bold text-brand-charcoal dark:text-brand-goldenrod">
+          <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             Follow us
           </h2>
           <ShowcaseButton href={siteMetadata.instagram} title="Instagram" />
