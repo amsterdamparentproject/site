@@ -40,7 +40,8 @@
     "**/*.json",
     ".contentlayer/generated",
     ".contentlayer/generated/**/*.json",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "app/disclaimer.mdx"
   ],
   "exclude": ["node_modules"]
 }

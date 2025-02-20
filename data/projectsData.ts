@@ -3,6 +3,8 @@ interface Project {
   description: string;
   href?: string;
   imgSrc?: string;
+  date?: string;
+  comingSoon?: boolean;
 }
 
 const projectsData: Project[] = [

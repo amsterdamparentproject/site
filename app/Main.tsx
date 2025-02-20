@@ -1,93 +1,77 @@
+import Logo from "@/components/Logo";
 import Link from "@/components/Link";
-import Tag from "@/components/Tag";
-import siteMetadata from "@/data/siteMetadata";
 import { formatDate } from "pliny/utils/formatDate";
-import NewsletterForm from "pliny/ui/NewsletterForm";
+import ShowcaseButton from "@/components/ShowcaseButton";
+import siteMetadata from "@/data/siteMetadata";
+import eventsData from "@/data/eventsData";
 
-const MAX_DISPLAY = 5;
+const MAX_DISPLAY = 3;
 
 export default function Home({ posts }) {
+  const latestPost = posts[0];
+  const { slug, date, title } = latestPost;
+  const latestPostUrl = `/blog/${slug}`;
+
   return (
     <>
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            Latest
+      <div className="flex-column justify-center divide-y divide-gray-200 dark:divide-gray-700">
+        <div
+          key="container"
+          className="flex flex-col items-center space-y-2 pt-6 pb-8 md:space-y-5"
+        >
+          {/* <h1 className="justify-center text-2xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+            Amsterdam Parent Project
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
             {siteMetadata.description}
-          </p>
+          </p> */}
+          <h2 className="text-md mb-2 font-bold text-brand-charcoal dark:text-brand-goldenrod">
+            Upcoming events & programs
+          </h2>
+          {eventsData.slice(0, MAX_DISPLAY).map((event) => (
+            <ShowcaseButton
+              key={event.title}
+              href={event.href ? event.href : "/calendar"}
+              title={event.title}
+              date={event.date}
+              comingSoon={event.comingSoon}
+            />
+          ))}
+          <div className="flex justify-end text-base leading-6 font-medium">
+            <Link
+              href="/calendar"
+              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-white dark:hover:text-brand-goldenrod"
+              aria-label="All events"
+            >
+              See all &rarr;
+            </Link>
+          </div>
+
+          <h2 className="text-md mt-6 mb-2 font-bold text-brand-charcoal dark:text-brand-goldenrod">
+            Latest expert advice
+          </h2>
+          <ShowcaseButton
+            href={latestPostUrl}
+            title={title}
+            date={formatDate(date, siteMetadata.locale)}
+          />
+          <div className="flex justify-end text-base leading-6 font-medium">
+            <Link
+              href="/blog"
+              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-white dark:hover:text-brand-goldenrod"
+              aria-label="All advice"
+            >
+              See all &rarr;
+            </Link>
+          </div>
+
+          <h2 className="text-md mt-6 mb-2 font-bold text-brand-charcoal dark:text-brand-goldenrod">
+            Follow us
+          </h2>
+          <ShowcaseButton href={siteMetadata.instagram} title="Instagram" />
+          <ShowcaseButton href={siteMetadata.roadmap} title="Public roadmap" />
         </div>
-        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          {!posts.length && "No posts found."}
-          {posts.slice(0, MAX_DISPLAY).map((post) => {
-            const { slug, date, title, summary, tags } = post;
-            return (
-              <li key={slug} className="py-12">
-                <article>
-                  <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                    <dl>
-                      <dt className="sr-only">Published on</dt>
-                      <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
-                        <time dateTime={date}>
-                          {formatDate(date, siteMetadata.locale)}
-                        </time>
-                      </dd>
-                    </dl>
-                    <div className="space-y-5 xl:col-span-3">
-                      <div className="space-y-6">
-                        <div>
-                          <h2 className="text-2xl leading-8 font-bold tracking-tight">
-                            <Link
-                              href={`/blog/${slug}`}
-                              className="text-gray-900 dark:text-gray-100"
-                            >
-                              {title}
-                            </Link>
-                          </h2>
-                          <div className="flex flex-wrap">
-                            {tags.map((tag) => (
-                              <Tag key={tag} text={tag} />
-                            ))}
-                          </div>
-                        </div>
-                        <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                          {summary}
-                        </div>
-                      </div>
-                      <div className="text-base leading-6 font-medium">
-                        <Link
-                          href={`/blog/${slug}`}
-                          className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                          aria-label={`Read more: "${title}"`}
-                        >
-                          Read more &rarr;
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </li>
-            );
-          })}
-        </ul>
       </div>
-      {posts.length > MAX_DISPLAY && (
-        <div className="flex justify-end text-base leading-6 font-medium">
-          <Link
-            href="/blog"
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            aria-label="All posts"
-          >
-            All Posts &rarr;
-          </Link>
-        </div>
-      )}
-      {siteMetadata.newsletter?.provider && (
-        <div className="flex items-center justify-center pt-4">
-          <NewsletterForm />
-        </div>
-      )}
     </>
   );
 }
