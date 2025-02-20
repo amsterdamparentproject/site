@@ -3,17 +3,30 @@
 import Image from "@/components/Image";
 import { useTheme } from "next-themes";
 
-const Logo = () => {
-  const { theme } = useTheme();
+function Logo({ size }) {
+  const { resolvedTheme } = useTheme();
+  let src;
+
+  switch (resolvedTheme) {
+    case "light":
+      src = "light.png";
+      break;
+    case "dark":
+      src = "dark.png";
+      break;
+    default:
+      src = "light.png";
+      break;
+  }
 
   return (
     <Image
-      src={`/static/images/logo/${theme}.png`}
-      width={50}
-      height={50}
+      src={`/static/images/logo/${src}`}
+      width={Number(size)}
+      height={Number(size)}
       alt="Logo"
     />
   );
-};
+}
 
 export default Logo;
