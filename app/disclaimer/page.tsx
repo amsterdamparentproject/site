@@ -6,12 +6,15 @@ export default function Page() {
   return (
     <div className="flex-column justify-center divide-y divide-gray-200 dark:divide-gray-700">
       <div className="flex flex-col items-center space-y-2 pt-6 pb-8 md:space-y-5">
-        <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-gray-900 md:px-6 md:text-6xl md:leading-14 dark:text-gray-100">
+        <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-brand-white">
           Disclaimer
         </h1>
       </div>
       <div>
-        <h1 className="mt-4 mb-2 text-2xl font-bold" id="general">
+        <h1
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-2xl font-bold"
+          id="general"
+        >
           General
         </h1>
         <p>
@@ -21,7 +24,10 @@ export default function Page() {
 
         <hr className="mt-4 mb-2" />
 
-        <h1 className="mt-4 mb-2 text-2xl font-bold" id="privacy-policy">
+        <h1
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-2xl font-bold"
+          id="privacy-policy"
+        >
           Privacy Policy
         </h1>
         <p>
@@ -32,7 +38,7 @@ export default function Page() {
         </p>
 
         <h2
-          className="mt-4 mb-2 text-xl font-bold"
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
           id="information-collection-and-use"
         >
           Information Collection and Use
@@ -52,7 +58,10 @@ export default function Page() {
           requested.
         </p>
 
-        <h2 className="mt-4 mb-2 text-xl font-bold" id="cookies">
+        <h2
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
+          id="cookies"
+        >
           Cookies
         </h2>
         <p>
@@ -63,7 +72,10 @@ export default function Page() {
           them.
         </p>
 
-        <h2 className="mt-4 mb-2 text-xl font-bold" id="security">
+        <h2
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
+          id="security"
+        >
           Security
         </h2>
         <p>
@@ -73,7 +85,7 @@ export default function Page() {
         </p>
 
         <h2
-          className="mt-4 mb-2 text-xl font-bold"
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
           id="links-to-other-websites"
         >
           Links to Other Websites
@@ -86,7 +98,7 @@ export default function Page() {
         </p>
 
         <h2
-          className="mt-4 mb-2 text-xl font-bold"
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
           id="changes-to-this-privacy-policy"
         >
           Changes to this Privacy Policy
@@ -98,7 +110,10 @@ export default function Page() {
           such changes.
         </p>
 
-        <h2 className="mt-4 mb-2 text-xl font-bold" id="contact-us">
+        <h2
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
+          id="contact-us"
+        >
           Contact Us
         </h2>
         <p>
@@ -109,7 +124,7 @@ export default function Page() {
         <hr className="mt-4 mb-2" />
 
         <h1
-          className="mt-4 mb-2 text-2xl font-bold"
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-2xl font-bold"
           id="exclusion-of-liability"
         >
           Exclusion of Liability
@@ -155,7 +170,7 @@ export default function Page() {
         <hr className="mt-4 mb-2" />
 
         <h1
-          className="mt-4 mb-2 text-2xl font-bold"
+          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-2xl font-bold"
           id="copyrights-and-intellectual-proprietary-rights"
         >
           Copyrights and intellectual proprietary rights
