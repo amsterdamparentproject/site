@@ -23,15 +23,15 @@ function ShowcaseButton(args) {
       <button
         type="button"
         className="
-          py-2.5 px-8
+          py-4 px-8
           ml:40
           mr:10
-          text-xl
-          md:text-2xl
+          text-xl/5
+          md:text-2xl/5
           rounded-full
           bg-brand-white
           text-brand-charcoal
-          border border-brand-soft-charcoal
+          border border-brand-sand
           hover:bg-brand-soft-green
           hover:border-brand-soft-green
           hover:text-brand-white

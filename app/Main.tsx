@@ -50,10 +50,10 @@ export default function Home({ posts }) {
       <div className="flex-column justify-center divide-y divide-gray-200 dark:divide-gray-700">
         <div
           key="container"
-          className="flex flex-col items-center space-y-2 pt-6 pb-8 md:space-y-5"
+          className="flex flex-col items-center space-y-2 pt-2 pb-8 md:space-y-5"
         >
-          <Logo size="100" style="hidden md:block" />
-          <div className="h-6 text-2xl pt-0 mb-8 text-brand-charcoal font-semibold sm:hidden">
+          <Logo size="100" style="hidden sm:block" />
+          <div className="h-6 text-2xl/5 pt-0 mb-8 text-brand-charcoal dark:text-brand-white font-semibold sm:hidden text-center">
             {siteMetadata.headerTitle}
           </div>
           <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">

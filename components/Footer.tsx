@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="mt-16 flex flex-col items-center">
         <div>
           <Link href="/subscribe" aria-label="Subscribe">
-            <p className="font-bold text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod">
+            <p className="font-medium text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod">
               Subscribe to our newsletter:
             </p>
           </Link>
