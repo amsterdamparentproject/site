@@ -71,7 +71,7 @@ export default function Home({ posts }) {
           <div className="flex justify-end text-base leading-6 font-medium">
             <Link
               href="/calendar"
-              className="text-brand-charcoal hover:text-brand-goldenrod dark:text-brand-white dark:hover:text-brand-goldenrod"
+              className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
               aria-label="All events"
             >
               See all &rarr;
@@ -89,7 +89,7 @@ export default function Home({ posts }) {
           <div className="flex justify-end text-base leading-6 font-medium">
             <Link
               href="/blog"
-              className="text-brand-charcoal hover:text-brand-goldenrod dark:text-brand-white dark:hover:text-brand-goldenrod"
+              className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
               aria-label="All advice"
             >
               See all &rarr;
