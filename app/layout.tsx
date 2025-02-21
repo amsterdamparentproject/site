@@ -113,7 +113,7 @@ export default function RootLayout({
         type="application/rss+xml"
         href={`${basePath}/feed.xml`}
       />
-      <body className="bg-brand-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-brand-charcoal dark:text-white">
+      <body className="bg-brand-white pl-[calc(100vw-100%)] text-brand-charcoal antialiased dark:bg-brand-charcoal dark:text-brand-white">
         <ThemeProviders>
           <Analytics
             analyticsConfig={siteMetadata.analytics as AnalyticsConfig}

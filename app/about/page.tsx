@@ -90,12 +90,8 @@ export default function Page() {
         </li>
       </ul>
 
-      <Link
-        href="/team"
-        className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
-        aria-label="Learn more about our team"
-      >
-        <h1 className="text-brand-charcoal dark:text-brand-white font-bold text-2xl pt-8 pb-4 text-center">
+      <Link href="/team" aria-label="Learn more about our team">
+        <h1 className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod font-bold text-2xl pt-8 pb-4 text-center">
           Our team &rarr;
         </h1>
       </Link>
