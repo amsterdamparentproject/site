@@ -21,6 +21,7 @@ export default function Footer() {
                 src="https://embeds.beehiiv.com/91a659aa-6a60-4d9e-9b7a-03f3f1e5f98e?slim=true"
                 data-test-id="beehiiv-embed"
                 height="52"
+                className="bg-transparent"
                 suppressHydrationWarning
               ></iframe>
             </div>

@@ -99,10 +99,7 @@ export default function Home({ posts }) {
           <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             Follow us
           </h2>
-          <ShowcaseButton
-            href="/subscribe"
-            title="Subscribe to our newsletter"
-          />
+          <ShowcaseButton href="/newsletter" title="Newsletter" newTab={true} />
           <ShowcaseButton href={siteMetadata.instagram} title="Instagram" />
           <ShowcaseButton href={siteMetadata.roadmap} title="Public roadmap" />
         </div>

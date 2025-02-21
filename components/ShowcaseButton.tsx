@@ -3,7 +3,7 @@ import Link from "next/link";
 import { formatDate } from "pliny/utils/formatDate";
 
 function ShowcaseButton(args) {
-  const { href, title, date, comingSoon } = args;
+  const { href, title, date, comingSoon, newTab } = args;
 
   let dateElement;
   if (comingSoon) {
@@ -19,7 +19,7 @@ function ShowcaseButton(args) {
   }
 
   return (
-    <Link href={href} className="mb-2">
+    <Link href={href} className="mb-2" target={newTab ? "_blank" : ""}>
       <button
         type="button"
         className="

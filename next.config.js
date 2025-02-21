@@ -96,5 +96,20 @@ module.exports = () => {
 
       return config;
     },
+    async redirects() {
+      return [
+        // Basic redirect
+        {
+          source: '/newsletter',
+          destination: 'https://amsterdamparentproject.beehiiv.com/',
+          permanent: true,
+        },
+        {
+          source: '/instagram',
+          destination: 'https://www.instagram.com/amsterdamparentproject',
+          permanent: true,
+        },
+      ]
+    },
   });
 };

@@ -21,7 +21,7 @@ const Header = () => {
             <Logo size="50" />
           </div>
           {typeof siteMetadata.headerTitle === "string" ? (
-            <div className="hidden h-6 text-2xl/5 font-semibold sm:block">
+            <div className="hidden h-6 text-2xl/5 font-semibold sm:block text-brand-charcoal dark:text-brand-white">
               {siteMetadata.headerTitle}
             </div>
           ) : (
@@ -37,6 +37,7 @@ const Header = () => {
               <Link
                 key={link.title}
                 href={link.href}
+                target={link.newTab ? "_blank" : ""}
                 className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod m-1 font-medium text-brand-charcoal dark:text-brand-white"
               >
                 {link.title}
