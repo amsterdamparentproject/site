@@ -10,7 +10,13 @@ export default function Footer() {
       <div className="mt-16 flex flex-col items-center">
         {siteMetadata.newsletter?.provider && (
           <div className="flex items-center justify-center pt-4 mb-6">
-            <NewsletterForm />
+            <iframe
+              title="newsletter-subscribe-footer"
+              src="https://embeds.beehiiv.com/91a659aa-6a60-4d9e-9b7a-03f3f1e5f98e?slim=true"
+              data-test-id="beehiiv-embed"
+              height="52"
+              suppressHydrationWarning
+            ></iframe>
           </div>
         )}
         <div className="mb-4 flex space-x-4">

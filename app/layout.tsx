@@ -126,6 +126,11 @@ export default function RootLayout({
             <Footer />
           </SectionContainer>
         </ThemeProviders>
+        <script
+          type="text/javascript"
+          async
+          src="https://embeds.beehiiv.com/attribution.js"
+        ></script>
       </body>
     </html>
   );
