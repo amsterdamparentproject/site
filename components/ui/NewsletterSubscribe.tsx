@@ -3,7 +3,6 @@
 import siteMetadata from "@/data/siteMetadata";
 import { useState } from "react";
 import subscribe from "../Subscribe";
-import { subscriptionTags } from "@beehiiv/sdk/api";
 
 const NewsletterSubscribe = (Props) => {
   const { label, tag } = Props;
@@ -19,7 +18,7 @@ const NewsletterSubscribe = (Props) => {
 
     subscribe({
       email: emailInput,
-      tag: [tag],
+      tag: tag,
       referringSite: String(window.location),
     });
 

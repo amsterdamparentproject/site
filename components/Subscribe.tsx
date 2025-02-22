@@ -2,10 +2,8 @@
 
 import { BeehiivClient } from "@beehiiv/sdk";
 
-const apiKey = process.env.NEXT_PUBLIC_BEEHIIV_API_KEY;
-const pubId = process.env.NEXT_PUBLIC_BEEHIIV_PUBLICATION_ID;
-
-const testAPISubId = "sub_cc4c8ce7-0c0e-4884-bfd5-51bfa99c8673";
+const apiKey = process.env.BEEHIIV_API_KEY;
+const pubId = process.env.BEEHIIV_PUBLICATION_ID;
 
 const subscribe = async (Props) => {
   const { email, tag, referringSite } = Props;
@@ -20,7 +18,7 @@ const subscribe = async (Props) => {
       utmMedium: "website",
     });
 
-    client.subscriptionTags.create(pubId, subscriber.data.id, { tags: tag });
+    client.subscriptionTags.create(pubId, subscriber.data.id, { tags: [tag] });
   }
 };
 
