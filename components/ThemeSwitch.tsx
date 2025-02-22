@@ -50,7 +50,7 @@ const ThemeSwitch = () => {
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       type="button"
-      className="tems-center justify-center text-brand-soft-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod focus:outline-none"
+      className="cursor-pointer items-center justify-center text-brand-soft-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod focus:outline-none"
     >
       {mounted ? (
         resolvedTheme === "dark" ? (

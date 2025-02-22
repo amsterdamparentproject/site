@@ -41,7 +41,6 @@ function ShowcaseButton(args) {
           dark:hover:bg-brand-soft-charcoal
           dark:hover:border-brand-soft-charcoal
           dark:hover:text-brand-white
-
           cursor-pointer
           focus:outline-none focus:ring-2 focus:ring-blue-300
           w-80 sm:w-xl

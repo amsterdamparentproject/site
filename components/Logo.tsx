@@ -2,6 +2,7 @@
 
 import Image from "@/components/Image";
 import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 
 function Logo(Props) {
   const { size, style } = Props;
@@ -18,6 +19,15 @@ function Logo(Props) {
     default:
       src = "light.png";
       break;
+  }
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
   }
 
   return (
