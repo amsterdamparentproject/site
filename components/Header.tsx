@@ -3,7 +3,6 @@ import headerNavLinks from "@/data/headerNavLinks";
 import Logo from "./Logo";
 import Link from "./Link";
 import MobileNav from "./MobileNav";
-import ThemeSwitch from "./ThemeSwitch";
 import SocialIcon from "@/components/social-icons";
 
 const Header = () => {
@@ -45,7 +44,6 @@ const Header = () => {
             ))}
         </div>
         <SocialIcon kind="instagram" href={siteMetadata.instagram} size={5} />
-        <ThemeSwitch />
         <MobileNav />
       </div>
     </header>

@@ -1,8 +1,7 @@
 import Link from "./Link";
 import siteMetadata from "@/data/siteMetadata";
-import SocialIcon from "@/components/social-icons";
 import NewsletterForm from "pliny/ui/NewsletterForm";
-import SearchButton from "./SearchButton";
+import ThemeSwitch from "./ThemeSwitch";
 
 export default function Footer() {
   return (
@@ -26,6 +25,10 @@ export default function Footer() {
               ></iframe>
             </div>
           )}
+        </div>
+
+        <div className="mb-2 flex space-x-2 text-sm text-brand-soft-charcoal dark:text-brand-white">
+          <ThemeSwitch />
         </div>
 
         <div className="mb-4 flex space-x-2 text-sm text-brand-soft-charcoal dark:text-brand-white">
