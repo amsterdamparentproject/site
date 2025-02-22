@@ -9,13 +9,13 @@ function Card(args) {
   let dateElement;
   if (comingSoon) {
     dateElement = (
-      <p className="prose mb-3 max-w-none text-gray-500 dark:text-gray-400">
+      <p className="prose mb-3 max-w-none text-brand-soft-charcoal dark:text-brand-white">
         {"Coming Soon"}
       </p>
     );
   } else if (date) {
     dateElement = (
-      <p className="prose mb-3 max-w-none text-gray-500 dark:text-gray-400">
+      <p className="prose mb-3 max-w-none text-brand-soft-charcoal dark:text-brand-white">
         {formatDate(date, siteMetadata.locale)}
       </p>
     );
@@ -28,7 +28,7 @@ function Card(args) {
       <div
         className={`${
           imgSrc && "h-full"
-        } overflow-hidden rounded-md border-2 border-gray-200/60 dark:border-gray-700/60`}
+        } overflow-hidden rounded-md border border-brand-sand/60 dark:border-brand-soft-charcoal/60`}
       >
         {imgSrc &&
           (href ? (
@@ -61,13 +61,13 @@ function Card(args) {
             )}
           </h2>
           {dateElement}
-          <p className="prose mb-3 max-w-none text-gray-500 dark:text-gray-400">
+          <p className="prose mb-3 max-w-none text-brand-soft-charcoal dark:text-brand-white">
             {description}
           </p>
           {href && (
             <Link
               href={href}
-              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-base leading-6 font-medium"
+              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green text-base leading-6 font-medium"
               aria-label={`Link to ${title}`}
             >
               Learn more &rarr;

@@ -31,13 +31,13 @@ function ShowcaseButton(args) {
           rounded-full
           bg-brand-white
           text-brand-charcoal
-          border border-brand-sand
+          border border-brand-sand/60
           hover:bg-brand-soft-green
           hover:border-brand-soft-green
           hover:text-brand-white
           dark:bg-brand-charcoal
           dark:text-brand-white
-          dark:border-brand-soft-charcoal
+          dark:border-brand-soft-charcoal/60
           dark:hover:bg-brand-soft-charcoal
           dark:hover:border-brand-soft-charcoal
           dark:hover:text-brand-white

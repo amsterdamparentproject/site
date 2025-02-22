@@ -50,19 +50,19 @@ const ThemeSwitch = () => {
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       type="button"
-      className="items-center justify-center text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod focus:outline-none"
+      className="tems-center justify-center text-brand-soft-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod focus:outline-none"
     >
       {mounted ? (
         resolvedTheme === "dark" ? (
           <div className="inline-flex">
-            <span className="whitespace-nowrap">
+            <span className="whitespace-nowrap leading-4">
               Switch to light mode:&nbsp;
             </span>
             <Sun />
           </div>
         ) : (
           <div className="inline-flex">
-            <span className="whitespace-nowrap">
+            <span className="whitespace-nowrap leading-4">
               Switch to dark mode:&nbsp;
             </span>
             <Moon />

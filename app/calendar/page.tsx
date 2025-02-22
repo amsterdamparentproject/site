@@ -7,16 +7,16 @@ export const metadata = genPageMetadata({ title: "Events & Prograams" });
 export default function Events() {
   return (
     <>
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+      <div>
+        <div className="space-y-2 pt-6 pb-8 md:space-y-5 flex flex-col items-center">
+          <h1 className="text-brand-charcoal dark:text-brand-white text-4xl font-extrabold tracking-tight md:text-6xl md:leading-14">
             Calendar
           </h1>
-          <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
+          <p className="text-lg leading-7 text-brand-soft-charcoal dark:text-brand-white">
             Upcoming APP events and programs
           </p>
         </div>
-        <div className="container py-12">
+        <div className="container pt-4 pb-6">
           <div className="-m-4 flex flex-wrap">
             {eventsData.map((d) => (
               <Card
@@ -24,7 +24,7 @@ export default function Events() {
                 title={d.title}
                 description={d.description}
                 date={d.date}
-                imgSrc={d.imgSrc}
+                imgSrc={d.imgSrc ? d.imgSrc : "/static/images/web-share.png"}
                 href={d.href}
                 comingSoon={d.comingSoon}
               />

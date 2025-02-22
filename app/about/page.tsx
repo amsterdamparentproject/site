@@ -14,7 +14,7 @@ export default function Page() {
   return (
     <div>
       <div className="flex flex-col items-center space-y-2 py-6 md:space-y-5">
-        <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-brand-white">
+        <h1 className="text-brand-charcoal dark:text-brand-white text-4xl leading-9 font-extrabold tracking-tight md:text-6xl md:leading-14">
           About us
         </h1>
       </div>
@@ -83,9 +83,9 @@ export default function Page() {
           <p className="text-4xl">🌱</p>
           <p className="font-bold pb-2">Grounded</p>
           <p className="text-left">
-            We design our services with empathy and evidence. All of experts
-            follow the best practices in their fields, and we ensure that our
-            peer-led spaces follow support group guidelines.
+            We design our services with empathy and evidence. All of our experts
+            follow best practices and we ensure that our peer-led spaces are
+            aligned with modern support group guidelines.
           </p>
         </li>
       </ul>
