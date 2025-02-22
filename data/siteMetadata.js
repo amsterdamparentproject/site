@@ -5,7 +5,7 @@ const siteMetadata = {
   headerTitle: "Amsterdam Parent Project",
   description: "Parent-to-parent support, (em)powered by professionals",
   language: "en-us",
-  theme: "system", // system, dark or light
+  theme: "light", // Start with light as the default
   siteUrl: "https://tailwind-nextjs-starter-blog.vercel.app",
   siteRepo: "https://github.com/timlrx/tailwind-nextjs-starter-blog",
   siteLogo: `${process.env.BASE_PATH || ""}/static/images/logo/light.png`,

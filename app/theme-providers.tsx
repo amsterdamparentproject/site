@@ -8,7 +8,8 @@ export function ThemeProviders({ children }: { children: React.ReactNode }) {
     <ThemeProvider
       attribute="class"
       defaultTheme={siteMetadata.theme}
-      enableSystem
+      // Disable system theme: https://github.com/pacocoursey/next-themes?tab=readme-ov-file#ignore-system-preference
+      enableSystem={false}
     >
       {children}
     </ThemeProvider>
