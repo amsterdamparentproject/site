@@ -2,9 +2,11 @@
 
 import siteMetadata from "@/data/siteMetadata";
 import { useState } from "react";
+import subscribe from "../Subscribe";
+import { subscriptionTags } from "@beehiiv/sdk/api";
 
 const NewsletterSubscribe = (Props) => {
-  const { label } = Props;
+  const { label, tag } = Props;
   const [emailInput, setEmailInput] = useState("");
 
   const updateEmailInput = (e) => {
@@ -12,10 +14,14 @@ const NewsletterSubscribe = (Props) => {
     setEmailInput(val);
   };
 
-  const subscribe = (e) => {
+  const processSubscription = async (e) => {
     e.preventDefault();
 
-    console.log(`Subscribed! ${emailInput} ${window.location}`);
+    subscribe({
+      email: emailInput,
+      tag: [tag],
+      referringSite: String(window.location),
+    });
 
     setEmailInput("");
   };
@@ -44,7 +50,7 @@ const NewsletterSubscribe = (Props) => {
           <button
             className="inline-flex cursor-pointer items-center px-3 text-md text-brand-charcoal bg-brand-goldenrod
                 border border-l-0 border-brand-goldenrod rounded-e-md"
-            onClick={subscribe}
+            onClick={processSubscription}
             type="submit"
           >
             Subscribe
