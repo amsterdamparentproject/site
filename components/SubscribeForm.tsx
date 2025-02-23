@@ -5,7 +5,7 @@ import { useState } from "react";
 import subscribeToNewsletter from "./Subscribe";
 
 const SubscribeForm = (Props) => {
-  const { label, tag } = Props;
+  const { ctaLabel, subscribedLabel, tag } = Props;
   const [emailInput, setEmailInput] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -27,6 +27,10 @@ const SubscribeForm = (Props) => {
     setSubscribed(true);
   };
 
+  const accentColor = Props.color ? Props.color : "brand-goldenrod";
+  const inputStyle = `min-w-40 sm:w-md rounded-none rounded-l-lg bg-white border border-2 border-${accentColor} text-brand-charcoal block flex-1 min-w-0 w-full placeholder-brand-soft-charcoal/60 text-md p-2.5 focus:ring-transparent`;
+  const buttonStyle = `inline-flex cursor-pointer items-center px-3 text-md text-brand-charcoal bg-${accentColor} border border-l-0 border-${accentColor} rounded-e-md`;
+
   if (siteMetadata.newsletter?.provider) {
     return (
       <form className="max-w-sm mx-auto">
@@ -34,23 +38,19 @@ const SubscribeForm = (Props) => {
           htmlFor="subscribe-email"
           className="block mb-2 font-medium text-brand-charcoal dark:text-brand-white"
         >
-          {label ? label : "Subscribe to our newsletter:"}
+          {ctaLabel ? ctaLabel : "Subscribe to our newsletter:"}
         </label>
         <div className="flex flex-wrap">
           <input
             type="text"
             id="subscribe-email"
-            className="min-w-40 sm:w-md rounded-none rounded-l-lg bg-white border border-2 border-brand-goldenrod text-brand-charcoal 
-                block flex-1 min-w-0 w-full 
-                placeholder-brand-soft-charcoal/60
-                text-md p-2.5 focus:ring-transparent"
+            className={inputStyle}
             onChange={updateEmailInput}
             value={emailInput}
             placeholder="Enter your email"
           />
           <button
-            className="inline-flex cursor-pointer items-center px-3 text-md text-brand-charcoal bg-brand-goldenrod
-                border border-l-0 border-brand-goldenrod rounded-e-md"
+            className={buttonStyle}
             onClick={processSubscription}
             type="submit"
           >
@@ -62,7 +62,7 @@ const SubscribeForm = (Props) => {
               (!subscribed ? " hidden" : "")
             }
           >
-            Thanks for subscribing!
+            {subscribedLabel ? subscribedLabel : "Thanks for subscribing!"}
           </p>
         </div>
       </form>

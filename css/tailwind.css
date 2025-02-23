@@ -34,6 +34,9 @@
   --color-brand-soft-charcoal: oklch(0.4439 0.0131 167.27);
   --color-brand-charcoal: oklch(0.3261 0.0097 164.34);
 
+  /* Programs */
+  --color-program-burnout-blue: oklch(0.6899 0.0952 216.1);
+
   /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
   --color-primary-50: oklch(0.971 0.014 343.198);
   --color-primary-100: oklch(0.948 0.028 342.258);

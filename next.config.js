@@ -13,7 +13,7 @@ const ContentSecurityPolicy = `
   media-src *.s3.amazonaws.com;
   connect-src *;
   font-src 'self';
-  frame-src embeds.beehiiv.com
+  frame-src 'self' embeds.beehiiv.com;
 `;
 
 const securityHeaders = [
