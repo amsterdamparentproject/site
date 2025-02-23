@@ -17,6 +17,7 @@ interface PaginationProps {
 interface ListLayoutProps {
   posts: CoreContent<Blog>[];
   title: string;
+  subtitle?: string;
   initialDisplayPosts?: CoreContent<Blog>[];
   pagination?: PaginationProps;
 }
@@ -78,6 +79,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
 export default function ListLayout({
   posts,
   title,
+  subtitle,
   initialDisplayPosts = [],
   pagination,
 }: ListLayoutProps) {

@@ -18,7 +18,7 @@ interface PaginationProps {
 interface ListLayoutProps {
   posts: CoreContent<Blog>[];
   title: string;
-  subtitle: string;
+  subtitle?: string;
   initialDisplayPosts?: CoreContent<Blog>[];
   pagination?: PaginationProps;
 }
