@@ -22,7 +22,7 @@ const getEventsByType = (events) => {
       events
         .filter((event) => {
           const today = new Date();
-          return event.date > today;
+          return event.date >= today;
         })
         .concat(events.filter((event) => event.comingSoon)),
     ),

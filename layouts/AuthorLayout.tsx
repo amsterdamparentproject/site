@@ -39,14 +39,18 @@ export default function AuthorLayout({ children, content }: Props) {
           <h3 className="pt-4 pb-2 text-2xl leading-8 font-bold tracking-tight">
             {name}
           </h3>
-          <div className="text-gray-500 dark:text-gray-400">{occupation}</div>
-          <div className="text-gray-500 dark:text-gray-400">{company}</div>
+          <div className="text-brand-soft-charcoal dark:text-brand-white">
+            {occupation}
+          </div>
+          <div className="text-brand-soft-charcoal dark:text-brand-white">
+            {company}
+          </div>
           <div className="flex space-x-3 pt-6">
-            {/* TODO: Add website icon */}
             <SocialIcon kind="mail" href={`mailto:${email}`} />
             <SocialIcon kind="instagram" href={instagram} />
             <SocialIcon kind="github" href={github} />
             <SocialIcon kind="linkedin" href={linkedin} />
+            <SocialIcon kind="website" href={website} />
           </div>
         </div>
         <div className="prose dark:prose-invert max-w-none pt-8 pb-8 xl:col-span-2">
