@@ -28,8 +28,8 @@ const SubscribeForm = (Props) => {
   };
 
   const accentColor = Props.color ? Props.color : "brand-goldenrod";
-  const inputStyle = `min-w-40 sm:w-md rounded-none rounded-l-lg bg-white border border-2 border-${accentColor} text-brand-charcoal block flex-1 min-w-0 w-full placeholder-brand-soft-charcoal/60 text-md p-2.5 focus:ring-transparent`;
-  const buttonStyle = `inline-flex cursor-pointer items-center px-3 text-md text-brand-charcoal bg-${accentColor} border border-l-0 border-${accentColor} rounded-e-md`;
+  const inputStyle = `min-w-40 sm:w-md rounded-none rounded-l-lg bg-white border border-2 border-brand-goldenrod text-brand-charcoal block flex-1 min-w-0 w-full placeholder-brand-soft-charcoal/60 text-md p-2.5 focus:ring-transparent`;
+  const buttonStyle = `inline-flex cursor-pointer items-center px-3 text-md text-brand-charcoal bg-brand-goldenrod border border-l-0 border-brand-goldenrod rounded-e-md`;
 
   if (siteMetadata.newsletter?.provider) {
     return (

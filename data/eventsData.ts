@@ -25,7 +25,7 @@ const eventsData: Event[] = [
   },
   {
     title: "Panel: Navigating Career Transitions in Tech",
-    description: `Let's discuss reintegration, reskilling, and resilience as parent professionals. In partnership with SheSharp.`,
+    description: `APP founder Alex Siega is speaking on this panel about reintegration, reskilling, and resilience as parent professionals in the tech industry. In partnership with SheSharp and Uber.`,
     date: new Date("6 March 2025"),
     href: "https://pages.beamery.com/uber/page/uber-tech-x-shesharp-panel",
     imgSrc:
