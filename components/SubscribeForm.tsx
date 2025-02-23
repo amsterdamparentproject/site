@@ -2,9 +2,9 @@
 
 import siteMetadata from "@/data/siteMetadata";
 import { useState } from "react";
-import subscribe from "../Subscribe";
+import subscribeToNewsletter from "./Subscribe";
 
-const NewsletterSubscribe = (Props) => {
+const SubscribeForm = (Props) => {
   const { label, tag } = Props;
   const [emailInput, setEmailInput] = useState("");
 
@@ -16,7 +16,7 @@ const NewsletterSubscribe = (Props) => {
   const processSubscription = async (e) => {
     e.preventDefault();
 
-    subscribe({
+    subscribeToNewsletter({
       email: emailInput,
       tag: tag,
       referringSite: String(window.location),
@@ -60,4 +60,4 @@ const NewsletterSubscribe = (Props) => {
   }
 };
 
-export default NewsletterSubscribe;
+export default SubscribeForm;

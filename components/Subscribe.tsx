@@ -5,7 +5,7 @@ import { BeehiivClient } from "@beehiiv/sdk";
 const apiKey = process.env.BEEHIIV_API_KEY;
 const pubId = process.env.BEEHIIV_PUBLICATION_ID;
 
-const subscribe = async (Props) => {
+const subscribeToNewsletter = async (Props) => {
   const { email, tag, referringSite } = Props;
 
   if (apiKey && pubId) {
@@ -22,4 +22,4 @@ const subscribe = async (Props) => {
   }
 };
 
-export default subscribe;
+export default subscribeToNewsletter;

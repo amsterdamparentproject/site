@@ -1,14 +1,14 @@
 import Link from "./Link";
 import siteMetadata from "@/data/siteMetadata";
 import ThemeSwitch from "./ThemeSwitch";
-import NewsletterSubscribe from "./ui/NewsletterSubscribe";
+import SubscribeForm from "./SubscribeForm";
 
 export default function Footer() {
   return (
     <footer>
       <div className="mt-16 flex flex-col items-center">
         <div className="mb-4">
-          <NewsletterSubscribe tag="website-footer" />
+          <SubscribeForm tag="website-footer" />
         </div>
 
         <div className="mb-2 flex space-x-2 text-sm">
