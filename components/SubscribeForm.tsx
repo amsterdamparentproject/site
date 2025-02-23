@@ -7,6 +7,7 @@ import subscribeToNewsletter from "./Subscribe";
 const SubscribeForm = (Props) => {
   const { label, tag } = Props;
   const [emailInput, setEmailInput] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
 
   const updateEmailInput = (e) => {
     const val = e.target.value;
@@ -23,6 +24,7 @@ const SubscribeForm = (Props) => {
     });
 
     setEmailInput("");
+    setSubscribed(true);
   };
 
   if (siteMetadata.newsletter?.provider) {
@@ -34,11 +36,11 @@ const SubscribeForm = (Props) => {
         >
           {label ? label : "Subscribe to our newsletter:"}
         </label>
-        <div className="flex">
+        <div className="flex flex-wrap">
           <input
             type="text"
             id="subscribe-email"
-            className="rounded-none rounded-l-lg bg-white border border-2 border-brand-goldenrod text-brand-charcoal 
+            className="min-w-40 sm:w-md rounded-none rounded-l-lg bg-white border border-2 border-brand-goldenrod text-brand-charcoal 
                 block flex-1 min-w-0 w-full 
                 placeholder-brand-soft-charcoal/60
                 text-md p-2.5 focus:ring-transparent"
@@ -54,6 +56,14 @@ const SubscribeForm = (Props) => {
           >
             Subscribe
           </button>
+          <p
+            className={
+              "w-full mt-2 text-brand-soft-green dark:text-brand-goldenrod" +
+              (!subscribed ? " hidden" : "")
+            }
+          >
+            Thanks for subscribing!
+          </p>
         </div>
       </form>
     );

@@ -11,7 +11,7 @@ export default function Footer() {
           <SubscribeForm tag="website-footer" />
         </div>
 
-        <div className="mb-2 flex space-x-2 text-sm">
+        <div className="mb-2 flex space-x-2 text-md">
           <ThemeSwitch />
         </div>
 
