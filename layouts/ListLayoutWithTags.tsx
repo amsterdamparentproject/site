@@ -18,6 +18,7 @@ interface PaginationProps {
 interface ListLayoutProps {
   posts: CoreContent<Blog>[];
   title: string;
+  subtitle: string;
   initialDisplayPosts?: CoreContent<Blog>[];
   pagination?: PaginationProps;
 }
@@ -81,6 +82,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
 export default function ListLayoutWithTags({
   posts,
   title,
+  subtitle,
   initialDisplayPosts = [],
   pagination,
 }: ListLayoutProps) {
@@ -95,26 +97,29 @@ export default function ListLayoutWithTags({
   return (
     <>
       <div>
-        <div className="pt-6 pb-6">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-brand-soft-charcoal sm:hidden sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+        <div className="pt-6 pb-6 flex flex-col items-center">
+          <h1 className="text-brand-charcoal dark:text-brand-white text-4xl leading-9 font-extrabold tracking-tight md:text-6xl md:leading-14">
             {title}
           </h1>
+          <h2 className="text-brand-soft-charcoal dark:text-brand-white text-lg font-medium tracking-tight my-2">
+            {subtitle}
+          </h2>
+          <SearchButton />
         </div>
         <div className="flex sm:space-x-24">
-          <div className="hidden h-full max-h-screen max-w-[280px] min-w-[280px] flex-wrap overflow-auto rounded-sm pt-5 sm:flex">
-            <div className="px-6 py-4">
-              <SearchButton />
+          <div className="hidden h-full max-h-screen max-w-[280px] min-w-[280px] flex-wrap overflow-auto rounded-sm pt-5 sm:flex mr-4">
+            <div className="px-6">
               <br />
-              {pathname.startsWith("/blog") ? (
+              {pathname.startsWith("/advice") ? (
                 <h3 className="text-brand-soft-green dark:text-brand-goldenrod font-bold uppercase">
-                  Dear Dr. Mom
+                  All advice
                 </h3>
               ) : (
                 <Link
-                  href={`/blog`}
+                  href={`/advice`}
                   className="text-brand-soft-green dark:text-brand-goldenrod font-bold uppercase"
                 >
-                  Dear Dr. Mom
+                  All advice
                 </Link>
               )}
               <ul>
@@ -160,7 +165,7 @@ export default function ListLayoutWithTags({
                           <h2 className="text-2xl leading-8 font-bold tracking-tight">
                             <Link
                               href={`/${path}`}
-                              className="text-gray-900 dark:text-brand-white"
+                              className="text-brand-charcoal dark:text-brand-white"
                             >
                               {title}
                             </Link>
@@ -169,7 +174,7 @@ export default function ListLayoutWithTags({
                             {tags?.map((tag) => <Tag key={tag} text={tag} />)}
                           </div>
                         </div>
-                        <div className="prose max-w-none text-gray-500 dark:text-brand-white">
+                        <div className="prose max-w-none text-brand-soft-charcoal dark:text-brand-white">
                           {summary}
                         </div>
                       </div>

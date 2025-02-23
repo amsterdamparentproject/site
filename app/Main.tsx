@@ -43,7 +43,7 @@ const createEventList = (events, MAX_DISPLAY = 3) => {
 export default function Home({ posts }) {
   const latestPost = posts[0];
   const { slug, date, title } = latestPost;
-  const latestPostUrl = `/blog/${slug}`;
+  const latestPostUrl = `/advice/${slug}`;
 
   return (
     <>
@@ -88,7 +88,7 @@ export default function Home({ posts }) {
           />
           <div className="flex justify-end text-base leading-6 font-medium">
             <Link
-              href="/blog"
+              href="/advice"
               className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
               aria-label="All advice"
             >

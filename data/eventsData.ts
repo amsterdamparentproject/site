@@ -36,7 +36,7 @@ const eventsData: Event[] = [
     description: `Let's discuss reintegration, reskilling, and resilience as parent professionals. In partnership with SheSharp.`,
     date: new Date("1 April 2025"),
     imgSrc: "/static/images/programs/burnout-support-flyer.png",
-    href: `./programs/burnout-support`,
+    href: `./programs/burnout`,
   },
 ];
 
