@@ -15,6 +15,22 @@ export default function Footer() {
           <ThemeSwitch />
         </div>
 
+        <div className="flex space-x-2 text-sm text-brand-soft-charcoal dark:text-brand-white">
+          <Link
+            href="mailto:amsterdamparentproject@gmail.com"
+            className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
+          >
+            Contact us
+          </Link>
+          <div>{` • `}</div>
+          <Link
+            href="/disclaimer"
+            className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
+          >
+            Disclaimer
+          </Link>
+        </div>
+
         <div className="mb-4 flex space-x-2 text-sm text-brand-soft-charcoal dark:text-brand-white">
           <Link
             href="/"
@@ -24,13 +40,6 @@ export default function Footer() {
           </Link>
           <div>{` • `}</div>
           <div>{`© ${new Date().getFullYear()}`}</div>
-          <div>{` • `}</div>
-          <Link
-            href="/disclaimer"
-            className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
-          >
-            Disclaimer
-          </Link>
         </div>
       </div>
     </footer>
