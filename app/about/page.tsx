@@ -8,9 +8,6 @@ import Link from "next/link";
 export const metadata = genPageMetadata({ title: "About" });
 
 export default function Page() {
-  const author = allAuthors.find((p) => p.slug === "default") as Authors;
-  const mainContent = coreContent(author);
-
   return (
     <div>
       <div className="flex flex-col items-center space-y-2 py-6 md:space-y-5">
