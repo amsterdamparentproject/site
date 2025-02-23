@@ -42,7 +42,7 @@ function ShowcaseButton(args) {
           dark:hover:border-brand-soft-charcoal
           dark:hover:text-brand-white
           cursor-pointer
-          focus:outline-none focus:ring-2 focus:ring-blue-300
+          focus:outline-none focus:ring-0
           w-80 sm:w-xl
           "
       >
