@@ -18,7 +18,7 @@ export default function Page() {
           Burnout Support Program
         </h1>
         <p className="mb-2 text-sm">Designed by:</p>
-        <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0 mb-6">
+        <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0 mb-8">
           <li className="flex space-x-2" key={author.name}>
             {author.avatar && (
               <Image
@@ -51,7 +51,7 @@ export default function Page() {
             </div>
           </li>
         </ul>
-        <p className="mb-4">
+        <p className="mb-8">
           Did you know that{" "}
           <a
             className="text-program-burnout-blue hover:text-brand-goldenrod"
@@ -77,7 +77,7 @@ export default function Page() {
           color="program-burnout-blue"
         />
 
-        <h2 className="mt-4 font-medium">The 2 month program includes:</h2>
+        <h2 className="mt-8 font-medium">The 2 month program includes:</h2>
         <ul className="list-disc mx-4">
           <li>
             A <b>small, safe cohort</b> of fellow parents going through the same
@@ -93,7 +93,7 @@ export default function Page() {
             <b>2 cohort meetups</b>, online or in-person (with childcare!)
           </li>
         </ul>
-        <p className="italic max-w-lg">
+        <p className="italic max-w-lg mt-4 mb-8">
           Facilitated by psychotherapist Dr. Irena (Miriam) Domachowska, APP
           co-founder and expert in parental burnout.
         </p>
