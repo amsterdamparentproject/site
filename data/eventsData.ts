@@ -33,10 +33,24 @@ const eventsData: Event[] = [
   },
   {
     title: "Burnout Support Program",
-    description: `Let's discuss reintegration, reskilling, and resilience as parent professionals. In partnership with SheSharp.`,
+    description: `A 2 month program to navigate parental burnout with peer and professional support. Designed and facilitated by a psychotherapist.`,
     date: new Date("1 April 2025"),
     imgSrc: "/static/images/programs/burnout-support-flyer.png",
     href: `./programs/burnout`,
+  },
+  {
+    title: "Community €2 Sale",
+    description: `Buy, sell, and donate children's clothes, toys, and books — most for €2 and all for €10 or less — at this community sale hosted by APP.`,
+    date: new Date("16 February 2025"),
+    imgSrc: "/static/images/calendar/2-euro-sale.jpg",
+    href: `https://www.eventbrite.nl/e/2-sale-winter-edition-tickets-1147869631969`,
+  },
+  {
+    title: "Burnout Brunch",
+    description: `An expert panel followed by small peer support group discussion about identifying and navigating stress and burnout as a working parent.`,
+    date: new Date("25 January 2025"),
+    imgSrc: "/static/images/calendar/burnout-brunch-jan-2025.png",
+    href: `https://www.eventbrite.nl/e/burnout-brunch-how-to-navigate-stress-and-burnout-as-a-working-parent-tickets-1124433543999`,
   },
 ];
 

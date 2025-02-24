@@ -11,11 +11,10 @@ module.exports = {
               color: theme("--color-brand-charcoal"),
             },
             a: {
-              color: theme("--color-brand-violet"),
+              color: theme("--color-brand-soft-green"),
               "&:hover": {
                 color: theme("--color-brand-goldenrod"),
               },
-              code: { color: theme("--color-primary-400") },
             },
             "h1,h2": {
               color: theme("--color-brand-charcoal"),
@@ -54,9 +53,9 @@ module.exports = {
               },
             },
             a: {
-              color: theme("--color-brand-violet"),
+              color: theme("--color-brand-goldenrod"),
               "&:hover": {
-                color: theme("--color-brand-goldenrod"),
+                color: theme("--color-brand-soft-green"),
               },
             },
             "h1,h2,h3,h4,h5,h6": {

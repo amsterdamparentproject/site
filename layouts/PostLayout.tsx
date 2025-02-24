@@ -159,7 +159,7 @@ export default function PostLayout({
               <div className="pt-4 xl:pt-8">
                 <Link
                   href={`/${basePath}`}
-                  className="text-brand-violet hover:text-brand-goldenrod dark:hover:text-brand-goldenrod"
+                  className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
                   aria-label="Back to the blog"
                 >
                   &larr; Back to the blog
