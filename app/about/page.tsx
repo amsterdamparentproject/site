@@ -55,8 +55,9 @@ export default function Page() {
           <p className="font-bold pb-2">Collaborative</p>
           <p className="text-left">
             We partner with peers, experts, and other communities. If we see a
-            gap in support, we first ask: "Is there anyone else doing this?"
-            We're truly stronger together.
+            gap in support, we first ask: "Is there anyone already doing
+            something similar we could work with or highlight?" We're truly
+            stronger together.
           </p>
         </li>
         <li className="w-80 px-4 pl-0 pb-8 text-center">
