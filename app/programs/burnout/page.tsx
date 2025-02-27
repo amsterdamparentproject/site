@@ -90,7 +90,7 @@ export default function Page() {
             <b>1:1 match</b> with a parent peer for private support
           </li>
           <li>
-            <b>2 cohort meetups</b>, online or in-person (with childcare!)
+            <b>Cohort meetups</b>, online and in-person (with childcare!)
           </li>
         </ul>
         <p className="italic max-w-lg mt-4 mb-8">
