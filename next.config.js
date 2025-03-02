@@ -109,6 +109,11 @@ module.exports = () => {
           destination: 'https://www.instagram.com/amsterdamparentproject',
           permanent: true,
         },
+        {
+          source: '/programs/burnout/apply',
+          destination: 'https://docs.google.com/forms/d/e/1FAIpQLSf5buxK4oEJxUOChHbbBVie5P7gUXJ2qsoR-xxweiixWCcjQw/viewform?usp=dialog',
+          permanent: true,
+        },
       ]
     },
   });
