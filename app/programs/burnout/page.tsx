@@ -1,8 +1,8 @@
-import SubscribeForm from "@/components/SubscribeForm";
 import { genPageMetadata } from "app/seo";
 import Image from "@/components/Image";
 import { Authors, allAuthors } from "contentlayer/generated";
 import Link from "@/components/Link";
+import ShowcaseButton from "@/components/ShowcaseButton";
 
 export const metadata = genPageMetadata({ title: "Burnout Support Program" });
 
@@ -70,13 +70,11 @@ export default function Page() {
           </b>
           .
         </p>
-        <SubscribeForm
-          tag="burnout-support"
-          ctaLabel="Sign up to be notified of launch:"
-          subscribedLabel="Thanks for joining us!"
-          color="program-burnout-blue"
+        <ShowcaseButton
+          href="/programs/burnout/apply"
+          title="Apply now"
+          newTab={true}
         />
-
         <h2 className="mt-8 font-medium">The 2 month program includes:</h2>
         <ul className="list-disc mx-4">
           <li>
@@ -87,15 +85,31 @@ export default function Page() {
             Relevant <b>discussion topics and exercises</b> every 1-2 weeks
           </li>
           <li>
-            <b>1:1 match</b> with a parent peer for private support
+            Optional <b>1:1 match</b> with a parent peer for private support
           </li>
           <li>
-            <b>Cohort meetups</b>, online and in-person (with childcare!)
+            Optional <b>cohort meetups</b>: 2 online and 1 in-person (with
+            childcare!)
+          </li>
+        </ul>
+        <p className="italic max-w-lg mt-4">
+          Facilitated by psychotherapist Dr. Irena (Miriam) Domachowska, APP
+          co-founder and expert in parental burnout.
+        </p>
+
+        <h2 className="mt-4 font-medium">Program fees:</h2>
+        <ul className="list-disc mx-4">
+          <li>
+            <b>At cost</b> fees: €15/month (€30)
+          </li>
+          <li>
+            <b>Community</b> fees: €20/month (€40)
           </li>
         </ul>
         <p className="italic max-w-lg mt-4 mb-8">
-          Facilitated by psychotherapist Dr. Irena (Miriam) Domachowska, APP
-          co-founder and expert in parental burnout.
+          APP runs as a volunteer nonprofit, hence why our costs are so low.
+          Every Community ticket helps us grow and make more programming
+          accessible to everyone.
         </p>
         <Image
           alt="Burnout Support Flyer"
@@ -104,6 +118,42 @@ export default function Page() {
           width={544}
           height={306}
         />
+        <h2 className="mt-4 font-medium">FAQ:</h2>
+        <ul className="list-disc mx-4">
+          <li className="mb-4">
+            <h3>
+              <b>How long does the program last for?</b>
+            </h3>
+            The program is 2 months long, from 1 April - 31 May, 2025.
+          </li>
+          <li className="mb-4">
+            <h3>
+              <b>When and where will the meetups happen?</b>
+            </h3>
+            All meetups happen on Saturdays: 12 April (online), 10 May
+            (in-person), 31 May (online). The in-person meetup will happen in
+            Amsterdam, exact location TBD.
+          </li>
+          <li className="mb-4">
+            <h3>
+              <b>What if I can't attend the meetups?</b>
+            </h3>
+            That's okay! Everything in the program is optional, as we recognize
+            parents are already very busy. We will send all online content to
+            you via email, so you won't miss out on the support you need.
+          </li>
+          <li className="mb-4">
+            <h3>
+              <b>
+                Is it required to be paired 1:1 with someone else during the
+                program?
+              </b>
+            </h3>
+            No, a 1:1 match is not required! We want to provide everyone with
+            the right support they need to recover; if private, peer support
+            isn't for you, no problem. Just let us know in the intake form.
+          </li>
+        </ul>
       </div>
     </div>
   );
