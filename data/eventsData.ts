@@ -52,6 +52,13 @@ const eventsData: Event[] = [
     imgSrc: "/static/images/calendar/burnout-brunch-jan-2025.png",
     href: `https://www.eventbrite.nl/e/burnout-brunch-how-to-navigate-stress-and-burnout-as-a-working-parent-tickets-1124433543999`,
   },
+  {
+    title: "Co-Work with Kids",
+    description: `Are you struggling to get work done while your little one is at home? Us too. APP is partnering with Hola Nanny to bring the magic of childcare to our monthly co-working.`,
+    date: new Date("8 April 2025"),
+    imgSrc: "/static/images/calendar/co-work-with-kids.png",
+    href: `https://www.eventbrite.nl/e/co-work-with-kids-in-partnership-with-hola-nanny-registration-1288101719919?aff=oddtdtcreator`,
+  },
 ];
 
 export default eventsData;
