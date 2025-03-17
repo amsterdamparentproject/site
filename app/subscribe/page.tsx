@@ -1,3 +1,4 @@
+import SubscribeForm from "@/components/SubscribeForm";
 import { genPageMetadata } from "app/seo";
 
 export const metadata = genPageMetadata({ title: "Subscribe" });
@@ -10,13 +11,8 @@ export default function Page() {
           Subscribe
         </h1>
       </div>
-      <iframe
-        title="newsletter-subscribe"
-        src="https://embeds.beehiiv.com/91a659aa-6a60-4d9e-9b7a-03f3f1e5f98e"
-        data-test-id="beehiiv-embed"
-        width="100%"
-        height="320"
-      ></iframe>
+      <br />
+      <SubscribeForm tag="website-subscribe" />
       <div className="pb-8">
         <h1
           className="mt-4 mb-2 text-2xl text-brand-charcoal text-center"
