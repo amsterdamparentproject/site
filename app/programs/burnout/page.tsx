@@ -72,7 +72,7 @@ export default function Page() {
         </p>
         <ShowcaseButton
           href="/programs/burnout/apply"
-          title="Apply now"
+          title="Apply now until 26 March"
           newTab={true}
         />
         <h2 className="mt-8 font-medium">The 2 month program includes:</h2>
@@ -100,10 +100,14 @@ export default function Page() {
         <h2 className="mt-4 font-medium">Program fees:</h2>
         <ul className="list-disc mx-4">
           <li>
-            <b>At cost</b> fees: €15/month (€30)
+            <b>At cost spot</b>: €15/month (€30)
+            <br />
+            <i>Cover program costs</i>
           </li>
           <li>
-            <b>Community</b> fees: €20/month (€40)
+            or <b>Community spot</b>: €20/month (€40)
+            <br />
+            <i>Cover program costs & help APP grow</i>
           </li>
         </ul>
         <p className="italic max-w-lg mt-4 mb-8">
