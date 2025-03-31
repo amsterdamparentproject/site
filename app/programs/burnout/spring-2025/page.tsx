@@ -98,7 +98,7 @@ export default function Page() {
           First and foremost: This program is designed to meet you where you
           are. It consists of{" "}
           <b>
-            professionally guided peer support via 3 cohort meetups and 5
+            professionally guided peer support: 3 cohort meetups and 5
             discussion topics
           </b>{" "}
           sent via email to 1:1 pairs.
@@ -171,8 +171,10 @@ export default function Page() {
         <h2 className="mt-8 font-medium">What's my 1:1 match?</h2>
         <p>
           There are 8 people in our cohort; you've been matched with one of them
-          for private peer support. We believe that people have so much to learn
-          from one another, especially with expert guidance.
+          for private peer support. They're <b>your buddy in the program</b>:
+          you'll receive the discussion topics and online resources to talk
+          about with them. You both have so much to learn from one another,
+          especially with expert guidance.
         </p>
         <p>
           You were matched based on these factors: your stage of burnout, your
