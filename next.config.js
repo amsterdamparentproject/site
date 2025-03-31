@@ -114,6 +114,11 @@ module.exports = () => {
           destination: 'https://docs.google.com/forms/d/e/1FAIpQLSf5buxK4oEJxUOChHbbBVie5P7gUXJ2qsoR-xxweiixWCcjQw/viewform?usp=dialog',
           permanent: true,
         },
+        {
+          source: '/advice/submit',
+          destination: 'https://docs.google.com/forms/d/e/1FAIpQLSdsywfv8a0KxpVM1yIYg4TJmm1mr3NtMB6i1ogESG0idDYZyg/viewform?usp=sf_link',
+          permanent: true,
+        },
       ]
     },
   });
