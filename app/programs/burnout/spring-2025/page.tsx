@@ -137,10 +137,10 @@ export default function Page() {
             <b>6 April</b>: Discussion topic #1
           </li>
           <li>
-            <b>12 April</b>: Cohort meetup #1 (online)
+            <b>13 April</b>: Cohort meetup #1 (online)
           </li>
           <li>
-            <b>13 April</b>: Discussion topic #2
+            <b>17 April</b>: Discussion topic #2
           </li>
           <li>
             <b>28 April</b>: Discussion topic #3
