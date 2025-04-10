@@ -2,6 +2,7 @@ interface Event {
   title: string;
   description: string;
   date?: Date;
+  until?: Date;
   href?: string;
   imgSrc?: string;
   comingSoon?: boolean;
@@ -35,6 +36,7 @@ const eventsData: Event[] = [
     title: "Burnout Support Program",
     description: `A 2 month program to navigate parental burnout with peer and professional support. Designed and facilitated by a psychotherapist.`,
     date: new Date("1 April 2025"),
+    until: new Date("31 May 2025"),
     imgSrc: "/static/images/programs/burnout-support-flyer.png",
     href: `./programs/burnout`,
   },
@@ -58,6 +60,16 @@ const eventsData: Event[] = [
     date: new Date("8 April 2025"),
     imgSrc: "/static/images/calendar/co-work-with-kids.png",
     href: `https://www.eventbrite.nl/e/co-work-with-kids-in-partnership-with-hola-nanny-registration-1288101719919?aff=oddtdtcreator`,
+  },
+  {
+    title: "Wellness Walk",
+    description: `Taking a walk is one of the simplest acts of self-care and 
+      community building you can do. So come do it with us! 
+      You're welcome to come alone, or with your baby, partner, friend, dog. 
+      The more the merrier ❤️`,
+    date: new Date("14 April 2025"),
+    href: "https://www.eventbrite.nl/e/app-wellness-walk-tickets-1245241574069",
+    imgSrc: "/static/images/calendar/wellness-walk.png",
   },
 ];
 

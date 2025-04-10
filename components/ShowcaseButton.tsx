@@ -3,11 +3,18 @@ import Link from "next/link";
 import { formatDate } from "pliny/utils/formatDate";
 
 function ShowcaseButton(args) {
-  const { href, title, date, comingSoon, newTab } = args;
+  const { href, title, date, until, comingSoon, newTab } = args;
 
   let dateElement;
   if (comingSoon) {
     dateElement = <p className="text-xs sm:text-sm">{"Coming Soon"}</p>;
+  } else if (date && until) {
+    dateElement = (
+      <p className="text-xs sm:text-sm">
+        {formatDate(date, siteMetadata.locale)} -{" "}
+        {formatDate(until, siteMetadata.locale)}
+      </p>
+    );
   } else if (date) {
     dateElement = (
       <p className="text-xs sm:text-sm">

@@ -12,7 +12,15 @@ const getCurrentEvents = (events) => {
   });
 };
 
+const getCurrentPrograms = (programs) => {
+  return programs.filter((program) => {
+    const today = new Date();
+    return program.until > today;
+  });
+};
+
 const createEventList = (events, MAX_DISPLAY = 3) => {
+  const currentPrograms = getCurrentPrograms(events);
   let currentEvents = getCurrentEvents(events);
 
   currentEvents = currentEvents.sort((a, b) => {
@@ -34,9 +42,9 @@ const createEventList = (events, MAX_DISPLAY = 3) => {
       0,
       MAX_DISPLAY - currentEvents.length,
     );
-    return currentEvents.concat(comingSoonFillers);
+    return currentPrograms.concat(currentEvents.concat(comingSoonFillers));
   } else {
-    return currentEvents;
+    return currentPrograms.concat(currentEvents);
   }
 };
 
@@ -65,6 +73,7 @@ export default function Home({ posts }) {
               href={event.href ? event.href : "/calendar"}
               title={event.title}
               date={event.date}
+              until={event.until}
               comingSoon={event.comingSoon}
             />
           ))}

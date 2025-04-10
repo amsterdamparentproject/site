@@ -4,13 +4,20 @@ import Link from "./Link";
 import siteMetadata from "@/data/siteMetadata";
 
 function Card(args) {
-  const { title, description, imgSrc, href, date, comingSoon } = args;
+  const { title, description, imgSrc, href, date, until, comingSoon } = args;
 
   let dateElement;
   if (comingSoon) {
     dateElement = (
       <p className="prose mb-3 max-w-none text-brand-soft-charcoal dark:text-brand-white">
         {"Coming Soon"}
+      </p>
+    );
+  } else if (date && until) {
+    dateElement = (
+      <p className="prose mb-3 max-w-none text-brand-soft-charcoal dark:text-brand-white">
+        {formatDate(date, siteMetadata.locale)} -{" "}
+        {formatDate(until, siteMetadata.locale)}
       </p>
     );
   } else if (date) {

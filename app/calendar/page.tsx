@@ -17,14 +17,15 @@ const sortEvents = (events) => {
 };
 
 const getEventsByType = (events) => {
+  const today = new Date();
+
+  const comingUpEvents = events.filter((event) => event.date >= today);
+  const comingSoonEvents = events.filter((event) => event.comingSoon);
+  const currentPrograms = events.filter((event) => event.until >= today);
+
   return {
     current: sortEvents(
-      events
-        .filter((event) => {
-          const today = new Date();
-          return event.date >= today;
-        })
-        .concat(events.filter((event) => event.comingSoon)),
+      currentPrograms.concat(comingUpEvents).concat(comingSoonEvents),
     ),
     past: sortEvents(
       events.filter((event) => {
@@ -60,6 +61,7 @@ export default function Events() {
                 title={d.title}
                 description={d.description}
                 date={d.date}
+                until={d.until}
                 imgSrc={d.imgSrc ? d.imgSrc : "/static/images/web-share.png"}
                 href={d.href}
                 comingSoon={d.comingSoon}
@@ -76,6 +78,7 @@ export default function Events() {
                 title={d.title}
                 description={d.description}
                 date={d.date}
+                until={d.until}
                 imgSrc={d.imgSrc ? d.imgSrc : "/static/images/web-share.png"}
                 href={d.href}
                 comingSoon={d.comingSoon}
