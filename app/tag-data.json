@@ -1,5 +1,9 @@
 {
-  "neurodiversity": 1,
+  "mental-health": 3,
+  "neurodiversity": 2,
+  "free-resources": 4,
+  "routine": 2,
+  "worklife-balance": 3,
   "friends": 3,
   "special-needs": 1,
   "support-system": 1,
@@ -11,13 +15,9 @@
   "partner": 1,
   "relationships": 1,
   "physical-health": 2,
-  "free-resources": 3,
   "milestones": 1,
   "motor-skills": 1,
   "personal-goals": 2,
-  "mental-health": 2,
-  "worklife-balance": 2,
   "newborn": 2,
-  "social": 2,
-  "routine": 1
+  "social": 2
 }
