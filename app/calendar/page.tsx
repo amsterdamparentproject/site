@@ -57,7 +57,7 @@ export default function Events() {
           <div className="-m-4 flex flex-wrap">
             {allEvents.current.map((d) => (
               <Card
-                key={d.title}
+                key={d.title + d.date}
                 title={d.title}
                 description={d.description}
                 date={d.date}
@@ -74,7 +74,7 @@ export default function Events() {
           <div className="-m-4 flex flex-wrap">
             {allEvents.past.map((d) => (
               <Card
-                key={d.title}
+                key={d.title + d.date}
                 title={d.title}
                 description={d.description}
                 date={d.date}

@@ -20,8 +20,8 @@ const eventsData: Event[] = [
     imgSrc: "/static/images/calendar/wellness-walk.png",
   },
   {
-    title: "Online Circle: Finding Support Beyond Family",
-    description: `Learn how to build a virtual or local support network when family isn’t nearby. In partnership with Hey Momie.`,
+    title: "Workshop: Crafting your Postpartum Support System",
+    description: `Learn how to build a virtual or local support network when family isn’t nearby.`,
     comingSoon: true,
   },
   {
@@ -70,6 +70,12 @@ const eventsData: Event[] = [
     date: new Date("14 April 2025"),
     href: "https://www.eventbrite.nl/e/app-wellness-walk-tickets-1245241574069",
     imgSrc: "/static/images/calendar/wellness-walk.png",
+  },
+  {
+    title: "Newborn Feeding Strategies for the Whole Family",
+    description: `Learn how to support the whole family while taking on feeding a newborn.`,
+    href: `./programs/fourth-trimester`,
+    comingSoon: true,
   },
 ];
 
