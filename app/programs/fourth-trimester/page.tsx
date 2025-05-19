@@ -89,7 +89,7 @@ export default function programDetails() {
           />
         </div>
 
-        <p className="mb-8">
+        <p className="mb-6">
           Finding the right support after you have a baby is a daunting task.
           Your giant parent group is dispensing baby advice 100 times a day,
           you're frantically Googling "Why is this happening..." during 2am
@@ -99,7 +99,7 @@ export default function programDetails() {
           energy to find them in the first place. Speaking from experience: It
           can be exhausting and overwhelming.
         </p>
-        <p>
+        <p className="mb-6">
           <b>
             APP's Fourth Trimester Program is designed to cut through the noise
           </b>{" "}
@@ -112,8 +112,11 @@ export default function programDetails() {
           . Whereas other resources may be purely informational, and others
           purely anecdotal, the Fourth Trimester Program blends both — because
           parenting "best practices" come from both science and community 🤝.
-          And by sharing expertise, we make it <b>accessible and afforable</b>{" "}
-          for all families.
+        </p>
+        <p>
+          APP is a non-profit organization, built by and for the community. By
+          sharing expertise, we make postpartum support through the Fourth
+          Trimester Program <b>accessible and afforable</b> for all families.
         </p>
         <h2 className="mt-8 font-medium">What you get:</h2>
         <ul className="list-disc max-w-lg">
@@ -168,31 +171,37 @@ export default function programDetails() {
             ))}
           </ul>
         </div>
-        <p className="italic max-w-lg mb-8">
-          We're also deeply supported the Amsterdam postpartum expert community.
-          Our partnerships with midwives, kraamzorgs, psychotherapists, sleep
-          and lactation consultants, and more help keep our content up to date
-          and also ground us here in the community — so the people we serve have
-          a true foundation of postpartum support.
+        <p className="italic max-w-lg text-sm mb-8">
+          We're also deeply supported by the Amsterdam postpartum expert
+          community. Our partnerships with midwives, kraamzorgs,
+          psychotherapists, sleep and lactation consultants, and more help keep
+          our content up to date and also ground us here in the community — so
+          that the people we serve have a true foundation of postpartum support.
         </p>
       </div>
       <div className="container pt-4 pb-6">
-        <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
+        <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-4">
           Upcoming sessions
         </h2>
+        <p className="italic text-sm mb-4">
+          While we build the 12-week program, we're offering completed modules
+          as standalone courses.
+        </p>
         {upcomingSessions()}
       </div>
       <div>
-        <h2 className="mt-8 font-medium text-center mb-4">FAQ:</h2>
+        <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod my-4">
+          FAQ
+        </h2>
         <ul className="list-disc mx-4">
           <li className="mb-4">
             <h3>
-              <b>How is the Fourth Trimester Program different?</b>
+              <b>What's different about the Fourth Trimester Program?</b>
             </h3>
-            <p className="mb-2">
+            <p className="mb-2 text-sm">
               Parents — especially expat parents — have complex support needs:
             </p>
-            <ul className="list-disc ml-4 mt-2">
+            <ul className="list-disc ml-4 mt-2 text-sm">
               <li>
                 <u>Right timing</u>: You have questions you never anticipated
                 that need answering now, and you can't remember what you learned
@@ -213,7 +222,7 @@ export default function programDetails() {
                 now.
               </li>
             </ul>
-            <p className="my-2">
+            <p className="my-2 text-sm">
               We haven't found a single program in the Netherlands that does all
               this. The Fourth Trimester Program is meant to be your guide, so
               that you don't have to think about how to build your own support.
@@ -222,35 +231,52 @@ export default function programDetails() {
           </li>
           <li className="mb-4">
             <h3>
+              <b>Why are your sessions cheaper than others?</b>
+            </h3>
+            <p className="text-sm">
+              APP operates as a non-profit. We strive to be a community resource
+              more than a thriving business. All of the sessions are offered at
+              cost and largely powered by volunteer work, to be as accessible
+              and affordable as possible. You're paying for the expert's time
+              and APP operating costs: that's it. Each session has the option to
+              "pay the organizer," too — so we can not only sustain, but grow.
+            </p>
+          </li>
+          <li className="mb-4">
+            <h3>
               <b>This sounds a lot like Mother's Groups in the UK...</b>
             </h3>
-            Yes, exactly! It's inspired by Canada's postpartum support system
-            and <a href="https://www.peps.org/">PEPS</a> in Seattle. Our goal
-            has never been to create a unique, revolutionary postpartum program;
-            it's to import the successful models that exist in other countries
-            to Amsterdam, to cover the gap in English-language postpartum
-            support here.
+            <p className="text-sm">
+              Yes, exactly! It's inspired by Canada's postpartum support system
+              and <a href="https://www.peps.org/">PEPS</a> in Seattle. Our goal
+              has never been to create a unique, revolutionary postpartum
+              program; it's to import the successful models that exist in other
+              countries to Amsterdam, to cover the gap in English-language
+              postpartum support here.
+            </p>
           </li>
           <li className="mb-4">
             <h3>
               <b>Why is APP tackling this?</b>
             </h3>
-            It's something close to our hearts and first-hand experience. Having
-            become parents in Amsterdam ourselves, we couldn't transition into
-            new parenthood with confidence with the existing the
-            English-language resources available in Amsterdam. After asking
-            ourselves "Why is this so hard?" a lot, we decided to start asking,
-            "What can we do about it?"
+            <p className="text-sm">
+              It's something close to our hearts and first-hand experience.
+              Having become parents in Amsterdam ourselves, we couldn't
+              transition into new parenthood with confidence with the existing
+              the English-language resources available. After asking ourselves
+              "Why is this so hard?", we started asking, "What can we do about
+              it?"
+            </p>
           </li>
           <li className="mb-4">
             <h3>
               <b>I'm a postpartum professional — how can I help?</b>
             </h3>
-            <p className="mb-2">
+            <p className="mb-2 text-sm">
               Thanks for your enthusiasm! We'd love to be in touch. There are
               three main ways to help:
             </p>
-            <ul className="list-disc ml-4 mt-2">
+            <ul className="list-disc ml-4 mt-2 text-sm">
               <li>
                 <u>Help us build cohorts</u>: APP believes that the most
                 successful cohorts will have something in common: same
@@ -268,7 +294,7 @@ export default function programDetails() {
                 reach out.
               </li>
             </ul>
-            <p className="my-2">
+            <p className="my-2 text-sm">
               You can reach us at{" "}
               <a href="mailto:amsterdamparentproject@gmail.com">
                 amsterdamparentproject@gmail.com
