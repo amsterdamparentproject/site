@@ -3,7 +3,7 @@ import Link from "next/link";
 import { formatDate } from "pliny/utils/formatDate";
 
 function ShowcaseButton(args) {
-  const { href, title, date, until, comingSoon, newTab } = args;
+  const { href, title, date, until, comingSoon, newTab, fill } = args;
 
   let dateElement;
   if (comingSoon) {
@@ -25,34 +25,51 @@ function ShowcaseButton(args) {
     dateElement = "";
   }
 
+  const buttonStyle = `
+    py-4 px-8
+    ml:40
+    mr:10
+    text-xl/5
+    md:text-2xl/5
+    rounded-full
+    cursor-pointer
+    focus:outline-none focus:ring-0
+    w-80 sm:w-xl
+  `;
+
+  const transparentStyle = `
+    border
+    bg-brand-white
+    text-brand-charcoal
+    border-brand-sand/60
+    hover:bg-brand-soft-green
+    hover:border-brand-soft-green
+    hover:text-brand-white
+    dark:bg-brand-charcoal 
+    dark:text-brand-white
+    dark:border-brand-soft-charcoal/60
+    dark:hover:bg-brand-soft-charcoal
+    dark:hover:border-brand-soft-charcoal
+    dark:hover:text-brand-white
+  `;
+
+  const fillStyle = `
+    border
+    bg-brand-soft-green
+    border-brand-soft-green
+    text-brand-white
+    hover:bg-brand-charcoal
+    dark:bg-brand-soft-charcoal 
+    dark:text-brand-white
+    dark:hover:bg-brand-soft-green
+    dark:border-brand-soft-charcoal
+  `;
+
+  const backgroundColor = fill ? fillStyle : transparentStyle;
+
   return (
     <Link href={href} className="mb-2" target={newTab ? "_blank" : ""}>
-      <button
-        type="button"
-        className="
-          py-4 px-8
-          ml:40
-          mr:10
-          text-xl/5
-          md:text-2xl/5
-          rounded-full
-          bg-brand-white
-          text-brand-charcoal
-          border border-brand-sand/60
-          hover:bg-brand-soft-green
-          hover:border-brand-soft-green
-          hover:text-brand-white
-          dark:bg-brand-charcoal
-          dark:text-brand-white
-          dark:border-brand-soft-charcoal/60
-          dark:hover:bg-brand-soft-charcoal
-          dark:hover:border-brand-soft-charcoal
-          dark:hover:text-brand-white
-          cursor-pointer
-          focus:outline-none focus:ring-0
-          w-80 sm:w-xl
-          "
-      >
+      <button type="button" className={buttonStyle + backgroundColor}>
         {title}
         {dateElement}
       </button>

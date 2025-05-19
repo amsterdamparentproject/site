@@ -6,6 +6,7 @@ import Image from "@/components/Image";
 import Link from "@/components/Link";
 import SubscribeForm from "@/components/SubscribeForm";
 import { coreContent } from "pliny/utils/contentlayer";
+import ShowcaseButton from "@/components/ShowcaseButton";
 
 export const metadata = genPageMetadata({ title: "Fourth Trimester Program" });
 
@@ -71,8 +72,11 @@ export default function programDetails() {
   );
 
   return (
-    <div className="flex-column justify-center">
-      <div className="pt-6 pb-6 flex flex-col items-center">
+    <div className="flex-column justify-center mx-2">
+      <div
+        className="pt-6 pb-6 flex flex-col items-center"
+        id="program-description"
+      >
         <h1 className="text-brand-charcoal dark:text-brand-white text-center text-4xl leading-9 font-extrabold tracking-tight md:text-6xl md:leading-14">
           Fourth Trimester Program
         </h1>
@@ -90,14 +94,17 @@ export default function programDetails() {
         </div>
 
         <p className="mb-6">
-          Finding the right support after you have a baby is a daunting task.
+          <b>
+            Finding the right support after you have a baby is a daunting
+            task.{" "}
+          </b>
           Your giant parent group is dispensing baby advice 100 times a day,
           you're frantically Googling "Why is this happening..." during 2am
           feeds, and social media is constantly telling you what you should be
           feeling as a new parent. If you want an actual expert's opinion, you
           may be paying €100/hour for a consult — and you have to spend time and
           energy to find them in the first place. Speaking from experience: It
-          can be exhausting and overwhelming.
+          can be overwhelming and exhausting.
         </p>
         <p className="mb-6">
           <b>
@@ -111,34 +118,48 @@ export default function programDetails() {
           </b>
           . Whereas other resources may be purely informational, and others
           purely anecdotal, the Fourth Trimester Program blends both — because
-          parenting "best practices" come from both science and community 🤝.
+          <b>
+            {" "}
+            parenting "best practices" come from both science and community 🤝
+          </b>
         </p>
         <p>
           APP is a non-profit organization, built by and for the community. By
-          sharing expertise, we make postpartum support through the Fourth
-          Trimester Program <b>accessible and afforable</b> for all families.
+          sharing access to expertise, we make postpartum support through the
+          Fourth Trimester Program <b>accessible and afforable</b> for all
+          families.
         </p>
-        <h2 className="mt-8 font-medium">What you get:</h2>
-        <ul className="list-disc max-w-lg">
-          <br />
-          <li>
-            <b>Expert workshops + "ask me anything" sessions</b> on topics that
-            track with your baby's growth — and yours, as a new parent
-          </li>
-          <li>
-            Tailored <b>resources that guide you</b> through your baby's
-            development, crafted by local postpartum professionals
-          </li>
-          <li>
-            A new (manageable!) <b>network of fellow newborn parents</b> around
-            your baby's age
-          </li>
-        </ul>
-        <div className="space-y-2 pt-6 md:space-y-5">
-          <h2 className="mt-8 font-medium text-center">Designed by:</h2>
-          <ul className="flex flex-wrap justify-center gap-4 sm:space-x-4 xl:space-y-4 xl:space-x-0 mb-8">
+
+        <div className="mt-6">
+          <ShowcaseButton
+            href="#upcoming-sessions"
+            title="Join an upcoming session"
+            fill={true}
+          />
+        </div>
+
+        <div>
+          <h2 className="mt-6 font-medium mb-2 text-center">What you get:</h2>
+          <ul className="list-disc max-w-lg">
+            <li className="mx-4">
+              <b>Expert workshops + "ask me anything" sessions</b> on topics
+              that track with your baby's growth — and yours, as a new parent
+            </li>
+            <li className="mx-4">
+              Tailored <b>resources that guide you</b> through your baby's
+              development, crafted by local postpartum professionals
+            </li>
+            <li className="mx-4">
+              A new (manageable!) <b>network of fellow newborn parents</b>{" "}
+              around your baby's age
+            </li>
+          </ul>
+        </div>
+        <div className="space-y-2 md:space-y-5">
+          <h2 className="mt-6 font-medium text-center">Designed by:</h2>
+          <ul className="flex flex-wrap justify-center gap-4 sm:space-x-4 xl:space-y-4 xl:space-x-0 mb-6">
             {authorDetails.map((author) => (
-              <li className="flex space-x-3 max-w-55" key={author.name}>
+              <li className="flex space-x-3 w-55" key={author.name}>
                 {author.avatar && (
                   <Image
                     src={author.avatar}
@@ -169,15 +190,20 @@ export default function programDetails() {
             ))}
           </ul>
         </div>
-        <p className="italic max-w-lg text-sm mb-8">
+        <p className="italic max-w-lg text-sm">
           We're also deeply supported by the Amsterdam postpartum expert
           community. Our partnerships with midwives, kraamzorgs,
           psychotherapists, sleep and lactation consultants, and more help keep
           our content up to date and also ground us here in the community — so
           that the people we serve have a true foundation of postpartum support.
         </p>
+
+        <div className="mt-6">
+          <ShowcaseButton href="#faq" title="Learn more" fill={true} />
+        </div>
       </div>
-      <div className="container pt-4 pb-6">
+
+      <div className="container pt-4 pb-6 scroll-m-32" id="upcoming-sessions">
         <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-4">
           Upcoming sessions
         </h2>
@@ -187,7 +213,8 @@ export default function programDetails() {
         </p>
         {upcomingSessions()}
       </div>
-      <div>
+
+      <div id="faq" className="scroll-m-32">
         <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod my-4">
           FAQ
         </h2>
