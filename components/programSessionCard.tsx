@@ -18,7 +18,7 @@ function Card(args) {
     components,
   } = args;
 
-  const host = allAuthors.find((p) => p.slug === "heatherBerry") as Authors;
+  const host = allAuthors.find((p) => p.slug === hostName) as Authors;
 
   let dateElement;
   if (comingSoon) {

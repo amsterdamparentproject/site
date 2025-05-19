@@ -63,7 +63,7 @@ const upcomingSessions = () => {
 };
 
 export default function programDetails() {
-  const authorDetails = ["heatherBerry", "irenaDomachowska", "default"].map(
+  const authorDetails = ["heatherBerry", "irenaDomachowska", "alexSiega"].map(
     (author) => {
       const authorResults = allAuthors.find((p) => p.slug === author);
       return coreContent(authorResults as Authors);
@@ -150,21 +150,19 @@ export default function programDetails() {
                 )}
                 <dl className="text-sm leading-5 font-medium">
                   <dt className="sr-only">Name</dt>
-                  <dd className="dark:text-brand-white">{author.name}</dd>
-                  <dt className="sr-only">Title</dt>
-                  <dd className="text-brand-soft-charcoal dark:text-brand-white">
-                    {author.occupation}
-                  </dd>
-                  <dt className="sr-only">Website</dt>
-                  <dd>
+                  <dd className="dark:text-brand-white">
                     {author.website && (
                       <Link
                         href={author.website}
                         className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
                       >
-                        {"Website"}
+                        {author.name}
                       </Link>
                     )}
+                  </dd>
+                  <dt className="sr-only">Title</dt>
+                  <dd className="text-brand-soft-charcoal dark:text-brand-white">
+                    {author.occupation}
                   </dd>
                 </dl>
               </li>
@@ -281,8 +279,9 @@ export default function programDetails() {
                 <u>Help us build cohorts</u>: APP believes that the most
                 successful cohorts will have something in common: same
                 midwife/doula, same neighborhood, etc. If you serve pregnant
-                people, we'd love to talk to you how we can offer sessions or a
-                full program to your clients giving birth around the same time.
+                people, we'd love to talk to you about how we can offer sessions
+                or a full program to your clients giving birth around the same
+                time.
               </li>
               <li>
                 <u>Help us build content</u>: We regularly seek reviews from

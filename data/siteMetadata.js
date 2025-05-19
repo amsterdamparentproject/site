@@ -6,8 +6,8 @@ const siteMetadata = {
   description: "Parent-to-parent support, (em)powered by professionals",
   language: "en-us",
   theme: "light", // Start with light as the default
-  siteUrl: "https://tailwind-nextjs-starter-blog.vercel.app",
-  siteRepo: "https://github.com/timlrx/tailwind-nextjs-starter-blog",
+  siteUrl: "https://amsterdamparentproject.nl",
+  siteRepo: "https://github.com/amsterdamparentproject/site",
   siteLogo: `${process.env.BASE_PATH || ""}/static/images/logo/light.png`,
   socialBanner: `${process.env.BASE_PATH || ""}/static/images/web-share.png`,
   email: "amsterdamparentproject@gmail.com",
@@ -40,23 +40,14 @@ const siteMetadata = {
     // },
   },
   newsletter: {
-    // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus, beehive
     // Please add your .env file and modify it according to your selection
     provider: "beehiiv",
   },
   search: {
-    provider: "kbar", // kbar or algolia
+    provider: "kbar",
     kbarConfig: {
       searchDocumentsPath: `${process.env.BASE_PATH || ""}/search.json`, // path to load documents to search
     },
-    // provider: 'algolia',
-    // algoliaConfig: {
-    //   // The application ID provided by Algolia
-    //   appId: 'R2IYF7ETH7',
-    //   // Public API key: it is safe to commit it
-    //   apiKey: '599cec31baffa4868cae4e79f180729b',
-    //   indexName: 'docsearch',
-    // },
   },
 };
 
