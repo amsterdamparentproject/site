@@ -230,7 +230,7 @@ export default function programDetails() {
               <li>
                 <u>Right timing</u>: You have questions you never anticipated
                 that need answering now, and you can't remember what you learned
-                3 months ago.
+                before the birth.
               </li>
               <li>
                 <u>Right sources</u>: You need insights from accredited experts,
@@ -243,8 +243,13 @@ export default function programDetails() {
               </li>
               <li>
                 <u>Right language</u>: You're not familiar with the Dutch
-                language/system, and you don't need the mental overhead right
-                now.
+                language/system, and you don't need the mental overhead to
+                figure it out right now.
+              </li>
+              <li>
+                <u>Right price</u>: Having a baby is expensive, and the last
+                thing you need is to weigh affordability with getting the
+                support you need.
               </li>
             </ul>
             <p className="my-2 text-sm">
@@ -260,11 +265,11 @@ export default function programDetails() {
             </h3>
             <p className="text-sm">
               APP operates as a non-profit. We strive to be a community resource
-              more than a thriving business. All of the sessions are offered at
-              cost and largely powered by volunteer work, to be as accessible
-              and affordable as possible. You're paying for the expert's time
-              and APP operating costs: that's it. Each session has the option to
-              "pay the organizer," too — so we can not only sustain, but grow.
+              above all. Sessions are offered at cost and are powered by
+              volunteer work, to be as accessible and affordable as possible.
+              You're paying for the expert's time and APP operating costs:
+              that's it. Each session has the option to "pay the organizer," too
+              — so we can not only sustain, but grow.
             </p>
           </li>
           <li className="mb-4">

@@ -121,7 +121,7 @@ function Card(args) {
           {components && (
             <div className="text-brand-soft-charcoal dark:text-brand-white text-sm">
               <p>In this session:</p>
-              <ul className="list-disc mx-4">
+              <ul className="list-disc mx-4" key="session-components">
                 {components.map((component) => (
                   <li key={component.name}>{component}</li>
                 ))}
