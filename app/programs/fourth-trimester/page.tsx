@@ -111,7 +111,7 @@ export default function programDetails() {
             APP's Fourth Trimester Program is designed to cut through the noise
           </b>{" "}
           to what really matters postpartum: creating a healthy and happy
-          environment for all members of your new family. We bring together{" "}
+          environment for all members of your new family. We bring{" "}
           <b>
             guidance from Amsterdam's premier postpartum professionals{" "}
             <i>together with</i> parent mentors and peers

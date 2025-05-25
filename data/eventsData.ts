@@ -20,11 +20,6 @@ const eventsData: Event[] = [
     imgSrc: "/static/images/calendar/wellness-walk.png",
   },
   {
-    title: "Workshop: Crafting your Postpartum Support System",
-    description: `Learn how to build a virtual or local support network when family isn’t nearby.`,
-    comingSoon: true,
-  },
-  {
     title: "Panel: Navigating Career Transitions in Tech",
     description: `APP founder Alex Siega is speaking on this panel about reintegration, reskilling, and resilience as parent professionals in the tech industry. In partnership with SheSharp and Uber.`,
     date: new Date("6 March 2025"),
@@ -72,9 +67,18 @@ const eventsData: Event[] = [
     imgSrc: "/static/images/calendar/wellness-walk.png",
   },
   {
+    title: "BBABBY Fair",
+    description: `Over 50 birth and postpartum professionals are gathering at the BBABBY Fair to share their expertise ranging from conception to early parenting: Before, Belly, Birth and Beyond. Come listen to the panels, participate in workshops, meet experts, and browse the booths while your little one plays in the special kid’s corner — nannies included. APP will be at the Beyond panel in the afternoon: to talk about burnout, postpartum identity, and community building.`,
+    href: "https://www.eventbrite.nl/e/tickets-bbabby-fair-1218084747269?aff=oddtdtcreator",
+    imgSrc: "/static/images/calendar/bbabby-fair.png",
+    date: new Date("28 June 2025"),
+  },
+  {
     title: "Newborn Feeding Strategies for the Whole Family",
+    imgSrc:
+      "/static/images/programs/fourth-trimester-program/feeding-strategies-card.png",
+    href: "./programs/fourth-trimester",
     description: `Learn how to support the whole family while taking on feeding a newborn.`,
-    href: `./programs/fourth-trimester`,
     comingSoon: true,
   },
 ];
