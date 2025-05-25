@@ -293,9 +293,8 @@ export default function programDetails() {
               It's something close to our hearts and first-hand experience.
               Having become parents in Amsterdam ourselves, we couldn't
               transition into new parenthood with confidence with the existing
-              the English-language resources available. After asking ourselves
-              "Why is this so hard?", we started asking, "What can we do about
-              it?"
+              English-language resources available. After asking ourselves "Why
+              is this so hard?", we started asking, "What can we do about it?"
             </p>
           </li>
           <li className="mb-4">
