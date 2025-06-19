@@ -28,7 +28,7 @@ const eventsData: Event[] = [
       "/static/images/calendar/shesharp/navigating-career-transitions.png",
   },
   {
-    title: "Burnout Support Program",
+    title: "Burnout Support Program — Spring 2025",
     description: `A 2 month program to navigate parental burnout with peer and professional support. Designed and facilitated by a psychotherapist.`,
     date: new Date("1 April 2025"),
     until: new Date("31 May 2025"),
@@ -71,7 +71,7 @@ const eventsData: Event[] = [
     description: `Over 50 birth and postpartum professionals are gathering at the BBABBY Fair to share their expertise ranging from conception to early parenting: Before, Belly, Birth and Beyond. Come listen to the panels, participate in workshops, meet experts, and browse the booths while your little one plays in the special kid’s corner — nannies included. APP will be at the Beyond panel in the afternoon: to talk about burnout, postpartum identity, and community building.`,
     href: "https://www.eventbrite.nl/e/tickets-bbabby-fair-1218084747269?aff=oddtdtcreator",
     imgSrc: "/static/images/calendar/bbabby-fair.png",
-    date: new Date("28 June 2025"),
+    date: new Date("11 October 2025"),
   },
   {
     title: "Newborn Feeding Strategies for the Whole Family",

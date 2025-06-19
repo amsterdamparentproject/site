@@ -69,7 +69,7 @@ export default function Home({ posts }) {
           </h2>
           {createEventList(eventsData).map((event) => (
             <ShowcaseButton
-              key={event.title}
+              key={event.title + event.date}
               href={event.href ? event.href : "/calendar"}
               title={event.title}
               date={event.date}
@@ -88,9 +88,10 @@ export default function Home({ posts }) {
           </div>
 
           <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
-            Latest expert advice
+            Latest advice
           </h2>
           <ShowcaseButton
+            key={title}
             href={latestPostUrl}
             title={title}
             date={formatDate(date, siteMetadata.locale)}
@@ -104,6 +105,20 @@ export default function Home({ posts }) {
               See all &rarr;
             </Link>
           </div>
+
+          <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
+            Our programs
+          </h2>
+          <ShowcaseButton
+            key={"bsp"}
+            href={"/programs/burnout"}
+            title={"Burnout Support Program"}
+          />
+          <ShowcaseButton
+            key={"ftp"}
+            href={"/programs/fourth-trimester"}
+            title={"Fourth Trimester Program"}
+          />
 
           <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             Follow us
