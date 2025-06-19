@@ -70,11 +70,6 @@ export default function Page() {
           </b>
           .
         </p>
-        <ShowcaseButton
-          href="/programs/burnout/apply"
-          title="Apply now until 26 March"
-          newTab={true}
-        />
         <h2 className="mt-8 font-medium">The 2 month program includes:</h2>
         <ul className="list-disc mx-4">
           <li>
@@ -128,14 +123,13 @@ export default function Page() {
             <h3>
               <b>How long does the program last for?</b>
             </h3>
-            The program is 2 months long, from 1 April - 31 May, 2025.
+            The program is 2 months long.
           </li>
           <li className="mb-4">
             <h3>
               <b>When and where will the meetups happen?</b>
             </h3>
-            All meetups happen on Saturdays: 12 April (online), 10 May
-            (in-person), 31 May (online). The in-person meetup will happen in
+            All meetups happen on Saturdays. The in-person meetup will happen in
             Amsterdam, exact location TBD.
           </li>
           <li className="mb-4">
