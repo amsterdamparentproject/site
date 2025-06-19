@@ -64,6 +64,7 @@ export default function Home({ posts }) {
           <div className="h-6 text-2xl/5 pt-0 mb-8 text-brand-charcoal dark:text-brand-white font-semibold sm:hidden text-center">
             {siteMetadata.headerTitle}
           </div>
+
           <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             What's next
           </h2>
@@ -87,8 +88,22 @@ export default function Home({ posts }) {
             </Link>
           </div>
 
+          <h2 className="text-md mt-2 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
+            Our programs
+          </h2>
+          <ShowcaseButton
+            key={"bsp"}
+            href={"/programs/burnout"}
+            title={"Burnout Support Program"}
+          />
+          <ShowcaseButton
+            key={"ftp"}
+            href={"/programs/fourth-trimester"}
+            title={"Fourth Trimester Program"}
+          />
+
           <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
-            Latest advice
+            Latest post
           </h2>
           <ShowcaseButton
             key={title}
@@ -106,21 +121,7 @@ export default function Home({ posts }) {
             </Link>
           </div>
 
-          <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
-            Our programs
-          </h2>
-          <ShowcaseButton
-            key={"bsp"}
-            href={"/programs/burnout"}
-            title={"Burnout Support Program"}
-          />
-          <ShowcaseButton
-            key={"ftp"}
-            href={"/programs/fourth-trimester"}
-            title={"Fourth Trimester Program"}
-          />
-
-          <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
+          <h2 className="text-md mt-4 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             Follow us
           </h2>
           <ShowcaseButton href="/newsletter" title="Newsletter" newTab={true} />
