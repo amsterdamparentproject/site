@@ -81,6 +81,20 @@ const eventsData: Event[] = [
     description: `Learn how to support the whole family while taking on feeding a newborn.`,
     comingSoon: true,
   },
+  {
+    title: "Burnout Support Meetup in the Park",
+    imgSrc: "/static/images/calendar/burnout-support-meetup.png",
+    href: "https://www.eventbrite.nl/e/burnout-support-meetup-in-the-park-tickets-1505966770149?aff=oddtdtcreator",
+    description: `This meetup in the park is an extension of APP's Burnout Support Program, providing a cozy, safe environment to meet other local parents with past or present experiences in parental burnout. Bring yourself, your partner, and/or your child(ren) — all are welcome for this open meetup.`,
+    date: new Date("27 July 2025"),
+  },
+  {
+    title: "Pumping Party: Summer 2025",
+    imgSrc: "/static/images/calendar/pumping-party-summer-2025.png",
+    href: "https://www.instagram.com/p/DL-bm_BtTNv/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+    description: `A casual meet up with fellow mums where we can try out different pumps and gadgets, exchange experiences, and support each other on this journey.`,
+    date: new Date("13 July 2025"),
+  },
 ];
 
 export default eventsData;
