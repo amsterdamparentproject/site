@@ -70,6 +70,13 @@ export default function Page() {
           </b>
           .
         </p>
+
+        <ShowcaseButton
+          href="https://docs.google.com/forms/d/e/1FAIpQLSddKHCD6HCM87Rofdylg1NfkXgXa8We2dTIiaOk41D7iuaoQA/viewform?usp=dialog"
+          title="Apply now before 26 August"
+          newTab={true}
+        />
+
         <h2 className="mt-8 font-medium">The 2 month program includes:</h2>
         <ul className="list-disc mx-4">
           <li>
@@ -95,14 +102,14 @@ export default function Page() {
         <h2 className="mt-4 font-medium">Program fees:</h2>
         <ul className="list-disc mx-4">
           <li>
-            <b>At cost spot</b>: €15/month (€30)
+            <b>At cost spot</b>: €20/month (€40)
             <br />
             <i>Cover program costs</i>
           </li>
           <li>
-            or <b>Community spot</b>: €20/month (€40)
+            or <b>Community spot</b>: €25/month (€50)
             <br />
-            <i>Cover program costs & help APP grow</i>
+            <i>Cover program costs & pay organizers for their time at events</i>
           </li>
         </ul>
         <p className="italic max-w-lg mt-4 mb-8">
@@ -129,8 +136,8 @@ export default function Page() {
             <h3>
               <b>When and where will the meetups happen?</b>
             </h3>
-            All meetups happen on Saturdays. The in-person meetup will happen in
-            Amsterdam, exact location TBD.
+            The online meetups are during the week, and the in-person meetups
+            happen on Saturdays, somewhere in Amsterdam (exact location TBD).
           </li>
           <li className="mb-4">
             <h3>

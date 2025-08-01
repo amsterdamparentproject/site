@@ -19,14 +19,13 @@ const sortEvents = (events) => {
 const getEventsByType = (events) => {
   const today = new Date();
 
-  const comingUpEvents = events.filter((event) => event.date >= today);
-  const comingSoonEvents = events.filter((event) => event.comingSoon);
-  const currentPrograms = events.filter((event) => event.until >= today);
+  const comingUp = events.filter(
+    (event) => event.date >= today || event.until >= today,
+  );
+  const comingSoon = events.filter((event) => event.comingSoon);
 
   return {
-    current: sortEvents(
-      currentPrograms.concat(comingUpEvents).concat(comingSoonEvents),
-    ),
+    current: sortEvents(comingUp.concat(comingSoon)),
     past: sortEvents(
       events.filter((event) => {
         const today = new Date();

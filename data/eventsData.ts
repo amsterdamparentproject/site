@@ -28,7 +28,7 @@ const eventsData: Event[] = [
       "/static/images/calendar/shesharp/navigating-career-transitions.png",
   },
   {
-    title: "Burnout Support Program — Spring 2025",
+    title: "Burnout Support Program: Spring 2025",
     description: `A 2 month program to navigate parental burnout with peer and professional support. Designed and facilitated by a psychotherapist.`,
     date: new Date("1 April 2025"),
     until: new Date("31 May 2025"),
@@ -74,11 +74,11 @@ const eventsData: Event[] = [
     date: new Date("11 October 2025"),
   },
   {
-    title: "Newborn Feeding Strategies for the Whole Family",
+    title: "Fourth Trimester Program: Pilot cohort",
     imgSrc:
       "/static/images/programs/fourth-trimester-program/feeding-strategies-card.png",
     href: "./programs/fourth-trimester",
-    description: `Learn how to support the whole family while taking on feeding a newborn.`,
+    description: `Your whole-family support system in the first months psotpartum.`,
     comingSoon: true,
   },
   {
@@ -94,6 +94,14 @@ const eventsData: Event[] = [
     href: "https://www.instagram.com/p/DL-bm_BtTNv/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
     description: `A casual meet up with fellow mums where we can try out different pumps and gadgets, exchange experiences, and support each other on this journey.`,
     date: new Date("13 July 2025"),
+  },
+  {
+    title: "Burnout Support Program: Fall 2025",
+    description: `A 2 month program to navigate parental burnout with peer and professional support. Designed and facilitated by a psychotherapist.`,
+    date: new Date("1 September 2025"),
+    until: new Date("31 October 2025"),
+    imgSrc: "/static/images/programs/burnout-support-flyer.png",
+    href: `./programs/burnout`,
   },
 ];
 

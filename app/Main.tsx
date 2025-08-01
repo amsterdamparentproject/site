@@ -5,25 +5,8 @@ import ShowcaseButton from "@/components/ShowcaseButton";
 import siteMetadata from "@/data/siteMetadata";
 import eventsData from "@/data/eventsData";
 
-const getCurrentEvents = (events) => {
-  return events.filter((event) => {
-    const today = new Date();
-    return event.date > today;
-  });
-};
-
-const getCurrentPrograms = (programs) => {
-  return programs.filter((program) => {
-    const today = new Date();
-    return program.until > today;
-  });
-};
-
-const createEventList = (events, MAX_DISPLAY = 3) => {
-  const currentPrograms = getCurrentPrograms(events);
-  let currentEvents = getCurrentEvents(events);
-
-  currentEvents = currentEvents.sort((a, b) => {
+const sortEvents = (events) => {
+  return events.sort((a, b) => {
     if (a.date < b.date) {
       return -1;
     }
@@ -32,19 +15,24 @@ const createEventList = (events, MAX_DISPLAY = 3) => {
     }
     return 0;
   });
+};
 
-  const comingSoonEvents = events.filter((event) => {
-    return event.comingSoon;
-  });
+const createEventList = (events, MAX_DISPLAY = 3) => {
+  const today = new Date();
 
-  if (currentEvents.length < MAX_DISPLAY) {
-    const comingSoonFillers = comingSoonEvents.slice(
+  const comingUp = sortEvents(
+    events.filter((event) => event.date >= today || event.until >= today),
+  );
+  const comingSoon = events.filter((event) => event.comingSoon);
+
+  if (comingUp.length < MAX_DISPLAY) {
+    const comingSoonFillers = comingSoon.slice(
       0,
-      MAX_DISPLAY - currentEvents.length,
+      MAX_DISPLAY - comingUp.length,
     );
-    return currentPrograms.concat(currentEvents.concat(comingSoonFillers));
+    return comingUp.concat(comingSoonFillers);
   } else {
-    return currentPrograms.concat(currentEvents);
+    return comingUp;
   }
 };
 
