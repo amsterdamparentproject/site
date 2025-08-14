@@ -81,9 +81,10 @@ export default function programDetails() {
         </h2>
 
         <div className="mt-2 mb-6">
-          <SubscribeForm
-            tag="website-fourth-trimester-program"
-            ctaLabel="Be notified when we launch:"
+          <ShowcaseButton
+            href="/programs/fourth-trimester/apply"
+            title="Join our pilot cohort"
+            fill={true}
           />
         </div>
 
@@ -125,10 +126,9 @@ export default function programDetails() {
         </p>
 
         <div className="mt-6">
-          <ShowcaseButton
-            href="https://forms.gle/WorswRRVMsyvTN8r5"
-            title="Join our pilot cohort"
-            fill={true}
+          <SubscribeForm
+            tag="website-fourth-trimester-program"
+            ctaLabel="Join our mailing list:"
           />
         </div>
 
