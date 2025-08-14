@@ -2,13 +2,6 @@ interface Session {
   title: string;
   description: string;
   components?: string[];
-  date?: Date;
-  until?: Date;
-  href?: string;
-  imgSrc?: string;
-  bannerSrc?: string;
-  comingSoon?: boolean;
-  hostName?: string;
 }
 
 const fourthTrimesterData: Session[] = [
@@ -20,17 +13,20 @@ const fourthTrimesterData: Session[] = [
     components: [
       "Actionable feeding strategies focused on health and wellness for you and your baby",
       "Evidence-based insight into common feeding scenarios",
-      "Ask the expert about your specific situation",
       "Short, impactful exercises for you and your partner",
       "Easy-to-digest local resource reference sheet",
-      "A new peer support group facing similar feeding joys and challenges as you are",
     ],
-    comingSoon: true,
-    hostName: "heatherBerry",
-    imgSrc:
-      "/static/images/programs/fourth-trimester-program/feeding-strategies-card.png",
-    bannerSrc:
-      "/static/images/programs/fourth-trimester-program/feeding-strategies-banner.png",
+  },
+  {
+    title: "Postpartum Soup: How parents’ bodies and minds change after baby",
+    description: `
+        It's time we got rid of "return to your pre-birth self" — birth and postpartum change parents' bodies and minds forever.
+        In this module, we'll learn precisely why "get back to the way things were before the baby" isn't possible, and ways to handle the melting pot of changes to your new self, using psychotherapy techniques.`,
+    components: [
+      "Overview of permanent physical changes that can happen after birth",
+      "Actionable strategies for navigating your new body and mind: for both partners",
+      "Resources to help within the English-speaking Dutch system",
+    ],
   },
 ];
 

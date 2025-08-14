@@ -123,6 +123,11 @@ module.exports = () => {
           source: '/community-calendar',
           destination: 'https://calendar.google.com/calendar/u/0?cid=OGUyZTFlNWI0M2UxYzZjYjRiN2FiNmQ3OTc3N2U0ZGIzN2MyYjg4MzJmZTZmYWIyMDdkNWU4ZDdlN2IxNmZhOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t',
           permanent: true,
+        },
+        {
+          source: '/programs/fourth-trimester/apply',
+          destination: 'https://forms.gle/WorswRRVMsyvTN8r5',
+          permanent: true,
         }
       ]
     },

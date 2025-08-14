@@ -45,7 +45,7 @@ function Card(args) {
   }
 
   return (
-    <div className="p-4">
+    <div className="pr-4 pl-4 pt-4">
       <div
         className={`${
           imgSrc

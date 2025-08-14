@@ -45,17 +45,11 @@ const allEvents = getSessions(eventsData);
 const upcomingSessions = () => {
   return (
     <div className="-m-4 flex flex-wrap">
-      {allEvents.current.map((d) => (
+      {eventsData.map((d) => (
         <Card
           key={d.title}
           title={d.title}
           description={d.description}
-          date={d.date}
-          until={d.until}
-          imgSrc={d.imgSrc ? d.imgSrc : "/static/images/web-share.png"}
-          href={d.href}
-          comingSoon={d.comingSoon}
-          hostName={d.hostName}
           components={d.components}
         />
       ))}
@@ -132,8 +126,8 @@ export default function programDetails() {
 
         <div className="mt-6">
           <ShowcaseButton
-            href="#upcoming-sessions"
-            title="Join an upcoming session"
+            href="https://forms.gle/WorswRRVMsyvTN8r5"
+            title="Join our pilot cohort"
             fill={true}
           />
         </div>
@@ -192,7 +186,7 @@ export default function programDetails() {
         </div>
         <p className="italic max-w-lg text-sm">
           We're also deeply supported by the Amsterdam postpartum expert
-          community. Our partnerships with midwives, kraamzorgs,
+          community. Our partnerships with doulas, midwives, kraamzorgs,
           psychotherapists, sleep and lactation consultants, and more help keep
           our content up to date and also ground us here in the community — so
           that the people we serve have a true foundation of postpartum support.
@@ -205,12 +199,8 @@ export default function programDetails() {
 
       <div className="container pt-4 pb-6 scroll-m-32" id="upcoming-sessions">
         <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-4">
-          Upcoming sessions
+          Expert-led sessions
         </h2>
-        <p className="italic text-sm mb-4">
-          While we build the 12-week program, we're offering completed modules
-          as standalone courses.
-        </p>
         {upcomingSessions()}
       </div>
 
