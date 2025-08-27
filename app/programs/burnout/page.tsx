@@ -73,7 +73,7 @@ export default function Page() {
 
         <ShowcaseButton
           href="https://docs.google.com/forms/d/e/1FAIpQLSddKHCD6HCM87Rofdylg1NfkXgXa8We2dTIiaOk41D7iuaoQA/viewform?usp=dialog"
-          title="Apply now before 26 August"
+          title="Apply now before 31 August"
           newTab={true}
         />
 
