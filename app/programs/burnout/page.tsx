@@ -71,12 +71,6 @@ export default function Page() {
           .
         </p>
 
-        <ShowcaseButton
-          href="https://docs.google.com/forms/d/e/1FAIpQLSddKHCD6HCM87Rofdylg1NfkXgXa8We2dTIiaOk41D7iuaoQA/viewform?usp=dialog"
-          title="Apply now before 31 August"
-          newTab={true}
-        />
-
         <h2 className="mt-8 font-medium">The 2 month program includes:</h2>
         <ul className="list-disc mx-4">
           <li>
