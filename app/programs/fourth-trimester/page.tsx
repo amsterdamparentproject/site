@@ -194,7 +194,39 @@ export default function programDetails() {
           . All of the content was created by experts and reviewed against the
           most current, evidence-based research available.
         </p>
-        {getSessions()}
+        <div>{getSessions()}</div>
+        <h3 className="text-2xl font-bold leading-7 mt-8 mb-2">
+          Our reviewers
+        </h3>
+        <ul>
+          <li>
+            <a
+              href="https://www.motherstransition.com/"
+              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
+            >
+              Danielle Bensky
+            </a>
+            ,<i> Postpartum Doula at Mothers Transition</i>
+          </li>
+          <li>
+            <a
+              href="https://www.internationallactationsupport.com/"
+              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
+            >
+              Andrea Hamlett
+            </a>
+            ,<i> IBCLC & Nurse at International Lactation Support</i>
+          </li>
+          <li>
+            <a
+              href="https://www.karileibowitz.com/"
+              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
+            >
+              Dr. Kari Leibowitz
+            </a>
+            ,<i> Health Psychologist (and newborn mom!)</i>
+          </li>
+        </ul>
       </div>
 
       <div id="faq" className="scroll-m-32 mt-6">
