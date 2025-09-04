@@ -1,4 +1,4 @@
-import eventsData from "@/data/fourthTrimesterProgram";
+import sessionData from "@/data/fourthTrimesterProgram";
 import Card from "@/components/programSessionCard";
 import { genPageMetadata } from "app/seo";
 import { Authors, allAuthors } from "contentlayer/generated";
@@ -22,34 +22,16 @@ const sortEvents = (events) => {
   });
 };
 
-const getSessions = (sessions) => {
-  const today = new Date();
-
-  const comingUpSessions = sessions.filter(
-    (sessions) => sessions.date >= today,
-  );
-  const comingSoonSessions = sessions.filter((sessions) => sessions.comingSoon);
-  const currentPrograms = sessions.filter(
-    (sessions) => sessions.until >= today,
-  );
-
-  return {
-    current: sortEvents(
-      currentPrograms.concat(comingUpSessions).concat(comingSoonSessions),
-    ),
-  };
-};
-
-const allEvents = getSessions(eventsData);
-
-const upcomingSessions = () => {
+const getSessions = () => {
   return (
     <div className="-m-4 flex flex-wrap">
-      {eventsData.map((d) => (
+      {sessionData.map((d) => (
         <Card
           key={d.title}
           title={d.title}
           description={d.description}
+          subtitle={d.subtitle}
+          experts={d.experts}
           components={d.components}
         />
       ))}
@@ -197,14 +179,25 @@ export default function programDetails() {
         </div>
       </div>
 
-      <div className="container pt-4 pb-6 scroll-m-32" id="upcoming-sessions">
-        <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-4">
+      <div className="pt-4 pb-6 scroll-m-32" id="sessions">
+        <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-1">
           Expert-led sessions
         </h2>
-        {upcomingSessions()}
+        <p className="mb-4">
+          Before every session, you'll get a pdf guide covering common cases.
+          When you get there, you can also
+          <b>
+            {" "}
+            ask a postpartum professional your specific questions on the topic,
+            or about baby care in general
+          </b>
+          . All of the content was created by experts and reviewed against the
+          most current, evidence-based research available.
+        </p>
+        {getSessions()}
       </div>
 
-      <div id="faq" className="scroll-m-32">
+      <div id="faq" className="scroll-m-32 mt-6">
         <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod my-4">
           FAQ
         </h2>
