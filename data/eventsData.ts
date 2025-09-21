@@ -79,7 +79,8 @@ const eventsData: Event[] = [
       "/static/images/programs/fourth-trimester-program/feeding-strategies-card.png",
     href: "./programs/fourth-trimester",
     description: `Your whole-family support system in the first months psotpartum.`,
-    comingSoon: true,
+    date: new Date("1 October 2025"),
+    until: new Date("21 December 2025"),
   },
   {
     title: "Burnout Support Meetup in the Park",
