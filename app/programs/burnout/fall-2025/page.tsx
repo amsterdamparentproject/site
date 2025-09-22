@@ -139,26 +139,26 @@ export default function Page() {
             <b>7 Sept</b>: Discussion topic #1
           </li>
           <li>
-            <b>To be scheduled between 7-14 Sept</b>: Cohort meetup #1 (online)
+            <b>19 Sept</b>: Cohort meetup #1 (online)
           </li>
           <li>
-            <b>14 Sept</b>: Discussion topic #2
+            <b>22 Sept</b>: Discussion topic #2
           </li>
           <li>
-            <b>To be scheduled between 14-28 Sept</b>: Cohort meetup #2 (in
+            <b>To be scheduled between 26 Sept-5 Oct</b>: Cohort meetup #2 (in
             person)
           </li>
           <li>
             <b>28 Sept</b>: Discussion topic #3
           </li>
           <li>
-            <b>5 Oct</b>: Discussion topic #4
+            <b>12 Oct</b>: Discussion topic #4
           </li>
           <li>
-            <b>12 Oct</b>: Discussion topic #5
+            <b>26 Oct</b>: Discussion topic #5
           </li>
           <li>
-            <b>To be scheduled between 12-26 Oct</b>: Cohort meetup #3 (online)
+            <b>To be scheduled between 19-31 Oct</b>: Cohort meetup #3 (online)
           </li>
           <li>
             <b>31 Oct</b>: Program end
