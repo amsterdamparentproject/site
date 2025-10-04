@@ -1,7 +1,10 @@
 {
-  "community-spotlight": 4,
-  "dad-spotlight": 1,
-  "building-community": 1,
+  "community-spotlight": 5,
+  "resilience": 1,
+  "building-community": 2,
+  "sleep": 5,
+  "social": 4,
+  "dad": 1,
   "mental-health": 5,
   "matrescence": 2,
   "identity": 2,
@@ -11,7 +14,6 @@
   "burnout": 1,
   "breastfeeding": 1,
   "milk-supply": 1,
-  "sleep": 3,
   "pumping": 2,
   "newborn": 3,
   "daycare": 1,
@@ -32,6 +34,5 @@
   "physical-health": 2,
   "milestones": 1,
   "motor-skills": 1,
-  "personal-goals": 2,
-  "social": 2
+  "personal-goals": 2
 }
