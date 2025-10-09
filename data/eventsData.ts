@@ -97,12 +97,11 @@ const eventsData: Event[] = [
     date: new Date("13 July 2025"),
   },
   {
-    title: "Burnout Support Program: Fall 2025",
-    description: `A 2 month program to navigate parental burnout with peer and professional support. Designed and facilitated by a psychotherapist.`,
-    date: new Date("1 September 2025"),
-    until: new Date("31 October 2025"),
-    imgSrc: "/static/images/programs/burnout-support-flyer.png",
-    href: `./programs/burnout`,
+    title: "Burnout Support Meetup in the Park",
+    imgSrc: "/static/images/calendar/burnout-support-meetup.png",
+    href: "https://www.eventbrite.nl/e/burnout-support-meetup-in-the-park-tickets-1772509887789?aff=oddtdtcreator",
+    description: `This meetup in the park is an extension of APP's Burnout Support Program, providing a cozy, safe environment to meet other local parents with past or present experiences in parental burnout. Bring yourself, your partner, and/or your child(ren) — all are welcome for this open meetup.`,
+    date: new Date("25 October 2025"),
   },
 ];
 
