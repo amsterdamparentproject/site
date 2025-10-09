@@ -64,11 +64,23 @@ export default function programDetails() {
 
         <div className="mt-2 mb-6">
           <ShowcaseButton
-            href="/programs/fourth-trimester/apply"
-            title="Join our pilot cohort"
+            href="https://www.eventbrite.nl/e/fourth-trimester-program-jan-mar-2026-cohort-tickets-1784343291819?aff=oddtdtcreator"
+            title="Join our next cohort: November/December 2025 due dates"
             fill={true}
           />
         </div>
+
+        <span className="mb-6">
+          2026 due date? Fill out our
+          <a
+            href="https://www.motherstransition.com/"
+            className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
+          >
+            {" "}
+            interest form
+          </a>{" "}
+          to be notified of future cohorts.
+        </span>
 
         <p className="mb-6">
           <b>

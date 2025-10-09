@@ -75,10 +75,9 @@ const eventsData: Event[] = [
   },
   {
     title: "Fourth Trimester Program: Pilot cohort",
-    imgSrc:
-      "/static/images/programs/fourth-trimester-program/feeding-strategies-card.png",
+    imgSrc: "/static/images/programs/fourth-trimester-program/ftp-banner.png",
     href: "./programs/fourth-trimester",
-    description: `Your whole-family support system in the first months psotpartum.`,
+    description: `Your whole-family support system in the first months psotpartum. For babies born in Amsterdam in August-October 2025.`,
     date: new Date("1 October 2025"),
     until: new Date("21 December 2025"),
   },
@@ -102,6 +101,14 @@ const eventsData: Event[] = [
     href: "https://www.eventbrite.nl/e/burnout-support-meetup-in-the-park-tickets-1772509887789?aff=oddtdtcreator",
     description: `This meetup in the park is an extension of APP's Burnout Support Program, providing a cozy, safe environment to meet other local parents with past or present experiences in parental burnout. Bring yourself, your partner, and/or your child(ren) — all are welcome for this open meetup.`,
     date: new Date("25 October 2025"),
+  },
+  {
+    title: "Fourth Trimester Program: Jan-Mar 2026 cohort",
+    imgSrc: "/static/images/programs/fourth-trimester-program/ftp-banner.png",
+    href: "https://www.eventbrite.nl/e/fourth-trimester-program-jan-mar-2026-cohort-tickets-1784343291819?aff=oddtdtcreator",
+    description: `Your whole-family support system in the first months psotpartum. For babies born in Amsterdam in November-December 2025.`,
+    date: new Date("5 January 2026"),
+    until: new Date("26 March 2026"),
   },
 ];
 
