@@ -14,10 +14,7 @@ export default function Page() {
       <br />
       <SubscribeForm tag="website-subscribe" />
       <div className="pb-8">
-        <h1
-          className="mt-4 mb-2 text-2xl text-brand-charcoal text-center"
-          id="copyrights-and-intellectual-proprietary-rights"
-        >
+        <h1 className="mt-4 mb-2 text-2xl text-brand-charcoal dark:text-brand-goldenrod text-center">
           In each issue:
         </h1>
         <ul className="text-center">

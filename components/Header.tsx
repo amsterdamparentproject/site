@@ -37,7 +37,7 @@ const Header = () => {
                 key={link.title}
                 href={link.href}
                 target={link.newTab ? "_blank" : ""}
-                className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod m-1 font-medium text-brand-charcoal dark:text-brand-white"
+                className={link.style}
               >
                 {link.title}
               </Link>
