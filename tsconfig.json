@@ -41,7 +41,8 @@
     ".contentlayer/generated",
     ".contentlayer/generated/**/*.json",
     ".next/types/**/*.ts",
-    "app/disclaimer.mdx"
+    "app/disclaimer.mdx",
+    "global.d.ts"
   ],
   "exclude": ["node_modules"]
 }

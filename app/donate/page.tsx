@@ -1,4 +1,3 @@
-// Example using Next.js App Router (or Pages Router)
 import Script from "next/script";
 import { genPageMetadata } from "app/seo";
 
@@ -16,11 +15,12 @@ function BuyButton() {
         strategy="lazyOnload"
       />
 
+      {/* @ts-ignore: Property 'stripe-buy-button' does not exist on type 'JSX.IntrinsicElements'. */}
       <stripe-buy-button
         buy-button-id={buyButtonId}
         publishable-key={publishableKey}
         style={{ margin: "20px auto", display: "block" }}
-      ></stripe-buy-button>
+      />
     </div>
   );
 }
