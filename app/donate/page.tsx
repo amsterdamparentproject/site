@@ -64,7 +64,7 @@ export default function Page() {
               <b>Operational costs</b>: €150 per month
             </li>
           </ul>
-          <p className="mt-4 italic">
+          <p className="mt-4 italic max-w-sm text-center">
             APP is completely self-funded by a local parent, so every little bit
             helps! 🫶🏻
           </p>
