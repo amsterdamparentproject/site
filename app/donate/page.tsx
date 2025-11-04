@@ -35,8 +35,8 @@ export default function Page() {
       </div>
       <div className="flex flex-col items-center mt-6">
         <p className="max-w-lg text-center">
-          By donating to APP, you are helpings us keep our newsletter free and
-          our program costs as low as possible — so that{" "}
+          By donating to APP, you're helping us keep our newsletter free and our
+          program costs as low as possible — so that{" "}
           <b className="text-brand-soft-green dark:text-brand-goldenrod">
             APP remains sustainable and accessible to all community parents who
             need it
@@ -47,7 +47,7 @@ export default function Page() {
         <BuyButton />
 
         <div>
-          <h1 className="mt-4 mb-2 text-2xl text-brand-soft-green dark:text-brand-goldenrod text-center">
+          <h1 className="mt-2 mb-2 text-2xl text-brand-soft-green dark:text-brand-goldenrod text-center">
             Recurring costs you're offsetting:
           </h1>
           <ul className="text-center">
