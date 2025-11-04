@@ -4,7 +4,9 @@ import { Authors, allAuthors } from "contentlayer/generated";
 import Link from "@/components/Link";
 import ShowcaseButton from "@/components/ShowcaseButton";
 
-export const metadata = genPageMetadata({ title: "Burnout Support Program" });
+export const metadata = genPageMetadata({
+  title: "Burnout Support Program: Spring 2025",
+});
 
 export default function Page() {
   const miriam = allAuthors.find(

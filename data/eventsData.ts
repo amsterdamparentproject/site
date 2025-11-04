@@ -110,6 +110,14 @@ const eventsData: Event[] = [
     date: new Date("5 January 2026"),
     until: new Date("26 March 2026"),
   },
+  {
+    title: "Vote for us in West Begroot",
+    imgSrc: "/static/images/calendar/west-begroot-2025.png",
+    href: "https://westbegroot.amsterdam.nl",
+    description: `Vote for APP's West Begroot submission: Kring voor Ouderwelzijn, a monthly support group (with childcare!) for parents experiencing overwhelm and burnout. With enough votes, we'll be able to facilitate the group completely free for Amsterdam West residents!`,
+    date: new Date("31 October 2025"),
+    until: new Date("1 December 2025"),
+  },
 ];
 
 export default eventsData;
