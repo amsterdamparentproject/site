@@ -113,9 +113,9 @@ export default function RootLayout({
           <Analytics
             analyticsConfig={siteMetadata.analytics as AnalyticsConfig}
           />
+          <Header />
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
-              <Header />
               <main className="mb-auto">{children}</main>
             </SearchProvider>
             <Footer />

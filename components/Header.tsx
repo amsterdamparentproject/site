@@ -7,7 +7,7 @@ import SocialIcon from "@/components/social-icons";
 
 const Header = () => {
   let headerClass =
-    "flex items-center w-full text-brand-charcoal bg-brand-white dark:bg-brand-charcoal justify-between pt-10 pb-6 md:pb-8";
+    "flex items-center w-full text-brand-charcoal bg-brand-white dark:bg-brand-charcoal justify-between px-5 md:px-10 xl:px-70 pt-10 pb-6 md:pb-8";
   if (siteMetadata.stickyNav) {
     headerClass += " sticky top-0 z-50";
   }
