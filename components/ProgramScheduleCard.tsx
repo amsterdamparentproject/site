@@ -8,7 +8,9 @@ const formatSessions = (sessions) => {
       <ul className="flex flex-col pl-4 list-disc sm:space-x-1 xl:space-y-1 xl:space-x-0">
         {sessions.map((session) => (
           <li key={session.name}>
-            <p className="text-sm text-brand-charcoal">{session.name}</p>
+            <p className="text-sm text-brand-charcoal dark:text-brand-white">
+              {session.name}
+            </p>
             <span className="text-xs text-brand-soft-green dark:text-brand-dark-sand">
               {formatDate(session.date, siteMetadata.locale)}
             </span>
