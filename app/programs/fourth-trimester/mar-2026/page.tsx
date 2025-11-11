@@ -3,7 +3,7 @@ import { genPageMetadata } from "app/seo";
 import Link from "@/components/Link";
 
 export const metadata = genPageMetadata({
-  title: "Join the Jan 2026 FTP cohort",
+  title: "Join the Mar 2026 FTP cohort",
 });
 
 function PricingTable() {
@@ -35,7 +35,7 @@ export default function Page() {
           Join the Fourth Trimester Program
         </p>
         <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
-          Jan-Mar 2026 cohort
+          Mar-May 2026 cohort
         </h1>
       </div>
       <div className="flex flex-col items-center mt-6">
@@ -69,7 +69,7 @@ export default function Page() {
           <Link
             href="/programs/fourth-trimester/join"
             className="text-base leading-6 font-medium text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
-            aria-label="cohort-selection"
+            aria-label="select-cohort"
           >
             Back to cohort selection &rarr;
           </Link>

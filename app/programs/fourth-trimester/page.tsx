@@ -1,11 +1,11 @@
 import sessionData from "@/data/fourthTrimesterProgram/sessions";
-import Card from "@/components/ProgramSessionCard";
 import { genPageMetadata } from "app/seo";
 import { Authors, allAuthors } from "contentlayer/generated";
 import Image from "@/components/Image";
 import Link from "@/components/Link";
 import { coreContent } from "pliny/utils/contentlayer";
 import ShowcaseButton from "@/components/ShowcaseButton";
+import Card from "@/components/ProgramSessionCard";
 
 export const metadata = genPageMetadata({ title: "Fourth Trimester Program" });
 
@@ -49,26 +49,13 @@ export default function programDetails() {
           and fellow newborn parents right there with you.
         </h2>
 
-        <div className="mt-4 mb-4">
+        <div className="mt-4 mb-6">
           <ShowcaseButton
             href="/programs/fourth-trimester/join"
             title="Join the program"
             fill={true}
           />
         </div>
-
-        <span className="mb-6 max-w-md text-center italic">
-          Our Jan 2026 cohort is for babies born in Nov/Dec 2025. 2026 due date?
-          Fill out our
-          <a
-            href="https://www.motherstransition.com/"
-            className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
-          >
-            {" "}
-            interest form
-          </a>{" "}
-          to be notified of future cohorts.
-        </span>
 
         <p className="mb-6">
           <b>

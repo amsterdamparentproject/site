@@ -1,31 +1,11 @@
-import Script from "next/script";
 import { genPageMetadata } from "app/seo";
 import Link from "@/components/Link";
+import Card from "@/components/ProgramScheduleCard";
+import cohortSchedules from "@/data/fourthTrimesterProgram/schedules";
 
 export const metadata = genPageMetadata({
   title: "Join the Fourth Trimester Program",
 });
-
-function PricingTable() {
-  const pricingTableID = "prctbl_1SRvzSQXyrloqZVhejYo4mim";
-  const publishableKey =
-    "pk_live_51SPjE2QXyrloqZVh2slle48bZ0dI3Ud73x4180eRaszI8PZwlJNQi4Jk5wwz2LEhnywF8Z1RoCRw9S4icO9yKSOK00IvDsDylL";
-
-  return (
-    <div className="lg:w-5xl m-6 mt-4 p-2 lg:pt-4 rounded rounded-md bg-brand-white border border-1 border-brand-sand/60 dark:border-brand-soft-charcoal/60">
-      <Script
-        src="https://js.stripe.com/v3/pricing-table.js"
-        strategy="lazyOnload"
-      />
-
-      {/* @ts-ignore: Property 'stripe-pricing-table' does not exist on type 'JSX.IntrinsicElements'. */}
-      <stripe-pricing-table
-        pricing-table-id={pricingTableID}
-        publishable-key={publishableKey}
-      />
-    </div>
-  );
-}
 
 export default function Page() {
   return (
@@ -37,24 +17,33 @@ export default function Page() {
         <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
           Choose your cohort
         </h1>
-        <h2 className="text-brand-soft-charcoal dark:text-brand-white text-center text-lg font-medium tracking-tight mb-2">
-          <b className="text-brand-soft-green dark:text-brand-goldenrod">
-            Your local support system in the first 3 months postpartum.
-          </b>{" "}
-          Socials and expert-led discussions to build your village, reduce
-          overwhelm, and transition with confidence into new parent life.
-        </h2>
       </div>
-      <div className="flex flex-col items-center mt-6">
-        <div className="mt-4 text-base leading-6 font-medium">
-          <Link
-            href="/programs/fourth-trimester/jan-2026"
-            className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
-            aria-label="jan-2026"
+      <div>
+        <p className="text-center italic mt-8">
+          Don't see your due date? Fill out our
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
+            className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
           >
-            Nov/Dec 2025 due dates &rarr;
-          </Link>
-        </div>
+            {" "}
+            interest form
+          </a>{" "}
+          to be notified of future cohorts.
+        </p>
+      </div>
+
+      <div className="flex flex-row flex-wrap justify-center mt-2">
+        {cohortSchedules.map((schedule) => (
+          <Card
+            key={schedule.title}
+            title={schedule.title}
+            joinLink={schedule.joinLink ? schedule.joinLink : "/join"}
+            dueDates={schedule.dueDates}
+            discussions={schedule.discussions}
+            socials={schedule.socials}
+            showSchedule={true}
+          />
+        ))}
       </div>
 
       <div className="mt-6 text-center">
