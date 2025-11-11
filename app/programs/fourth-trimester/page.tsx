@@ -5,7 +5,7 @@ import Image from "@/components/Image";
 import Link from "@/components/Link";
 import { coreContent } from "pliny/utils/contentlayer";
 import ShowcaseButton from "@/components/ShowcaseButton";
-import Card from "@/components/ProgramSessionCard";
+import Card from "@/components/programSessionCard";
 
 export const metadata = genPageMetadata({ title: "Fourth Trimester Program" });
 
