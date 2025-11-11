@@ -69,9 +69,9 @@ export default function Page() {
           <Link
             href="/programs/fourth-trimester/join"
             className="text-base leading-6 font-medium text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
-            aria-label="select-cohort"
+            aria-label="cohort-selection"
           >
-            Back to cohort selection &rarr;
+            Select another cohort &rarr;
           </Link>
           <br />
           <Link
@@ -79,7 +79,7 @@ export default function Page() {
             className="text-base leading-6 font-medium text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
             aria-label="program-info"
           >
-            Back to program info &rarr;
+            Learn more about the program &rarr;
           </Link>
         </div>
       </div>
