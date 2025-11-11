@@ -1,26 +1,13 @@
-import sessionData from "@/data/fourthTrimesterProgram";
-import Card from "@/components/programSessionCard";
+import sessionData from "@/data/fourthTrimesterProgram/sessions";
+import Card from "@/components/ProgramSessionCard";
 import { genPageMetadata } from "app/seo";
 import { Authors, allAuthors } from "contentlayer/generated";
 import Image from "@/components/Image";
 import Link from "@/components/Link";
-import SubscribeForm from "@/components/SubscribeForm";
 import { coreContent } from "pliny/utils/contentlayer";
 import ShowcaseButton from "@/components/ShowcaseButton";
 
 export const metadata = genPageMetadata({ title: "Fourth Trimester Program" });
-
-const sortEvents = (events) => {
-  return events.sort((a, b) => {
-    if (a.date < b.date) {
-      return -1;
-    }
-    if (a.date > b.date) {
-      return 1;
-    }
-    return 0;
-  });
-};
 
 const getSessions = () => {
   return (
@@ -62,16 +49,17 @@ export default function programDetails() {
           and fellow newborn parents right there with you.
         </h2>
 
-        <div className="mt-2 mb-6">
+        <div className="mt-4 mb-4">
           <ShowcaseButton
-            href="https://www.eventbrite.nl/e/fourth-trimester-program-jan-mar-2026-cohort-tickets-1784343291819?aff=oddtdtcreator"
-            title="Join our next cohort: November/December 2025 due dates"
+            href="/programs/fourth-trimester/join"
+            title="Join the program"
             fill={true}
           />
         </div>
 
-        <span className="mb-6">
-          2026 due date? Fill out our
+        <span className="mb-6 max-w-md text-center italic">
+          Our Jan 2026 cohort is for babies born in Nov/Dec 2025. 2026 due date?
+          Fill out our
           <a
             href="https://www.motherstransition.com/"
             className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
@@ -118,13 +106,6 @@ export default function programDetails() {
           Fourth Trimester Program <b>accessible and afforable</b> for all
           families.
         </p>
-
-        <div className="mt-6">
-          <SubscribeForm
-            tag="website-fourth-trimester-program"
-            ctaLabel="Join our mailing list:"
-          />
-        </div>
 
         <div>
           <h2 className="mt-6 font-medium mb-2 text-center">What you get:</h2>

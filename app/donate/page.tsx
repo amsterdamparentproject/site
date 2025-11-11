@@ -29,7 +29,7 @@ export default function Page() {
   return (
     <div className="flex-column justify-center">
       <div className="flex flex-col items-center space-y-2 pt-6 md:space-y-5">
-        <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-gray-900 md:px-6 md:text-6xl md:leading-14 dark:text-gray-100">
+        <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100">
           Donate
         </h1>
       </div>
