@@ -30,7 +30,7 @@ function PricingTable() {
 export default function Page() {
   return (
     <div className="flex-column justify-center">
-      <div className="flex flex-col items-center space-y-2 pt-6 md:space-y-5">
+      <div className="flex flex-col items-center text-center space-y-2 pt-6 md:space-y-5">
         <p className="text-2xl font-extrabold text-brand-soft-green dark:text-brand-goldenrod text-center">
           Join the Fourth Trimester Program
         </p>
@@ -47,7 +47,7 @@ export default function Page() {
           in the neighborhood to help you transition with confidence to new
           parenthood.
         </p>
-        <p className="text-sm">
+        <p className="text-sm text-center mt-6">
           Not due in January/February 2026?{" "}
           <a
             href="/programs/fourth-trimester/join"

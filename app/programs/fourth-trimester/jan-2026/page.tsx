@@ -12,7 +12,7 @@ function PricingTable() {
     "pk_live_51SPjE2QXyrloqZVh2slle48bZ0dI3Ud73x4180eRaszI8PZwlJNQi4Jk5wwz2LEhnywF8Z1RoCRw9S4icO9yKSOK00IvDsDylL";
 
   return (
-    <div className="lg:w-5xl m-6 mt-6 p-2 lg:pt-4 rounded rounded-md bg-brand-white border border-1 border-brand-sand/60 dark:border-brand-soft-charcoal/60">
+    <div className="lg:w-5xl dark:m-6 p-2 lg:pt-4 rounded rounded-md bg-brand-white">
       <Script
         src="https://js.stripe.com/v3/pricing-table.js"
         strategy="lazyOnload"
@@ -30,14 +30,14 @@ function PricingTable() {
 export default function Page() {
   return (
     <div className="flex-column justify-center">
-      <div className="flex flex-col items-center space-y-2 pt-6 md:space-y-5">
+      <div className="flex flex-col text-center items-center space-y-2 pt-6 md:space-y-5">
         <p className="text-2xl font-extrabold text-brand-soft-green dark:text-brand-goldenrod text-center">
           Join the Fourth Trimester Program
         </p>
         <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
           Jan-Mar 2026 cohort
         </h1>
-        <p className="text-center">
+        <p className="mt-4">
           Your{" "}
           <b className="dark:text-brand-goldenrod text-brand-soft-green">
             neighborhood support system in the first months postpartum
@@ -47,8 +47,9 @@ export default function Page() {
           in the neighborhood to help you transition with confidence to new
           parenthood.
         </p>
-        <p className="text-sm">
-          Not due in November/December 2025?{" "}
+        <p className="text-sm mt-4 md:mb-4">
+          Not due in November/December 2025?
+          <br />
           <a
             href="/programs/fourth-trimester/join"
             className="dark:text-brand-goldenrod dark:hover:text-brand-soft-green text-brand-soft-green hover:text-brand-goldenrod"
@@ -57,7 +58,7 @@ export default function Page() {
           </a>
         </p>
       </div>
-      <div className="flex flex-col items-center mt-6">
+      <div className="flex flex-col items-center">
         <div>
           <PricingTable />
         </div>
