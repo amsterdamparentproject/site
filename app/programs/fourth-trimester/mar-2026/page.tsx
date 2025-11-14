@@ -37,6 +37,25 @@ export default function Page() {
         <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
           Mar-May 2026 cohort
         </h1>
+        <p className="text-center">
+          Your{" "}
+          <b className="dark:text-brand-goldenrod text-brand-soft-green">
+            neighborhood support system in the first months postpartum
+          </b>
+          , designed for families with January/February 2026 newborns.
+          Expert-led discussions and curated socials with local newborn parents
+          in the neighborhood to help you transition with confidence to new
+          parenthood.
+        </p>
+        <p className="text-sm">
+          Not due in January/February 2026?{" "}
+          <a
+            href="/programs/fourth-trimester/join"
+            className="dark:text-brand-goldenrod dark:hover:text-brand-soft-green text-brand-soft-green hover:text-brand-goldenrod"
+          >
+            Join another cohort &rarr;
+          </a>
+        </p>
       </div>
       <div className="flex flex-col items-center mt-6">
         <div>

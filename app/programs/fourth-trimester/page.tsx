@@ -44,9 +44,9 @@ export default function programDetails() {
           Fourth Trimester Program
         </h1>
         <h2 className="text-brand-soft-charcoal dark:text-brand-white text-center text-lg font-medium tracking-tight mb-2 mt-4">
-          Your local, English-speaking support system in the first months
-          postpartum. Right when you need it, right where you are, with experts
-          and fellow newborn parents right there with you.
+          Your neighborhood support system in the first months postpartum.
+          Expert-led discussions and socials with local newborn parents to help
+          you transition with confidence to postpartum life.
         </h2>
 
         <div className="mt-4 mb-6">
@@ -260,11 +260,10 @@ export default function programDetails() {
             </h3>
             <p className="text-sm">
               APP operates as a non-profit. We strive to be a community resource
-              above all. Sessions are offered at cost and are powered by
-              volunteer work, to be as accessible and affordable as possible.
-              You're paying for the expert's time and APP operating costs:
-              that's it. Each session has the option to "pay the organizer," too
-              — so we can not only sustain, but grow.
+              above all. Sessions are offered with transparent, socially-driven
+              costs to be as accessible and affordable as possible. You're
+              paying for the expert's time, operating costs, and development
+              costs: that's it.
             </p>
           </li>
           <li className="mb-4">
