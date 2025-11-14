@@ -3,7 +3,7 @@ interface ScheduledSession {
   date: Date;
 }
 
-interface Schedule {
+export interface Schedule {
   title: string;
   slug?: string;
   dueDates?: string;

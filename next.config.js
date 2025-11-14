@@ -125,8 +125,8 @@ module.exports = () => {
           permanent: true,
         },
         {
-          source: '/programs/fourth-trimester/apply',
-          destination: 'https://forms.gle/WorswRRVMsyvTN8r5',
+          source: '/programs/fourth-trimester/jan-2026',
+          destination: '/programs/fourth-trimester/join?cohort=jan-2026',
           permanent: true,
         }
       ]

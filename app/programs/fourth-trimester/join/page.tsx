@@ -1,7 +1,9 @@
 import Script from "next/script";
 import { genPageMetadata } from "app/seo";
 import Link from "@/components/Link";
-import cohortSchedules from "@/data/fourthTrimesterProgram/schedules";
+import cohortSchedules, {
+  Schedule,
+} from "@/data/fourthTrimesterProgram/schedules";
 import { formatDate } from "pliny/utils/formatDate";
 import siteMetadata from "@/data/siteMetadata";
 
@@ -30,15 +32,15 @@ function PricingTable() {
   );
 }
 
-export default async function Page({ searchParams }) {
-  let cohort = cohortSchedules.find(
-    (cohort) => cohort.slug === searchParams.cohort,
-  );
-  cohort = cohort
-    ? cohort
-    : {
-        title: "Rolling",
-      };
+export default async function Page(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParams = await props.searchParams;
+  const { cohort } = searchParams;
+
+  const defaultCohort: Schedule = { title: "Next" };
+  const cohortDetails =
+    cohortSchedules.find((c) => c.slug === cohort) ?? defaultCohort;
 
   return (
     <div className="flex-column justify-center">
@@ -47,20 +49,20 @@ export default async function Page({ searchParams }) {
           Join the Fourth Trimester Program
         </p>
         <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
-          {cohort?.title} cohort
+          {cohortDetails?.title} cohort
         </h1>
         <p className="mt-4">
           Your{" "}
           <b className="dark:text-brand-goldenrod text-brand-soft-green">
             neighborhood support system in the first months postpartum
           </b>
-          , designed for families with {cohort.dueDates} newborns. Expert-led
-          discussions and curated socials with local newborn parents to help you
-          transition with confidence to new parenthood.
+          , designed for families with {cohortDetails.dueDates} newborns.
+          Expert-led discussions and curated socials with local newborn parents
+          to help you transition with confidence to new parenthood.
         </p>
-        {cohort.dueDates && (
+        {cohortDetails.dueDates && (
           <p className="text-sm mt-2 md:mb-2">
-            Not due in {cohort.dueDates}?
+            Not due in {cohortDetails.dueDates}?
             <br />
             <a
               href="/programs/fourth-trimester/cohorts"
@@ -102,15 +104,21 @@ export default async function Page({ searchParams }) {
           </p>
         </div>
 
-        {cohort.start && (
+        {cohortDetails.start && cohortDetails.end && (
           <div className="mt-6 text-center">
             <h2 className="mt-2 mb-2 text-xl text-brand-soft-green dark:text-brand-goldenrod">
               Cohort dates:
             </h2>
             <p>
-              {" "}
-              {formatDate(cohort.start, siteMetadata.locale)} -{" "}
-              {formatDate(cohort.end, siteMetadata.locale)}
+              {formatDate(
+                cohortDetails.start.toISOString()!,
+                siteMetadata.locale,
+              )}
+              <span> - </span>
+              {formatDate(
+                cohortDetails.end.toISOString()!,
+                siteMetadata.locale,
+              )}
             </p>
             <Link
               href="/programs/fourth-trimester/cohorts"
