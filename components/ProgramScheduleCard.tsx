@@ -1,5 +1,5 @@
 import siteMetadata from "@/data/siteMetadata";
-import Link from "./Link";
+import Link from "next/link";
 import { formatDate } from "pliny/utils/formatDate";
 
 const formatSessions = (sessions) => {
@@ -22,12 +22,7 @@ const formatSessions = (sessions) => {
 };
 
 function Card(args) {
-  const { title, joinLink, dueDates, discussions, socials, showSchedule } =
-    args;
-
-  const joinHref = joinLink
-    ? `/programs/fourth-trimester{joinLink}`
-    : "/programs/fourth-trimester/join";
+  const { title, slug, dueDates, discussions, socials, showSchedule } = args;
 
   return (
     <div className="pr-4 pl-4 pt-4 sm:w-1/2 min-w-80">
@@ -43,15 +38,18 @@ function Card(args) {
               For babies due in {dueDates}
             </p>
           )}
-          <p className="mb-2">
-            <Link
-              href={"/programs/fourth-trimester" + joinLink}
-              className="text-base leading-6 font-medium text-brand-goldenrod hover:text-brand-white"
-              aria-label="jan-2026"
-            >
+          <Link
+            href={{
+              pathname: "/programs/fourth-trimester/join",
+              query: {
+                cohort: slug,
+              },
+            }}
+          >
+            <p className="mb-2 text-base leading-6 font-medium text-brand-goldenrod hover:text-brand-white">
               Join this cohort &rarr;
-            </Link>
-          </p>
+            </p>
+          </Link>
         </div>
 
         {showSchedule && (

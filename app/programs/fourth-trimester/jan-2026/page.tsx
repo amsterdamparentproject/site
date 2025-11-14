@@ -44,10 +44,9 @@ export default function Page() {
           </b>
           , designed for families with November/December 2025 newborns.
           Expert-led discussions and curated socials with local newborn parents
-          in the neighborhood to help you transition with confidence to new
-          parenthood.
+          to help you transition with confidence to new parenthood.
         </p>
-        <p className="text-sm mt-4 md:mb-4">
+        <p className="text-sm mt-2 md:mb-2">
           Not due in November/December 2025?
           <br />
           <a

@@ -5,8 +5,8 @@ interface ScheduledSession {
 
 interface Schedule {
   title: string;
-  joinLink?: string;
-  dueDates: string;
+  slug?: string;
+  dueDates?: string;
   start?: Date;
   end?: Date;
   discussions?: ScheduledSession[];
@@ -16,7 +16,7 @@ interface Schedule {
 const ftpCohortSchedules: Schedule[] = [
   {
     title: "Jan-Mar 2026",
-    joinLink: "/jan-2026",
+    slug: "jan-2026",
     dueDates: "Nov-Dec 2025",
     start: new Date("5 January 2026"),
     end: new Date("31 March 2026"),
@@ -36,7 +36,7 @@ const ftpCohortSchedules: Schedule[] = [
   },
   {
     title: "Mar-May 2026",
-    joinLink: "/mar-2026",
+    slug: "mar-2026",
     dueDates: "Jan-Feb 2026",
     start: new Date("1 Mar 2026"),
     end: new Date("31 May 2026"),
