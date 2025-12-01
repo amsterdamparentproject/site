@@ -21,9 +21,7 @@ const sortEvents = (events) => {
 const getEventsByType = (events) => {
   const today = new Date();
 
-  const comingUp = events.filter(
-    (event) => event.date >= today || event.until >= today,
-  );
+  const comingUp = events.filter((event) => event.date >= today);
   const comingSoon = events.filter((event) => event.comingSoon);
 
   return {

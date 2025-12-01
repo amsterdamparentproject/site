@@ -118,6 +118,13 @@ const eventsData: Event[] = [
     date: new Date("31 October 2025"),
     until: new Date("1 December 2025"),
   },
+  {
+    title: "Family Tour at the Rijksmuseum",
+    imgSrc: "/static/images/calendar/rijksmuseum.jpg",
+    href: "https://www.eventbrite.nl/e/family-tour-at-the-rijksmuseum-parents-children-from-0-4-years-old-tickets-1976387211352?aff=oddtdtcreator",
+    description: `Meet fellow local parents and learn about the museum's most famous pieces — including those by Rembrandt and Vermeer — in the Gallery of Honor. The 1 hour tour is designed to flexibly meet your family's needs; step out to feed or change your baby at the museum's facilities and join back up with us when you're ready. After the tour, we'll likely head to the museum cafe to learn more from our expert guide and connect with the group.`,
+    date: new Date("22 January 2026"),
+  },
 ];
 
 export default eventsData;

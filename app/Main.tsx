@@ -20,9 +20,7 @@ const sortEvents = (events) => {
 const createEventList = (events, MAX_DISPLAY = 3) => {
   const today = new Date();
 
-  const comingUp = sortEvents(
-    events.filter((event) => event.date >= today || event.until >= today),
-  );
+  const comingUp = sortEvents(events.filter((event) => event.date >= today));
   const comingSoon = events.filter((event) => event.comingSoon);
 
   if (comingUp.length < MAX_DISPLAY) {
