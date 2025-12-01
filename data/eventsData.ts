@@ -106,7 +106,7 @@ const eventsData: Event[] = [
     title: "Fourth Trimester Program: Jan-Mar 2026 cohort",
     imgSrc: "/static/images/programs/fourth-trimester-program/ftp-banner.png",
     href: "/programs/fourth-trimester/jan-2026",
-    description: `Your whole-family support system in the first months psotpartum. For babies born in Amsterdam in November-December 2025.`,
+    description: `Your whole-family support system in the first months postpartum. For babies born in Amsterdam in November-December 2025.`,
     date: new Date("5 January 2026"),
     until: new Date("26 March 2026"),
   },

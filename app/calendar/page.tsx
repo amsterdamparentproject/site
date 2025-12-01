@@ -93,7 +93,7 @@ export default function Events() {
             Past @ APP
           </h2>
           <div className="-m-4 flex flex-wrap">
-            {allEvents.past.map((d) => (
+            {allEvents.past.reverse().map((d) => (
               <Card
                 key={d.title + d.date}
                 title={d.title}
