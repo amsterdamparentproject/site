@@ -1,6 +1,8 @@
 import eventsData from "@/data/eventsData";
 import Card from "@/components/Card";
 import { genPageMetadata } from "app/seo";
+import ShowcaseButton from "@/components/ShowcaseButton";
+import siteMetadata from "@/data/siteMetadata";
 
 export const metadata = genPageMetadata({ title: "Events & Programs" });
 
@@ -45,13 +47,27 @@ export default function Events() {
           <h1 className="text-brand-charcoal dark:text-brand-white text-4xl leading-9 font-extrabold tracking-tight md:text-6xl md:leading-14">
             Calendar
           </h1>
-          <h2 className="text-brand-soft-charcoal dark:text-brand-white text-lg font-medium tracking-tight my-2">
-            APP events & programs
+        </div>
+        <div className="flex flex-col items-center space-y-2 pt-4 pb-8 md:space-y-5">
+          <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
+            Community Calendar
           </h2>
+          <ShowcaseButton
+            key="community-calendar-google"
+            href={siteMetadata.communityCalendar.google}
+            title="Add to Google Calendar"
+            fill={true}
+          />
+          <ShowcaseButton
+            key="community-calendar-iCal"
+            href={siteMetadata.communityCalendar.iCal}
+            title="Add to iCal"
+            fill={true}
+          />
         </div>
         <div className="container pt-4 pb-6">
-          <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
-            Upcoming
+          <h2 className="text-3xl text-center font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
+            Upcoming @ APP
           </h2>
           <div className="-m-4 flex flex-wrap">
             {allEvents.current.map((d) => (
@@ -67,8 +83,8 @@ export default function Events() {
               />
             ))}
           </div>
-          <h2 className="mt-12 text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
-            Past
+          <h2 className="mt-12 text-3xl text-center font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
+            Past @ APP
           </h2>
           <div className="-m-4 flex flex-wrap">
             {allEvents.past.map((d) => (

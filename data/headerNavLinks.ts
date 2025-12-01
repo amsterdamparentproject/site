@@ -5,6 +5,7 @@ const highlightStyle =
 const headerNavLinks = [
   { href: "/", title: "Home", style: defaultStyle },
   { href: "/about", title: "About", style: defaultStyle },
+  { href: "/calendar", title: "Calendar", style: defaultStyle },
   {
     href: "/newsletter",
     title: "Newsletter",

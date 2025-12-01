@@ -114,11 +114,7 @@ export default function Home({ posts }) {
           </h2>
           <ShowcaseButton href="/newsletter" title="Newsletter" newTab={true} />
           <ShowcaseButton href={siteMetadata.instagram} title="Instagram" />
-          <ShowcaseButton href="/calendar" title="APP events calendar" />
-          <ShowcaseButton
-            href="/community-calendar"
-            title="Local events calendar"
-          />
+          <ShowcaseButton href="/calendar" title="Calendar" />
         </div>
       </div>
     </>

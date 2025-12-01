@@ -13,6 +13,11 @@ const siteMetadata = {
   email: "amsterdamparentproject@gmail.com",
   instagram: "https://www.instagram.com/amsterdamparentproject",
   roadmap: "https://trello.com/b/yUO7aIps/roadmap-amsterdam-parent-project-app",
+  communityCalendar: {
+    google:
+      "https://calendar.google.com/calendar/u/0?cid=OGUyZTFlNWI0M2UxYzZjYjRiN2FiNmQ3OTc3N2U0ZGIzN2MyYjg4MzJmZTZmYWIyMDdkNWU4ZDdlN2IxNmZhOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t",
+    iCal: "https://calendar.google.com/calendar/ical/8e2e1e5b43e1c6cb4b7ab6d79777e4db37c2b8832fe6fab207d5e8d7e7b16fa8%40group.calendar.google.com/public/basic.ics",
+  },
   locale: "en-US",
   stickyNav: true,
   analytics: {
