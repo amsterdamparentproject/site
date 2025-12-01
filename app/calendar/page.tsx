@@ -49,9 +49,14 @@ export default function Events() {
           </h1>
         </div>
         <div className="flex flex-col items-center space-y-2 pt-4 pb-8 md:space-y-5">
-          <h2 className="text-3xl text-center font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
+          <h2 className="text-3xl text-center font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod">
             Community Calendar
           </h2>
+          <p className="max-w-sm text-center mb-4">
+            Your single reference guide for local events, activities, and
+            programs happening every day for babies, toddlers, and their parents
+            in Amsterdam
+          </p>
           <ShowcaseButton
             key="community-calendar-google"
             href={siteMetadata.communityCalendar.google}
@@ -64,6 +69,9 @@ export default function Events() {
             title="Add to iCal"
             fill={true}
           />
+          <p className="text-sm italic text-center mt-4">
+            Maintained for free by the Amsterdam Parent Project
+          </p>
         </div>
         <div className="container pt-4 pb-6">
           <h2 className="text-3xl text-center font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
