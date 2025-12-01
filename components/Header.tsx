@@ -7,7 +7,7 @@ import SocialIcon from "@/components/social-icons";
 
 const Header = () => {
   let headerClass =
-    "flex items-center w-full text-brand-charcoal bg-brand-white dark:bg-brand-charcoal justify-between px-5 md:px-10 xl:px-70 pt-10 pb-6 md:pb-8";
+    "flex items-center w-full text-brand-charcoal bg-brand-white dark:bg-brand-charcoal justify-between px-5 md:px-10 xl:px-50 2xl:px-80 pt-10 pb-6 md:pb-8";
   if (siteMetadata.stickyNav) {
     headerClass += " sticky top-0 z-50";
   }
@@ -20,7 +20,7 @@ const Header = () => {
             <Logo size="50" />
           </div>
           {typeof siteMetadata.headerTitle === "string" ? (
-            <div className="hidden h-6 text-2xl/5 font-semibold sm:block text-brand-charcoal dark:text-brand-white">
+            <div className="hidden h-6 text-2xl/5 font-semibold sm:block md:max-w-50 lg:max-w-500 text-brand-charcoal dark:text-brand-white">
               {siteMetadata.headerTitle}
             </div>
           ) : (
@@ -28,8 +28,8 @@ const Header = () => {
           )}
         </div>
       </Link>
-      <div className="flex items-center space-x-4 leading-5 sm:-mr-6 sm:space-x-6">
-        <div className="no-scrollbar hidden items-center gap-x-4 overflow-x-auto md:flex max-w-40 md:max-w-72 lg:max-w-96">
+      <div className="flex items-center space-x-4 md:ml-5 leading-5 sm:-mr-6 sm:space-x-6">
+        <div className="no-scrollbar hidden items-center gap-x-4 overflow-x-auto md:flex">
           {headerNavLinks
             .filter((link) => link.href !== "/")
             .map((link) => (

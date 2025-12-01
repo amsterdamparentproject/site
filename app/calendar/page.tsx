@@ -49,7 +49,7 @@ export default function Events() {
           </h1>
         </div>
         <div className="flex flex-col items-center space-y-2 pt-4 pb-8 md:space-y-5">
-          <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
+          <h2 className="text-3xl text-center font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
             Community Calendar
           </h2>
           <ShowcaseButton
