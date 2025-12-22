@@ -5,7 +5,7 @@ import Image from "@/components/Image";
 import Link from "@/components/Link";
 import { coreContent } from "pliny/utils/contentlayer";
 import ShowcaseButton from "@/components/ShowcaseButton";
-import Card from "@/components/programSessionCard";
+import FTPSessionCard from "@/components/FTPSessionCard";
 
 export const metadata = genPageMetadata({ title: "Fourth Trimester Program" });
 
@@ -13,7 +13,7 @@ const getSessions = () => {
   return (
     <div className="-m-4 flex flex-wrap">
       {sessionData.map((d) => (
-        <Card
+        <FTPSessionCard
           key={d.title}
           title={d.title}
           description={d.description}
@@ -40,16 +40,32 @@ export default function programDetails() {
         className="pt-6 pb-6 flex flex-col items-center"
         id="program-description"
       >
-        <h1 className="text-brand-charcoal dark:text-brand-white text-center text-4xl leading-9 font-extrabold tracking-tight md:text-6xl md:leading-14">
-          Fourth Trimester Program
-        </h1>
-        <h2 className="text-brand-soft-charcoal dark:text-brand-white text-center text-lg font-medium tracking-tight mb-2 mt-4">
-          Your neighborhood support system in the first months postpartum.
-          Expert-led discussions and socials with local newborn parents to help
-          you transition with confidence to postpartum life.
-        </h2>
+        <div className="flex flex-col text-center items-center space-y-2 pt-6 md:space-y-5">
+          <p className="text-2xl font-extrabold text-brand-goldenrod text-center">
+            About the program
+          </p>
+          <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
+            Fourth Trimester Program
+          </h1>
+          <p className="mt-4">
+            Your{" "}
+            <b className="dark:text-brand-goldenrod text-brand-soft-green">
+              neighborhood support system in the first months postpartum
+            </b>
+            , designed for families with newborns. Expert-led discussions and
+            curated socials with local newborn parents to help you transition
+            with confidence to new parenthood.
+            <Link
+              href="/programs/fourth-trimester"
+              className="text-base leading-6 font-medium italic text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-white"
+              aria-label="jan-2026"
+            >
+              &nbsp;Learn more about the program &rarr;
+            </Link>
+          </p>
+        </div>
 
-        <div className="mt-4 mb-6">
+        <div className="mt-6 mb-10">
           <ShowcaseButton
             href="/programs/fourth-trimester/join"
             title="Join the program"
@@ -57,45 +73,37 @@ export default function programDetails() {
           />
         </div>
 
-        <p className="mb-6">
-          <b>
-            Finding the right support after you have a baby is a daunting
-            task.{" "}
-          </b>
-          Your giant parent group is dispensing baby advice 100 times a day,
-          you're frantically Googling "Why is this happening..." during 2am
-          feeds, and social media is constantly telling you what you should be
-          feeling as a new parent. If you want an actual expert's opinion, you
-          may be paying €100/hour for a consult — and you have to spend time and
-          energy to find them in the first place. Speaking from experience: It
-          can be overwhelming and exhausting.
-        </p>
-        <p className="mb-6">
-          <b>
-            APP's Fourth Trimester Program is designed to cut through the noise
-          </b>{" "}
-          to what really matters postpartum: creating a healthy and happy
-          environment for all members of your new family. We bring{" "}
-          <b>
-            guidance from Amsterdam's premier postpartum professionals{" "}
-            <i>together with</i> parent mentors and peers
-          </b>
-          . Whereas other resources may be purely informational, and others
-          purely anecdotal, the Fourth Trimester Program blends both — because
-          <b>
-            {" "}
-            parenting "best practices" come from both science and community 🤝
-          </b>
-        </p>
-        <p>
-          APP is a non-profit organization, built by and for the community. By
-          sharing access to expertise, we make postpartum support through the
-          Fourth Trimester Program <b>accessible and afforable</b> for all
-          families.
-        </p>
+        <div className="max-w-xl">
+          <p className="mb-6">
+            <b>
+              APP's Fourth Trimester Program is designed to cut through the
+              noise
+            </b>{" "}
+            to what really matters postpartum: creating a healthy and happy
+            environment for all members of your new family. We bring{" "}
+            <b>
+              guidance from Amsterdam's premier postpartum professionals{" "}
+              <i>together with</i> parent mentors and peers
+            </b>
+            . Whereas other resources may be purely informational, and others
+            purely anecdotal, the Fourth Trimester Program blends both — because
+            <b>
+              {" "}
+              parenting "best practices" come from both science and community 🤝
+            </b>
+          </p>
+          <p>
+            APP is a non-profit organization, built by and for the community. By
+            sharing access to expertise, we make postpartum support through the
+            Fourth Trimester Program <b>accessible and afforable</b> for all
+            families.
+          </p>
+        </div>
 
         <div>
-          <h2 className="mt-6 font-medium mb-2 text-center">What you get:</h2>
+          <h2 className="mt-6 font-medium mb-2 text-center text-brand-goldenrod">
+            What you get:
+          </h2>
           <ul className="list-disc max-w-lg">
             <li className="mx-4">
               <b>Expert workshops + "ask me anything" sessions</b> on topics
@@ -112,7 +120,9 @@ export default function programDetails() {
           </ul>
         </div>
         <div className="space-y-2 md:space-y-5">
-          <h2 className="mt-6 font-medium text-center">Designed by:</h2>
+          <h2 className="mt-6 font-medium text-center text-brand-goldenrod">
+            Designed by:
+          </h2>
           <ul className="flex flex-wrap justify-center gap-4 sm:space-x-4 xl:space-y-4 xl:space-x-0 mb-6">
             {authorDetails.map((author) => (
               <li className="flex space-x-3 w-55" key={author.name}>
@@ -159,21 +169,19 @@ export default function programDetails() {
         </div>
       </div>
 
-      <div className="pt-4 pb-6 scroll-m-32" id="sessions">
-        <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-1">
+      <div className="pt-4 pb-6 scroll-m-32 items-center" id="sessions">
+        <h2 className="text-center text-3xl font-bold leading-7 text-brand-goldenrod mb-4">
           Expert-led sessions
         </h2>
-        <p className="mb-4">
-          Before every session, you'll get a pdf guide covering common cases.
-          When you get there, you can also
-          <b>
-            {" "}
-            ask a postpartum professional your specific questions on the topic,
-            or about baby care in general
-          </b>
-          . All of the content was created by experts and reviewed against the
-          most current, evidence-based research available.
-        </p>
+        <div className="mb-4">
+          <p>
+            Each session has a resource guide and the chance to
+            <b> ask a postpartum professional </b>
+            your specific questions on the topic, or about baby care in general.
+            All of the content was created by experts and reviewed against the
+            most current, evidence-based research available.
+          </p>
+        </div>
         <div>{getSessions()}</div>
         <h3 className="text-2xl font-bold leading-7 mt-8 mb-2">
           Our reviewers
@@ -210,10 +218,25 @@ export default function programDetails() {
       </div>
 
       <div id="faq" className="scroll-m-32 mt-6">
-        <h2 className="text-3xl font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod my-4">
+        <h2 className="text-center text-3xl font-bold leading-7 text-brand-goldenrod my-4">
           FAQ
         </h2>
         <ul className="list-disc mx-4">
+          <li className="mb-4">
+            <h3>
+              <b>Why do I need group postpartum support?</b>
+            </h3>
+            <p className="mb-2 text-sm">
+              Finding the right support after you have a baby is a daunting
+              task. Your giant parent group is dispensing baby advice 100 times
+              a day, you're frantically Googling "Why is this happening..."
+              during 2am feeds, and social media is constantly telling you what
+              you should be feeling as a new parent. If you want an actual
+              expert's opinion, you may be paying €100/hour for a consult — and
+              you have to spend time and energy to find them in the first place.
+              Speaking from experience: It can be overwhelming and exhausting.
+            </p>
+          </li>
           <li className="mb-4">
             <h3>
               <b>What's different about the Fourth Trimester Program?</b>
@@ -291,42 +314,44 @@ export default function programDetails() {
               is this so hard?", we started asking, "What can we do about it?"
             </p>
           </li>
-          <li className="mb-4">
-            <h3>
-              <b>I'm a postpartum professional — how can I help?</b>
-            </h3>
-            <p className="mb-2 text-sm">
-              Thanks for your enthusiasm! We'd love to be in touch. There are
-              three main ways to help:
-            </p>
-            <ul className="list-disc ml-4 mt-2 text-sm">
-              <li>
-                <u>Help us build cohorts</u>: APP believes that the most
-                successful cohorts will have something in common: same
-                midwife/doula, same neighborhood, etc. If you serve pregnant
-                people, we'd love to talk to you about how we can offer sessions
-                or a full program to your clients giving birth around the same
-                time.
-              </li>
-              <li>
-                <u>Help us build content</u>: We regularly seek reviews from
-                experts to ensure our content aligns with current research.
-              </li>
-              <li>
-                <u>Help us deliver content</u>: Every session needs a host! If
-                you're an expert in a session topic and want to host, please
-                reach out.
-              </li>
-            </ul>
-            <p className="my-2 text-sm">
-              You can reach us at{" "}
-              <a href="mailto:amsterdamparentproject@gmail.com">
-                amsterdamparentproject@gmail.com
-              </a>
-              .
-            </p>
+        </ul>
+      </div>
+      <div id="faq" className="scroll-m-32 mt-6">
+        <h2 className="text-center text-3xl font-bold leading-7 text-brand-goldenrod my-4">
+          Want to help?
+        </h2>
+        <p className="mb-2">
+          Are you a postpartum professional that wants to support the program?
+          We'd love to be in touch. There are three main ways to help:
+        </p>
+        <ul className="list-disc ml-4 mt-2 text-sm">
+          <li>
+            <u>Help us build cohorts</u>: APP believes that the most successful
+            cohorts will have something in common: same midwife/doula, same
+            neighborhood, etc. If you serve pregnant people, we'd love to talk
+            to you about how we can offer sessions or a full program to your
+            clients giving birth around the same time.
+          </li>
+          <li>
+            <u>Help us build content</u>: We regularly seek reviews from experts
+            to ensure our content aligns with current research.
+          </li>
+          <li>
+            <u>Help us deliver content</u>: Every session needs a host! If
+            you're an expert in a session topic and want to host, please reach
+            out.
           </li>
         </ul>
+        <p className="my-2">
+          You can reach us at{" "}
+          <a
+            className="text-brand-goldenrod"
+            href="mailto:amsterdamparentproject@gmail.com"
+          >
+            amsterdamparentproject@gmail.com
+          </a>
+          .
+        </p>
       </div>
     </div>
   );

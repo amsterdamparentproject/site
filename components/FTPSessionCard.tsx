@@ -3,7 +3,7 @@ import Link from "./Link";
 import { allAuthors, Authors } from "contentlayer/generated";
 import { coreContent } from "pliny/utils/contentlayer";
 
-function Card(args) {
+function FTPSessionCard(args) {
   const { title, href, description, subtitle, experts } = args;
 
   const expertDetails = experts.map((author) => {
@@ -73,4 +73,4 @@ function Card(args) {
   );
 }
 
-export default Card;
+export default FTPSessionCard;
