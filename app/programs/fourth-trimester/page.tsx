@@ -68,15 +68,13 @@ export default function programDetails() {
 
         <div className="max-w-xl">
           <p className="mb-6">
+            APP's Fourth Trimester Program is designed to{" "}
+            <b>cut through the noise</b> to what really matters postpartum:
+            creating a healthy and happy environment for all members of your new
+            family. We bring{" "}
             <b>
-              APP's Fourth Trimester Program is designed to cut through the
-              noise
-            </b>{" "}
-            to what really matters postpartum: creating a healthy and happy
-            environment for all members of your new family. We bring{" "}
-            <b>
-              guidance from Amsterdam's premier postpartum professionals{" "}
-              <i>together with</i> parent mentors and peers
+              guidance from Amsterdam's postpartum experts <i>together with</i>{" "}
+              parent mentors and peers
             </b>
             . Whereas other resources may be purely informational, and others
             purely anecdotal, the Fourth Trimester Program blends both — because
@@ -86,10 +84,9 @@ export default function programDetails() {
             </b>
           </p>
           <p>
-            APP is a non-profit organization, built by and for the community. By
-            sharing access to expertise, we make postpartum support through the
-            Fourth Trimester Program <b>accessible and afforable</b> for all
-            families.
+            The non-profit program is built by and for the postpartum community.
+            By sharing access to local expertise, we make support{" "}
+            <b>accessible and afforable</b> for all families.
           </p>
         </div>
 
@@ -99,15 +96,16 @@ export default function programDetails() {
           </h2>
           <ul className="list-disc max-w-lg">
             <li className="mx-4">
-              <b>Expert workshops + "ask me anything" sessions</b> on topics
+              <b>Expert "ask me anything" resources and sessions</b> on topics
               that track with your baby's growth — and yours, as a new parent
             </li>
             <li className="mx-4">
-              Tailored <b>resources that guide you</b> through your baby's
-              development, crafted by local postpartum professionals
+              Planned <b>local socials</b> online and at newborn-friendly
+              neighborhood spots
             </li>
             <li className="mx-4">
-              A new (manageable!) <b>network of fellow newborn parents</b>{" "}
+              A psychotherapist-moderated chat with a new (manageable!){" "}
+              <b>network of fellow newborn parents </b>
               around your baby's age
             </li>
           </ul>
