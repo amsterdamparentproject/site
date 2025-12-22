@@ -12,7 +12,9 @@ const formatSessions = (sessions) => {
               {session.name}
             </p>
             <span className="text-xs text-brand-soft-green dark:text-brand-dark-sand">
-              {formatDate(session.date, siteMetadata.locale)}
+              {session.date instanceof Date
+                ? formatDate(session.date, siteMetadata.locale)
+                : "To be scheduled"}
             </span>
           </li>
         ))}
@@ -21,8 +23,17 @@ const formatSessions = (sessions) => {
   );
 };
 
-function Card(args) {
-  const { title, slug, dueDates, discussions, socials, showSchedule } = args;
+function FTPCohortCard(args) {
+  const {
+    title,
+    slug,
+    dueDates,
+    discussions,
+    socials,
+    showJoin,
+    showSchedule,
+    draft,
+  } = args;
 
   return (
     <div className="pr-4 pl-4 pt-4 sm:w-1/2 min-w-80">
@@ -38,35 +49,37 @@ function Card(args) {
               For babies due in {dueDates}
             </p>
           )}
-          <Link
-            href={{
-              pathname: "/programs/fourth-trimester/join",
-              query: {
-                cohort: slug,
-              },
-            }}
-          >
-            <p className="mb-2 text-base leading-6 font-medium text-brand-goldenrod hover:text-brand-white">
-              Join this cohort &rarr;
-            </p>
-          </Link>
+          {showJoin && (
+            <Link
+              href={{
+                pathname: "/programs/fourth-trimester/join",
+                query: {
+                  cohort: slug,
+                },
+              }}
+            >
+              <p className="mb-2 text-base leading-6 font-medium text-brand-goldenrod hover:text-brand-white">
+                Join this cohort &rarr;
+              </p>
+            </Link>
+          )}
         </div>
 
         {showSchedule && (
           <div className="p-4">
-            {discussions && (
+            {!draft && discussions && (
               <div>
                 <h3 className="mb-3 font-bold">Discussions:</h3>
                 {formatSessions(discussions)}
               </div>
             )}
-            {socials && (
+            {!draft && socials && (
               <div>
                 <h3 className="mt-6 mb-3 font-bold">Socials:</h3>
                 {formatSessions(socials)}
               </div>
             )}
-            {!discussions && !socials && (
+            {draft && (
               <p className="italic text-sm text-brand-soft-charcoal dark:text-brand-white">
                 Full cohort schedule will be released soon
               </p>
@@ -78,4 +91,4 @@ function Card(args) {
   );
 }
 
-export default Card;
+export default FTPCohortCard;
