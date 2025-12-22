@@ -55,13 +55,6 @@ export default function programDetails() {
             , designed for families with newborns. Expert-led discussions and
             curated socials with local newborn parents to help you transition
             with confidence to new parenthood.
-            <Link
-              href="/programs/fourth-trimester"
-              className="text-base leading-6 font-medium italic text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-white"
-              aria-label="jan-2026"
-            >
-              &nbsp;Learn more about the program &rarr;
-            </Link>
           </p>
         </div>
 

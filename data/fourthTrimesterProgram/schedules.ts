@@ -18,7 +18,7 @@ const ftpCohortSchedules: Schedule[] = [
   {
     title: "Mar-May 2026",
     slug: "mar-2026",
-    dueDates: "Jan-Feb 2025",
+    dueDates: "Jan-Feb 2026",
     start: new Date("1 Mar 2026"),
     end: new Date("31 May 2026"),
     draft: true,
@@ -39,7 +39,7 @@ const ftpCohortSchedules: Schedule[] = [
   {
     title: "May-July 2026",
     slug: "may-2026",
-    dueDates: "Mar-Apr 2025",
+    dueDates: "Mar-Apr 2026",
     start: new Date("1 May 2026"),
     end: new Date("31 July 2026"),
     draft: true,
