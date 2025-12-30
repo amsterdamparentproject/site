@@ -128,7 +128,12 @@ module.exports = () => {
           source: '/programs/fourth-trimester/jan-2026',
           destination: '/programs/fourth-trimester/join?cohort=jan-2026',
           permanent: true,
-        }
+        },
+        {
+          source: '/newsletter/build/events',
+          destination: 'https://the-siegas.app.n8n.cloud/form/73f32c7f-2caf-45cb-818a-e96b352a2845', // Auth on the form to prevent expensive API calls
+          permanent: true,
+        },
       ]
     },
   });
