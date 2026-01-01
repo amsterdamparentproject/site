@@ -1,130 +1,238 @@
 "use client";
-
-import siteMetadata from "@/data/siteMetadata";
+import { useState, useRef } from "react";
 
 const SubmitEventForm = () => {
+  const [formData, setFormData] = useState({
+    title: "",
+    url: "",
+    email: "",
+    notes: "",
+  });
+
+  const [touched, setTouched] = useState({
+    title: false,
+    url: false,
+    email: false,
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 1. Email Validation Helper
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+
+  // 2. Updated Form Validation Logic
+  const isFormValid =
+    formData.title.trim() !== "" && formData.url.trim() !== "" && isEmailValid; // Now checks for valid email format, not just "not empty"
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const resetForm = () => {
+    setFormData({ title: "", url: "", email: "", notes: "" });
+    setTouched({ title: false, url: false, email: false });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    setIsSuccess(false);
+  };
+
+  const submitEvent = async (e) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+    setIsSubmitting(true);
+
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("url", formData.url);
+    data.append("email", formData.email);
+    data.append("notes", formData.notes);
+
+    if (fileInputRef.current?.files?.[0]) {
+      data.append("image", fileInputRef.current.files[0]);
+    }
+
+    try {
+      // const response = await fetch("YOUR_N8N_WEBHOOK_URL_HERE", {
+      //   method: "POST",
+      //   body: data,
+      // });
+      const response = { ok: true };
+
+      if (response.ok) {
+        setIsSuccess(true);
+      } else {
+        throw new Error("Submission failed");
+      }
+    } catch (error) {
+      alert("Oops! Something went wrong. Please try again.");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // --- Styles ---
   const labelStyle = `block tracking-wide text-brand-charcoal dark:text-brand-white text-md font-bold mb-2`;
-  const focusStyle = `focus:outline-none focus:ring-0 focus:border-brand-violet focus:border-2`;
-  const inputStyle =
-    `
-    form-required
-    appearance-none block w-full 
-    bg-white/70 text-charcoal placeholder-gray-500 
-    border border-brand-sand 
-    rounded py-3 px-4 leading-tight 
-    focus:bg-white ` + focusStyle;
-  const requiredInputStyle =
-    `
-    appearance-none block w-full 
-    bg-white/70 text-charcoal placeholder-gray-500 
-    border border-red-500 
-    rounded py-3 px-4 leading-tight 
-    focus:bg-white ` + focusStyle;
+  const focusStyle = `focus:outline-none focus:ring-0 focus:border-brand-soft-green`;
+  const inputBase =
+    `appearance-none block w-full bg-white text-charcoal placeholder-gray-500 border rounded py-3 px-4 leading-tight focus:bg-white ` +
+    focusStyle;
+  const inputStyle = `${inputBase} border-brand-sand`;
+  const requiredInputStyle = `${inputBase} border-red-500 bg-red-50/30`;
   const submitButtonStyle =
-    `
-    bg-brand-goldenrod text-lg 
-    mt-2 px-3 py-2 rounded 
-    hover:cursor-pointer ` + focusStyle;
+    `bg-brand-soft-green text-brand-white text-lg mt-2 px-6 py-2 rounded transition-all hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
+    focusStyle;
   const fileInputStyle =
-    `
-    form-input 
-    border-brand-sand
-    rounded
-    hover:cursor-pointer
-    file:mr-2 file:py-1 file:px-3 file:border-[1px]
-    file:text-sm file:font-medium
-    file:bg-brand-soft-green file:text-brand-white file:rounded
-    hover:file:cursor-pointer hover:file:bg-brand-goldenrod hover:file:text-brand-charcoal ` +
+    `w-full max-w-full appearance-none block bg-white border border-brand-sand rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:bg-brand-goldenrod file:text-brand-charcoal hover:file:bg-brand-goldenrod hover:file:text-brand-charcoal ` +
     focusStyle;
 
-  if (siteMetadata.newsletter?.provider) {
+  // 3. Updated Style Logic to handle specific Email validation
+  const getStyle = (field) => {
+    if (!touched[field]) return inputStyle;
+
+    // Check for empty values first
+    if (!formData[field].trim()) return requiredInputStyle;
+
+    // Special check: If it's the email field and it's NOT empty but NOT valid
+    if (field === "email" && !isEmailValid) return requiredInputStyle;
+
+    return inputStyle;
+  };
+
+  if (isSuccess) {
     return (
-      <form className="w-100%">
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full px-3">
-            <label className={labelStyle} htmlFor="grid-url">
-              Title of your event
-            </label>
-            <input
-              className={inputStyle}
-              id="grid-url"
-              type="text"
-              placeholder="Young child reading circle"
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full px-3">
-            <label className={labelStyle} htmlFor="grid-url">
-              Link to your event
-            </label>
-            <input
-              className={inputStyle}
-              id="grid-url"
-              type="text"
-              placeholder="https://amsterdamparentproject.nl"
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full px-3">
-            <label htmlFor="event-image" className={labelStyle}>
-              Upload event image (optional)
-            </label>
-            <input
-              className={fileInputStyle}
-              type="file"
-              id="event-image"
-              name="Event image"
-              accept=""
-              placeholder=""
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full px-3">
-            <label className={labelStyle} htmlFor="grid-url">
-              Anything else to add? (optional)
-            </label>
-            <textarea
-              className={inputStyle}
-              id="grid-url"
-              placeholder="Share details, questions, or comments"
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full px-3">
-            <label className={labelStyle} htmlFor="grid-url">
-              Your email
-            </label>
-            <input
-              className={inputStyle}
-              id="grid-url"
-              type="email"
-              placeholder="hello@amsterdamparentproject.nl"
-            />
-            <p className="mt-2 text-gray-500 text-xs italic">
-              We ask for your email to limit spam and also to reach out with
-              questions.
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full px-3">
-            <input
-              className={submitButtonStyle}
-              type="submit"
-              value="Submit event"
-            />
-            <p className="mt-2 text-red-500 text-xs">
-              Please fill out all required fields
-            </p>
-          </div>
-        </div>
-      </form>
+      <div className="w-full p-10 text-center bg-brand-soft-green/10 border-2 border-dashed border-brand-soft-green rounded-lg">
+        <h2 className="text-2xl font-bold text-brand-charcoal mb-2">
+          Success!
+        </h2>
+        <p className="text-brand-charcoal mb-4">
+          Your event has been sent for review.
+        </p>
+        <button onClick={resetForm} className={submitButtonStyle}>
+          Submit another event
+        </button>
+      </div>
     );
   }
+
+  return (
+    <form className="w-full" onSubmit={submitEvent}>
+      <div className="flex flex-wrap mb-6">
+        <div className="w-full px-3">
+          <label className={labelStyle} htmlFor="title">
+            Title of your event <span className="text-red-500 ml-1">*</span>
+          </label>
+          <input
+            className={getStyle("title")}
+            id="title"
+            name="title"
+            type="text"
+            placeholder="Parent & child yoga"
+            value={formData.title}
+            onChange={handleChange}
+            onBlur={() => handleBlur("title")}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap mb-6">
+        <div className="w-full px-3">
+          <label className={labelStyle} htmlFor="url">
+            Link to your event <span className="text-red-500 ml-1">*</span>
+          </label>
+          <input
+            className={getStyle("url")}
+            id="url"
+            name="url"
+            type="text"
+            placeholder="https://amsterdamparentproject.nl"
+            value={formData.url}
+            onChange={handleChange}
+            onBlur={() => handleBlur("url")}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap mb-6">
+        <div className="w-full px-3">
+          <label htmlFor="event-image" className={labelStyle}>
+            Upload event image (optional)
+          </label>
+          <input
+            className={fileInputStyle}
+            type="file"
+            id="event-image"
+            accept="image/*"
+            ref={fileInputRef}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap mb-6">
+        <div className="w-full px-3">
+          <label className={labelStyle} htmlFor="notes">
+            Anything else to add? (optional)
+          </label>
+          <textarea
+            className={inputStyle}
+            id="notes"
+            name="notes"
+            rows={3}
+            placeholder="Share details, questions, or comments"
+            value={formData.notes}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap mb-6">
+        <div className="w-full px-3">
+          <label className={labelStyle} htmlFor="email">
+            Your email <span className="text-red-500 ml-1">*</span>
+          </label>
+          <input
+            className={getStyle("email")}
+            id="email"
+            name="email"
+            type="email"
+            placeholder="hello@amsterdamparentproject.nl"
+            value={formData.email}
+            onChange={handleChange}
+            onBlur={() => handleBlur("email")}
+          />
+          <p className="mt-2 text-gray-500 text-[11px] italic">
+            For verification and follow-up questions
+          </p>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap mb-6">
+        <div className="w-full px-3">
+          <button
+            className={submitButtonStyle}
+            type="submit"
+            disabled={!isFormValid || isSubmitting}
+          >
+            {isSubmitting ? "Sending..." : "Submit event"}
+          </button>
+          {!isFormValid && !isSubmitting && (
+            <p className="mt-2 text-red-500 text-xs">
+              Please fill out all required fields correctly
+            </p>
+          )}
+        </div>
+      </div>
+    </form>
+  );
 };
 
 export default SubmitEventForm;
