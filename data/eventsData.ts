@@ -103,14 +103,6 @@ const eventsData: Event[] = [
     date: new Date("25 October 2025"),
   },
   {
-    title: "Fourth Trimester Program: Jan-Mar 2026 cohort",
-    imgSrc: "/static/images/programs/fourth-trimester-program/ftp-banner.png",
-    href: "/programs/fourth-trimester/jan-2026",
-    description: `Your whole-family support system in the first months postpartum. For babies born in Amsterdam in November-December 2025.`,
-    date: new Date("5 January 2026"),
-    until: new Date("26 March 2026"),
-  },
-  {
     title: "Vote for us in West Begroot",
     imgSrc: "/static/images/calendar/west-begroot-2025.png",
     href: "https://westbegroot.amsterdam.nl",
