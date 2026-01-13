@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
+import postEventToWebhook from "./SubmitEvent";
 
 const SubmitEventForm = () => {
   const [formData, setFormData] = useState({
@@ -20,12 +21,9 @@ const SubmitEventForm = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 1. Email Validation Helper
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
-
-  // 2. Updated Form Validation Logic
   const isFormValid =
-    formData.title.trim() !== "" && formData.url.trim() !== "" && isEmailValid; // Now checks for valid email format, not just "not empty"
+    formData.title.trim() !== "" && formData.url.trim() !== "" && isEmailValid;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,26 +59,21 @@ const SubmitEventForm = () => {
     }
 
     try {
-      // const response = await fetch("YOUR_N8N_WEBHOOK_URL_HERE", {
-      //   method: "POST",
-      //   body: data,
-      // });
-      const response = { ok: true };
-
+      const response = await postEventToWebhook(data);
       if (response.ok) {
         setIsSuccess(true);
       } else {
         throw new Error("Submission failed");
       }
     } catch (error) {
-      alert("Oops! Something went wrong. Please try again.");
+      alert("Something went wrong. Please try again.");
       console.error(error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // --- Styles ---
+  // Styles
   const labelStyle = `block tracking-wide text-brand-charcoal dark:text-brand-white text-md font-bold mb-2`;
   const focusStyle = `focus:outline-none focus:ring-0 focus:border-brand-soft-green`;
   const inputBase =
@@ -95,14 +88,10 @@ const SubmitEventForm = () => {
     `w-full max-w-full appearance-none block bg-white border border-brand-sand rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:bg-brand-goldenrod file:text-brand-charcoal hover:file:bg-brand-goldenrod hover:file:text-brand-charcoal ` +
     focusStyle;
 
-  // 3. Updated Style Logic to handle specific Email validation
   const getStyle = (field) => {
+    // Warn if inputs are invalid
     if (!touched[field]) return inputStyle;
-
-    // Check for empty values first
     if (!formData[field].trim()) return requiredInputStyle;
-
-    // Special check: If it's the email field and it's NOT empty but NOT valid
     if (field === "email" && !isEmailValid) return requiredInputStyle;
 
     return inputStyle;
@@ -110,7 +99,7 @@ const SubmitEventForm = () => {
 
   if (isSuccess) {
     return (
-      <div className="w-full p-10 text-center bg-brand-soft-green/10 border-2 border-dashed border-brand-soft-green rounded-lg">
+      <div className="w-full p-10 text-center bg-brand-soft-green/10 border-2 border-brand-soft-green rounded-lg mb-4">
         <h2 className="text-2xl font-bold text-brand-charcoal mb-2">
           Success!
         </h2>
@@ -165,7 +154,7 @@ const SubmitEventForm = () => {
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
           <label htmlFor="event-image" className={labelStyle}>
-            Upload event image (optional)
+            Upload event image
           </label>
           <input
             className={fileInputStyle}
@@ -180,7 +169,7 @@ const SubmitEventForm = () => {
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
           <label className={labelStyle} htmlFor="notes">
-            Anything else to add? (optional)
+            Anything else to add?
           </label>
           <textarea
             className={inputStyle}

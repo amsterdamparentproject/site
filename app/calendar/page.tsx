@@ -67,6 +67,12 @@ export default function Events() {
             title="Add to iCal"
             fill={true}
           />
+          <ShowcaseButton
+            key="community-calendar-submit"
+            href="/calendar/submit-event"
+            title="Submit your own event"
+            fill={true}
+          />
           <p className="text-sm italic text-center mt-4">
             Maintained for free by the Amsterdam Parent Project
           </p>

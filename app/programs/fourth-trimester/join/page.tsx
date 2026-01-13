@@ -125,7 +125,7 @@ export default async function Page(props: {
                     className="dark:text-brand-goldenrod dark:hover:text-brand-soft-green text-brand-soft-green hover:text-brand-goldenrod"
                     aria-label="cohort-selection"
                   >
-                    <p>Select another cohort &rarr;</p>
+                    <span>Select another cohort &rarr;</span>
                   </Link>
                 </p>
               )}

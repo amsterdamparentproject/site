@@ -130,7 +130,7 @@ module.exports = () => {
           permanent: true,
         },
         {
-          source: '/newsletter/build/events',
+          source: '/newsletter/build',
           destination: 'https://the-siegas.app.n8n.cloud/form/73f32c7f-2caf-45cb-818a-e96b352a2845', // Auth on the form to prevent expensive API calls
           permanent: true,
         },
