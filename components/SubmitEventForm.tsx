@@ -60,7 +60,7 @@ const SubmitEventForm = () => {
 
     try {
       const response = await postEventToWebhook(data);
-      if (response.ok) {
+      if (response.success) {
         setIsSuccess(true);
       } else {
         throw new Error("Submission failed");
