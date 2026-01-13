@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import postEventToWebhook from "./SubmitEvent";
+import { postEventToWebhook } from "./SubmitEvent";
 
 const SubmitEventForm = () => {
   const [formData, setFormData] = useState({
@@ -77,7 +77,7 @@ const SubmitEventForm = () => {
   const labelStyle = `block tracking-wide text-brand-charcoal dark:text-brand-white text-md font-bold mb-2`;
   const focusStyle = `focus:outline-none focus:ring-0 focus:border-brand-soft-green`;
   const inputBase =
-    `appearance-none block w-full bg-white text-charcoal placeholder-gray-500 border rounded py-3 px-4 leading-tight focus:bg-white ` +
+    `appearance-none block w-full bg-white text-brand-charcoal placeholder-gray-500 border rounded py-3 px-4 leading-tight focus:bg-white ` +
     focusStyle;
   const inputStyle = `${inputBase} border-brand-sand`;
   const requiredInputStyle = `${inputBase} border-red-500 bg-red-50/30`;
