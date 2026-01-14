@@ -3,7 +3,8 @@ import Link from "next/link";
 import { formatDate } from "pliny/utils/formatDate";
 
 function ShowcaseButton(args) {
-  const { href, title, date, until, comingSoon, newTab, fill } = args;
+  const { href, title, date, until, comingSoon, newTab, fill, background } =
+    args;
 
   let dateElement;
   if (comingSoon) {
@@ -65,11 +66,37 @@ function ShowcaseButton(args) {
     dark:border-brand-soft-charcoal
   `;
 
-  const backgroundColor = fill ? fillStyle : transparentStyle;
+  const highlightStyle = `
+    border
+    bg-brand-goldenrod
+    border-brand-goldenrod
+    text-brand-charcoal
+    hover:bg-brand-charcoal
+    hover:text-brand-white
+    dark:bg-brand-soft-charcoal 
+    dark:text-brand-white
+    dark:hover:bg-brand-soft-green
+    dark:border-brand-soft-charcoal
+  `;
+
+  const getBackgroundStyle = (fill, background) => {
+    const backgroundStyle = fill ? "fill" : background;
+    switch (backgroundStyle) {
+      case "fill":
+        return fillStyle;
+      case "highlight":
+        return highlightStyle;
+      default:
+        return transparentStyle;
+    }
+  };
 
   return (
     <Link href={href} className="mb-2" target={newTab ? "_blank" : ""}>
-      <button type="button" className={buttonStyle + backgroundColor}>
+      <button
+        type="button"
+        className={buttonStyle + getBackgroundStyle(fill, background)}
+      >
         {title}
         {dateElement}
       </button>

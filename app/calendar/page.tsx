@@ -67,15 +67,15 @@ export default function Events() {
             title="Add to iCal"
             fill={true}
           />
-          <p className="text-sm italic text-center mt-4">
-            Maintained for free by the Amsterdam Parent Project
-          </p>
           <ShowcaseButton
             key="community-calendar-submit"
             href="/calendar/submit-event"
             title="Submit your own event"
-            fill={true}
+            background="highlight"
           />
+          <p className="text-sm italic text-center mt-4">
+            Maintained for free by the Amsterdam Parent Project
+          </p>
         </div>
         <div className="container pt-4 pb-6">
           <h2 className="text-3xl text-center font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod mb-6">
