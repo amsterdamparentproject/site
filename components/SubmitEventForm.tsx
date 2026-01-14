@@ -85,7 +85,7 @@ const SubmitEventForm = () => {
     `bg-brand-soft-green text-brand-white text-lg mt-2 px-6 py-2 rounded transition-all hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
     focusStyle;
   const fileInputStyle =
-    `w-full max-w-full appearance-none block bg-white border border-brand-sand rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:bg-brand-goldenrod file:text-brand-charcoal hover:file:bg-brand-goldenrod hover:file:text-brand-charcoal ` +
+    `w-full max-w-full appearance-none block bg-white text-brand-charcoal border border-brand-sand rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:bg-brand-goldenrod file:text-brand-charcoal hover:file:bg-brand-goldenrod hover:file:text-brand-charcoal ` +
     focusStyle;
 
   const getStyle = (field) => {
@@ -100,10 +100,10 @@ const SubmitEventForm = () => {
   if (isSuccess) {
     return (
       <div className="w-full p-10 text-center bg-brand-soft-green/10 border-2 border-brand-soft-green rounded-lg mb-4">
-        <h2 className="text-2xl font-bold text-brand-charcoal mb-2">
+        <h2 className="text-2xl font-bold text-brand-charcoal dark:text-brand-white mb-2">
           Success!
         </h2>
-        <p className="text-brand-charcoal mb-4">
+        <p className="text-brand-charcoal dark:text-brand-white mb-4">
           Your event has been sent for review.
         </p>
         <button onClick={resetForm} className={submitButtonStyle}>

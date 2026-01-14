@@ -96,6 +96,9 @@ module.exports = () => {
 
       return config;
     },
+    serverActions: {
+      bodySizeLimit: '6mb', // Accept image upload size up to Netlify's max limit
+    },
     async redirects() {
       return [
         // Basic redirect
