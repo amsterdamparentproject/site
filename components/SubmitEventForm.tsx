@@ -18,12 +18,30 @@ const SubmitEventForm = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [fileError, setFileError] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isFormValid =
     formData.title.trim() !== "" && formData.url.trim() !== "" && isEmailValid;
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    const MAX_SIZE = 4.5 * 1024 * 1024; // 4.5MB safe limit
+
+    if (file) {
+      if (file.size > MAX_SIZE) {
+        setFileError(
+          "This image is too large. Please select an image under 4.5MB.",
+        );
+        // Clear the input so a bad file isn't sitting in the ref
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      } else {
+        setFileError(""); // Clear error if file is okay
+      }
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,7 +63,7 @@ const SubmitEventForm = () => {
 
   const submitEvent = async (e) => {
     e.preventDefault();
-    if (!isFormValid) return;
+    if (!isFormValid || fileError) return;
     setIsSubmitting(true);
 
     const data = new FormData();
@@ -66,7 +84,9 @@ const SubmitEventForm = () => {
         throw new Error("Submission failed");
       }
     } catch (error) {
-      alert("Something went wrong. Please try again.");
+      alert(
+        "Something went wrong, please try again. If the error persists, please reach out to us at amsterdamparentproject@gmail.com with the event details.",
+      );
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -161,8 +181,12 @@ const SubmitEventForm = () => {
             type="file"
             id="event-image"
             accept="image/*"
+            onChange={handleFileChange}
             ref={fileInputRef}
           />
+          {fileError && (
+            <p className="mt-2 text-red-500 text-[11px]">{fileError}</p>
+          )}
         </div>
       </div>
 
@@ -199,7 +223,7 @@ const SubmitEventForm = () => {
             onBlur={() => handleBlur("email")}
           />
           <p className="mt-2 text-gray-500 text-[11px] italic">
-            For verification and follow-up questions
+            For confirmation and follow-up questions
           </p>
         </div>
       </div>

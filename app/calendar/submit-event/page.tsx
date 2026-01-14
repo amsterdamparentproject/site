@@ -19,8 +19,8 @@ export default function Page() {
         </h2>
         <p className="max-w-xl text-center mb-4">
           Want to share an event for babies, toddlers, and/or their parents
-          happening Amsterdam? Enter the details below and we'll add it to our
-          Community Calendar. We may also highlight your event in our
+          happening in Amsterdam? Enter the details below and we'll add it to
+          our Community Calendar. We may also highlight your event in our
           newsletter!
         </p>
 
