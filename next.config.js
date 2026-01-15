@@ -99,6 +99,14 @@ module.exports = () => {
     serverActions: {
       bodySizeLimit: '6mb', // Accept image upload size up to Netlify's max limit
     },
+    async rewrites() {
+      return [
+        {
+          source: '/stats/:path*',
+          destination: 'https://cloud.umami.is/:path*',
+        },
+      ]
+    },
     async redirects() {
       return [
         // Basic redirect

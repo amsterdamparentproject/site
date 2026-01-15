@@ -122,8 +122,9 @@ export default function RootLayout({
         {/* Umami Analytics Script */}
         <Script
           id="umami-analytics"
-          src="https://cloud.umami.is/script.js"
-          data-website-id={siteMetadata.umamiAnalytics.websiteId}
+          src="/stats/script.js"
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_ID}
+          data-host-url="https://amsterdamparentproject.nl/stats"
           strategy="afterInteractive"
         />
 

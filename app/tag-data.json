@@ -23,6 +23,9 @@
   "breastfeeding": 1,
   "milk-supply": 1,
   "pumping": 2,
+  "expert-spotlight": 1,
+  "yoga": 1,
+  "hypnobirthing": 1,
   "community-spotlight": 5,
   "daycare": 1,
   "return-to-work": 1,
@@ -36,8 +39,5 @@
   "dad": 1,
   "perfection": 1,
   "ppd": 1,
-  "confidence": 1,
-  "expert-spotlight": 1,
-  "yoga": 1,
-  "hypnobirthing": 1
+  "confidence": 1
 }
