@@ -3,7 +3,6 @@ import "pliny/search/algolia.css";
 import "remark-github-blockquote-alert/alert.css";
 
 import { Quicksand } from "next/font/google";
-import { Analytics, AnalyticsConfig } from "pliny/analytics";
 import { SearchProvider, SearchConfig } from "pliny/search";
 import Header from "@/components/Header";
 import SectionContainer from "@/components/SectionContainer";
@@ -11,6 +10,7 @@ import Footer from "@/components/Footer";
 import siteMetadata from "@/data/siteMetadata";
 import { ThemeProviders } from "./theme-providers";
 import { Metadata } from "next";
+import Script from "next/script";
 
 const quicksand = Quicksand({
   subsets: ["latin"],
@@ -110,9 +110,6 @@ export default function RootLayout({
       />
       <body className="bg-brand-white pl-[calc(100vw-100%)] text-brand-charcoal antialiased dark:bg-brand-charcoal dark:text-brand-white">
         <ThemeProviders>
-          <Analytics
-            analyticsConfig={siteMetadata.analytics as AnalyticsConfig}
-          />
           <Header />
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
@@ -121,11 +118,21 @@ export default function RootLayout({
             <Footer />
           </SectionContainer>
         </ThemeProviders>
-        <script
-          type="text/javascript"
-          async
+
+        {/* Umami Analytics Script */}
+        <Script
+          id="umami-analytics"
+          src="https://cloud.umami.is/script.js"
+          data-website-id={siteMetadata.umamiAnalytics.websiteId}
+          strategy="afterInteractive"
+        />
+
+        {/* Beehiiv Attribution Script */}
+        <Script
+          id="beehiiv-attribution"
           src="https://embeds.beehiiv.com/attribution.js"
-        ></script>
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
