@@ -1,12 +1,11 @@
 "use server";
 
-export const postEventToWebhook = async (data) => {
-  const webhookURL = process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
+const postToWebhook = async (webhookURL, data) => {
   const authSecret = process.env.N8N_WEBHOOK_SECRET;
 
   try {
     if (!webhookURL || !authSecret) {
-      console.error("Missing environment variables");
+      console.error("postToWebhook error: Missing environment variables");
       return { success: false, error: "Configuration error" };
     }
 
@@ -21,11 +20,20 @@ export const postEventToWebhook = async (data) => {
     const isOk = !!response.ok;
     const statusCode = Number(response.status);
 
-    console.log("postEventToWebhook isOk: ", isOk);
-
     return { success: isOk, status: statusCode };
   } catch (error) {
-    console.error("postEventToWebhook error:", error);
+    console.error("postToWebhook error:", error);
     return { success: false, error: error.message || "Unknown error" };
   }
+};
+
+export const postEvent = async (data) => {
+  const url = process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
+  return postToWebhook(url, data);
+};
+
+export const postSpotlight = async (data) => {
+  // TODO: Create submission flow for Expert & Community Spotlights
+  const url = process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
+  return postToWebhook(url, data);
 };

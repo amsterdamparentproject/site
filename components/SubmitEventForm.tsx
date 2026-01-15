@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import { postEventToWebhook } from "./SubmitEvent";
+import { postEvent } from "./PostToWebhook";
 
 const SubmitEventForm = () => {
   const [formData, setFormData] = useState({
@@ -77,7 +77,7 @@ const SubmitEventForm = () => {
     }
 
     try {
-      const response = await postEventToWebhook(data);
+      const response = await postEvent(data);
       if (response.success) {
         setIsSuccess(true);
       } else {
