@@ -7,7 +7,7 @@ export const postEventToWebhook = async (data) => {
   try {
     if (!webhookURL || !authSecret) {
       console.error("Missing environment variables");
-      return { success: false, error: "Configuration Error" };
+      return { success: false, error: "Configuration error" };
     }
 
     const response = await fetch(webhookURL, {
