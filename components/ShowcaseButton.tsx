@@ -3,8 +3,17 @@ import Link from "next/link";
 import { formatDate } from "pliny/utils/formatDate";
 
 function ShowcaseButton(args) {
-  const { href, title, date, until, comingSoon, newTab, fill, background } =
-    args;
+  const {
+    href,
+    title,
+    date,
+    until,
+    comingSoon,
+    newTab,
+    fill,
+    background,
+    umamiName,
+  } = args;
 
   let dateElement;
   if (comingSoon) {
@@ -96,6 +105,8 @@ function ShowcaseButton(args) {
       <button
         type="button"
         className={buttonStyle + getBackgroundStyle(fill, background)}
+        data-umami-event={umamiName}
+        data-umami-event-type="showcaseButton"
       >
         {title}
         {dateElement}

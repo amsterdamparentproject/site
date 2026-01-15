@@ -2,9 +2,10 @@ import Image from "./Image";
 import Link from "./Link";
 import { allAuthors, Authors } from "contentlayer/generated";
 import { coreContent } from "pliny/utils/contentlayer";
+import DownloadFileButton from "@/components/DownloadFileButton";
 
 function FTPSessionCard(args) {
-  const { title, href, description, subtitle, experts } = args;
+  const { title, href, description, subtitle, experts, downloadFile } = args;
 
   const expertDetails = experts.map((author) => {
     const authorResults = allAuthors.find((p) => p.slug === author);
@@ -12,10 +13,8 @@ function FTPSessionCard(args) {
   });
 
   return (
-    <div className="pr-4 pl-4 pt-4 md:w-1/2">
-      <div
-        className={`overflow-hidden rounded-md border border-brand-sand/60 dark:border-brand-soft-charcoal/60 flex flex-row`}
-      >
+    <div className="pr-4 pl-4 pt-4 w-full xl:max-w-98">
+      <div className="overflow-hidden rounded-md border border-brand-sand/60 dark:border-brand-soft-charcoal/60 flex flex-row xl:min-h-110">
         <div className="p-6">
           <h2 className="text-2xl leading-6 mb-1 font-bold tracking-tight">
             {href ? (
@@ -27,6 +26,15 @@ function FTPSessionCard(args) {
             )}
           </h2>
           {subtitle && <p className="mb-3 text-sm italic">{subtitle}</p>}
+          {downloadFile && (
+            <div className="mb-2">
+              <DownloadFileButton
+                filePath={downloadFile}
+                buttonText="Download the guide"
+                umamiName="Fourth Trimester Program: Download guide"
+              />
+            </div>
+          )}
           <p className="prose mb-3 text-sm max-w-none text-brand-soft-charcoal dark:text-brand-white">
             {description}
           </p>

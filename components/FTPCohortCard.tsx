@@ -57,6 +57,8 @@ function FTPCohortCard(args) {
                   cohort: slug,
                 },
               }}
+              data-umami-event-name="Fourth Trimester Program: Join cohort"
+              data-umami-event-cohort={slug}
             >
               <p className="mb-2 text-base leading-6 font-medium text-brand-goldenrod hover:text-brand-white">
                 Join this cohort &rarr;

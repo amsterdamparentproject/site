@@ -11,7 +11,7 @@ export const metadata = genPageMetadata({ title: "Fourth Trimester Program" });
 
 const getSessions = () => {
   return (
-    <div className="-m-4 flex flex-wrap">
+    <div className="-m-4 flex flex-wrap justify-center">
       {sessionData.map((d) => (
         <FTPSessionCard
           key={d.title}
@@ -63,6 +63,7 @@ export default function programDetails() {
             href="/programs/fourth-trimester/join"
             title="Join the program"
             fill={true}
+            umamiName="Fourth Trimester Program: Join program"
           />
         </div>
 
@@ -156,7 +157,12 @@ export default function programDetails() {
         </p>
 
         <div className="mt-6">
-          <ShowcaseButton href="#faq" title="Learn more" fill={true} />
+          <ShowcaseButton
+            href="#faq"
+            title="Learn more"
+            fill={true}
+            umamiName="Fourth Trimester Program: FAQ"
+          />
         </div>
       </div>
 
