@@ -24,7 +24,7 @@ const siteMetadata = {
     provider: "beehiiv",
   },
   umamiAnalytics: {
-    websiteId: process.env.UMAMI_ID,
+    websiteId: process.env.NEXT_PUBLIC_UMAMI_ID,
   },
   search: {
     provider: "kbar",
