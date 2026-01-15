@@ -2,14 +2,19 @@
 
 export const postEventToWebhook = async (data) => {
   const webhookURL = process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
+  const authSecret = process.env.N8N_WEBHOOK_SECRET;
 
   try {
-    const url = webhookURL;
-    if (!url)
-      throw new Error("postEventToWebhook error: Webhook URL is not defined");
+    if (!webhookURL || !authSecret) {
+      console.error("Missing environment variables");
+      return { success: false, error: "Configuration Error" };
+    }
 
-    const response = await fetch(url, {
+    const response = await fetch(webhookURL, {
       method: "POST",
+      headers: {
+        "X-N8N-WEBHOOK-SECRET": authSecret,
+      },
       body: data,
     });
 
