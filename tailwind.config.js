@@ -41,6 +41,12 @@ module.exports = {
                 fontSize: "1.1em",
                 padding: "1.5em",
               },
+              a: {
+                color: theme("--color-brand-violet"),
+                "&:hover": {
+                  color: theme("--color-brand-goldenrod"),
+                },
+              },
             },
           },
         },
