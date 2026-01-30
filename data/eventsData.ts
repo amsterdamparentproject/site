@@ -125,6 +125,14 @@ const eventsData: Event[] = [
     date: new Date("1 March 2026"),
     until: new Date("31 May 2026"),
   },
+  {
+    title: "Fourth Trimester Meetup",
+    imgSrc: "/static/images/calendar/fourth-trimester-meetup.png",
+    href: "https://www.eventbrite.nl/e/fourth-trimester-meetup-tickets-1981518996660?aff=oddtdtcreator",
+    date: new Date("12 February 2026"),
+    description:
+      "Bring your newborn (or your belly!) to chat about all things pregnancy and postpartum with other families in the neighborhood.",
+  },
 ];
 
 export default eventsData;
