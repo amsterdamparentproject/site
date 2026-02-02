@@ -114,21 +114,8 @@ export default async function Page(props: {
           {cohortDetails.start && cohortDetails.end && (
             <div className="mt-4">
               <h2 className="text-center mb-2 text-xl text-brand-goldenrod">
-                Cohort dates:
+                Cohort schedule:
               </h2>
-              {cohortDetails.dueDates && (
-                <p className="text-center text-sm mt-2 md:mb-2">
-                  Not due in {cohortDetails.dueDates}?
-                  <br />
-                  <Link
-                    href="/programs/fourth-trimester/join"
-                    className="dark:text-brand-goldenrod dark:hover:text-brand-soft-green text-brand-soft-green hover:text-brand-goldenrod"
-                    aria-label="cohort-selection"
-                  >
-                    <span>Select another cohort &rarr;</span>
-                  </Link>
-                </p>
-              )}
               <FTPCohortCard
                 key={cohortDetails.title}
                 title={cohortDetails.title}
@@ -140,6 +127,34 @@ export default async function Page(props: {
                 showSchedule={true}
                 draft={cohortDetails.draft}
               />
+            </div>
+          )}
+          {cohortDetails && (
+            <div>
+              <p className="max-w-md mt-6 text-brand-charcoal dark:text-brand-white">
+                Our schedule is <b>designed to reduce FOMO</b>! Whether you're
+                traveling or just can't get out of bed, you can join our expert
+                discussions online. If your baby is being fussy that morning,
+                you're welcome to come late to one of our socials. Come as you
+                are; we're here to meet you.
+              </p>
+              <p className="max-w-md mt-4 italic text-sm text-brand-charcoal dark:text-brand-white">
+                Please note: The schedule may change before the start of the
+                cohort.
+              </p>
+              {cohortDetails.dueDates && (
+                <p className="text-center text-sm mt-4 md:mb-2">
+                  Not due in {cohortDetails.dueDates}?
+                  <br />
+                  <Link
+                    href="/programs/fourth-trimester/join"
+                    className="dark:text-brand-goldenrod dark:hover:text-brand-soft-green text-brand-soft-green hover:text-brand-goldenrod"
+                    aria-label="cohort-selection"
+                  >
+                    <span>Select another cohort &rarr;</span>
+                  </Link>
+                </p>
+              )}
             </div>
           )}
 

@@ -69,19 +69,21 @@ function FTPCohortCard(args) {
 
         {showSchedule && (
           <div className="p-4">
-            {!draft && discussions && (
+            {discussions && (
               <div>
-                <h3 className="mb-3 font-bold">Discussions:</h3>
+                <h3 className="mb-3 font-bold">
+                  Expert-led online discussions:
+                </h3>
                 {formatSessions(discussions)}
               </div>
             )}
-            {!draft && socials && (
+            {socials && (
               <div>
-                <h3 className="mt-6 mb-3 font-bold">Socials:</h3>
+                <h3 className="mt-6 mb-3 font-bold">Curated local socials:</h3>
                 {formatSessions(socials)}
               </div>
             )}
-            {draft && (
+            {draft && !discussions && !socials && (
               <p className="italic text-sm text-brand-soft-charcoal dark:text-brand-white">
                 Full cohort schedule will be released soon
               </p>
