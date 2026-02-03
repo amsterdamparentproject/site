@@ -5,6 +5,7 @@ import cohortSchedules, {
   Schedule,
 } from "@/data/fourthTrimesterProgram/schedules";
 import FTPCohortCard from "@/components/FTPCohortCard";
+import Image from "@/components/Image";
 
 export const metadata = genPageMetadata({
   title: "Join the Fourth Trimester Program",
@@ -104,6 +105,16 @@ export default async function Page(props: {
         </p>
       </div>
       {!cohort && CohortSelection()}
+
+      <div className="flex flex-col items-center">
+        <Image
+          src="/static/images/programs/fourth-trimester-program/rijks-pilot.png"
+          width={400}
+          height={400}
+          alt="rijksmuseum social"
+          className="mt-4"
+        />
+      </div>
 
       {cohort && (
         <div className="flex flex-col items-center">
