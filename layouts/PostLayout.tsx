@@ -81,7 +81,7 @@ export default function PostLayout({
                         <dt className="sr-only">Name</dt>
                         <dd className="dark:text-brand-white">{author.name}</dd>
                         <dt className="sr-only">Title</dt>
-                        <dd className="text-xs mb-1 italic text-brand-soft-charcoal dark:text-brand-white">
+                        <dd className="mb-1 italic text-brand-soft-charcoal dark:text-brand-white">
                           {author.occupation}
                         </dd>
                         <dt className="sr-only">Website</dt>
