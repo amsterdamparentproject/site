@@ -39,7 +39,7 @@ export default function AuthorLayout({ children, content }: Props) {
           <h3 className="pt-4 pb-2 text-2xl leading-8 font-bold tracking-tight">
             {name}
           </h3>
-          <div className="text-brand-soft-charcoal dark:text-brand-white">
+          <div className="italic text-brand-soft-charcoal dark:text-brand-white">
             {occupation}
           </div>
           <div className="text-brand-soft-charcoal dark:text-brand-white">
