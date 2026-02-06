@@ -97,7 +97,7 @@ export default async function Page(props: {
           to help you transition with confidence to new parenthood.
           <Link
             href="/programs/fourth-trimester"
-            className="text-base leading-6 font-medium italic text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-white"
+            className="text-base leading-6 font-medium italic text-brand-soft-green hover:text-brand-soft-green dark:text-brand-goldenrod"
             aria-label="jan-2026"
           >
             &nbsp;Learn more about the program &rarr;
@@ -112,19 +112,15 @@ export default async function Page(props: {
           width={400}
           height={400}
           alt="rijksmuseum social"
-          className="mt-4"
+          className="m-4"
         />
       </div>
 
       {cohort && (
         <div className="flex flex-col items-center">
-          <div>
-            <PricingTable />
-          </div>
-
           {cohortDetails.start && cohortDetails.end && (
             <div className="mt-4">
-              <h2 className="text-center mb-2 text-xl text-brand-goldenrod">
+              <h2 className="text-center mb-2 font-bold text-xl text-brand-goldenrod">
                 Cohort schedule:
               </h2>
               <FTPCohortCard
@@ -142,14 +138,14 @@ export default async function Page(props: {
           )}
           {cohortDetails && (
             <div>
-              <p className="max-w-md mt-6 text-brand-charcoal dark:text-brand-white">
+              <p className="max-w-md mt-6 text-center text-brand-charcoal dark:text-brand-white">
                 Our schedule is <b>designed to reduce FOMO</b>! Whether you're
                 traveling or just can't get out of bed, you can join our expert
                 discussions online. If your baby is being fussy that morning,
                 you're welcome to come late to one of our socials. Come as you
                 are; we're here to meet you.
               </p>
-              <p className="max-w-md mt-4 italic text-sm text-brand-charcoal dark:text-brand-white">
+              <p className="max-w-md mt-4 italic text-center text-sm text-brand-charcoal dark:text-brand-white">
                 Please note: The schedule may change before the start of the
                 cohort.
               </p>
@@ -169,20 +165,25 @@ export default async function Page(props: {
             </div>
           )}
 
+          <div>
+            <h2 className="text-center sm:mt-4 sm:mb-2 mt-8 font-bold text-xl text-brand-goldenrod">
+              Register:
+            </h2>
+            <PricingTable />
+          </div>
+
           <div className="text-center max-w-md mt-8">
-            <h2 className="mb-2 text-xl text-brand-goldenrod">
+            <h2 className="mb-2 font-bold text-xl text-brand-goldenrod">
               Where your program fees are going:
             </h2>
             <p>
-              <span>
-                <b>To experts</b>: 62% /{" "}
-              </span>
-              <span>
-                <b>To socials</b>: 20% /{" "}
-              </span>
-              <span>
-                <b>To operations</b>: 18%
-              </span>
+              <b>To experts</b>: 62%
+            </p>
+            <p>
+              <b>To socials</b>: 20%
+            </p>
+            <p>
+              <b>To operations</b>: 18%
             </p>
             <p className="mt-4">
               Each cohort costs €966 to run. We first cover costs, then we use
