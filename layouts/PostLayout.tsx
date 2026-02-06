@@ -8,6 +8,7 @@ import Image from "@/components/Image";
 import Tag from "@/components/Tag";
 import siteMetadata from "@/data/siteMetadata";
 import ScrollTopAndComment from "@/components/ScrollTopAndComment";
+import SocialIcon from "@/components/social-icons";
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`;
 
@@ -77,35 +78,30 @@ export default function PostLayout({
                           className="h-18 w-18 rounded-full"
                         />
                       )}
-                      <dl className="text-sm leading-5 font-medium">
+                      <dl className="leading-5 font-medium">
                         <dt className="sr-only">Name</dt>
-                        <dd className="dark:text-brand-white">{author.name}</dd>
+                        <dd className="text-brand-goldenrod">{author.name}</dd>
                         <dt className="sr-only">Title</dt>
-                        <dd className="mb-1 italic text-brand-soft-charcoal dark:text-brand-white">
+                        <dd className="text-sm mt-1 mb-2 italic text-brand-soft-charcoal dark:text-brand-white">
                           {author.occupation}
                         </dd>
-                        <dt className="sr-only">Website</dt>
-                        <dd>
+                        <dt className="sr-only">Socials</dt>
+                        <div className="flex gap-2">
                           {author.website && (
-                            <Link
+                            <SocialIcon
+                              kind="website"
+                              size={4}
                               href={author.website}
-                              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
-                            >
-                              {"Website"}
-                            </Link>
+                            />
                           )}
-                        </dd>
-                        <dt className="sr-only">Instagram</dt>
-                        <dd>
                           {author.instagram && (
-                            <Link
+                            <SocialIcon
+                              kind="instagram"
+                              size={4}
                               href={author.instagram}
-                              className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
-                            >
-                              {"Instagram"}
-                            </Link>
+                            />
                           )}
-                        </dd>
+                        </div>
                       </dl>
                     </li>
                   ))}
