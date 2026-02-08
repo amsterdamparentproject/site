@@ -133,6 +133,13 @@ const eventsData: Event[] = [
     description:
       "Bring your newborn (or your belly!) to chat about all things pregnancy and postpartum with other families in the neighborhood.",
   },
+  {
+    title: "Rijksmuseum Family Tour",
+    imgSrc: "/static/images/calendar/rijksmuseum.jpg",
+    href: "https://www.eventbrite.nl/e/rijksmuseum-family-tour-tickets-1982609593665",
+    description: `Meet fellow local parents and learn about the museum's most famous pieces — including those by Rembrandt and Vermeer — in the Gallery of Honor. The 1 hour tour is designed to flexibly meet your family's needs; step out to feed or change your baby at the museum's facilities and join back up with us when you're ready. After the tour, we'll head to the museum cafe to learn more from our expert guide and connect with the group.`,
+    date: new Date("15 March 2026"),
+  },
 ];
 
 export default eventsData;
