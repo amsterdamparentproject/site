@@ -71,10 +71,12 @@ export default function Page() {
         </li>
         <li className="w-80 px-4 pl-0 pb-8 text-center">
           <p className="text-4xl">📍</p>
-          <p className="font-bold pb-2">Local</p>
+          <p className="font-bold pb-2">Accessible</p>
           <p className="text-left">
-            We serve Amsterdam first, and prioritize in-person interactions. Our
-            goal is to help you find the support next door!
+            We strive to keep costs as low as possible so that all families can
+            access the support they need. We serve Amsterdam first, and
+            prioritize in-person interactions. Our goal is to help you share the
+            support next door!
           </p>
         </li>
         <li className="w-80 px-4 pl-0 pb-8 text-center">
