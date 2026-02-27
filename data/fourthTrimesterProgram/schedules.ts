@@ -1,6 +1,7 @@
 interface ScheduledSession {
   name: string;
   date?: Date;
+  location?: string;
 }
 
 export interface Schedule {
@@ -26,21 +27,55 @@ const ftpCohortSchedules: Schedule[] = [
       {
         name: "Intro Call: Building Your Village",
         date: new Date("7 March 2026"),
+        location: "Online",
       },
-      { name: "Newborn Feeding Strategies", date: new Date("21 March 2026") },
-      { name: "Postpartum Identity", date: new Date("11 April 2026") },
-      { name: "Postpartum Relationships", date: new Date("18 April 2026") },
-      { name: "Postpartum Return", date: new Date("16 May 2026") },
+      {
+        name: "Newborn Feeding Strategies",
+        date: new Date("21 March 2026"),
+        location: "Online",
+      },
+      {
+        name: "Postpartum Identity",
+        date: new Date("11 April 2026"),
+        location: "Online",
+      },
+      {
+        name: "Postpartum Relationships",
+        date: new Date("18 April 2026"),
+        location: "Online",
+      },
+      {
+        name: "Postpartum Return",
+        date: new Date("16 May 2026"),
+        location: "Online",
+      },
     ],
     socials: [
-      { name: "Walk in Vondelpark", date: new Date("12 March 2026") },
-      { name: "Newborn Play at Papote Cafe", date: new Date("26 March 2026") },
-      { name: "Family Reading Time", date: new Date("9 April 2026") },
+      {
+        name: "Walk in Vondelpark",
+        date: new Date("12 March 2026"),
+        location: "Groot Melkhuis",
+      },
+      {
+        name: "Newborn Play at Papote Cafe",
+        date: new Date("26 March 2026"),
+        location: "Papote Cafe",
+      },
+      {
+        name: "Family Reading Time",
+        date: new Date("9 April 2026"),
+        location: "OBA",
+      },
       {
         name: "Private Rijksmuseum Family Tour",
-        date: new Date("21 March 2026"),
+        location: "Rijksmuseum",
+        date: new Date("21 May 2026"),
       },
-      { name: "Closing Reflections", date: new Date("30 March 2026") },
+      {
+        name: "Closing Reflections",
+        date: new Date("30 May 2026"),
+        location: "Online",
+      },
     ],
   },
   {

@@ -85,6 +85,22 @@ export default function PostLayout({
                         <dd className="text-sm mt-1 mb-2 italic text-brand-soft-charcoal dark:text-brand-white">
                           {author.occupation}
                         </dd>
+                        <dd>
+                          {author.website && (
+                            <SocialIcon
+                              kind="website"
+                              size={4}
+                              href={author.website}
+                            />
+                          )}
+                          {author.instagram && (
+                            <SocialIcon
+                              kind="instagram"
+                              size={4}
+                              href={author.instagram}
+                            />
+                          )}
+                        </dd>
                         <dt className="sr-only">Socials</dt>
                         <div className="flex gap-2">
                           {author.website && (
