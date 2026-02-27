@@ -168,7 +168,7 @@ export default function Page() {
 
         <ShowcaseButton
           key="resource-guides"
-          href="/guides"
+          href="https://drive.google.com/drive/folders/1jyb5GxM0F-tgXCdGjwOHETR0KhccR72d?usp=sharing"
           title="Go to the resource guides"
           fill={true}
         />
@@ -254,7 +254,10 @@ export default function Page() {
         <h2 className="mt-8 font-medium">Where can I find the resources?</h2>
         <p>
           You can download them{" "}
-          <a href="/guides" target="_blank">
+          <a
+            href="https://drive.google.com/drive/folders/1jyb5GxM0F-tgXCdGjwOHETR0KhccR72d?usp=sharing"
+            target="_blank"
+          >
             here
           </a>
           .
