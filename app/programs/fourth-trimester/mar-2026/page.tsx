@@ -192,7 +192,7 @@ export default function Page() {
           group!
         </p>
 
-        <h2 className="mt-8 font-medium">What are topic discussions?</h2>
+        <h2 className="font-medium">What are topic discussions?</h2>
         <p>
           Every few weeks we gather to discuss a newborn parenting topic at a
           time that's developmentally appropriate for your baby and you as
@@ -219,13 +219,21 @@ export default function Page() {
           . They are meant to validate experiences, inspire discussion, and be a
           personal reference for your family!
         </p>
-        <p>
+        <p className="mb-6">
           We will also send along an open Q&A form for you to submit questions
           to the topic discussion facilitator ahead of time. You have the
           ability to ask questions anonymously via the form, or you can post
           them in the WhatsApp group.
         </p>
-        <p>
+
+        <ShowcaseButton
+          key="qa-form"
+          href="https://docs.google.com/forms/d/e/1FAIpQLScuQb9PXenNK9rxWxVX353zdSyBKvi2Qz6QeAlp4ZvtQbmZLw/viewform?usp=dialog"
+          title="Go to the Q&A form"
+          fill={true}
+        />
+
+        <p className="mt-6">
           <i>
             If there's a topic we're not covering that you'd like to discuss as
             a group, let us know! Email us at{" "}
@@ -235,6 +243,7 @@ export default function Page() {
             .
           </i>
         </p>
+
         <h2 className="mt-8 font-medium">What are socials?</h2>
         <p>
           Socials are a chance to meet other newborn parents in a totally casual
@@ -251,7 +260,32 @@ export default function Page() {
           Each social is facilitated by a local parent who is a few months (or
           years!) ahead of you in the parenting journey.
         </p>
-        <h2 className="mt-8 font-medium">Where can I find the resources?</h2>
+
+        <h2 className="mt-8 font-medium">
+          What can I expect from the WhatsApp group?
+        </h2>
+        <p>
+          Each cohort has a private, dedicated WhatsApp group. It's meant to be
+          a place for peer support: to share experiences, organize adhoc
+          meetups, ask questions, and generally share the joys and challenges of
+          parenthood.
+        </p>
+        <p>
+          The chat is moderated by a psychotherapist (👋🏻 Miriam) to keep things
+          safe. Of course, Miriam is both a two-time mom — she just gave birth
+          to her second daughter in January! — and a pumping/lactation expert,
+          so she has much expertise and experience to share!
+        </p>
+        <p className="mb-8">
+          While the facilitators will be in the chat, we won't always be
+          available to answer right away. Especially since (most of) our kids
+          are finally sleeping through the night 🙏🏻😅 If you need an expert
+          perspective outside of the scheduled meetups, we're happy to share
+          online resources, our professional networks, or coordinate a separate
+          topic discussion.
+        </p>
+
+        <h2 className="mt-8 font-medium">Where can I find the topic guides?</h2>
         <p>
           You can download them{" "}
           <a
@@ -262,6 +296,7 @@ export default function Page() {
           </a>
           .
         </p>
+
         <h2 className="mt-8 font-medium">A reminder about our values</h2>
         <p>
           We welcome families of all shapes and sizes and believe that our
