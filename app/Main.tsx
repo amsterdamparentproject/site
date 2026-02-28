@@ -53,7 +53,7 @@ export default function Home({ posts }) {
           <p className="text-center max-w-md mb-8">
             We're a{" "}
             <span className="text-brand-goldenrod font-bold">
-              nonprofit, parent-run
+              nonprofit, parent-powered
             </span>{" "}
             (and expert-supported!) organization that runs{" "}
             <Link
