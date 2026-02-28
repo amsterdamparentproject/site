@@ -5,31 +5,37 @@ export default function FTPCohortScheduleTable({ cohort }) {
   ].sort((a, b) => a.date.getTime() - b.date.getTime());
 
   return (
-    <div className="overflow-x-auto border border-gray-200 rounded-lg">
+    <div className="overflow-x-auto border border-brand-sand/30 rounded-lg">
       <table className="w-full text-left text-sm">
-        <thead className="bg-gray-50 border-b border-gray-200">
+        <thead className="bg-brand-goldenrod border-b border-brand-sand/30">
           <tr>
-            <th className="p-3 font-semibold text-gray-700">Event</th>
-            <th className="p-3 font-semibold text-gray-700">Date</th>
-            <th className="p-3 font-semibold text-gray-700">Location</th>
+            <th className="p-3 font-semibold text-brand-charcoal">Event</th>
+            <th className="p-3 font-semibold text-brand-charcoal">Date</th>
+            <th className="p-3 font-semibold text-brand-charcoal">Location</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-brand-sand/30">
           {allEvents.map((event, i) => (
-            <tr key={i} className="hover:bg-brand-sand/30">
-              <td className="p-3 text-gray-900 font-medium">{event.name}</td>
-              <td className="p-3 text-gray-600">
-                {event.date.toLocaleDateString("en-US", {
+            <tr
+              key={i}
+              className="hover:bg-brand-sand/30 dark:hover:bg-brand-soft-charcoal/30"
+            >
+              <td className="p-3 text-brand-charcoal dark:text-brand-goldenrod font-medium">
+                {event.name}
+              </td>
+              <td className="p-3 text-brand-soft-charcoal dark:text-brand-white">
+                {`${event.date.toLocaleDateString("en-US", {
+                  weekday: "short",
                   month: "short",
                   day: "numeric",
-                })}
+                })} @ ${event.time}`}
               </td>
               <td className="p-3">
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full ${
                     event.location === "Online"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-blue-100 text-blue-700"
+                      ? "bg-brand-soft-green/30 text-brand-charcoal dark:text-brand-white"
+                      : "bg-brand-soft-green text-brand-white"
                   }`}
                 >
                   {event.location}

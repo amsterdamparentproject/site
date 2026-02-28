@@ -251,10 +251,13 @@ export default function Page() {
           for both parents and babies.
         </p>
         <p>
-          If you are having a tough morning and can't make it to the social in
-          time — or at all — it's totally fine! Newborn life is unpredictable.
-          You're welcome to schedule adhoc meetups (coffees, walks, online
-          chats, etc) yourself through the WhatsApp group.
+          <b>
+            If you are having a tough morning and can't make it to the social in
+            time — or at all — it's totally fine!
+          </b>{" "}
+          Newborn life is unpredictable. You're welcome to schedule adhoc
+          meetups (coffees, walks, online chats, etc) yourself through the
+          WhatsApp group.
         </p>
         <p className="mb-8">
           Each social is facilitated by a local parent who is a few months (or
@@ -266,7 +269,7 @@ export default function Page() {
         </h2>
         <p>
           Each cohort has a private, dedicated WhatsApp group. It's meant to be
-          a place for peer support: to share experiences, organize adhoc
+          a <b>place for peer support</b>: to share experiences, organize adhoc
           meetups, ask questions, and generally share the joys and challenges of
           parenthood.
         </p>
