@@ -51,10 +51,27 @@ export default function Home({ posts }) {
             {siteMetadata.headerTitle}
           </div>
           <p className="text-center max-w-md mb-8">
-            We're a nonprofit, parent-run (and expert-supported!) organization
-            that runs postpartum support groups, family events, and a regular
-            local activities newsletter to help families find their grounding
-            here in Amsterdam.
+            We're a{" "}
+            <span className="text-brand-goldenrod font-bold">
+              nonprofit, parent-run
+            </span>{" "}
+            (and expert-supported!) organization that runs{" "}
+            <Link
+              href="/programs/fourth-trimester"
+              className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
+              aria-label="fourth-tri-tagline"
+            >
+              postpartum support groups
+            </Link>
+            , family events, and a local activities{" "}
+            <Link
+              href="/subscribe"
+              className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
+              aria-label="subscribe-tagline"
+            >
+              newsletter
+            </Link>{" "}
+            to help families find their grounding here in Amsterdam.
           </p>
 
           <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
