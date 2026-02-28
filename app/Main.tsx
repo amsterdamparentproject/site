@@ -125,6 +125,7 @@ export default function Home({ posts }) {
             href={latestPostUrl}
             title={title}
             date={formatDate(date, siteMetadata.locale)}
+            umamiName="Main: Latest post"
           />
           <div className="flex justify-end text-base leading-6 font-medium">
             <Link
