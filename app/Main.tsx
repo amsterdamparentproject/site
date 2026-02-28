@@ -60,6 +60,7 @@ export default function Home({ posts }) {
               href="/programs/fourth-trimester"
               className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
               aria-label="fourth-tri-tagline"
+              data-umami-event="Tagline: Fourth Trimester Program"
             >
               postpartum support groups
             </Link>
@@ -68,6 +69,7 @@ export default function Home({ posts }) {
               href="/subscribe"
               className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
               aria-label="subscribe-tagline"
+              data-umami-event="Tagline: Subscribe"
             >
               newsletter
             </Link>{" "}
@@ -85,6 +87,7 @@ export default function Home({ posts }) {
               date={event.date}
               until={event.until}
               comingSoon={event.comingSoon}
+              umamiName={"Main: Event"}
             />
           ))}
           <div className="flex justify-end text-base leading-6 font-medium">
@@ -92,6 +95,7 @@ export default function Home({ posts }) {
               href="/calendar"
               className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
               aria-label="All events"
+              data-umami-event="Main: See all events"
             >
               See all &rarr;
             </Link>
@@ -104,11 +108,13 @@ export default function Home({ posts }) {
             key={"ftp"}
             href={"/programs/fourth-trimester"}
             title={"Fourth Trimester Program"}
+            umamiName={"Main: Fourth Trimester Program"}
           />
           <ShowcaseButton
             key={"bsp"}
             href={"/programs/burnout"}
             title={"Burnout Support Program"}
+            umamiName={"Main: Burnout Support Program"}
           />
 
           <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
@@ -125,6 +131,7 @@ export default function Home({ posts }) {
               href="/advice"
               className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
               aria-label="All advice"
+              data-umami-event="Main: See all posts"
             >
               See all &rarr;
             </Link>
@@ -133,9 +140,22 @@ export default function Home({ posts }) {
           <h2 className="text-md mt-4 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             Follow us
           </h2>
-          <ShowcaseButton href="/newsletter" title="Newsletter" newTab={true} />
-          <ShowcaseButton href={siteMetadata.instagram} title="Instagram" />
-          <ShowcaseButton href="/calendar" title="Calendar" />
+          <ShowcaseButton
+            href="/newsletter"
+            title="Newsletter"
+            newTab={true}
+            umamiName={"Main: Newsletter"}
+          />
+          <ShowcaseButton
+            href={siteMetadata.instagram}
+            title="Instagram"
+            umamiName={"Main: Instagram"}
+          />
+          <ShowcaseButton
+            href="/calendar"
+            title="Calendar"
+            umamiName={"Main: Calendar"}
+          />
         </div>
       </div>
     </>

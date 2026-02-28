@@ -60,12 +60,14 @@ export default function Events() {
             href={siteMetadata.communityCalendar.google}
             title="Add to Google Calendar"
             fill={true}
+            umamiName="Calendar: Add to Google Calendar"
           />
           <ShowcaseButton
             key="community-calendar-iCal"
             href={siteMetadata.communityCalendar.iCal}
             title="Add to iCal"
             fill={true}
+            umamiName="Calendar: Add to iCal"
           />
           <p className="text-sm italic text-center mt-2 mb-6">
             Maintained for free by the Amsterdam Parent Project
@@ -75,6 +77,7 @@ export default function Events() {
             href="/calendar/submit-event"
             title="Submit your own event"
             background="highlight"
+            umamiName="Calendar: Submit event"
           />
         </div>
         <div className="container pt-4 pb-6">

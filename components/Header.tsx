@@ -38,6 +38,7 @@ const Header = () => {
                 href={link.href}
                 target={link.newTab ? "_blank" : ""}
                 className={link.style}
+                data-umami-event={"Header: " + link.title}
               >
                 {link.title}
               </Link>
