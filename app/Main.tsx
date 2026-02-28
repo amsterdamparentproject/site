@@ -50,6 +50,12 @@ export default function Home({ posts }) {
           <div className="h-6 text-2xl/5 pt-0 mb-8 text-brand-charcoal dark:text-brand-white font-semibold sm:hidden text-center">
             {siteMetadata.headerTitle}
           </div>
+          <p className="text-center max-w-md mb-8">
+            We're a nonprofit, parent-run (and expert-supported!) organization
+            that runs postpartum support groups, family events, and a regular
+            local activities newsletter to help families find their grounding
+            here in Amsterdam.
+          </p>
 
           <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             What's next
