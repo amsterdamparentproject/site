@@ -97,6 +97,20 @@ export default function Home({ posts }) {
             </Link>
           </div>
 
+          <h2 className="text-md mt-2 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
+            Our programs
+          </h2>
+          <ShowcaseButton
+            key={"ftp"}
+            href={"/programs/fourth-trimester"}
+            title={"Fourth Trimester Program"}
+          />
+          <ShowcaseButton
+            key={"bsp"}
+            href={"/programs/burnout"}
+            title={"Burnout Support Program"}
+          />
+
           <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             Latest post
           </h2>
@@ -115,20 +129,6 @@ export default function Home({ posts }) {
               See all &rarr;
             </Link>
           </div>
-
-          <h2 className="text-md mt-2 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
-            Our programs
-          </h2>
-          <ShowcaseButton
-            key={"ftp"}
-            href={"/programs/fourth-trimester"}
-            title={"Fourth Trimester Program"}
-          />
-          <ShowcaseButton
-            key={"bsp"}
-            href={"/programs/burnout"}
-            title={"Burnout Support Program"}
-          />
 
           <h2 className="text-md mt-4 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             Follow us
