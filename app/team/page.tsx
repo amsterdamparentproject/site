@@ -25,9 +25,6 @@ export default function Page() {
   const defaultTeamMember = teamMemberDetails[0];
 
   const alex = teamMemberDetails.find((p) => p.raw.slug === "alexSiega");
-  const alexandra = teamMemberDetails.find(
-    (p) => p.raw.slug === "alexandraFallows",
-  );
   const miriam = teamMemberDetails.find(
     (p) => p.raw.slug === "irenaDomachowska",
   );
@@ -59,21 +56,6 @@ export default function Page() {
           <MDXLayoutRenderer
             code={
               miriam ? miriam.raw.body.code : defaultTeamMember.raw.body.code
-            }
-          />
-        </AuthorLayout>
-      </div>
-      <div key={alexandra?.coreContent.name}>
-        <AuthorLayout
-          content={
-            alexandra ? alexandra.coreContent : defaultTeamMember.coreContent
-          }
-        >
-          <MDXLayoutRenderer
-            code={
-              alexandra
-                ? alexandra.raw.body.code
-                : defaultTeamMember.raw.body.code
             }
           />
         </AuthorLayout>
