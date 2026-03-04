@@ -172,9 +172,28 @@ export const TeamMembers = defineDocumentType(() => ({
   computedFields,
 }));
 
+export const FTPFacilitators = defineDocumentType(() => ({
+  name: "FTPFacilitators",
+  filePathPattern: "fourthTrimesterProgram/facilitators/*.mdx",
+  contentType: "mdx",
+  fields: {
+    name: { type: "string", required: true },
+    avatar: { type: "string" },
+    occupation: { type: "string" },
+    company: { type: "string" },
+    email: { type: "string" },
+    linkedin: { type: "string" },
+    github: { type: "string" },
+    instagram: { type: "string" },
+    website: { type: "string" },
+    layout: { type: "string" },
+  },
+  computedFields,
+}));
+
 export default makeSource({
   contentDirPath: "data",
-  documentTypes: [Blog, Authors, TeamMembers],
+  documentTypes: [Blog, Authors, TeamMembers, FTPFacilitators],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [

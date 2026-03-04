@@ -1,5 +1,9 @@
 import { ReactNode } from "react";
-import type { Authors, TeamMembers } from "contentlayer/generated";
+import type {
+  Authors,
+  FTPFacilitators,
+  TeamMembers,
+} from "contentlayer/generated";
 import SocialIcon from "@/components/social-icons";
 import Image from "@/components/Image";
 
@@ -7,7 +11,8 @@ interface Props {
   children: ReactNode;
   content:
     | Omit<Authors, "_id" | "_raw" | "body">
-    | Omit<TeamMembers, "_id" | "_raw" | "body">;
+    | Omit<TeamMembers, "_id" | "_raw" | "body">
+    | Omit<FTPFacilitators, "_id" | "_raw" | "body">;
 }
 
 export default function AuthorLayout({ children, content }: Props) {
