@@ -51,7 +51,7 @@ const ftpCohortSchedules: Schedule[] = [
       },
       {
         name: "Postpartum Return",
-        date: new Date("16 May 2026"),
+        date: new Date("23 May 2026"),
         time: "10:00-11:15",
         location: "Online",
       },
