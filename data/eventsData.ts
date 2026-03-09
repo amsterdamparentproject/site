@@ -140,6 +140,13 @@ const eventsData: Event[] = [
     description: `Meet fellow local parents and learn about the museum's most famous pieces — including those by Rembrandt and Vermeer — in the Gallery of Honor. The 1 hour tour is designed to flexibly meet your family's needs; step out to feed or change your baby at the museum's facilities and join back up with us when you're ready. After the tour, we'll head to the museum cafe to learn more from our expert guide and connect with the group.`,
     date: new Date("15 March 2026"),
   },
+  {
+    title: "Van Gogh Museum Parent & Baby Tour",
+    imgSrc: "/static/images/calendar/vangogh.jpg",
+    href: "https://www.eventbrite.nl/e/van-gogh-museum-parent-baby-tour-tickets-1984753296538",
+    description: `Meet local families and learn about Van Gogh's famous works. Designed for parents with pre-walking babies (0-1 year old). The 1 hour tour is designed to flexibly meet your family's needs; step out to feed or change your baby at the museum's facilities and join back up with us when you're ready. After the tour, we'll head to the museum cafe to learn more from our expert guide and connect with the group.`,
+    date: new Date("14 April 2026"),
+  },
 ];
 
 export default eventsData;

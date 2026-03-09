@@ -73,7 +73,7 @@ export default function Home({ posts }) {
             >
               newsletter
             </Link>{" "}
-            to help families find their grounding here in Amsterdam.
+            to help families with babies and toddlers thrive in Amsterdam.
           </p>
 
           <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
