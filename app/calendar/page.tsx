@@ -1,43 +1,97 @@
-import eventsData from "@/data/eventsData";
+import eventsData, { CalendarEvent } from "@/data/eventsData";
 import Card from "@/components/Card";
 import { genPageMetadata } from "app/seo";
 import ShowcaseButton from "@/components/ShowcaseButton";
 import siteMetadata from "@/data/siteMetadata";
+import Link from "@/components/Link";
 
 export const metadata = genPageMetadata({ title: "Events & Programs" });
 
-const sortEvents = (events) => {
-  return events.sort((a, b) => {
-    if (a.date < b.date) {
-      return -1;
+// --- Types & Interfaces ---
+type EnhancedEvent = CalendarEvent & { dateObj: Date };
+
+// --- Logic Helpers ---
+const processEvents = (events: CalendarEvent[]) => {
+  const now = new Date();
+  const todayStr = now.toISOString().split("T")[0];
+
+  const current: CalendarEvent[] = [];
+  const past: CalendarEvent[] = [];
+
+  events.forEach((event) => {
+    // Current if it's today/future OR marked as comingSoon
+    if (event.date >= todayStr || event.comingSoon) {
+      current.push(event);
+    } else {
+      past.push(event);
     }
-    if (a.date > b.date) {
-      return 1;
-    }
-    return 0;
   });
-};
-
-const getEventsByType = (events) => {
-  const today = new Date();
-
-  const comingUp = events.filter((event) => event.date >= today);
-  const comingSoon = events.filter((event) => event.comingSoon);
 
   return {
-    current: sortEvents(comingUp.concat(comingSoon)),
-    past: sortEvents(
-      events.filter((event) => {
-        const today = new Date();
-        return event.date < today;
-      }),
-    ),
+    // Sort current ascending (soonest first)
+    current: current.sort((a, b) => a.date.localeCompare(b.date)),
+    // Sort past descending (most recent first)
+    past: past.sort((a, b) => b.date.localeCompare(a.date)),
   };
 };
 
-const allEvents = getEventsByType(eventsData);
+const groupEventsByMonth = (events: CalendarEvent[]) => {
+  const groups: { [key: string]: CalendarEvent[] } = {};
+
+  events.forEach((event) => {
+    const date = new Date(event.date);
+    const monthYear = date.toLocaleString("en-US", {
+      month: "long",
+      year: "numeric",
+    });
+    if (!groups[monthYear]) groups[monthYear] = [];
+    groups[monthYear].push(event);
+  });
+
+  return groups;
+};
+
+const PastEventsList = ({ events }: { events: CalendarEvent[] }) => {
+  if (events.length === 0) return null;
+  const groupedEvents = groupEventsByMonth(events);
+
+  return (
+    <section className="w-full mt-6 px-4">
+      {Object.entries(groupedEvents).map(([monthYear, monthEvents]) => (
+        <div key={monthYear} className="mb-6">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod">
+            {monthYear}
+          </h3>
+          <ul className="space-y-3 border-l-2 border-gray-100 dark:border-gray-800 ml-1 pl-6">
+            {monthEvents.map((event, idx) => (
+              <li
+                key={idx}
+                className="relative text-brand-charcoal dark:text-gray-300"
+              >
+                <span className="absolute -left-[27px] top-2 h-2 w-2 rounded-full bg-brand-sand"></span>
+                <b>
+                  <Link
+                    href={event.href}
+                    className="text-gray-900 hover:text-brand-goldenrod dark:text-brand-goldenrod"
+                  >
+                    {event.title}
+                  </Link>
+                </b>
+                <span className="text-brand-charcoal dark:text-gray-400">
+                  : {event.description}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  );
+};
 
 export default function Events() {
+  const { current, past } = processEvents(eventsData);
+
   return (
     <>
       <div>
@@ -85,16 +139,16 @@ export default function Events() {
             Upcoming @ APP
           </h2>
           <div className="-m-4 flex flex-wrap">
-            {allEvents.current.map((d) => (
+            {current.map((event) => (
               <Card
-                key={d.title + d.date}
-                title={d.title}
-                description={d.description}
-                date={d.date}
-                until={d.until}
-                imgSrc={d.imgSrc ? d.imgSrc : "/static/images/web-share.png"}
-                href={d.href}
-                comingSoon={d.comingSoon}
+                key={event.title + event.date}
+                title={event.title}
+                description={event.description}
+                date={event.date}
+                until={event.until}
+                imgSrc={event.imgSrc || "/static/images/web-share.png"}
+                href={event.href}
+                comingSoon={event.comingSoon}
               />
             ))}
           </div>
@@ -102,18 +156,7 @@ export default function Events() {
             Past @ APP
           </h2>
           <div className="-m-4 flex flex-wrap">
-            {allEvents.past.reverse().map((d) => (
-              <Card
-                key={d.title + d.date}
-                title={d.title}
-                description={d.description}
-                date={d.date}
-                until={d.until}
-                imgSrc={d.imgSrc ? d.imgSrc : "/static/images/web-share.png"}
-                href={d.href}
-                comingSoon={d.comingSoon}
-              />
-            ))}
+            <PastEventsList events={past} />
           </div>
         </div>
       </div>

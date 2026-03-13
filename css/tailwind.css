@@ -37,18 +37,19 @@
   /* Programs */
   --color-program-burnout-blue: oklch(0.6899 0.0952 216.1);
 
-  /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
-  --color-primary-50: oklch(0.971 0.014 343.198);
-  --color-primary-100: oklch(0.948 0.028 342.258);
-  --color-primary-200: oklch(0.899 0.061 343.231);
-  --color-primary-300: oklch(0.823 0.12 346.018);
-  --color-primary-400: oklch(0.718 0.202 349.761);
-  --color-primary-500: oklch(0.656 0.241 354.308);
-  --color-primary-600: oklch(0.592 0.249 0.584);
-  --color-primary-700: oklch(0.525 0.223 3.958);
-  --color-primary-800: oklch(0.459 0.187 3.815);
-  --color-primary-900: oklch(0.408 0.153 2.432);
-  --color-primary-950: oklch(0.284 0.109 3.907);
+  --color-primary-50: #f4f7f5;
+  --color-primary-100: #e9f0eb;
+  --color-primary-200: #cfe1d5;
+  --color-primary-300: #a7c3b2;
+  --color-primary-400: #7da58e;
+  --color-primary-500: #5f8670; /* brand-soft-green */
+  --color-primary-600: #4a6a58;
+  --color-primary-700: #3d5548;
+  --color-primary-800: #33453b;
+  --color-primary-900: #2c3a32;
+  --color-primary-950: #18201b;
+
+  --color-accent-500: #b89146; /* brand-goldenrod */
 
   --color-gray-50: oklch(0.985 0.002 247.839);
   --color-gray-100: oklch(0.967 0.003 264.542);

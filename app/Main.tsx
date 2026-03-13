@@ -5,36 +5,30 @@ import ShowcaseButton from "@/components/ShowcaseButton";
 import siteMetadata from "@/data/siteMetadata";
 import eventsData from "@/data/eventsData";
 
-const sortEvents = (events) => {
-  return events.sort((a, b) => {
-    if (a.date < b.date) {
-      return -1;
-    }
-    if (a.date > b.date) {
-      return 1;
-    }
-    return 0;
-  });
-};
-
 const createEventList = (events, MAX_DISPLAY = 3) => {
   const today = new Date();
 
-  const comingUp = sortEvents(events.filter((event) => event.date >= today));
-  const comingSoon = events.filter((event) => event.comingSoon);
+  // 1. Convert strings to Dates and filter in one go
+  const comingUp = events
+    .map((event) => ({ ...event, dateObj: new Date(event.date) })) // Temporary date object for logic
+    .filter((event) => event.dateObj >= today)
+    .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()); // Sort by the actual time
 
+  // 2. Handle "Coming Soon" fillers
   if (comingUp.length < MAX_DISPLAY) {
-    const comingSoonFillers = comingSoon.slice(
-      0,
-      MAX_DISPLAY - comingUp.length,
-    );
-    return comingUp.concat(comingSoonFillers);
-  } else {
-    return comingUp;
+    const comingSoon = events.filter((event) => event.comingSoon);
+    const needed = MAX_DISPLAY - comingUp.length;
+
+    // Combine and return
+    return comingUp.concat(comingSoon.slice(0, needed));
   }
+
+  return comingUp.slice(0, MAX_DISPLAY);
 };
 
 export default function Home({ posts }) {
+  const upcomingEvents = createEventList(eventsData);
+
   const latestPost = posts[0];
   const { slug, date, title } = latestPost;
   const latestPostUrl = `/advice/${slug}`;
@@ -79,7 +73,7 @@ export default function Home({ posts }) {
           <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             What's next
           </h2>
-          {createEventList(eventsData).map((event) => (
+          {createEventList(upcomingEvents).map((event) => (
             <ShowcaseButton
               key={event.title + event.date}
               href={event.href ? event.href : "/calendar"}
