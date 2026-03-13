@@ -59,25 +59,25 @@ const PastEventsList = ({ events }: { events: CalendarEvent[] }) => {
     <section className="w-full mt-6 px-4">
       {Object.entries(groupedEvents).map(([monthYear, monthEvents]) => (
         <div key={monthYear} className="mb-6">
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-brand-soft-green dark:text-brand-sand">
             {monthYear}
           </h3>
-          <ul className="space-y-3 border-l-2 border-gray-100 dark:border-gray-800 ml-1 pl-6">
+          <ul className="space-y-3 ml-1 pl-6">
             {monthEvents.map((event, idx) => (
               <li
                 key={idx}
-                className="relative text-brand-charcoal dark:text-gray-300"
+                className="relative text-brand-charcoal dark:text-brand-soft-charcoal"
               >
                 <span className="absolute -left-[27px] top-2 h-2 w-2 rounded-full bg-brand-sand"></span>
                 <b>
                   <Link
                     href={event.href}
-                    className="text-gray-900 hover:text-brand-goldenrod dark:text-brand-goldenrod"
+                    className="text-brand-charcoal hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green"
                   >
                     {event.title}
                   </Link>
                 </b>
-                <span className="text-brand-charcoal dark:text-gray-400">
+                <span className="text-brand-soft-charcoal dark:text-brand-white">
                   : {event.description}
                 </span>
               </li>
