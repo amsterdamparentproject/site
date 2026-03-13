@@ -1,7 +1,3 @@
-import { Authors, allAuthors } from "contentlayer/generated";
-import { MDXLayoutRenderer } from "pliny/mdx-components";
-import AuthorLayout from "@/layouts/AuthorLayout";
-import { coreContent } from "pliny/utils/contentlayer";
 import { genPageMetadata } from "app/seo";
 import Link from "next/link";
 
@@ -9,92 +5,98 @@ export const metadata = genPageMetadata({ title: "About" });
 
 export default function Page() {
   return (
-    <div>
+    <div className="space-y-8 pb-12">
+      {/* Main Header */}
       <div className="flex flex-col items-center space-y-2 py-6 md:space-y-5">
         <h1 className="text-brand-charcoal dark:text-brand-white text-4xl leading-9 font-extrabold tracking-tight md:text-6xl md:leading-14">
           About us
         </h1>
       </div>
-      <p>
+
+      <p className="text-lg leading-7 text-gray-600 dark:text-gray-300">
         The Amsterdam Parent Project (APP) is a nonprofit organization providing
         peer and professional support to parents of young children in Amsterdam.
         We run a newsletter, events, and programs to connect the local community
         with the help they need to thrive in early parenthood.
       </p>
+
+      {/* Team */}
+      <div className="mt-4 mb-12 text-center">
+        <Link
+          href="/team"
+          className="group inline-flex items-center text-3xl font-bold text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
+          prefetch={false}
+        >
+          Our team
+          <span className="ml-2 transform group-hover:translate-x-2 transition-transform">
+            &rarr;
+          </span>
+        </Link>
+      </div>
+
+      {/* Mission */}
       <div
         id="mission-highlight"
-        className="bg-brand-soft-green text-center px-8 py-8 mt-8 rounded-md"
+        className="bg-brand-soft-green text-center px-8 py-10 rounded-2xl shadow-sm"
       >
-        <h1 className="text-brand-goldenrod font-bold text-2xl pb-4">
+        <h2 className="text-brand-goldenrod font-bold text-2xl pb-4 uppercase tracking-widest">
           Our mission
-        </h1>
-        <p className="text-brand-white">
+        </h2>
+        <p className="text-brand-white text-xl leading-8 max-w-2xl mx-auto">
           Empower new parents in Amsterdam with peer and professional support,
           so that they thrive in the early years of parenthood.
         </p>
       </div>
 
-      <h1 className="text-brand-charcoal dark:text-brand-white font-bold text-2xl pt-8 pb-4 text-center">
-        Our approach
-      </h1>
-      <p>
-        We believe parents need context and community to thrive. Our "sandwich"
-        model of support combines peer-to-peer connection (bottom-up) with
-        expert advice (top-down) to help new parents navigate life with a
-        baby/toddler with confidence and joy. By delivering relevant information
-        at the right time in live settings, we avoid overwhelming parents and
-        provide actionable advice when they need it most.
-      </p>
+      {/* Approach */}
+      <section>
+        <h2 className="text-brand-charcoal dark:text-brand-white font-bold text-3xl pt-8 pb-4 text-center">
+          Our approach
+        </h2>
+        <p className="leading-7">
+          We believe parents need context and community to thrive. Our
+          "sandwich" model of support combines peer-to-peer connection
+          (bottom-up) with expert advice (top-down) to help new parents navigate
+          life with a baby/toddler with confidence and joy.
+        </p>
+      </section>
 
-      <h1 className="text-brand-charcoal dark:text-brand-white font-bold text-2xl pt-8 pb-4 text-center">
-        Our values
-      </h1>
-      <ul className="flex flex-wrap justify-center">
-        <li className="w-80 px-4 pl-0 pb-8 text-center">
-          <p className="text-4xl">🫶🏻</p>
-          <p className="font-bold pb-2">Collaborative</p>
-          <p className="text-left">
-            We partner with peers, experts, and other communities. If we see a
-            gap in support, we first ask: "Is there anyone already doing
-            something similar we could work with or highlight?" We're truly
-            stronger together.
-          </p>
-        </li>
-        <li className="w-80 px-4 pl-0 pb-8 text-center">
-          <p className="text-4xl">🪟</p>
-          <p className="font-bold pb-2">Transparent</p>
-          <p className="text-left">
-            We build in the open with our public roadmap and published revenue
-            numbers. You'll always know precisely what we're working on and
-            where your money is going.
-          </p>
-        </li>
-        <li className="w-80 px-4 pl-0 pb-8 text-center">
-          <p className="text-4xl">📍</p>
-          <p className="font-bold pb-2">Accessible</p>
-          <p className="text-left">
-            We strive to keep costs as low as possible so that all families can
-            access the support they need. We serve Amsterdam first, and
-            prioritize in-person interactions. Our goal is to help you share the
-            support next door!
-          </p>
-        </li>
-        <li className="w-80 px-4 pl-0 pb-8 text-center">
-          <p className="text-4xl">🌱</p>
-          <p className="font-bold pb-2">Grounded</p>
-          <p className="text-left">
-            We design our services with empathy and evidence. All of our experts
-            follow best practices and we ensure that our peer-led spaces are
-            aligned with modern support group guidelines.
-          </p>
-        </li>
-      </ul>
-
-      <Link href="/team" aria-label="Learn more about our team">
-        <h1 className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod font-bold text-2xl pt-8 pb-4 text-center">
-          Our team &rarr;
-        </h1>
-      </Link>
+      {/* Values Grid */}
+      <section>
+        <h2 className="text-brand-charcoal dark:text-brand-white font-bold text-3xl pt-8 pb-8 text-center">
+          Our values
+        </h2>
+        <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2 justify-items-center">
+          {[
+            {
+              emoji: "🫶🏻",
+              title: "Collaborative",
+              text: "We partner with peers, experts, and other communities. We're truly stronger together.",
+            },
+            {
+              emoji: "🪟",
+              title: "Transparent",
+              text: "We build in the open with our public roadmap and published revenue numbers.",
+            },
+            {
+              emoji: "📍",
+              title: "Accessible",
+              text: "We strive to keep costs low so all families can access support. In-person first.",
+            },
+            {
+              emoji: "🌱",
+              title: "Grounded",
+              text: "We design with empathy and evidence, following modern support group guidelines.",
+            },
+          ].map((value) => (
+            <li key={value.title} className="max-w-xs text-center">
+              <p className="text-5xl mb-4">{value.emoji}</p>
+              <h3 className="font-bold text-xl pb-2">{value.title}</h3>
+              <p className="text-gray-600 dark:text-gray-400">{value.text}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

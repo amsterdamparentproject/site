@@ -7,7 +7,7 @@
 @theme {
   /* Font families */
   --font-sans:
-    var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif,
+    var(--font-quicksand), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   /* Colors */
@@ -160,4 +160,9 @@ input:-webkit-autofill:focus {
 .linkicon {
   display: inline-block;
   vertical-align: middle;
+}
+
+html {
+  /* This reserves the scrollbar space so the header/content never jump */
+  scrollbar-gutter: stable;
 }

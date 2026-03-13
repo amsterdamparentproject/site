@@ -2,7 +2,6 @@ import "css/tailwind.css";
 import "remark-github-blockquote-alert/alert.css";
 
 import { Quicksand } from "next/font/google";
-import { SearchProvider, SearchConfig } from "pliny/search";
 import Header from "@/components/Header";
 import SectionContainer from "@/components/SectionContainer";
 import Footer from "@/components/Footer";
@@ -14,7 +13,7 @@ import Script from "next/script";
 const quicksand = Quicksand({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-space-grotesk",
+  variable: "--font-quicksand",
 });
 
 export const metadata: Metadata = {
@@ -107,7 +106,7 @@ export default function RootLayout({
         type="application/rss+xml"
         href={`${basePath}/feed.xml`}
       />
-      <body className="bg-brand-white pl-[calc(100vw-100%)] text-brand-charcoal antialiased dark:bg-brand-charcoal dark:text-brand-white">
+      <body className="bg-brand-white text-brand-charcoal antialiased dark:bg-brand-charcoal dark:text-brand-white">
         <ThemeProviders>
           <Header />
           <SectionContainer>
@@ -122,14 +121,14 @@ export default function RootLayout({
           src="/stats/script.js"
           data-website-id={process.env.NEXT_PUBLIC_UMAMI_ID}
           data-host-url="https://amsterdamparentproject.nl/stats"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
 
         {/* Beehiiv Attribution Script */}
         <Script
           id="beehiiv-attribution"
           src="https://embeds.beehiiv.com/attribution.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </body>
     </html>
