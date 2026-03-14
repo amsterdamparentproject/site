@@ -105,6 +105,12 @@ export default function Home({ posts }) {
             umamiName={"Main: Fourth Trimester Program"}
           />
           <ShowcaseButton
+            key={"online-groups"}
+            href={"/online-groups"}
+            title={"Online Community Groups"}
+            umamiName={"Main: Online Community Groups"}
+          />
+          <ShowcaseButton
             key={"bsp"}
             href={"/programs/burnout"}
             title={"Burnout Support Program"}

@@ -85,7 +85,7 @@ const SubmitEventForm = () => {
       }
     } catch (error) {
       alert(
-        "Something went wrong, please try again. If the error persists, please reach out to us at amsterdamparentproject@gmail.com with the event details.",
+        "Something went wrong, please try again. If the error persists, please reach out to us at hello@amsterdamparentproject.nl with the event details.",
       );
       console.error(error);
     } finally {
