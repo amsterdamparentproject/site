@@ -17,7 +17,7 @@ const SharePageButton = () => {
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-brand-sand/10 border border-brand-sand/30 rounded-xl my-2">
       <p className="text-brand-soft-charcoal dark:text-brand-white text-sm font-medium mb-4">
-        Invite others to join the community:
+        Invite others to the directory:
       </p>
       <button
         onClick={handleCopy}

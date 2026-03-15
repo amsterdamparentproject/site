@@ -130,7 +130,6 @@ const MOCK_DATA = [
 ];
 
 export default function DirectoryClient() {
-  // 2. Use the interface in your State
   const [data, setData] = useState<DirectoryData[]>(MOCK_DATA);
   const [status, setStatus] = useState<"loading" | "error" | "success">(
     "loading",
@@ -185,14 +184,14 @@ export default function DirectoryClient() {
           Online Community Group Directory
         </h1>
       </div>
-      <div className="mb-8 p-6 bg-brand-sand/10 border border-brand-sand/30 rounded-xl">
-        <h2 className="text-2xl font-bold text-brand-soft-green">
+      <div className="mb-8 p-6 bg-brand-sand/30 border border-brand-sand/60 dark:bg-brand-soft-charcoal dark:border-brand-soft-charcoal/30 rounded-xl">
+        <h2 className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
           Welcome, {currentUser?.userName}!
         </h2>
-        <p className="text-sm text-brand-soft-charcoal italic">
+        <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
           Accessing as: {currentUser?.maskedEmail}
         </p>
-        <p className="text-sm text-brand-charcoal mt-2">
+        <p className="text-sm text-brand-charcoal dark:text-brand-white mt-2">
           The community put this directory together to support other parents, no
           strings attached.{" "}
           <b>Please do not share the invite links in this directory!</b> Help us
@@ -206,7 +205,7 @@ export default function DirectoryClient() {
           className={`pb-3 px-6 text-sm rounded-l-lg cursor-pointer transition-all ${
             activeTab === "recommended"
               ? "font-bold bg-brand-soft-green p-2 text-brand-white"
-              : "bg-brand-soft-green/10 p-2 text-brand-soft-charcoal hover:text-brand-soft-green"
+              : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-white/80"
           }`}
         >
           Recommended ({currentUser?.groups.filter((g) => g.isMatch).length})
@@ -216,26 +215,25 @@ export default function DirectoryClient() {
           className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all ${
             activeTab === "all"
               ? "font-bold bg-brand-soft-green p-2 text-brand-white"
-              : "bg-brand-soft-green/10 p-2 text-brand-soft-charcoal hover:text-brand-soft-green"
+              : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-white/80"
           }`}
         >
           Browse all ({currentUser?.groups.length})
         </button>
       </div>
       {/* Filters Bar */}
-      <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 items-end bg-brand-white my-4">
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-3  max-w-sm md:max-w-xl gap-4 items-end my-4">
         {" "}
-        {/* Fixed 'mv-4' to 'my-4' */}
         <div className="flex flex-col gap-1">
           <label
             htmlFor="category-select"
-            className="text-xs font-bold text-brand-soft-green uppercase"
+            className="text-xs font-bold text-brand-soft-green dark:text-brand-goldenrod uppercase"
           >
             Category
           </label>
           <select
             id="category-select"
-            className="bg-white border border-brand-sand/60 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brand-soft-green outline-none"
+            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brand-soft-green outline-none"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
@@ -249,13 +247,13 @@ export default function DirectoryClient() {
         <div className="flex flex-col gap-1">
           <label
             htmlFor="platform-select"
-            className="text-xs font-bold text-brand-soft-green uppercase"
+            className="text-xs font-bold text-brand-soft-green dark:text-brand-goldenrod uppercase"
           >
             Platform
           </label>
           <select
             id="platform-select"
-            className="bg-white border border-brand-sand/60 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brand-soft-green outline-none"
+            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brand-soft-green outline-none"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
           >
@@ -271,7 +269,7 @@ export default function DirectoryClient() {
             setSelectedCategory("All");
             setSelectedType("All");
           }}
-          className="text-sm text-brand-soft-green font-medium hover:text-brand-goldenrod transition-colors h-10 flex items-center"
+          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-goldenrod transition-colors h-4 md:h-10 flex items-center"
         >
           Reset filters
         </button>
@@ -285,13 +283,13 @@ export default function DirectoryClient() {
               key={`${group.GroupName}-${group.Platform}`}
               className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-all ${
                 group.isMatch
-                  ? "border border-brand-sand/60 bg-brand-white"
+                  ? "border border-brand-sand/60 dark:border-brand-soft-charcoal"
                   : ""
               }`}
             >
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-brand-charcoal leading-tight">
+                  <h3 className="text-lg font-bold text-brand-charcoal dark:text-brand-white leading-tight">
                     {group.GroupName}
                   </h3>
                   <CustomSocialIcon
@@ -300,12 +298,12 @@ export default function DirectoryClient() {
                   />
                 </div>
                 {group.Description && (
-                  <p className="text-sm text-brand-soft-charcoal pt-1">
+                  <p className="text-sm text-brand-soft-charcoal dark:text-brand-white pt-1">
                     {group.Description}
                   </p>
                 )}
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod">
                     {group.Category}
                   </span>
                 </div>
@@ -322,7 +320,7 @@ export default function DirectoryClient() {
             </div>
           ))
         ) : (
-          <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+          <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-soft-charcoal">
             <p className="text-gray-500 font-medium">
               No groups found matching these criteria.
             </p>
