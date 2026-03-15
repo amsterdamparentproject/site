@@ -30,7 +30,7 @@ export default function AccessClient() {
         <p className="max-w-2xl text-center mb-4">
           <b className="dark:text-brand-goldenrod">
             This form will give you access to the Amsterdam Parent Community
-            Directory,
+            Groups Directory,
           </b>{" "}
           with invite links to the online groups. It exists to keep the
           community free of spammers and unwanted promotions. Your information
