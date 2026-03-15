@@ -20,11 +20,7 @@ interface DirectoryData {
   matchCount: number;
 }
 
-interface DirectoryProps {
-  webhookUrl: string | undefined;
-}
-
-export default function DirectoryClient({ webhookUrl }: DirectoryProps) {
+export default function DirectoryClient() {
   // --- State ---
   const [data, setData] = useState<DirectoryData[]>([]);
   const [status, setStatus] = useState<"loading" | "error" | "success">(
@@ -54,14 +50,13 @@ export default function DirectoryClient({ webhookUrl }: DirectoryProps) {
         }
 
         if (!uid) {
-          throw new Error("No access token found");
+          // Redirect to the access form if no UID found
+          console.error("No UID found");
+          window.location.href = "groups-directory/access?uid=false";
         }
 
-        const directoryUrl = webhookUrl + `?uid=` + uid;
-        console.log(directoryUrl);
-
         // 2. Call n8n Webhook
-        const response = await fetch(directoryUrl);
+        const response = await fetch(`/api/groups-directory?uid=${uid}`);
 
         if (!response.ok) throw new Error("Unauthorized access");
 

@@ -6,11 +6,9 @@ export const metadata = genPageMetadata({
 });
 
 export default function Page() {
-  const webhookUrl = process.env.N8N_ACCESS_DIRECTORY_WEBHOOK_URL;
-
   return (
     <main>
-      <DirectoryClient webhookUrl={webhookUrl} />
+      <DirectoryClient />
     </main>
   );
 }
