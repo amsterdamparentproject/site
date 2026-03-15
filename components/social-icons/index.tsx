@@ -8,7 +8,7 @@ import {
   Facebook,
 } from "./icons";
 
-const components = {
+export const components = {
   mail: Mail,
   github: Github,
   linkedin: Linkedin,

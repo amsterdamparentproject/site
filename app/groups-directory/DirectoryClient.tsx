@@ -1,6 +1,6 @@
 "use client";
 
-import { CustomSocialIcon } from "@/components/social-icons";
+import { CustomSocialIcon, components } from "@/components/social-icons";
 import { useEffect, useMemo, useState } from "react";
 
 // --- Types ---
@@ -245,7 +245,9 @@ export default function DirectoryClient() {
                   </h3>
                   {group.platform && (
                     <CustomSocialIcon
-                      kind={group.platform.toLowerCase()}
+                      kind={
+                        group.platform.toLowerCase() as keyof typeof components
+                      }
                       size={4}
                     />
                   )}
