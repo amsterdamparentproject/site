@@ -7,7 +7,7 @@ import InvalidDirectoryLinkWarning from "@/components/InvalidDirectoryLink";
 
 export default function AccessClient() {
   const searchParams = useSearchParams();
-  const showWarning = searchParams.get("token") === "false";
+  const showWarning = searchParams.get("uid") === "false";
 
   return (
     <div>

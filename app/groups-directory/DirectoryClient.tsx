@@ -84,8 +84,9 @@ export default function DirectoryClient({ webhookUrl }: DirectoryProps) {
         setData([formattedData]);
         setStatus("success");
       } catch (error) {
+        // Redirect to the access form if the link is invalid
         console.error("Directory Error:", error);
-        // window.location.href = "groups-directory/access?token=false";
+        window.location.href = "groups-directory/access?uid=false";
       }
     };
 

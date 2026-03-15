@@ -106,9 +106,9 @@ export default function Home({ posts }) {
           />
           <ShowcaseButton
             key={"groups-directory"}
-            href={"/groups-directory"}
+            href={"/groups-directory/access"}
             title={"Community Groups Directory"}
-            umamiName={"Main: Community Groups Directory"}
+            umamiName={"Main: Request Groups Directory Access"}
           />
           <ShowcaseButton
             key={"bsp"}
