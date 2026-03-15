@@ -34,7 +34,13 @@ const Header = () => {
           {headerNavLinks
             .filter((link) => link.href !== "/")
             .map((link) => (
-              <Link key={link.title} href={link.href} className={link.style}>
+              <Link
+                key={link.title}
+                href={link.href}
+                className={link.style}
+                target={link.newTab ? "_blank" : ""}
+                prefetch={link.prefetch}
+              >
                 {link.title}
               </Link>
             ))}

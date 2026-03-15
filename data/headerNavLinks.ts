@@ -11,6 +11,7 @@ const headerNavLinks = [
     title: "Newsletter",
     style: defaultStyle,
     newTab: true,
+    prefetch: false,
   },
   { href: "/donate", title: "Donate", style: highlightStyle },
 ];
