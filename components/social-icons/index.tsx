@@ -60,6 +60,11 @@ export const CustomSocialIcon = ({
     ? style
     : "fill-current text-brand-charcoal dark:text-brand-white";
 
+  if (!SocialSvg) {
+    console.warn(`Icon not found for kind: ${kind}`);
+    return <div className={`h-${size} w-${size} bg-gray-200 rounded-full`} />;
+  }
+
   return (
     <div>
       <span className="sr-only">{kind}</span>

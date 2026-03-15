@@ -1,10 +1,10 @@
 import { genPageMetadata } from "app/seo";
-import DirectoryClient from "./DirectoryClient";
+import AccessClient from "./AccessClient";
 
 export const metadata = genPageMetadata({
   title: "Online Community Directory",
 });
 
 export default function Page() {
-  return <DirectoryClient />;
+  return <AccessClient />;
 }

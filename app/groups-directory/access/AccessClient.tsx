@@ -1,29 +1,31 @@
-import { genPageMetadata } from "app/seo";
+"use client";
+
 import RequestGroupsDirectoryAccess from "@/components/RequestGroupsDirectoryAccess";
-import SharePageButton from "@/components/SharePageButton";
+import SharePageBlock from "@/components/SharePageBlock";
+import { useSearchParams } from "next/navigation";
+import InvalidDirectoryLinkWarning from "@/components/InvalidDirectoryLink";
 
-export const metadata = genPageMetadata({
-  title: "Access Online Community Groups",
-});
+export default function AccessClient() {
+  const searchParams = useSearchParams();
+  const showWarning = searchParams.get("token") === "false";
 
-export default function Page() {
   return (
     <div>
       <div className="pt-6 pb-6 flex flex-col items-center">
+        {showWarning && <InvalidDirectoryLinkWarning />}
         <h2 className="text-2xl md:text-3xl font-bold text-brand-soft-green dark:text-brand-goldenrod text-center mb-4 max-w-sm md:max-w-xl">
-          Join the
+          Find your
         </h2>
         <h1 className="text-center text-brand-charcoal dark:text-brand-white text-4xl leading-9 font-extrabold tracking-tight md:text-6xl md:leading-14">
-          Online Community
-          <br /> Groups
+          Community Groups
         </h1>
       </div>
       <div className="flex flex-col items-center space-y-2 md:pt-4 pb-8 md:space-y-5">
         <p className="max-w-2xl text-center mb-4">
-          Did you know there's a huge, thriving online community of 1000+
-          Amsterdam parents(-to-be) on WhatsApp and Facebook? There are groups
-          by neighborhood and age; groups to buy/sell children's items; groups
-          for just moms or dads; and more!
+          Did you know there's a huge, thriving community of 1000+ Amsterdam
+          parents(-to-be) on WhatsApp, Facebook, and other platforms? There are
+          groups by neighborhood and age; groups to buy/sell children's items;
+          groups for just moms or dads; and more!
         </p>
         <p className="max-w-2xl text-center mb-4">
           <b className="dark:text-brand-goldenrod">
@@ -48,7 +50,7 @@ export default function Page() {
           this page instead.
         </p>
         <div>
-          <SharePageButton />
+          <SharePageBlock infoText="Invite others to the directory:" />
         </div>
 
         <div className="w-full max-w-lg my-4">

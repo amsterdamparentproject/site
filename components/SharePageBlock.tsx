@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const SharePageButton = () => {
+const SharePageBlock = ({ infoText }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -16,9 +16,11 @@ const SharePageButton = () => {
 
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-brand-sand/10 border border-brand-sand/30 rounded-xl my-2">
-      <p className="text-brand-soft-charcoal dark:text-brand-white text-sm font-medium mb-4">
-        Invite others to the directory:
-      </p>
+      {infoText && (
+        <p className="text-brand-soft-charcoal dark:text-brand-white text-sm font-medium mb-4">
+          {infoText}
+        </p>
+      )}
       <button
         onClick={handleCopy}
         className={`flex items-center gap-3 px-6 py-3 cursor-pointer rounded-full font-bold transition-all duration-300 shadow-sm
@@ -57,4 +59,4 @@ const SharePageButton = () => {
   );
 };
 
-export default SharePageButton;
+export default SharePageBlock;

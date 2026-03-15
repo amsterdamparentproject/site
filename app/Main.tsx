@@ -105,10 +105,10 @@ export default function Home({ posts }) {
             umamiName={"Main: Fourth Trimester Program"}
           />
           <ShowcaseButton
-            key={"online-groups"}
-            href={"/online-groups"}
-            title={"Online Community Groups"}
-            umamiName={"Main: Online Community Groups"}
+            key={"groups-directory"}
+            href={"/groups-directory"}
+            title={"Community Groups Directory"}
+            umamiName={"Main: Community Groups Directory"}
           />
           <ShowcaseButton
             key={"bsp"}
