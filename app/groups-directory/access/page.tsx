@@ -2,7 +2,7 @@ import { genPageMetadata } from "app/seo";
 import AccessClient from "./AccessClient";
 
 export const metadata = genPageMetadata({
-  title: "Online Community Directory",
+  title: "Request Groups Directory Access",
 });
 
 export default function Page() {

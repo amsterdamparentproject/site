@@ -20,7 +20,11 @@ interface DirectoryData {
   matchCount: number;
 }
 
-export default function DirectoryClient() {
+interface DirectoryProps {
+  webhookUrl: string | undefined;
+}
+
+export default function DirectoryClient({ webhookUrl }: DirectoryProps) {
   // --- State ---
   const [data, setData] = useState<DirectoryData[]>([]);
   const [status, setStatus] = useState<"loading" | "error" | "success">(
@@ -53,14 +57,22 @@ export default function DirectoryClient() {
           throw new Error("No access token found");
         }
 
+        const directoryUrl = webhookUrl + `?uid=` + uid;
+        console.log(directoryUrl);
+
         // 2. Call n8n Webhook
-        const response = await fetch(
-          `https://the-siegas.app.n8n.cloud/webhook/get-directory?uid=${uid}`,
-        );
+        const response = await fetch(directoryUrl);
 
         if (!response.ok) throw new Error("Unauthorized access");
 
-        const result = await response.json();
+        // Check if the response actually has content before parsing
+        const text = await response.text();
+
+        if (!text) {
+          throw new Error("n8n returned an empty response");
+        }
+
+        const result = JSON.parse(text);
 
         // Handle n8n common return types (Array or Object)
         const formattedData: DirectoryData = Array.isArray(result)
@@ -73,7 +85,7 @@ export default function DirectoryClient() {
         setStatus("success");
       } catch (error) {
         console.error("Directory Error:", error);
-        window.location.href = "groups-directory/access?token=false";
+        // window.location.href = "groups-directory/access?token=false";
       }
     };
 
@@ -109,7 +121,9 @@ export default function DirectoryClient() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh]">
         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-soft-green"></div>
-        <p className="mt-4 text-brand-soft-charcoal">Finding your village...</p>
+        <p className="mt-4 text-brand-soft-charcoal">
+          Loading your directory...
+        </p>
       </div>
     );
   }
@@ -220,7 +234,7 @@ export default function DirectoryClient() {
             setSelectedCategory("All");
             setSelectedType("All");
           }}
-          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:underline transition-colors h-10 flex items-center"
+          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-goldenrod dark:hover:text-brand-soft-green transition-colors h-10 flex items-center"
         >
           Reset filters
         </button>
@@ -234,23 +248,26 @@ export default function DirectoryClient() {
               key={`${group.name}-${group.platform}`}
               className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-all ${
                 group.isRecommended
-                  ? "border-2 border-brand-soft-green bg-brand-soft-green/5"
-                  : "border border-brand-sand/60 dark:border-brand-soft-charcoal bg-white dark:bg-transparent"
+                  ? "border border-brand-soft-green"
+                  : "border border-brand-sand/60 dark:border-brand-soft-charcoal"
               }`}
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-bold text-brand-charcoal dark:text-brand-white leading-tight">
                     {group.name}
+
+                    {group.platform && (
+                      <span className="inline-flex align-middle ml-2 -translate-y-[1px]">
+                        <CustomSocialIcon
+                          kind={
+                            group.platform.toLowerCase() as keyof typeof components
+                          }
+                          size={4}
+                        />
+                      </span>
+                    )}
                   </h3>
-                  {group.platform && (
-                    <CustomSocialIcon
-                      kind={
-                        group.platform.toLowerCase() as keyof typeof components
-                      }
-                      size={4}
-                    />
-                  )}
                 </div>
                 {group.description && (
                   <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 pt-1">
@@ -261,7 +278,7 @@ export default function DirectoryClient() {
                   {group.categories.split(",").map((tag) => (
                     <span
                       key={tag}
-                      className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod bg-brand-sand/20 px-2 py-0.5 rounded"
+                      className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod p-0.5 rounded"
                     >
                       {tag.trim()}
                     </span>
@@ -280,8 +297,8 @@ export default function DirectoryClient() {
             </div>
           ))
         ) : (
-          <div className="text-center py-20 bg-gray-50 dark:bg-white/5 rounded-2xl border border-dashed border-brand-sand">
-            <p className="text-gray-500 dark:text-gray-400 font-medium">
+          <div className="text-center py-20 bg-brand-sand/10 dark:bg-white/5 rounded-xl border border border-brand-sand">
+            <p className="text-brand-soft-charcoal dark:text-brand-white font-medium">
               No groups match your current filters.
             </p>
             <button
@@ -290,7 +307,7 @@ export default function DirectoryClient() {
                 setSelectedType("All");
                 setActiveTab("all");
               }}
-              className="mt-2 text-brand-soft-green font-bold hover:underline"
+              className="mt-2 text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green cursor-pointer"
             >
               Clear all filters
             </button>
@@ -298,8 +315,15 @@ export default function DirectoryClient() {
         )}
       </div>
 
-      <p className="text-center text-xs text-brand-soft-charcoal mt-12 mb-8 italic">
-        Something not working? Please report broken links to the moderators.
+      <p className="text-center text-xs text-brand-charcoal dark:text-brand-white mt-8 mb-8 italic">
+        Something not working? Please report broken links to{" "}
+        <a
+          href="mailto:hello@amsterdamparentproject.nl"
+          className="dark:text-brand-goldenrod dark:hover:text-brand-soft-green hover:text-brand-goldenrod text-brand-soft-green"
+        >
+          hello@amsterdamparentproject.nl
+        </a>
+        .
       </p>
     </div>
   );
