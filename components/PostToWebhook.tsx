@@ -33,7 +33,7 @@ export const postEvent = async (data) => {
 };
 
 export const postRequestDirectory = async (data) => {
-  const url = process.env.TEST_N8N_REQUEST_DIRECTORY_WEBHOOK_URL;
+  const url = process.env.N8N_REQUEST_DIRECTORY_WEBHOOK_URL;
   return postToWebhook(url, data);
 };
 
