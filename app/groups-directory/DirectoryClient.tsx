@@ -149,7 +149,7 @@ export default function DirectoryClient() {
           attached.
         </p>
         <p className="text-sm text-brand-charcoal dark:text-brand-white mt-2">
-          A quick favor: To keep our spaces safe and free from spam,{" "}
+          To keep our spaces safe and free from spam,{" "}
           <b>please do not share these invite links publicly</b>. Help us
           protect these groups from spammers and more by keeping this directory
           private.
