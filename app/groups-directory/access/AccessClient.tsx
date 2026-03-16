@@ -4,21 +4,43 @@ import RequestGroupsDirectoryAccess from "@/components/RequestGroupsDirectoryAcc
 import SharePageBlock from "@/components/SharePageBlock";
 import { useSearchParams } from "next/navigation";
 import InvalidDirectoryLinkWarning from "@/components/InvalidDirectoryLink";
+import Link from "@/components/Link";
+import { useEffect, useState } from "react";
 
 export default function AccessClient() {
   const searchParams = useSearchParams();
   const showWarning = searchParams.get("uid") === "false";
 
+  const [hasStoredUid, sethasStoredUid] = useState<string | null>(null);
+  useEffect(() => {
+    const uid = localStorage.getItem("app_uid");
+    sethasStoredUid(uid);
+  }, []);
+
   return (
     <div>
-      <div className="pt-6 pb-6 flex flex-col items-center">
+      <div className="mt-6 md:mb-6 mb-3 flex flex-col items-center">
         {showWarning && <InvalidDirectoryLinkWarning />}
-        <h2 className="text-2xl md:text-3xl font-bold text-brand-soft-green dark:text-brand-goldenrod text-center mb-4 max-w-sm md:max-w-xl">
+        <h2 className="text-xl md:text-3xl font-bold text-brand-soft-green dark:text-brand-goldenrod text-center mb-2">
           Find your
         </h2>
         <h1 className="text-center text-brand-charcoal dark:text-brand-white text-3xl leading-8 font-extrabold tracking-tight md:text-5xl md:leading-10">
           Amsterdam Parent Groups
         </h1>
+      </div>
+      <div className="flex justify-center mb-1 md:mb-0">
+        {hasStoredUid && (
+          <Link
+            href="/groups-directory"
+            className="group inline-flex items-center italic py-2 px-4 rounded-2xl text-lg font-medium text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
+            prefetch={false}
+          >
+            Go to directory
+            <span className="ml-1 transform group-hover:translate-x-2 transition-transform">
+              &rarr;
+            </span>
+          </Link>
+        )}
       </div>
       <div className="flex flex-col items-center space-y-2 md:pt-4 pb-8 md:space-y-5">
         <p className="max-w-2xl text-center mb-4">

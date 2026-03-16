@@ -90,12 +90,23 @@ export default function DirectoryClient() {
 
   // --- Computed Filters ---
   const categories = useMemo(() => {
-    const all = data[0]?.groups.flatMap((g) => g.categories.split(", ")) || [];
+    const all =
+      data[0]?.groups.flatMap((g) =>
+        g.categories
+          .split(", ")
+          .map((cat) => cat.trim())
+          .filter(Boolean),
+      ) || [];
+
     return ["All", ...Array.from(new Set(all)).sort()];
   }, [data]);
 
   const types = useMemo(() => {
-    const all = data[0]?.groups.map((g) => g.platform).filter(Boolean) || [];
+    const all =
+      data[0]?.groups
+        .map((g) => g.platform)
+        .filter((p) => p && p.trim() !== "") || [];
+
     return ["All", ...Array.from(new Set(all)).sort()];
   }, [data]);
 

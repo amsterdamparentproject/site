@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import AccessClient from "./AccessClient";
 
 export const metadata = genPageMetadata({
-  title: "Request Groups Directory Access",
+  title: "Find Your Parent Groups",
 });
 
 export default function Page() {
