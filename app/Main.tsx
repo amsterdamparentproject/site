@@ -107,7 +107,7 @@ export default function Home({ posts }) {
           <ShowcaseButton
             key={"groups-directory"}
             href={"/groups-directory/access"}
-            title={"Community Groups Directory"}
+            title={"Amsterdam Parent Groups Directory"}
             umamiName={"Main: Request Groups Directory Access"}
           />
           <ShowcaseButton

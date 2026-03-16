@@ -16,8 +16,8 @@ export default function AccessClient() {
         <h2 className="text-2xl md:text-3xl font-bold text-brand-soft-green dark:text-brand-goldenrod text-center mb-4 max-w-sm md:max-w-xl">
           Find your
         </h2>
-        <h1 className="text-center text-brand-charcoal dark:text-brand-white text-4xl leading-9 font-extrabold tracking-tight md:text-6xl md:leading-14">
-          Community Groups
+        <h1 className="text-center text-brand-charcoal dark:text-brand-white text-3xl leading-8 font-extrabold tracking-tight md:text-5xl md:leading-10">
+          Amsterdam Parent Groups
         </h1>
       </div>
       <div className="flex flex-col items-center space-y-2 md:pt-4 pb-8 md:space-y-5">
@@ -29,8 +29,8 @@ export default function AccessClient() {
         </p>
         <p className="max-w-2xl text-center mb-4">
           <b className="dark:text-brand-goldenrod">
-            This form will give you access to the Amsterdam Parent Community
-            Groups Directory,
+            This form will give you access to the Amsterdam Parent Groups
+            Directory,
           </b>{" "}
           with invite links to the online groups. It exists to keep the
           community free of spammers and unwanted promotions. Your information
@@ -57,7 +57,7 @@ export default function AccessClient() {
           <RequestGroupsDirectoryAccess />
         </div>
         <div>
-          <p className="max-w-xl text-center italic text-sm mb-6">
+          <p className="max-w-xl text-center italic text-sm">
             A note on APP's role: APP collaborates with community admins and
             manages the directory, but not the groups themselves. We are not
             responsible for conversations that happen in individual chats;

@@ -130,7 +130,7 @@ export default function DirectoryClient() {
     <div className="max-w-4xl mx-auto px-6">
       <div className="pt-6 pb-6 flex flex-col items-center">
         <h1 className="text-center text-brand-charcoal dark:text-brand-white text-3xl leading-8 font-extrabold tracking-tight md:text-4xl">
-          Community Groups Directory
+          Amsterdam Parent Groups Directory
         </h1>
       </div>
 

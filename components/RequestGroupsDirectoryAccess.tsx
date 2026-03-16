@@ -7,7 +7,7 @@ const RequestWhatsAppDirectoryAccess = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    interests: [] as string[],
+    categories: [] as string[],
     otherInterest: "",
     notes: "",
     subscribeNewsletter: false,
@@ -23,27 +23,20 @@ const RequestWhatsAppDirectoryAccess = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const interestOptions = [
+  const categories = [
     "Parenting groups",
-    "Baby groups",
-    "Toddler groups",
-    "Child groups",
-    "LGBTQ+ family groups",
     "Mom groups",
     "Dad groups",
     "Twin groups",
-    "Event & meet-up groups",
-    "Entrepreneur & working mom groups",
-    "Buy & sell groups",
-    "Language & country groups",
+    "Neighborhood groups",
     "Groups by age/due date",
-    "Groups by neighborhood",
-    "Fertility support groups",
-    "Pumping support groups",
+    "Activities groups",
+    "Language & country groups",
+    "Buy & sell groups",
   ];
 
-  const isAllSelected = formData.interests.length === interestOptions.length;
-  const isAnySelected = formData.interests.length > 0;
+  const isAllSelected = formData.categories.length === categories.length;
+  const isAnySelected = formData.categories.length > 0;
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
 
   const isFormValid =
@@ -56,11 +49,11 @@ const RequestWhatsAppDirectoryAccess = () => {
 
     if (type === "checkbox") {
       const checkbox = e.target as HTMLInputElement;
-      if (name === "interests") {
-        const updatedInterests = checkbox.checked
-          ? [...formData.interests, value]
-          : formData.interests.filter((i) => i !== value);
-        setFormData((prev) => ({ ...prev, interests: updatedInterests }));
+      if (name === "categories") {
+        const updatedCategories = checkbox.checked
+          ? [...formData.categories, value]
+          : formData.categories.filter((i) => i !== value);
+        setFormData((prev) => ({ ...prev, categories: updatedCategories }));
       } else {
         setFormData((prev) => ({ ...prev, [name]: checkbox.checked }));
       }
@@ -72,7 +65,7 @@ const RequestWhatsAppDirectoryAccess = () => {
   const handleToggleAll = () => {
     setFormData((prev) => ({
       ...prev,
-      interests: isAllSelected ? [] : [...interestOptions],
+      categories: isAllSelected ? [] : [...categories],
     }));
   };
 
@@ -85,11 +78,11 @@ const RequestWhatsAppDirectoryAccess = () => {
     if (!isFormValid) return;
     setIsSubmitting(true);
 
-    // INTERESTS
-    let selectedInterests = formData.interests.join(", ");
+    // categories
+    let selectedCategories = formData.categories.join(", ");
     if (!isAnySelected && !formData.otherInterest.trim()) {
       // Select all if none provided
-      selectedInterests = "";
+      selectedCategories = "";
     }
 
     try {
@@ -97,7 +90,7 @@ const RequestWhatsAppDirectoryAccess = () => {
       if (formData.subscribeNewsletter) {
         await subscribeToNewsletter({
           email: formData.email,
-          tag: "website-whatsapp-directory-request",
+          tag: "website-groups-directory-request",
           referringSite: String(window.location),
         });
       }
@@ -106,7 +99,7 @@ const RequestWhatsAppDirectoryAccess = () => {
       const data = new FormData();
       data.append("name", formData.name);
       data.append("email", formData.email);
-      data.append("interests", selectedInterests);
+      data.append("categories", selectedCategories);
       data.append("otherInterest", formData.otherInterest);
       data.append("notes", formData.notes);
       data.append(
@@ -204,13 +197,13 @@ const RequestWhatsAppDirectoryAccess = () => {
 
       {/* Resources list */}
       <div className="flex flex-wrap mb-6 px-3">
-        <label htmlFor="interests-check" className={labelStyle}>
+        <label htmlFor="categories-check" className={labelStyle}>
           Which groups are you interested in?
         </label>
         <p className="text-xs text-gray-500 mb-3 italic">
           If none are selected, we'll show you all groups by default.
         </p>
-        <div id="interests-check" className="w-full space-y-2">
+        <div id="categories-check" className="w-full space-y-2">
           <label className="flex items-center p-2 mb-2 bg-brand-sand/10 rounded-md cursor-pointer hover:bg-brand-sand/20 transition-colors">
             <input
               type="checkbox"
@@ -225,16 +218,16 @@ const RequestWhatsAppDirectoryAccess = () => {
               {isAllSelected ? "Deselect all" : "Select all"}
             </span>
           </label>
-          {interestOptions.map((option) => (
+          {categories.map((option) => (
             <label
               key={option}
               className="flex items-center cursor-pointer group px-2"
             >
               <input
                 type="checkbox"
-                name="interests"
+                name="categories"
                 value={option}
-                checked={formData.interests.includes(option)}
+                checked={formData.categories.includes(option)}
                 onChange={handleChange}
                 className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green"
               />
