@@ -1,6 +1,6 @@
 "use client";
 
-import RequestAccessForm from "@/components/groups-directory/RequestAccess";
+import RequestAccessForm from "@/components/groups-directory/RequestAccessForm";
 import SharePageBlock from "@/components/SharePageBlock";
 import { useSearchParams } from "next/navigation";
 import InvalidDirectoryLinkWarning from "@/components/InvalidDirectoryLink";
