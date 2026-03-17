@@ -281,16 +281,18 @@ export default function DirectoryClient() {
                     {group.description}
                   </p>
                 )}
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {group.categories.split(",").map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod p-0.5 rounded"
-                    >
-                      {tag.trim()}
-                    </span>
-                  ))}
-                </div>
+                {group.categories && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {group.categories.split(",").map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod p-0.5 rounded"
+                      >
+                        {tag.trim()}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <a

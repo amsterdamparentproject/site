@@ -4,6 +4,11 @@ import AccessClient from "./AccessClient";
 
 export const metadata = genPageMetadata({
   title: "Find Your Parent Groups",
+  openGraph: {
+    images: [
+      `${process.env.BASE_PATH || ""}/static/images/web-share/groups-directory.png`,
+    ],
+  },
 });
 
 export default function Page() {

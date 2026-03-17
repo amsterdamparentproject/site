@@ -9,6 +9,11 @@ import Image from "@/components/Image";
 
 export const metadata = genPageMetadata({
   title: "Join the Fourth Trimester Program",
+  openGraph: {
+    images: [
+      `${process.env.BASE_PATH || ""}/static/images/web-share/fourth-trimester-program.png`,
+    ],
+  },
 });
 
 function PricingTable() {

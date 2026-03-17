@@ -4,6 +4,11 @@ import sessionData from "@/data/fourthTrimesterProgram/sessions";
 
 export const metadata = genPageMetadata({
   title: "Welcome to the Fourth Trimester Program",
+  openGraph: {
+    images: [
+      `${process.env.BASE_PATH || ""}/static/images/web-share/fourth-trimester-program.png`,
+    ],
+  },
 });
 
 export default function page() {

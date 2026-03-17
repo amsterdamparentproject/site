@@ -7,7 +7,14 @@ import { coreContent } from "pliny/utils/contentlayer";
 import ShowcaseButton from "@/components/ShowcaseButton";
 import FTPSessionCard from "@/components/FTPSessionCard";
 
-export const metadata = genPageMetadata({ title: "Fourth Trimester Program" });
+export const metadata = genPageMetadata({
+  title: "Fourth Trimester Program",
+  openGraph: {
+    images: [
+      `${process.env.BASE_PATH || ""}/static/images/web-share/fourth-trimester-program.png`,
+    ],
+  },
+});
 
 const getSessions = () => {
   return (

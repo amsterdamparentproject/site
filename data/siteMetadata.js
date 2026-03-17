@@ -9,7 +9,7 @@ const siteMetadata = {
   siteUrl: "https://amsterdamparentproject.nl",
   siteRepo: "https://github.com/amsterdamparentproject/site",
   siteLogo: `${process.env.BASE_PATH || ""}/static/images/logo/light.png`,
-  socialBanner: `${process.env.BASE_PATH || ""}/static/images/web-share.png`,
+  socialBanner: `${process.env.BASE_PATH || ""}/static/images/web-share/default.png`,
   email: "amsterdamparentproject@gmail.com",
   instagram: "https://www.instagram.com/amsterdamparentproject",
   roadmap: "https://trello.com/b/yUO7aIps/roadmap-amsterdam-parent-project-app",

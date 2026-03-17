@@ -196,7 +196,7 @@ export default function Events() {
                 description={event.description}
                 date={event.date}
                 until={event.until}
-                imgSrc={event.imgSrc || "/static/images/web-share.png"}
+                imgSrc={event.imgSrc || "/static/images/web-share/default.png"}
                 href={event.href}
                 comingSoon={event.comingSoon}
               />

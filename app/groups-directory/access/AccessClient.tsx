@@ -11,10 +11,11 @@ export default function AccessClient() {
   const searchParams = useSearchParams();
   const showWarning = searchParams.get("uid") === "false";
 
-  const [hasStoredUid, sethasStoredUid] = useState<string | null>(null);
+  const [hasStoredUid, sethasStoredUid] = useState<boolean | null>(null);
   useEffect(() => {
     const uid = localStorage.getItem("app_uid");
-    sethasStoredUid(uid);
+    const maybeValidUid = !!uid && !showWarning;
+    sethasStoredUid(maybeValidUid);
   }, []);
 
   return (
