@@ -1,6 +1,6 @@
 "use client";
 
-import RequestGroupsDirectoryAccess from "@/components/RequestGroupsDirectoryAccess";
+import RequestAccessForm from "@/components/groups-directory/RequestAccess";
 import SharePageBlock from "@/components/SharePageBlock";
 import { useSearchParams } from "next/navigation";
 import InvalidDirectoryLinkWarning from "@/components/InvalidDirectoryLink";
@@ -77,7 +77,7 @@ export default function AccessClient() {
         </div>
 
         <div className="w-full max-w-lg my-4">
-          <RequestGroupsDirectoryAccess />
+          <RequestAccessForm />
         </div>
         <div>
           <p className="max-w-xl text-center italic text-sm">

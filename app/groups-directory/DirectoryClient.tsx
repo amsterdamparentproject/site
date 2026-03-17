@@ -33,6 +33,8 @@ export default function DirectoryClient() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
 
+  const [userUid, setuserUid] = useState<string | null>(null);
+
   // --- Data Fetching ---
   useEffect(() => {
     const fetchDirectory = async () => {
@@ -47,6 +49,10 @@ export default function DirectoryClient() {
           window.history.replaceState({}, "", window.location.pathname);
         } else {
           uid = localStorage.getItem("app_uid");
+        }
+
+        if (uid) {
+          setuserUid(uid);
         }
 
         if (!uid) {
@@ -300,6 +306,8 @@ export default function DirectoryClient() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-brand-soft-green text-white px-10 py-2.5 rounded-full cursor-pointer font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal active:scale-95 transition-all shadow-sm text-center"
+                data-umami-event="Groups Directory: Join group"
+                data-umami-event-uid={userUid}
               >
                 Join
               </a>

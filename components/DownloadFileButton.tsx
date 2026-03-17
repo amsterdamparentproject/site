@@ -6,7 +6,7 @@ function DownloadFileButton(args) {
       href={filePath}
       download
       data-umami-event={umamiName}
-      data-umami-type="downloadFileButton"
+      data-umami-event-type="downloadFileButton"
       className="inline-flex items-center px-6 py-3 bg-brand-soft-green text-base font-medium rounded-md text-brand-white hover:bg-brand-goldenrod cursor:pointer"
     >
       <svg

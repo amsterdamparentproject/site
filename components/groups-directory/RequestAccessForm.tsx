@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { postRequestDirectory } from "./PostToWebhook";
-import subscribeToNewsletter from "./Subscribe";
+import { postRequestDirectory } from "../PostToWebhook";
+import subscribeToNewsletter from "../Subscribe";
 
-const RequestWhatsAppDirectoryAccess = () => {
+const RequestAccessForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -321,4 +321,4 @@ const RequestWhatsAppDirectoryAccess = () => {
   );
 };
 
-export default RequestWhatsAppDirectoryAccess;
+export default RequestAccessForm;
