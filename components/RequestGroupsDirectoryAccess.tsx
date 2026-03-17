@@ -280,7 +280,7 @@ const RequestWhatsAppDirectoryAccess = () => {
           <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white">
             <b>Please subscribe me to APP's newsletter</b>: a twice-monthly
             email digest of upcoming activities for babies, toddlers, and
-            parents shared in the WhatsApp groups
+            parents shared in the groups
           </span>
         </label>
       </div>
