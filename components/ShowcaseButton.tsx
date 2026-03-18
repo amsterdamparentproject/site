@@ -81,11 +81,13 @@ function ShowcaseButton(args) {
     border-brand-goldenrod
     text-brand-charcoal
     hover:bg-brand-charcoal
+    hover:border-brand-charcoal
     hover:text-brand-white
-    dark:bg-brand-soft-charcoal 
+    dark:bg-brand-soft-green 
     dark:text-brand-white
-    dark:hover:bg-brand-soft-green
-    dark:border-brand-soft-charcoal
+    dark:hover:bg-brand-goldenrod
+    dark:hover:text-brand-charcoal
+    dark:border-brand-soft-green
   `;
 
   const getBackgroundStyle = (fill, background) => {

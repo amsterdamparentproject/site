@@ -136,7 +136,7 @@ const eventsData: CalendarEvent[] = [
   },
   {
     title: "Van Gogh Museum Parent & Baby Tour",
-    // imgSrc: "/static/images/calendar/vangogh.jpg",
+    imgSrc: "/static/images/calendar/vangogh.jpg",
     href: "https://www.eventbrite.nl/e/van-gogh-museum-parent-baby-tour-tickets-1984753296538",
     description: `Designed for parents with pre-walking babies (0-1 year old).`,
     date: "2026-04-14",

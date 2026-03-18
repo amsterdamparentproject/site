@@ -155,9 +155,8 @@ export default function Events() {
             Community Calendar
           </h2>
           <p className="max-w-sm text-center mb-4">
-            Your daily calendar reference for local events, activities, and
-            programs happening for babies, toddlers, and their parents in
-            Amsterdam.
+            Your daily reference for local events, activities, and programs
+            happening for babies, toddlers, and their parents in Amsterdam.
           </p>
           <ShowcaseButton
             key="community-calendar-google"

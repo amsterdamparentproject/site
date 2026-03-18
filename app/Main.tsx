@@ -124,7 +124,7 @@ export default function Home({ posts }) {
           />
           <ShowcaseButton
             href="/calendar"
-            title="Family Events"
+            title="Family events"
             umamiName={"Main: Calendar"}
           />
           <ShowcaseButton
