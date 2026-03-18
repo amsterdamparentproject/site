@@ -70,7 +70,7 @@ export default function Home({ posts }) {
               </Link>{" "}
               to help families with babies and toddlers thrive in Amsterdam.
             </p>
-            <p className="mb-4 font-medium text-center">
+            <p className="mb-4 font-medium text-center mt-1">
               <Link
                 href="/about"
                 className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
