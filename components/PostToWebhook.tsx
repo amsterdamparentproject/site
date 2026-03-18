@@ -1,5 +1,7 @@
 "use server";
 
+const isLocal = process.env.NODE_ENV === "development";
+
 const postToWebhook = async (webhookURL, data) => {
   const authSecret = process.env.N8N_WEBHOOK_SECRET;
 
@@ -28,12 +30,23 @@ const postToWebhook = async (webhookURL, data) => {
 };
 
 export const postEvent = async (data) => {
-  const url = process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
+  const url = isLocal
+    ? process.env.TEST_N8N_EVENT_SUBMIT_WEBHOOK_URL
+    : process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
   return postToWebhook(url, data);
 };
 
 export const postRequestDirectory = async (data) => {
-  const url = process.env.N8N_REQUEST_DIRECTORY_WEBHOOK_URL;
+  const url = isLocal
+    ? process.env.TEST_N8N_REQUEST_DIRECTORY_WEBHOOK_URL
+    : process.env.N8N_REQUEST_DIRECTORY_WEBHOOK_URL;
+  return postToWebhook(url, data);
+};
+
+export const postManageDirectory = async (data) => {
+  const url = isLocal
+    ? process.env.TEST_N8N_MANAGE_DIRECTORY_WEBHOOK_URL
+    : process.env.N8N_MANAGE_DIRECTORY_WEBHOOK_URL;
   return postToWebhook(url, data);
 };
 

@@ -1,14 +1,16 @@
 "use client";
 import { useState } from "react";
-import { postRequestDirectory } from "../PostToWebhook";
+import { postManageDirectory } from "../PostToWebhook";
 import subscribeToNewsletter from "../Subscribe";
 
-const RequestAccessForm = () => {
+const AddGroupForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    groupName: "",
+    inviteLink: "",
+    description: "",
+    adminName: "",
     email: "",
     categories: [] as string[],
-    otherInterest: "",
     notes: "",
     subscribeNewsletter: false,
     agreedToTerms: false,
@@ -24,23 +26,21 @@ const RequestAccessForm = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const categories = [
-    "Parenting groups",
-    "Mom groups",
-    "Dad groups",
-    "Twin groups",
-    "Neighborhood groups",
-    "Groups by age/due date",
-    "Activities groups",
-    "Language & country groups",
-    "Buy & sell groups",
+    "Parenting",
+    "Mom",
+    "Dad",
+    "Twin",
+    "Neighborhood",
+    "Age/due date",
+    "Activities",
+    "Language & country",
+    "Buy & sell",
   ];
 
-  const isAllSelected = formData.categories.length === categories.length;
-  const isAnySelected = formData.categories.length > 0;
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
 
   const isFormValid =
-    formData.name.trim() !== "" && isEmailValid && formData.agreedToTerms;
+    formData.adminName.trim() !== "" && isEmailValid && formData.agreedToTerms;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -62,13 +62,6 @@ const RequestAccessForm = () => {
     }
   };
 
-  const handleToggleAll = () => {
-    setFormData((prev) => ({
-      ...prev,
-      categories: isAllSelected ? [] : [...categories],
-    }));
-  };
-
   const handleBlur = (field: string) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
   };
@@ -78,29 +71,29 @@ const RequestAccessForm = () => {
     if (!isFormValid) return;
     setIsSubmitting(true);
 
+    console.log(formData);
+
     // categories
-    let selectedCategories = formData.categories.join(", ");
-    if (!isAnySelected && !formData.otherInterest.trim()) {
-      // Select all if none provided
-      selectedCategories = "";
-    }
+    const selectedCategories = formData.categories.join(", ");
 
     try {
       // Subscribe to newsletter
       if (formData.subscribeNewsletter) {
         await subscribeToNewsletter({
           email: formData.email,
-          tag: "website-groups-directory-request",
+          tag: "website-groups-directory-add-group",
           referringSite: String(window.location),
         });
       }
 
       // Send to n8n
       const data = new FormData();
-      data.append("name", formData.name);
-      data.append("email", formData.email);
+      data.append("groupName", formData.groupName);
+      data.append("inviteLink", formData.inviteLink);
+      data.append("description", formData.description);
       data.append("categories", selectedCategories);
-      data.append("otherInterest", formData.otherInterest);
+      data.append("adminName", formData.adminName);
+      data.append("email", formData.email);
       data.append("notes", formData.notes);
       data.append(
         "subscribeNewsletter",
@@ -108,7 +101,7 @@ const RequestAccessForm = () => {
       );
       data.append("agreedToTerms", formData.agreedToTerms ? "Yes" : "No");
 
-      const response = await postRequestDirectory(data);
+      const response = await postManageDirectory(data);
       if (response.success) {
         setIsSuccess(true);
       } else {
@@ -139,7 +132,8 @@ const RequestAccessForm = () => {
   const getStyle = (field: string) => {
     if (!touched[field]) return inputStyle;
     if (field === "email" && !isEmailValid) return requiredInputStyle;
-    if (field === "name" && !formData.name.trim()) return requiredInputStyle;
+    if (field === "adminName" && !formData.adminName.trim())
+      return requiredInputStyle;
     return inputStyle;
   };
 
@@ -150,8 +144,8 @@ const RequestAccessForm = () => {
           Success!
         </h2>
         <p className="text-brand-white">
-          Your request has been sent for review. Once approved, you'll receive
-          an email with the directory link.
+          Your request to add a new group has been sent for review. You'll
+          receive an email after we've taken a look!
         </p>
       </div>
     );
@@ -159,65 +153,70 @@ const RequestAccessForm = () => {
 
   return (
     <form className="w-full" onSubmit={submitEvent}>
-      {/* Person info */}
+      <h1 className="text-2xl text-center font-bold text-brand-soft-green mb-5">
+        Add a group
+      </h1>
+      {/* Group info */}
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
-          <label className={labelStyle} htmlFor="name">
-            Your first name <span className="text-red-500">*</span>
+          <label className={labelStyle} htmlFor="groupName">
+            Group name <span className="text-red-500">*</span>
           </label>
           <input
-            className={getStyle("name")}
-            id="name"
-            name="name"
-            type="name"
-            placeholder="Alex"
-            value={formData.name}
+            className={getStyle("groupName")}
+            id="groupName"
+            name="groupName"
+            type="groupName"
+            placeholder="Amsterdam Parent Group"
+            value={formData.groupName}
             onChange={handleChange}
-            onBlur={() => handleBlur("name")}
-          />
-        </div>
-      </div>
-      <div className="flex flex-wrap mb-6">
-        <div className="w-full px-3">
-          <label className={labelStyle} htmlFor="email">
-            Your email <span className="text-red-500">*</span>
-          </label>
-          <input
-            className={getStyle("email")}
-            id="email"
-            name="email"
-            type="email"
-            placeholder="hello@amsterdamparentproject.nl"
-            value={formData.email}
-            onChange={handleChange}
-            onBlur={() => handleBlur("email")}
+            onBlur={() => handleBlur("groupName")}
           />
         </div>
       </div>
 
-      {/* Resources list */}
+      <div className="flex flex-wrap mb-6">
+        <div className="w-full px-3">
+          <label className={labelStyle} htmlFor="inviteLink">
+            Invite link <span className="text-red-500">*</span>
+          </label>
+          <input
+            className={getStyle("inviteLink")}
+            id="inviteLink"
+            name="inviteLink"
+            type="inviteLink"
+            placeholder="https://chat.whatsapp.com/KniW..."
+            value={formData.inviteLink}
+            onChange={handleChange}
+            onBlur={() => handleBlur("inviteLink")}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap mb-6 px-3">
+        <label className={labelStyle} htmlFor="description">
+          Description
+        </label>
+        <textarea
+          className={inputStyle}
+          id="description"
+          name="description"
+          rows={3}
+          placeholder="What is your group about?"
+          value={formData.description}
+          onChange={handleChange}
+        />
+      </div>
+
       <div className="flex flex-wrap mb-6 px-3">
         <label htmlFor="categories-check" className={labelStyle}>
-          Which groups are you interested in?
+          Which categories apply to your group?
         </label>
         <p className="text-xs text-gray-500 mb-3 italic">
-          If none are selected, we'll show you all groups by default.
+          Select all that apply. If none apply, we will show your group in the
+          general list.
         </p>
         <div id="categories-check" className="w-full space-y-2">
-          <label className="flex items-center p-2 mb-2 bg-brand-sand/10 rounded-md cursor-pointer hover:bg-brand-sand/20 transition-colors">
-            <input
-              type="checkbox"
-              onChange={handleToggleAll}
-              checked={isAllSelected}
-              ref={(el) => {
-                if (el) el.indeterminate = isAnySelected && !isAllSelected;
-              }}
-              className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green"
-            />
-            <span className="ml-3 font-semibold text-brand-charcoal dark:text-brand-white">
-              {isAllSelected ? "Deselect all" : "Select all"}
-            </span>
-          </label>
           {categories.map((option) => (
             <label
               key={option}
@@ -236,19 +235,42 @@ const RequestAccessForm = () => {
               </span>
             </label>
           ))}
-          <div className="flex items-center mt-2 px-2">
-            <span className="text-brand-charcoal dark:text-brand-white mr-2">
-              Other:
-            </span>
-            <input
-              type="text"
-              name="otherInterest"
-              value={formData.otherInterest}
-              onChange={handleChange}
-              placeholder="Please specify"
-              className={getStyle("other")}
-            />
-          </div>
+        </div>
+      </div>
+
+      {/* Person info */}
+      <div className="flex flex-wrap mb-6">
+        <div className="w-full px-3">
+          <label className={labelStyle} htmlFor="adminName">
+            Your first name <span className="text-red-500">*</span>
+          </label>
+          <input
+            className={getStyle("adminName")}
+            id="adminName"
+            name="adminName"
+            type="adminName"
+            placeholder="Alex"
+            value={formData.adminName}
+            onChange={handleChange}
+            onBlur={() => handleBlur("adminName")}
+          />
+        </div>
+      </div>
+      <div className="flex flex-wrap mb-6">
+        <div className="w-full px-3">
+          <label className={labelStyle} htmlFor="email">
+            Your email <span className="text-red-500">*</span>
+          </label>
+          <input
+            className={getStyle("email")}
+            id="email"
+            name="email"
+            type="email"
+            placeholder="hello@amsterdamparentproject.nl"
+            value={formData.email}
+            onChange={handleChange}
+            onBlur={() => handleBlur("email")}
+          />
         </div>
       </div>
 
@@ -300,9 +322,13 @@ const RequestAccessForm = () => {
             className="mt-1 w-5 h-5 border-brand-sand rounded accent-brand-soft-green"
           />
           <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white">
-            <b>I agree to not publicly share links</b> to groups or to the
-            directory once I have access, to keep the community safe from
-            spammers. (Please share this form instead!){" "}
+            <b>
+              I confirm that this group meets directory requirements and that I
+              am the owner/admin of this group.
+            </b>{" "}
+            I agree to proactively keep the group information up to date in the
+            directory and to be the "admin contact" if there are questions or
+            concerns regarding the group.{" "}
             <span className="text-red-500">*</span>
           </span>
         </label>
@@ -314,11 +340,11 @@ const RequestAccessForm = () => {
           type="submit"
           disabled={!isFormValid || isSubmitting}
         >
-          {isSubmitting ? "Sending..." : "Request access"}
+          {isSubmitting ? "Sending..." : "Add group"}
         </button>
       </div>
     </form>
   );
 };
 
-export default RequestAccessForm;
+export default AddGroupForm;
