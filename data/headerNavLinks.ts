@@ -4,8 +4,11 @@ const highlightStyle =
   "text-brand-soft-green dark:text-brand-goldenrod m-1 font-medium hover:text-brand-goldenrod dark:hover:text-brand-soft-green";
 const headerNavLinks = [
   { href: "/", title: "Home", style: defaultStyle },
-  { href: "/about", title: "About", style: defaultStyle },
-  { href: "/calendar", title: "Calendar", style: defaultStyle },
+  {
+    href: "/programs/fourth-trimester",
+    title: "Newborn support",
+    style: defaultStyle,
+  },
   {
     href: "/newsletter",
     title: "Newsletter",

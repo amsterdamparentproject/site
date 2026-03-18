@@ -44,31 +44,43 @@ export default function Home({ posts }) {
           <div className="h-6 text-2xl/5 pt-0 mb-8 text-brand-charcoal dark:text-brand-white font-semibold sm:hidden text-center">
             {siteMetadata.headerTitle}
           </div>
-          <p className="text-center max-w-md mb-8">
-            We're a{" "}
-            <span className="text-brand-goldenrod font-bold">
-              nonprofit, parent-powered
-            </span>{" "}
-            (and expert-supported!) organization that runs{" "}
-            <Link
-              href="/programs/fourth-trimester"
-              className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
-              aria-label="fourth-tri-tagline"
-              data-umami-event="Tagline: Fourth Trimester Program"
-            >
-              postpartum support groups
-            </Link>
-            , family events, and a local activities{" "}
-            <Link
-              href="/subscribe"
-              className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
-              aria-label="subscribe-tagline"
-              data-umami-event="Tagline: Subscribe"
-            >
-              newsletter
-            </Link>{" "}
-            to help families with babies and toddlers thrive in Amsterdam.
-          </p>
+          <div>
+            <p className="text-center max-w-md">
+              We're a{" "}
+              <span className="text-brand-goldenrod font-bold">
+                nonprofit, parent-powered
+              </span>{" "}
+              (and expert-supported!) organization that runs{" "}
+              <Link
+                href="/programs/fourth-trimester"
+                className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
+                aria-label="fourth-tri-tagline"
+                data-umami-event="Tagline: Fourth Trimester Program"
+              >
+                postpartum support groups
+              </Link>
+              , family events, and a local activities{" "}
+              <Link
+                href="/subscribe"
+                className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
+                aria-label="subscribe-tagline"
+                data-umami-event="Tagline: Subscribe"
+              >
+                newsletter
+              </Link>{" "}
+              to help families with babies and toddlers thrive in Amsterdam.
+            </p>
+            <p className="mb-4 font-medium text-center">
+              <Link
+                href="/about"
+                className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
+                aria-label="about-tagline"
+                data-umami-event="Tagline: About"
+              >
+                About us &rarr;
+              </Link>
+            </p>
+          </div>
 
           <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             What's next
@@ -96,7 +108,7 @@ export default function Home({ posts }) {
           </div>
 
           <h2 className="text-md mt-2 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
-            Our programs
+            What we do
           </h2>
           <ShowcaseButton
             key={"ftp"}
@@ -109,6 +121,11 @@ export default function Home({ posts }) {
             href={"/groups-directory/access"}
             title={"Amsterdam Parent Groups Directory"}
             umamiName={"Main: Request Groups Directory Access"}
+          />
+          <ShowcaseButton
+            href="/calendar"
+            title="Family Events"
+            umamiName={"Main: Calendar"}
           />
           <ShowcaseButton
             key={"bsp"}
@@ -151,11 +168,6 @@ export default function Home({ posts }) {
             href={siteMetadata.instagram}
             title="Instagram"
             umamiName={"Main: Instagram"}
-          />
-          <ShowcaseButton
-            href="/calendar"
-            title="Calendar"
-            umamiName={"Main: Calendar"}
           />
         </div>
       </div>
