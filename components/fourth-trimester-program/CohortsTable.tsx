@@ -4,6 +4,30 @@ import Link from "next/link";
 import { useState } from "react";
 import FTPCohortSchedule from "./CohortSchedule";
 
+const handleCheckout = async (cohort) => {
+  try {
+    const response = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        cohortSlug: cohort.slug,
+        cohortTitle: cohort.title,
+      }),
+    });
+
+    const session = await response.json();
+
+    if (session.error) throw new Error(session.error);
+
+    if (session.url) {
+      window.location.href = session.url; // Send the user to Stripe
+    }
+  } catch (err) {
+    console.error("Checkout failed:", err);
+    alert("Something went wrong. Please try again or message me!");
+  }
+};
+
 const formatDate = (date) => {
   return date instanceof Date
     ? date.toLocaleDateString("en-US", { day: "numeric", month: "short" })
@@ -135,17 +159,15 @@ const CohortRow = ({ cohort, activationFee = 25 }) => {
           onClick={(e) => e.stopPropagation()}
         >
           {!isClosed ? (
-            <Link
-              href={{
-                pathname: "/programs/fourth-trimester/join",
-                query: { cohort: cohort.slug, type: "activation" },
-              }}
-              className="text-center inline-block dark:hover:bg-brand-goldenrod dark:hover:text-brand-charcoal dark:bg-brand-soft-green dark:text-brand-white bg-brand-goldenrod hover:bg-brand-soft-green hover:text-brand-white text-brand-charcoal px-3 py-2 rounded text-xs font-bold"
+            <button
+              type="button"
+              className="pointer-cursor text-center inline-block dark:hover:bg-brand-goldenrod dark:hover:text-brand-charcoal dark:bg-brand-soft-green dark:text-brand-white bg-brand-goldenrod hover:bg-brand-soft-green hover:text-brand-white text-brand-charcoal px-3 py-2 rounded text-xs font-bold"
               data-umami-event-name="Fourth Trimester Program: Save your place"
               data-umami-event-cohort={cohort.slug}
+              onClick={() => handleCheckout(cohort)}
             >
               Save my place (€{activationFee})
-            </Link>
+            </button>
           ) : (
             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
               {isClosed ? "Closed" : "Waitlist"}
