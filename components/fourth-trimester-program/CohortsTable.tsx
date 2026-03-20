@@ -13,8 +13,8 @@ const formatDate = (date) => {
 const StatusIndicator = ({ groupStatus, inline = false }) => {
   const statusConfig = {
     Open: {
-      dot: "bg-brand-soft-green",
-      text: "text-brand-soft-green",
+      dot: "bg-brand-soft-green dark:bg-brand-violet",
+      text: "text-brand-soft-green dark:text-brand-violet",
       label: "Open",
     },
     "Last spots": {
@@ -68,7 +68,9 @@ const SessionTable = ({ cohort }) => {
 
   return (
     <div className="w-full bg-brand-sand/10 p-4">
-      <h2 className="text-brand-soft-green mb-2 font-bold">Cohort schedule</h2>
+      <h2 className="text-brand-soft-green dark:text-brand-goldenrod mb-2 font-bold">
+        Cohort schedule
+      </h2>
       <p className="italic text-sm mb-3">
         Please note: The schedule may change before the start of the cohort.
       </p>
@@ -118,7 +120,7 @@ const CohortRow = ({ cohort, activationFee = 25 }) => {
         </td>
 
         {/* Column 2: Due Date Window (Desktop) */}
-        <td className="px-6 py-5 hidden sm:table-cell text-sm font-medium text-brand-charcoal dark:text-brand-sand">
+        <td className="px-6 py-5 hidden sm:table-cell text-sm font-medium text-brand-charcoal dark:text-brand-white">
           {formatDate(cohort.start)} to {formatDate(cohort.end)}
         </td>
 
@@ -138,7 +140,7 @@ const CohortRow = ({ cohort, activationFee = 25 }) => {
                 pathname: "/programs/fourth-trimester/join",
                 query: { cohort: cohort.slug, type: "activation" },
               }}
-              className="text-center inline-block bg-brand-goldenrod hover:bg-brand-soft-green hover:text-brand-white text-brand-charcoal dark:text-brand-white px-3 py-2 rounded text-xs font-bold"
+              className="text-center inline-block dark:hover:bg-brand-goldenrod dark:hover:text-brand-charcoal dark:bg-brand-soft-green dark:text-brand-white bg-brand-goldenrod hover:bg-brand-soft-green hover:text-brand-white text-brand-charcoal px-3 py-2 rounded text-xs font-bold"
               data-umami-event-name="Fourth Trimester Program: Save your place"
               data-umami-event-cohort={cohort.slug}
             >

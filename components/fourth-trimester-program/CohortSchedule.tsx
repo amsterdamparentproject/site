@@ -21,7 +21,7 @@ export default function FTPCohortSchedule({ cohort }) {
               <td className="p-4 text-brand-soft-charcoal dark:text-brand-white">
                 <span className="font-bold">{session.name}</span>
                 {session.type && (
-                  <div className="text-xs text-gray-400 italic">
+                  <div className="text-xs dark:text-brand-sand text-brand-soft-charcoal italic">
                     <span className="text-xs">{session.type}</span>
                     <span className="sm:hidden"> - {session.location}</span>
                   </div>
@@ -29,10 +29,10 @@ export default function FTPCohortSchedule({ cohort }) {
               </td>
 
               {/* Date & Time */}
-              <td className="p-4 text-brand-soft-charcoal dark:text-brand-white/80">
+              <td className="p-4 text-brand-soft-charcoal dark:text-brand-white">
                 <span className="font-medium">{formatDate(session.date)}</span>
                 {session.time && (
-                  <span className="block text-xs text-gray-400 italic">
+                  <span className="block text-xs dark:text-brand-sand text-brand-soft-charcoal italic">
                     {session.time}
                   </span>
                 )}
@@ -41,7 +41,7 @@ export default function FTPCohortSchedule({ cohort }) {
               {/* Location */}
               <td className="p-4 hidden sm:table-cell">
                 <span>Location: </span>
-                <span className="text-brand-charcoal font-medium dark:text-brand-sand">
+                <span className="text-brand-charcoal font-medium dark:text-brand-white">
                   {session.location || "To be determined"}
                 </span>
               </td>
