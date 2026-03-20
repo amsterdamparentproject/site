@@ -154,9 +154,9 @@ export default function Events() {
           <h2 className="text-3xl text-center font-bold leading-7 text-brand-soft-green dark:text-brand-goldenrod">
             Community Calendar
           </h2>
-          <p className="max-w-sm text-center mb-4">
-            Your daily reference for local events, activities, and programs
-            happening for babies, toddlers, and their parents in Amsterdam.
+          <p className="max-w-md text-center mb-4">
+            Your daily reference of everything that's happening for babies,
+            toddlers, and their parents in Amsterdam.
           </p>
           <ShowcaseButton
             key="community-calendar-google"
