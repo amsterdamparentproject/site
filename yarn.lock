@@ -3302,6 +3302,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stripe/stripe-js@npm:^8.11.0":
+  version: 8.11.0
+  resolution: "@stripe/stripe-js@npm:8.11.0"
+  checksum: 3cfe73f02023b7bb37ff3b47ac4a11dda01e44c654c065c73e4c6bb77f67d89eb4b0d0cf1c2ce7643c4da7e59c1075cd2fc85225b12424b44d5110652e79deeb
+  languageName: node
+  linkType: hard
+
 "@svgr/babel-plugin-add-jsx-attribute@npm:8.0.0":
   version: 8.0.0
   resolution: "@svgr/babel-plugin-add-jsx-attribute@npm:8.0.0"
@@ -11617,6 +11624,7 @@ __metadata:
     "@eslint/js": ^9.16.0
     "@headlessui/react": 2.2.0
     "@next/bundle-analyzer": 15.1.4
+    "@stripe/stripe-js": ^8.11.0
     "@svgr/webpack": ^8.0.1
     "@tailwindcss/forms": ^0.5.9
     "@tailwindcss/postcss": ^4.0.5
