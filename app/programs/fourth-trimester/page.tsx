@@ -68,7 +68,7 @@ export default function programDetails() {
         <div className="mt-6 mb-10">
           <ShowcaseButton
             href="/programs/fourth-trimester/join"
-            title="Join the program"
+            title="Find your cohort"
             fill={true}
             umamiName="Fourth Trimester Program: Join program"
           />
