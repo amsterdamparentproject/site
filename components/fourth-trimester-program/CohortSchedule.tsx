@@ -1,5 +1,5 @@
-export default function FTPCohortSchedule({ cohort }) {
-  const sortedSessions = [...(cohort.sessions || [])].sort(
+export default function CohortSchedule({ cohort }) {
+  const sortedSessions = [...(cohort?.sessions || [])].sort(
     (a, b) => a.date.getTime() - b.date.getTime(),
   );
 
@@ -39,11 +39,13 @@ export default function FTPCohortSchedule({ cohort }) {
               </td>
 
               {/* Location */}
-              <td className="p-4 hidden sm:table-cell">
-                <span>Location: </span>
-                <span className="text-brand-charcoal font-medium dark:text-brand-white">
-                  {session.location || "To be determined"}
-                </span>
+              <td className="p-4 text-brand-soft-charcoal dark:text-brand-white">
+                <span className="text-xs">Location:</span>
+                {session.time && (
+                  <span className="block text-xs dark:text-brand-sand text-brand-soft-charcoal italic">
+                    {session.location || "To be determined"}
+                  </span>
+                )}
               </td>
             </tr>
           ))}

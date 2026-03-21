@@ -49,7 +49,7 @@ const FTPCohorts: Cohort[] = [
         type: "Discussion",
       },
       {
-        name: "Postpartum Relationships",
+        name: "Parenting with your People",
         date: new Date("18 April 2026"),
         time: "10:00-11:15",
         location: "Online",
@@ -151,7 +151,7 @@ const FTPCohorts: Cohort[] = [
         type: "Social",
       },
       {
-        name: "Postpartum Relationships",
+        name: "Parenting with your People",
         date: new Date("4 July 2026"),
         time: "10:00-11:15",
         location: "Online",

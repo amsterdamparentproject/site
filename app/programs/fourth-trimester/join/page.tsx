@@ -3,7 +3,7 @@ import { genPageMetadata } from "app/seo";
 import Link from "@/components/Link";
 import cohortSchedules, {
   Schedule,
-} from "@/data/fourthTrimesterProgram/schedules";
+} from "@/data/fourth-trimester-program/schedules";
 import FTPCohortCard from "@/components/FTPCohortCard";
 import Image from "@/components/Image";
 

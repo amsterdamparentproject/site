@@ -13,7 +13,7 @@ export async function POST(req) {
           price_data: {
             currency: "eur",
             product_data: {
-              name: `Fourth Trimester Program: ${cohortTitle} cohort deposit`,
+              name: `${cohortTitle} cohort deposit`,
               description:
                 "Secure a spot for your whole family in APP's Fourth Trimester Program! This deposit will be deducted from your total program fee. It is 100% refundable if the cohort does not reach minimum capacity.",
               images: [
@@ -25,9 +25,54 @@ export async function POST(req) {
           quantity: 1,
         },
       ],
+      custom_fields: [
+        {
+          key: "birthday_select",
+          label: {
+            type: "custom",
+            custom: "Your baby's birth/due month",
+          },
+          type: "dropdown",
+          dropdown: {
+            options: [
+              { label: "January", value: "jan" },
+              { label: "February", value: "feb" },
+              { label: "March", value: "mar" },
+              { label: "April", value: "apr" },
+              { label: "May", value: "may" },
+              { label: "June", value: "jun" },
+              { label: "July", value: "jul" },
+              { label: "August", value: "aug" },
+              { label: "September", value: "sep" },
+              { label: "October", value: "oct" },
+              { label: "November", value: "nov" },
+              { label: "December", value: "dec" },
+            ],
+          },
+        },
+        {
+          key: "neighborhood_select",
+          label: {
+            type: "custom",
+            custom: "Neighborhood",
+          },
+          type: "dropdown",
+          dropdown: {
+            options: [
+              { label: "Centrum", value: "centrum" },
+              { label: "West/Nieuw-West", value: "west" },
+              { label: "Zuid", value: "zuid" },
+              { label: "Oost", value: "oost" },
+              { label: "Weesp", value: "weesp" },
+              { label: "Noord", value: "noord" },
+              { label: "Amstelveen/Buitenveldert", value: "amstelveen" },
+            ],
+          },
+        },
+      ],
       mode: "payment",
       metadata: { cohortSlug },
-      success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/programs/fourth-trimester/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/programs/fourth-trimester`,
     });
 

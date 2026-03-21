@@ -1,6 +1,6 @@
 import { genPageMetadata } from "app/seo";
 import Link from "@/components/Link";
-import FTPCohorts from "@/data/fourthTrimesterProgram/cohorts";
+import FTPCohorts from "@/data/fourth-trimester-program/cohorts";
 import CohortsTable from "@/components/fourth-trimester-program/CohortsTable";
 import Image from "@/components/Image";
 
