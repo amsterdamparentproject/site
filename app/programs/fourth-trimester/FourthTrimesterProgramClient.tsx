@@ -5,6 +5,28 @@ import FTPCohorts from "@/data/fourth-trimester-program/cohorts";
 import SessionsAccordion from "@/components/fourth-trimester-program/SessionsAccordion";
 import CohortsAccordion from "@/components/fourth-trimester-program/CohortsAccordion";
 import CostsBreakdown from "@/components/fourth-trimester-program/CostsBreakdown";
+import ProgramHighlightBox from "@/components/fourth-trimester-program/ProgramHighlightBox";
+
+const highlights = [
+  {
+    icon: "🩺",
+    title: "Expert guidance",
+    description:
+      "Regular 'Ask Me Anything' sessions with Amsterdam’s postpartum specialists, covering newborn growth, parenting skills, and shared experiences.",
+  },
+  {
+    icon: "☕️",
+    title: "Local socials",
+    description:
+      "Planned meetups at curated, newborn-friendly spots in your area and around the city. We handle the logistics; you just show up with your baby!",
+  },
+  {
+    icon: "💬",
+    title: "Moderated chat",
+    description:
+      "Peer support with safety built in: a private, psychotherapist-moderated chat with a close-knit group of local parents with newborns.",
+  },
+];
 
 export default function FourthTrimesterProgramClient() {
   return (
@@ -55,68 +77,38 @@ export default function FourthTrimesterProgramClient() {
           </p>
         </div>
 
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-12">
-            {/* Card 1: Expertise */}
-            <div className="p-6 rounded-xl border border-brand-soft-green/20 bg-brand-white dark:bg-brand-charcoal shadow-sm">
-              <div className="w-10 h-10 mb-4 rounded-full bg-brand-soft-green/10 flex items-center justify-center text-brand-soft-green text-xl">
-                🩺
-              </div>
-              <h3 className="font-bold text-lg mb-2">Expert-led guidance</h3>
-              <p className="text-sm leading-relaxed text-brand-charcoal/80 dark:text-brand-white/80">
-                Regular "Ask Me Anything" sessions with Amsterdam’s postpartum
-                specialists, covering newborn growth, parenting skills, and
-                shared experiences.
-              </p>
-            </div>
-
-            {/* Card 2: Socials */}
-            <div className="p-6 rounded-xl border border-brand-goldenrod/20 bg-brand-white dark:bg-brand-charcoal shadow-sm">
-              <div className="w-10 h-10 mb-4 rounded-full bg-brand-goldenrod/10 flex items-center justify-center text-brand-goldenrod text-xl">
-                ☕️
-              </div>
-              <h3 className="font-bold text-lg mb-2">Local socials</h3>
-              <p className="text-sm leading-relaxed text-brand-charcoal/80 dark:text-brand-white/80">
-                Planned meetups at curated, newborn-friendly spots in your area
-                and around the city. We handle the logistics; you just show up
-                with your baby!
-              </p>
-            </div>
-
-            {/* Card 3: Community */}
-            <div className="p-6 rounded-xl border border-brand-soft-green/20 bg-brand-white dark:bg-brand-charcoal shadow-sm">
-              <div className="w-10 h-10 mb-4 rounded-full bg-brand-soft-green/10 flex items-center justify-center text-brand-soft-green text-xl">
-                💬
-              </div>
-              <h3 className="font-bold text-lg mb-2">Moderated chat</h3>
-              <p className="text-sm leading-relaxed text-brand-charcoal/80 dark:text-brand-white/80">
-                Peer support with safety built in: a private,
-                psychotherapist-moderated chat with a close-knit group of local
-                parents with newborns.
-              </p>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-12 px-4">
+          {highlights.map((item, index) => (
+            <ProgramHighlightBox
+              key={index}
+              icon={item.icon}
+              title={item.title}
+              description={item.description}
+            />
+          ))}
         </div>
 
         <section className="py-8 px-4 max-w-4xl mx-auto flex items-center flex-col justify-center">
-          <h2 className="text-3xl max-w-sm font-bold text-brand-charcoal mb-12 text-center">
+          <h2 className="text-3xl max-w-sm font-bold text-brand-charcoal mb-16 text-center">
             Your family's transition to newborn parenthood
           </h2>
 
-          <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto before:h-full before:w-0.5 before:bg-gradient-to-b before:from-brand-soft-green before:via-brand-goldenrod before:to-transparent">
+          {/* 1. Updated the central line to be absolute centered at 50% */}
+          <div className="relative space-y-12 before:absolute before:inset-0 before:left-5 md:before:left-1/2 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-brand-soft-green before:via-brand-goldenrod before:to-transparent">
             {/* Step 1 */}
             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-soft-green text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+              {/* 2. Simplified the circle centering logic */}
+              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white bg-brand-soft-green shadow text-white shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
                 1
               </div>
-              <div className="w-[calc(100%-4rem)] md:w-[45%] p-4 rounded border border-brand-soft-green/10 bg-white">
+              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-soft-green/10 bg-white shadow-sm">
                 <h4 className="font-bold text-brand-charcoal">
                   Save your family's spot
                 </h4>
                 <p className="text-xs font-medium tracking-wide text-brand-soft-green italic mt-1 mb-2">
                   Up to 8 weeks after birth
                 </p>
-                <p className="text-sm text-brand-charcoal/70">
+                <p className="text-sm text-brand-charcoal/70 leading-relaxed">
                   Pay the €25 reservation fee to join the program. We’ll begin
                   matching you with other families with similar due dates and
                   neighborhoods to build a cohort.
@@ -126,38 +118,37 @@ export default function FourthTrimesterProgramClient() {
 
             {/* Step 2 */}
             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-goldenrod text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white bg-brand-goldenrod text-white shadow shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
                 2
               </div>
-              <div className="w-[calc(100%-4rem)] md:w-[45%] p-4 rounded border border-brand-goldenrod/10 bg-white">
+              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-goldenrod/10 bg-white shadow-sm">
                 <h4 className="font-bold text-brand-charcoal">
                   The cohort starts
                 </h4>
                 <p className="text-xs font-medium tracking-wide text-brand-goldenrod italic mt-1 mb-2">
                   4-8 weeks after birth
                 </p>
-                <p className="text-sm text-brand-charcoal/70">
+                <p className="text-sm text-brand-charcoal/70 leading-relaxed">
                   When your midwife support ends, our program begins!
                   Participate in expert-led AMAs, moderated peer discussions,
-                  and local socials. Sessions track with your baby’s growth
-                  milestones — and your development as a new parent.
+                  and local socials.
                 </p>
               </div>
             </div>
 
             {/* Step 3 */}
             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-soft-green text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white bg-brand-soft-green text-white shadow shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
                 3
               </div>
-              <div className="w-[calc(100%-4rem)] md:w-[45%] p-4 rounded border border-brand-soft-green/10 bg-white">
+              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-soft-green/10 bg-white shadow-sm">
                 <h4 className="font-bold text-brand-charcoal">
                   Continuous connection
                 </h4>
                 <p className="text-xs font-medium tracking-wide text-brand-soft-green italic mt-1 mb-2">
                   4 months after birth, and beyond
                 </p>
-                <p className="text-sm text-brand-charcoal/70">
+                <p className="text-sm text-brand-charcoal/70 leading-relaxed">
                   After the program ends, your local expert network and peer
                   chat remain active. Your neighborhood support is now
                   permanent, for your family's ever-evolving needs 🫶🏻
