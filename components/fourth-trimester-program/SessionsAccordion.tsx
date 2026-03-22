@@ -63,7 +63,7 @@ export default function SessionsAccordion() {
                     <h4 className="text-sm text-brand-charcoal mb-4 text-center sm:text-left">
                       Expert content by:
                     </h4>
-                    <div className="flex flex-wrap justify-center sm:justify-start gap-6">
+                    <div className="flex flex-wrap justify-start sm:justify-start gap-6">
                       {sessionAuthors.map((expert) => (
                         <div
                           key={expert?.slug}

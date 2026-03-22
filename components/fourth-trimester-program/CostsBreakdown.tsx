@@ -58,27 +58,47 @@ const StackedCostBar = () => {
 
 export default function CostsBreakdown() {
   const inclusions = [
-    "Access for your whole family: all parents included",
-    "4 expert-led discussions on newborn & new parent topics",
-    "5 socials at local, baby-friendly spots in Amsterdam",
-    "Cohort WhatsApp group moderated by a psychotherapist",
+    {
+      bold: "3 months of access",
+      rest: "for your whole family: all parents included",
+    },
+    {
+      bold: "4 expert-led discussions",
+      rest: "tailored to your newborn’s growth — and your own",
+    },
+    {
+      bold: "5 digital guides",
+      rest: "providing evidence-based context for early parenthood",
+    },
+    {
+      bold: "5 curated socials",
+      rest: "at baby-friendly Amsterdam spots, plus ad-hoc meetups",
+    },
+    {
+      bold: "A private WhatsApp group",
+      rest: "moderated by a psychotherapist",
+    },
+    {
+      bold: "A vetted shortlist",
+      rest: "of local & online resources from our network",
+    },
   ];
 
   return (
     <section className="max-w-4xl mx-auto my-8 px-6 flex flex-col items-center">
       {/* What the program includes */}
-      <div className="w-full max-w-lg bg-brand-sand/5 rounded-2xl p-6 mb-12 border border-brand-sand/20">
+      <div className="w-full max-w-xl bg-brand-sand/5 rounded-2xl p-6 mb-12 border border-brand-sand/20">
         <h4 className="text-sm italic text-brand-soft-green font-medium mb-4 text-center">
           Your program fee includes:
         </h4>
-        <ul className="grid grid-cols-1 gap-y-3">
+        <ul className="grid grid-cols-1 gap-y-3 text-left">
           {inclusions.map((item, i) => (
             <li
               key={i}
-              className="flex items-start gap-3 text-xs text-brand-soft-charcoal"
+              className="flex items-start gap-3 text-xs text-brand-soft-charcoal leading-relaxed"
             >
               <svg
-                className="w-4 h-4 text-brand-goldenrod shrink-0"
+                className="w-4 h-4 text-brand-goldenrod shrink-0 mt-0.5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -86,7 +106,12 @@ export default function CostsBreakdown() {
               >
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              {item}
+              <span>
+                <strong className="font-bold text-brand-charcoal">
+                  {item.bold}
+                </strong>{" "}
+                {item.rest}
+              </span>
             </li>
           ))}
         </ul>
