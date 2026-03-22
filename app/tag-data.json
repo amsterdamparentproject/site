@@ -1,4 +1,8 @@
 {
+  "solids": 1,
+  "culture": 1,
+  "milestones": 2,
+  "physical-health": 3,
   "travel": 2,
   "plane": 1,
   "train": 1,
@@ -40,8 +44,6 @@
   "work": 1,
   "partner": 1,
   "relationships": 1,
-  "physical-health": 2,
-  "milestones": 1,
   "motor-skills": 1,
   "personal-goals": 2
 }
