@@ -39,6 +39,7 @@ export default function CohortSchedule({ cohort }) {
               </td>
 
               {/* Location */}
+              {/* TODO: hidden md:table-cell */}
               <td className="p-4 text-brand-soft-charcoal">
                 <span className="text-xs">Location:</span>
                 {session.time && (

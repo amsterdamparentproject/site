@@ -91,7 +91,7 @@ export default function FourthTrimesterProgramClient() {
         </div>
 
         <div className="max-w-xl">
-          <p className="mb-6">
+          <p className="mb-6 mx-4">
             The Fourth Trimester Program cuts through the noise of overwhelming,
             conflicting advice to focus on what matters: a healthy, calm, and
             confident transition for your whole family.{" "}
