@@ -71,7 +71,7 @@ export default function ProgramFAQ() {
   ];
 
   return (
-    <div className="divide-y divide-brand-soft-green/20">
+    <div className="divide-y divide-brand-sand/30">
       {faqs.map((faq, index) => (
         <details key={index} className="group py-6">
           <summary className="flex items-center justify-between cursor-pointer list-none">
