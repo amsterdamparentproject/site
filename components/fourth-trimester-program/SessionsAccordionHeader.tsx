@@ -31,10 +31,10 @@ export default function AccordionHeader({
       aria-expanded={isOpen}
     >
       <div className="flex-1 min-w-0">
-        <h3 className="font-bold text-brand-charcoal text-lg leading-tight transition-colors duration-200">
+        <h3 className="font-bold text-brand-charcoal dark:text-brand-white text-lg leading-tight transition-colors duration-200">
           {title}
         </h3>
-        <p className="text-xs font-medium tracking-wide text-brand-soft-green italic mt-1">
+        <p className="text-xs font-medium tracking-wide text-brand-soft-green dark:text-brand-white/80 italic mt-1">
           {subtitle}
         </p>
       </div>
@@ -44,7 +44,7 @@ export default function AccordionHeader({
           {sessionAuthors.map((expert, i) => (
             <div
               key={expert?.slug}
-              className="relative inline-block rounded-full ring-1 ring-brand-white bg-brand-white"
+              className="relative inline-block rounded-full ring-1 ring-brand-white dark:ring-brand-charcoal bg-brand-white dark:bg-brand-charcoal"
               style={{ zIndex: sessionAuthors.length - i }}
             >
               <Image

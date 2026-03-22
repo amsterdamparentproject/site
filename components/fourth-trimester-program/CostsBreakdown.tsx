@@ -24,7 +24,7 @@ const StackedCostBar = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <h4 className="text-center text-brand-charcoal font-bold text-sm mb-6">
+      <h4 className="text-center text-brand-charcoal dark:text-brand-goldenrod font-bold text-sm mb-6">
         Where your program fees go:
       </h4>
 
@@ -46,7 +46,7 @@ const StackedCostBar = () => {
         {segments.map((segment, index) => (
           <div key={index} className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${segment.color}`} />
-            <span className="text-[10px] font-bold text-brand-charcoal/60">
+            <span className="text-[10px] font-bold text-brand-charcoal/60 dark:text-brand-white/80">
               {segment.label}
             </span>
           </div>
@@ -87,8 +87,8 @@ export default function CostsBreakdown() {
   return (
     <section className="max-w-4xl mx-auto my-8 px-6 flex flex-col items-center">
       {/* What the program includes */}
-      <div className="w-full max-w-xl bg-brand-sand/5 rounded-2xl p-6 mb-12 border border-brand-sand/20">
-        <h4 className="text-sm italic text-brand-soft-green font-medium mb-4 text-center">
+      <div className="w-full max-w-xl bg-brand-sand/5 dark:bg-brand-charcoal rounded-2xl p-6 mb-12 border border-brand-sand/20 dark:border-brand-soft-charcoal/80">
+        <h4 className="text-sm italic text-brand-soft-green dark:text-brand-goldenrod font-medium mb-4 text-center">
           Your program fee includes:
         </h4>
         <ul className="grid grid-cols-1 gap-y-3 text-left">
@@ -106,8 +106,8 @@ export default function CostsBreakdown() {
               >
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              <span>
-                <strong className="font-bold text-brand-charcoal">
+              <span className="text-brand-charcoal dark:text-brand-white/80">
+                <strong className="font-bold text-brand-charcoal dark:text-brand-white">
                   {item.bold}
                 </strong>{" "}
                 {item.rest}
@@ -119,7 +119,7 @@ export default function CostsBreakdown() {
 
       {/* 3. PRICE SUMMARY */}
       <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 mb-8 w-full">
-        <div className="text-center">
+        <div className="text-center dark:bg-white dark:p-4 dark:rounded-lg">
           <span className="block text-[10px] font-black text-brand-charcoal/40 uppercase tracking-widest mb-2">
             Single parent families
           </span>
@@ -131,7 +131,7 @@ export default function CostsBreakdown() {
           </div>
         </div>
 
-        <div className="text-center">
+        <div className="text-center dark:bg-white dark:p-4 dark:rounded-lg">
           <span className="block text-[10px] font-black text-brand-soft-green uppercase tracking-widest mb-2">
             Multi-parent families
           </span>
@@ -148,7 +148,7 @@ export default function CostsBreakdown() {
 
       {/* 4. SLIDING SCALE NOTICE */}
       <div className="max-w-md text-center mb-12 px-4">
-        <p className="text-[11px] text-brand-soft-charcoal leading-relaxed">
+        <p className="text-[11px] text-brand-soft-charcoal dark:text-brand-white/80 leading-relaxed">
           All prices include 21% BTW (VAT). The €25 reservation fee will be
           deducted from this total when you complete registration.
         </p>
@@ -158,7 +158,7 @@ export default function CostsBreakdown() {
       <div className="w-full border-t border-brand-sand/20 pt-10 flex flex-col items-center">
         <StackedCostBar />
 
-        <p className="text-[10px] text-brand-soft-charcoal/60 max-w-lg text-center mt-8 leading-relaxed italic">
+        <p className="text-[10px] text-brand-soft-charcoal/60 dark:text-brand-white/80 max-w-lg text-center mt-8 leading-relaxed italic">
           One of our core values is transparency. Each cohort costs €966 to run.
           We first cover costs, then use the remainder to support program
           development and other community initiatives.

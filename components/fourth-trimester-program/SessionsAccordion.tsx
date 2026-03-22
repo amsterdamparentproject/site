@@ -24,7 +24,7 @@ export default function SessionsAccordion() {
           return (
             <div
               key={index}
-              className={`border ${openIndex === index ? "border-brand-soft-green" : "border-brand-sand/60"} rounded-2xl overflow-hidden bg-brand-white transition-all hover:shadow-sm hover:border-brand-soft-green`}
+              className={`border ${openIndex === index ? "border-brand-soft-green" : "border-brand-sand/60"} rounded-2xl overflow-hidden bg-brand-white dark:bg-brand-charcoal transition-all hover:shadow-sm hover:border-brand-soft-green`}
             >
               <SessionsAccordionHeader
                 title={session.title}
@@ -38,19 +38,19 @@ export default function SessionsAccordion() {
                 className={`transition-all duration-300 ease-in-out ${openIndex === index ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}
               >
                 <div className="p-6 pt-0 border-t border-brand-soft-green/10">
-                  <p className="text-sm text-brand-soft-charcoal mb-6 mt-4">
+                  <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 mb-6 mt-4">
                     {session.description}
                   </p>
 
                   <div className="bg-brand-soft-green/5 rounded-xl py-4 px-6 mb-6">
-                    <h4 className="text-md font-bold text-brand-charcoal mb-2 text-center sm:text-left">
+                    <h4 className="text-md font-bold text-brand-charcoal dark:text-brand-goldenrod mb-2 text-center sm:text-left">
                       What we cover
                     </h4>
                     <ul className="grid grid-cols-1 gap-2">
                       {session.components?.map((item, i) => (
                         <li
                           key={i}
-                          className="flex items-start gap-2 text-sm text-brand-soft-charcoal"
+                          className="flex items-start gap-2 text-sm text-brand-soft-charcoal dark:text-brand-white/80"
                         >
                           <span className="mx-1 mt-2 h-1 w-1 shrink-0 rounded-full bg-brand-goldenrod" />
                           <span>{item}</span>
@@ -60,7 +60,7 @@ export default function SessionsAccordion() {
                   </div>
 
                   <div className="border-t border-brand-soft-green/10 pt-4">
-                    <h4 className="text-sm text-brand-charcoal mb-4 text-center sm:text-left">
+                    <h4 className="text-sm text-brand-charcoal dark:text-brand-white/80 mb-4 text-center sm:text-left">
                       Expert content by:
                     </h4>
                     <div className="flex flex-wrap justify-start sm:justify-start gap-6">
@@ -82,7 +82,7 @@ export default function SessionsAccordion() {
                             />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-bold text-brand-charcoal leading-tight">
+                            <span className="text-sm font-bold text-brand-charcoal dark:text-brand-white/80 leading-tight">
                               {expert?.name}
                             </span>
                             <span className="text-xs text-brand-soft-green font-medium">

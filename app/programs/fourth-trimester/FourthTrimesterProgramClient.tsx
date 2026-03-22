@@ -7,6 +7,8 @@ import CohortsAccordion from "@/components/fourth-trimester-program/CohortsAccor
 import CostsBreakdown from "@/components/fourth-trimester-program/CostsBreakdown";
 import ProgramHighlightBox from "@/components/fourth-trimester-program/ProgramHighlightBox";
 import ProgramFAQ from "@/components/fourth-trimester-program/ProgramFAQ";
+import { ReactNode } from "react";
+import ProgramJourney from "@/components/fourth-trimester-program/ProgramJourney";
 
 const highlights = [
   {
@@ -29,15 +31,27 @@ const highlights = [
   },
 ];
 
-const HeaderAndSubtitle = ({ header, subtitle }) => {
+interface SectionHeaderProps {
+  header: string;
+  subtitle?: ReactNode;
+}
+
+const SectionHeader = ({ header, subtitle }: SectionHeaderProps) => {
+  const headerMargin = subtitle ? "mb-4" : "mb-12";
+
   return (
     <>
-      <h2 className="text-center text-3xl font-bold text-brand-charcoal mb-4">
+      <h2
+        className={`text-center text-3xl font-bold text-brand-charcoal dark:text-brand-goldenrod ${headerMargin}`}
+      >
         {header}
       </h2>
-      <p className="text-center text-sm text-brand-soft-charcoal/70 max-w-xl mx-auto leading-relaxed italic mb-8">
-        {subtitle}
-      </p>
+
+      {subtitle && (
+        <div className="text-center text-sm text-brand-soft-charcoal/70 dark:text-brand-white/60 max-w-2xl mx-auto leading-relaxed italic mb-8 px-4">
+          {subtitle}
+        </div>
+      )}
     </>
   );
 };
@@ -103,75 +117,12 @@ export default function FourthTrimesterProgramClient() {
         </div>
 
         <section className="py-8 px-4 max-w-4xl mx-auto flex items-center flex-col justify-center">
-          <h2 className="text-3xl max-w-sm font-bold text-brand-charcoal mb-16 text-center">
-            Your family's transition to newborn parenthood
-          </h2>
-
-          <div className="relative space-y-12 before:absolute before:inset-0 before:left-5 md:before:left-1/2 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-brand-soft-green before:via-brand-goldenrod before:to-transparent">
-            {/* Step 1 */}
-            <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white bg-brand-soft-green  text-white shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
-                1
-              </div>
-              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-soft-green/10 bg-white">
-                <h4 className="font-bold text-brand-charcoal">
-                  Save your family's spot
-                </h4>
-                <p className="text-xs font-medium tracking-wide text-brand-soft-green italic mt-1 mb-2">
-                  Up to 8 weeks after birth
-                </p>
-                <p className="text-sm text-brand-charcoal/70 leading-relaxed">
-                  Pay the €25 reservation fee to join the program. We’ll begin
-                  matching you with other families with similar due dates and
-                  neighborhoods to build a cohort.
-                </p>
-              </div>
-            </div>
-
-            {/* Step 2 */}
-            <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white bg-brand-goldenrod text-white  shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
-                2
-              </div>
-              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-goldenrod/10 bg-white">
-                <h4 className="font-bold text-brand-charcoal">
-                  The cohort starts
-                </h4>
-                <p className="text-xs font-medium tracking-wide text-brand-goldenrod italic mt-1 mb-2">
-                  4-8 weeks after birth
-                </p>
-                <p className="text-sm text-brand-charcoal/70 leading-relaxed">
-                  When your midwife support ends, our program begins!
-                  Participate in expert-led AMAs, moderated peer discussions,
-                  and local socials.
-                </p>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white bg-brand-soft-green text-white shadow shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
-                3
-              </div>
-              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-soft-green/10 bg-white shadow-sm">
-                <h4 className="font-bold text-brand-charcoal">
-                  Continuous connection
-                </h4>
-                <p className="text-xs font-medium tracking-wide text-brand-soft-green italic mt-1 mb-2">
-                  4 months after birth, and beyond
-                </p>
-                <p className="text-sm text-brand-charcoal/70 leading-relaxed">
-                  After the program ends, your local expert network and peer
-                  chat remain active. Your neighborhood support is now
-                  permanent, for your family's ever-evolving needs 🫶🏻
-                </p>
-              </div>
-            </div>
-          </div>
+          <SectionHeader header="Your family's transition to newborn parenthood" />
+          <ProgramJourney />
         </section>
 
         <section className="mt-10 mb-8">
-          <HeaderAndSubtitle
+          <SectionHeader
             header="Expert curriculum"
             subtitle="Expert-led modules for the whole family that track your 12-week
             journey with your newborn"
@@ -180,29 +131,30 @@ export default function FourthTrimesterProgramClient() {
         </section>
 
         <section className="mb-10 text-center">
-          <h2 className="text-3xl font-bold text-brand-charcoal mb-4">
-            Program fees
-          </h2>
-          <p className="text-sm text-brand-soft-charcoal/70 max-w-xl mx-auto leading-relaxed italic mb-8">
-            As a nonprofit program, the program tiers reflect our commitment to
-            balancing community access with paying our experts and facilitators
-            fairly. If the full price is out of reach, please{" "}
-            <a
-              className="text-brand-goldenrod font-medium hover:text-brand-charcoal"
-              href="mailto:hello@amsterdamparentproject.nl"
-            >
-              contact us
-            </a>{" "}
-            — we are happy to accommodate your financial needs.
-          </p>
+          <SectionHeader
+            header="Program fees"
+            subtitle={
+              <>
+                As a nonprofit, we strive to balance access with fair pay. If
+                price is an issue, please{" "}
+                <a
+                  href="mailto:hello@amsterdamparentproject.nl"
+                  className="text-brand-goldenrod hover:text-brand-soft-green"
+                >
+                  contact us
+                </a>{" "}
+                — we're happy to accommodate your financial needs.
+              </>
+            }
+          />
           <CostsBreakdown />
         </section>
 
         <section
           id="find-cohort"
-          className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 border border-brand-sand/10 py-10 px-8 rounded-lg"
+          className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 dark:bg-brand-soft-charcoal border border-brand-sand/10 py-10 px-8 rounded-lg"
         >
-          <HeaderAndSubtitle
+          <SectionHeader
             header="Get started: Find your cohort"
             subtitle="Reserve your spot at any stage of your journey. Once your cohort reaches capacity, we’ll email you to finalize registration, process payment, and introduce your group."
           />
@@ -212,11 +164,11 @@ export default function FourthTrimesterProgramClient() {
                 <CohortsAccordion key={index} cohort={cohort} />
               ))}
             </div>
-            <p className="text-center text-xs text-brand-charcoal mt-8 max-w-md mx-auto leading-normal">
+            <p className="text-center text-xs text-brand-charcoal dark:text-brand-white/80 mt-8 max-w-md mx-auto leading-normal">
               Don’t see your due date?{" "}
               <a
                 href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
-                className="text-brand-soft-green hover:text-brand-goldenrod"
+                className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white/80"
               >
                 Join the general interest list
               </a>{" "}
@@ -227,7 +179,7 @@ export default function FourthTrimesterProgramClient() {
       </div>
 
       <div id="faq" className="scroll-m-32 mt-6">
-        <HeaderAndSubtitle
+        <SectionHeader
           header="Common questions"
           subtitle="If you have any other questions, please reach out to hello@amsterdamparentproject.nl."
         />

@@ -71,11 +71,11 @@ export default function ProgramFAQ() {
   ];
 
   return (
-    <div className="divide-y divide-brand-sand/30">
+    <div className="divide-y divide-brand-sand/30 dark:divide-brand-soft-charcoal/30">
       {faqs.map((faq, index) => (
         <details key={index} className="group py-6">
           <summary className="flex items-center justify-between cursor-pointer list-none">
-            <span className="text-lg font-medium text-brand-charcoal group-hover:text-brand-soft-green transition-colors pr-8">
+            <span className="text-lg font-medium text-brand-charcoal dark:text-brand-white group-hover:text-brand-soft-green transition-colors pr-8">
               {faq.question}
             </span>
             <span className="transition-transform duration-300 group-open:rotate-45 text-brand-soft-green">
@@ -94,7 +94,7 @@ export default function ProgramFAQ() {
               </svg>
             </span>
           </summary>
-          <div className="mt-4 text-brand-soft-charcoal text-sm leading-relaxed max-w-2xl">
+          <div className="mt-4 text-brand-soft-charcoal dark:text-brand-white/80 text-sm leading-relaxed max-w-2xl">
             {faq.answer}
           </div>
         </details>
