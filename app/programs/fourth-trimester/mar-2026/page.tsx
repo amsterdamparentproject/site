@@ -2,7 +2,7 @@ import { genPageMetadata } from "app/seo";
 import Image from "@/components/Image";
 import { Authors, allAuthors } from "contentlayer/generated";
 import Link from "@/components/Link";
-import cohortSchedules from "@/data/fourthTrimesterProgram/schedules";
+import cohortSchedules from "@/data/fourth-trimester-program/schedules";
 import FTPCohortScheduleTable from "@/components/FTPCohortScheduleTable";
 import ShowcaseButton from "@/components/ShowcaseButton";
 

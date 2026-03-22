@@ -1,6 +1,6 @@
 import { genPageMetadata } from "app/seo";
 import FTPSessionCard from "@/components/FTPSessionCard";
-import sessionData from "@/data/fourthTrimesterProgram/sessions";
+import sessionData from "@/data/fourth-trimester-program/sessions";
 
 export const metadata = genPageMetadata({
   title: "Welcome to the Fourth Trimester Program",

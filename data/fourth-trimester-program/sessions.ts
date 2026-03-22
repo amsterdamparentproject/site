@@ -3,7 +3,7 @@ interface Session {
   subtitle: string;
   description: string;
   components?: string[];
-  experts?: string[];
+  experts: string[];
 }
 
 const fourthTrimesterData: Session[] = [
@@ -11,7 +11,7 @@ const fourthTrimesterData: Session[] = [
     title: "Building the Village",
     subtitle: "Creating your postpartum support system",
     description: `
-      We've all heard the phrase "It takes a village;" but for expats becoming parents abroad, the village doesn't come without effort.
+      We've all heard the phrase "It takes a village." For all new parents — especially expats becoming parents abroad — the village doesn't come without effort.
       But where to start? We cover local Dutch postpartum care and end with an exercise on finding and filling gaps in support.
         `,
     experts: ["alexSiega", "irenaDomachowska"],
