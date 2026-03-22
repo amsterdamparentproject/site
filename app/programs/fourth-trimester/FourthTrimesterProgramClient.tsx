@@ -6,6 +6,7 @@ import SessionsAccordion from "@/components/fourth-trimester-program/SessionsAcc
 import CohortsAccordion from "@/components/fourth-trimester-program/CohortsAccordion";
 import CostsBreakdown from "@/components/fourth-trimester-program/CostsBreakdown";
 import ProgramHighlightBox from "@/components/fourth-trimester-program/ProgramHighlightBox";
+import ProgramFAQ from "@/components/fourth-trimester-program/ProgramFAQ";
 
 const highlights = [
   {
@@ -27,6 +28,19 @@ const highlights = [
       "Peer support with safety built in: a private, psychotherapist-moderated chat with a close-knit group of local parents with newborns.",
   },
 ];
+
+const HeaderAndSubtitle = ({ header, subtitle }) => {
+  return (
+    <>
+      <h2 className="text-center text-3xl font-bold text-brand-charcoal mb-4">
+        {header}
+      </h2>
+      <p className="text-center text-sm text-brand-soft-charcoal/70 max-w-xl mx-auto leading-relaxed italic mb-8">
+        {subtitle}
+      </p>
+    </>
+  );
+};
 
 export default function FourthTrimesterProgramClient() {
   return (
@@ -93,15 +107,13 @@ export default function FourthTrimesterProgramClient() {
             Your family's transition to newborn parenthood
           </h2>
 
-          {/* 1. Updated the central line to be absolute centered at 50% */}
           <div className="relative space-y-12 before:absolute before:inset-0 before:left-5 md:before:left-1/2 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-brand-soft-green before:via-brand-goldenrod before:to-transparent">
             {/* Step 1 */}
             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              {/* 2. Simplified the circle centering logic */}
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white bg-brand-soft-green shadow text-white shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white bg-brand-soft-green  text-white shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
                 1
               </div>
-              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-soft-green/10 bg-white shadow-sm">
+              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-soft-green/10 bg-white">
                 <h4 className="font-bold text-brand-charcoal">
                   Save your family's spot
                 </h4>
@@ -118,10 +130,10 @@ export default function FourthTrimesterProgramClient() {
 
             {/* Step 2 */}
             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white bg-brand-goldenrod text-white shadow shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white bg-brand-goldenrod text-white  shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
                 2
               </div>
-              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-goldenrod/10 bg-white shadow-sm">
+              <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-goldenrod/10 bg-white">
                 <h4 className="font-bold text-brand-charcoal">
                   The cohort starts
                 </h4>
@@ -159,13 +171,11 @@ export default function FourthTrimesterProgramClient() {
         </section>
 
         <section className="mt-10 mb-8">
-          <h2 className="text-3xl font-bold text-brand-charcoal my-2 text-center">
-            Expert curriculum
-          </h2>
-          <p className="text-brand-charcoal text-center text-sm">
-            Expert-led modules for the whole family that track your 12-week
-            journey with your newborn
-          </p>
+          <HeaderAndSubtitle
+            header="Expert curriculum"
+            subtitle="Expert-led modules for the whole family that track your 12-week
+            journey with your newborn"
+          />
           <SessionsAccordion />
         </section>
 
@@ -190,172 +200,41 @@ export default function FourthTrimesterProgramClient() {
 
         <section
           id="find-cohort"
-          className="bg-brand-sand/20 border border-brand-sand/10 py-10 px-8 rounded-lg"
+          className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 border border-brand-sand/10 py-10 px-8 rounded-lg"
         >
-          <h2 className="text-3xl font-bold text-brand-soft-green my-2 text-center">
-            Get started: Find your cohort
-          </h2>
-          <p className="text-brand-charcoal text-center text-sm">
-            Reserve your spot now, whenever you are in your pre/postpartum
+          <HeaderAndSubtitle
+            header="Get started: Find your cohort"
+            subtitle="Reserve your spot now, whenever you are in your pre/postpartum
             journey. As soon as your cohort reaches enough families, we’ll email
             you to finalize signup (including full payment) and introduce you to
-            your group.
-          </p>
+            your group."
+          />
           <div className="max-w-3xl mx-auto mt-8 px-4">
             <div className="space-y-4">
               {FTPCohorts.map((cohort, index) => (
                 <CohortsAccordion key={index} cohort={cohort} />
               ))}
             </div>
-            <p className="text-center text-[11px] text-brand-charcoal/30 mt-8 max-w-md mx-auto leading-normal">
+            <p className="text-center text-xs text-brand-charcoal mt-8 max-w-md mx-auto leading-normal">
               Don’t see your due date?{" "}
               <a
-                href="#newsletter"
-                className="underline hover:text-brand-soft-green"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
+                className="text-brand-soft-green hover:text-brand-goldenrod"
               >
                 Join the general interest list
               </a>{" "}
-              to be the first to know when new 2026 dates are released.
+              to be the first to know when new cohorts are released.
             </p>
           </div>
         </section>
       </div>
 
       <div id="faq" className="scroll-m-32 mt-6">
-        <h2 className="text-center text-3xl font-bold leading-7 text-brand-goldenrod my-4">
-          FAQ
-        </h2>
-        <ul className="list-disc mx-4">
-          <li className="mb-4">
-            <h3>
-              <b>Why do I need group postpartum support?</b>
-            </h3>
-            <p className="mb-2 text-sm">
-              Finding the right support after you have a baby is a daunting
-              task. Your giant parent group is dispensing baby advice 100 times
-              a day, you're frantically Googling "Why is this happening..."
-              during 2am feeds, and social media is constantly telling you what
-              you should be feeling as a new parent. If you want an actual
-              expert's opinion, you may be paying €100/hour for a consult — and
-              you have to spend time and energy to find them in the first place.
-              Speaking from experience: It can be overwhelming and exhausting.
-            </p>
-          </li>
-          <li className="mb-4">
-            <h3>
-              <b>What's different about the Fourth Trimester Program?</b>
-            </h3>
-            <p className="mb-2 text-sm">
-              Parents — especially expat parents — have complex support needs:
-            </p>
-            <ul className="list-disc ml-4 mt-2 text-sm">
-              <li>
-                <u>Right timing</u>: You have questions you never anticipated
-                that need answering now, and you can't remember what you learned
-                before the birth.
-              </li>
-              <li>
-                <u>Right sources</u>: You need insights from accredited experts,
-                not some random blog you found through Google/ChatGPT/WhatsApp.
-              </li>
-              <li>
-                <u>Right people</u>: You're less likely to build a stable
-                support system with folks in Oost if you live in West, or if
-                their baby is 8 months older than yours.
-              </li>
-              <li>
-                <u>Right language</u>: You're not familiar with the Dutch
-                language/system, and you don't need the mental overhead to
-                figure it out right now.
-              </li>
-              <li>
-                <u>Right price</u>: Having a baby is expensive, and the last
-                thing you need is to weigh affordability with getting the
-                support you need.
-              </li>
-            </ul>
-            <p className="my-2 text-sm">
-              We haven't found a single program in the Netherlands that does all
-              this. The Fourth Trimester Program is meant to be your guide, so
-              that you don't have to think about how to build your own support.
-              You just have to show up ☺️
-            </p>
-          </li>
-          <li className="mb-4">
-            <h3>
-              <b>Why are your sessions cheaper than others?</b>
-            </h3>
-            <p className="text-sm">
-              APP operates as a non-profit. We strive to be a community resource
-              above all. Sessions are offered with transparent, socially-driven
-              costs to be as accessible and affordable as possible. You're
-              paying for the expert's time, operating costs, and development
-              costs: that's it.
-            </p>
-          </li>
-          <li className="mb-4">
-            <h3>
-              <b>This sounds a lot like Mother's Groups in the UK...</b>
-            </h3>
-            <p className="text-sm">
-              Yes, exactly! It's inspired by Canada's postpartum support system
-              and <a href="https://www.peps.org/">PEPS</a> in Seattle. Our goal
-              has never been to create a unique, revolutionary postpartum
-              program; it's to import the successful models that exist in other
-              countries to Amsterdam, to cover the gap in English-language
-              postpartum support here.
-            </p>
-          </li>
-          <li className="mb-4">
-            <h3>
-              <b>Why is APP tackling this?</b>
-            </h3>
-            <p className="text-sm">
-              It's something close to our hearts and first-hand experience.
-              Having become parents in Amsterdam ourselves, we couldn't
-              transition into new parenthood with confidence with the existing
-              English-language resources available. After asking ourselves "Why
-              is this so hard?", we started asking, "What can we do about it?"
-            </p>
-          </li>
-        </ul>
-      </div>
-      <div id="faq" className="scroll-m-32 mt-6">
-        <h2 className="text-center text-3xl font-bold leading-7 text-brand-goldenrod my-4">
-          Want to help?
-        </h2>
-        <p className="mb-2">
-          Are you a postpartum professional that wants to support the program?
-          We'd love to be in touch. There are three main ways to help:
-        </p>
-        <ul className="list-disc ml-4 mt-2 text-sm">
-          <li>
-            <u>Help us build cohorts</u>: APP believes that the most successful
-            cohorts will have something in common: same midwife/doula, same
-            neighborhood, etc. If you serve pregnant people, we'd love to talk
-            to you about how we can offer sessions or a full program to your
-            clients giving birth around the same time.
-          </li>
-          <li>
-            <u>Help us build content</u>: We regularly seek reviews from experts
-            to ensure our content aligns with current research.
-          </li>
-          <li>
-            <u>Help us deliver content</u>: Every session needs a host! If
-            you're an expert in a session topic and want to host, please reach
-            out.
-          </li>
-        </ul>
-        <p className="my-2">
-          You can reach us at{" "}
-          <a
-            className="text-brand-goldenrod"
-            href="mailto:amsterdamparentproject@gmail.com"
-          >
-            amsterdamparentproject@gmail.com
-          </a>
-          .
-        </p>
+        <HeaderAndSubtitle
+          header="Common questions"
+          subtitle="If you have any other questions, please reach out to hello@amsterdamparentproject.nl."
+        />
+        <ProgramFAQ />
       </div>
     </div>
   );
