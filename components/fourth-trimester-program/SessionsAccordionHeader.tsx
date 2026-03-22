@@ -29,6 +29,8 @@ export default function AccordionHeader({
       onClick={onClick}
       className="w-full flex items-center justify-between p-6 text-left hover:bg-brand-soft-green/5 transition-all group gap-4"
       aria-expanded={isOpen}
+      data-umami-event="Fourth Trimester Program: See curriculum details"
+      data-umami-event-title={title}
     >
       <div className="flex-1 min-w-0">
         <h3 className="font-bold text-brand-charcoal dark:text-brand-white text-lg leading-tight transition-colors duration-200">

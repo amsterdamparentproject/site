@@ -123,6 +123,8 @@ export default function CohortsAccordion({ cohort }) {
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="cursor-pointer flex items-center gap-1.5 text-xs font-medium text-brand-soft-charcoal/60 hover:text-brand-soft-green transition-colors group"
+            data-umami-event="Fourth Trimester Program: See cohort details"
+            data-umami-event-cohort={cohort.slug}
           >
             <span>
               {isExpanded
@@ -156,6 +158,9 @@ export default function CohortsAccordion({ cohort }) {
                 : "bg-brand-soft-green hover:bg-brand-goldenrod active:scale-95 cursor-pointer"
             }`}
             onClick={() => handleCheckout({ cohort, isClosed })}
+            data-umami-event="Fourth Trimester Program: Reserve spot"
+            data-umami-event-cohort={cohort.slug}
+            data-umami-event-groupStatus={cohort.groupStatus}
           >
             {isClosed ? (
               "Closed"
