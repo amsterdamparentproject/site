@@ -19,7 +19,7 @@ const ProgramHighlightBox = ({ icon, title, description }: HighlightProps) => {
         </h3>
       </div>
 
-      <p className="text-sm leading-relaxed text-brand-soft-charcoal/80 text-brand-white/80">
+      <p className="text-sm leading-relaxed text-brand-soft-charcoal/80 dark:text-brand-white/80">
         {description}
       </p>
     </div>
