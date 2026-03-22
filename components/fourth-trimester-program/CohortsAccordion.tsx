@@ -223,10 +223,17 @@ export default function CohortsAccordion({ cohort }) {
                 Cohort schedule
               </h2>
               <p className="italic text-xs mb-3">
+                Our schedule is designed to reduce FOMO! Whether you're
+                traveling or just can't get out of bed, you can join our expert
+                discussions online. If your baby is being fussy that morning,
+                you're welcome to come late to one of our socials. Come as you
+                are; we're here to meet you.
+              </p>
+              <CohortSchedule cohort={cohort} />
+              <p className="italic text-xs mt-3">
                 Please note: The schedule may change before the start of the
                 cohort.
               </p>
-              <CohortSchedule cohort={cohort} />
             </div>
           )}
         </div>

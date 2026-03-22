@@ -124,8 +124,7 @@ export default function FourthTrimesterProgramClient() {
         <section className="mt-10 mb-8">
           <SectionHeader
             header="Expert curriculum"
-            subtitle="Expert-led modules for the whole family that track your 12-week
-            journey with your newborn"
+            subtitle="Evidence-based and expert-led discussions plus resource guides for the whole family, tracking your newborn's development — and yours as new parents"
           />
           <SessionsAccordion />
         </section>
@@ -181,7 +180,18 @@ export default function FourthTrimesterProgramClient() {
       <div id="faq" className="scroll-m-32 mt-6">
         <SectionHeader
           header="Common questions"
-          subtitle="If you have any other questions, please reach out to hello@amsterdamparentproject.nl."
+          subtitle={
+            <>
+              If you have any other questions, please{" "}
+              <a
+                href="mailto:hello@amsterdamparentproject.nl"
+                className="text-brand-goldenrod hover:text-brand-soft-green"
+              >
+                contact us
+              </a>
+              .
+            </>
+          }
         />
         <ProgramFAQ />
       </div>
