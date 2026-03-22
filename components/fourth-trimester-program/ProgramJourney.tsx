@@ -6,7 +6,7 @@ export default function ProgramJourney() {
         <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white dark:border-brand-charcoal bg-brand-soft-green text-white shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
           1
         </div>
-        <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-soft-green/10 bg-white">
+        <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-sand/60 bg-white">
           <h4 className="font-bold text-brand-charcoal">
             Save your family's spot
           </h4>
@@ -26,7 +26,7 @@ export default function ProgramJourney() {
         <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white dark:border-brand-charcoal bg-brand-goldenrod text-white shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
           2
         </div>
-        <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-goldenrod/10 bg-white">
+        <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-sand/60 bg-white">
           <h4 className="font-bold text-brand-charcoal">The cohort starts</h4>
           <p className="text-xs font-medium tracking-wide text-brand-goldenrod italic mt-1 mb-2">
             4-8 weeks after birth
@@ -40,10 +40,10 @@ export default function ProgramJourney() {
 
       {/* Step 3 */}
       <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-        <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white dark:border-brand-charcoal bg-brand-soft-green text-white shadow shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
+        <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-white dark:border-brand-charcoal bg-brand-soft-green text-white shrink-0 z-10 md:absolute md:left-1/2 md:-translate-x-1/2">
           3
         </div>
-        <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-soft-green/10 bg-white shadow-sm">
+        <div className="w-[calc(100%-4rem)] md:w-[42%] p-6 rounded-2xl border border-brand-sand/60 bg-white">
           <h4 className="font-bold text-brand-charcoal">
             Continuous connection
           </h4>

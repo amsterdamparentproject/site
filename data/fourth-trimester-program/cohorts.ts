@@ -106,7 +106,7 @@ const FTPCohorts: Cohort[] = [
     start: new Date("1 May 2026"),
     end: new Date("31 July 2026"),
     draft: true,
-    groupStatus: "Last spots",
+    groupStatus: "Open",
     sessions: [
       {
         name: "Intro Call: Building Your Village",
@@ -186,6 +186,7 @@ const FTPCohorts: Cohort[] = [
     dueDates: "May-Jun 2026",
     start: new Date("1 July 2026"),
     end: new Date("30 September 2026"),
+    groupStatus: "Last spots",
     draft: true,
   },
   {

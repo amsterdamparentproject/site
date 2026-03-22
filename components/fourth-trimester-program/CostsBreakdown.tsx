@@ -87,9 +87,9 @@ export default function CostsBreakdown() {
   return (
     <section className="max-w-4xl mx-auto my-8 px-6 flex flex-col items-center">
       {/* What the program includes */}
-      <div className="w-full max-w-xl bg-brand-sand/5 dark:bg-brand-charcoal rounded-2xl p-6 mb-12 border border-brand-sand/20 dark:border-brand-soft-charcoal/80">
+      <div className="w-full max-w-xl bg-white dark:bg-brand-charcoal rounded-2xl p-6 mb-12 border border-brand-sand/60 dark:border-brand-soft-charcoal/80">
         <h4 className="text-sm italic text-brand-soft-green dark:text-brand-goldenrod font-medium mb-4 text-center">
-          Your program fee includes:
+          Your program fees include:
         </h4>
         <ul className="grid grid-cols-1 gap-y-3 text-left">
           {inclusions.map((item, i) => (
