@@ -204,10 +204,7 @@ export default function FourthTrimesterProgramClient() {
         >
           <HeaderAndSubtitle
             header="Get started: Find your cohort"
-            subtitle="Reserve your spot now, whenever you are in your pre/postpartum
-            journey. As soon as your cohort reaches enough families, we’ll email
-            you to finalize signup (including full payment) and introduce you to
-            your group."
+            subtitle="Reserve your spot at any stage of your journey. Once your cohort reaches capacity, we’ll email you to finalize registration, process payment, and introduce your group."
           />
           <div className="max-w-3xl mx-auto mt-8 px-4">
             <div className="space-y-4">

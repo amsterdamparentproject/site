@@ -1,9 +1,24 @@
 export default function ProgramFAQ() {
   const faqs = [
     {
+      question: "How does the reservation and payment process work?",
+      answer:
+        "We prioritize building cohorts of parents with similar due dates who live in the same neighborhood. You can reserve your spot at any stage of your journey for a €25 deposit. Once your specific cohort reaches capacity, we will email you to finalize your registration, process the remaining payment, and introduce you to your new group. If a cohort doesn't reach capacity, we’ll offer you a spot in the next closest group or a full refund.",
+    },
+    {
+      question: "I’m not an expat. Can I still join?",
+      answer:
+        "Absolutely. While the program is conducted in English to support Amsterdam’s international community, we welcome any parent looking for a structured, expert-led support group. Having a mix of internationals and locals often makes for the best community resource sharing.",
+    },
+    {
+      question: "Are partners welcome to attend?",
+      answer:
+        "Yes, yes, yes! Unlike many groups that focus solely on moms/the birthing parent, the Fourth Trimester Program is built for the whole family. Whether you are a birthing parent, a non-birthing parent, or a partner, you are an equal part of this transition. Bringing your partner ensures you’re both receiving the same expert advice and building a shared support network from day one.",
+    },
+    {
       question: "Why do I need group postpartum support?",
       answer:
-        "Finding the right support after you have a baby is a daunting task. Between frantic 2am Google searches and overwhelming social media advice, getting an expert's opinion can be expensive and exhausting. We provide that expertise in a grounded, shared environment so you don't have to hunt for it.",
+        "Finding the right support after you have a baby is a daunting task. Between frantic 2 AM Google searches and overwhelming social media advice, getting an expert's opinion can be expensive and exhausting. We provide that expertise in a grounded, shared environment so you don't have to hunt for it.",
     },
     {
       question: "What's different about the Fourth Trimester Program?",
@@ -79,7 +94,7 @@ export default function ProgramFAQ() {
               </svg>
             </span>
           </summary>
-          <div className="mt-4 text-brand-soft-charcoal/80 text-sm leading-relaxed max-w-2xl">
+          <div className="mt-4 text-brand-soft-charcoal text-sm leading-relaxed max-w-2xl">
             {faq.answer}
           </div>
         </details>

@@ -122,7 +122,7 @@ export default function CohortsAccordion({ cohort }) {
           {/* Toggle */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1.5 text-xs font-medium text-brand-soft-charcoal/60 hover:text-brand-soft-green transition-colors group"
+            className="cursor-pointer flex items-center gap-1.5 text-xs font-medium text-brand-soft-charcoal/60 hover:text-brand-soft-green transition-colors group"
           >
             <span>
               {isExpanded

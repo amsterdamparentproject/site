@@ -150,7 +150,7 @@ export default function CostsBreakdown() {
       <div className="max-w-md text-center mb-12 px-4">
         <p className="text-[11px] text-brand-soft-charcoal leading-relaxed">
           All prices include 21% BTW (VAT). The €25 reservation fee will be
-          deducted from this total when you complete sign up.
+          deducted from this total when you complete registration.
         </p>
       </div>
 
