@@ -58,9 +58,9 @@ const SectionHeader = ({ header, subtitle }: SectionHeaderProps) => {
 
 export default function FourthTrimesterProgramClient() {
   return (
-    <div className="flex-column justify-center mx-2">
+    <div className="flex-col justify-center px-2 items-center w-full max-w-full">
       <div
-        className="pt-6 pb-6 flex flex-col items-center"
+        className="pb-6 flex flex-col items-center w-full"
         id="program-description"
       >
         <div className="flex flex-col text-center items-center space-y-2 pt-6 md:space-y-5">
@@ -81,9 +81,9 @@ export default function FourthTrimesterProgramClient() {
           </p>
         </div>
 
-        <div className="mt-6 mb-10">
+        <div className="mt-6 mb-8">
           <ShowcaseButton
-            href="#find-cohort"
+            href="#find-your-cohort"
             title="Find your cohort"
             fill={true}
             umamiName="Fourth Trimester Program: Join program"
@@ -94,7 +94,10 @@ export default function FourthTrimesterProgramClient() {
           <p className="mb-6 mx-4">
             The Fourth Trimester Program cuts through the noise of overwhelming,
             conflicting advice to focus on what matters: a healthy, calm, and
-            confident transition for your whole family.{" "}
+            confident transition to newborn parenthood for your whole
+            family.{" "}
+          </p>
+          <p className="mb-6 mx-4">
             <b>
               When support from your kraamzorg and midwife ends, we step in to
               bridge the gap between professional expertise and real-world
@@ -105,7 +108,7 @@ export default function FourthTrimesterProgramClient() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-12 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 mb-12 px-4">
           {highlights.map((item, index) => (
             <ProgramHighlightBox
               key={index}
@@ -149,32 +152,36 @@ export default function FourthTrimesterProgramClient() {
           <CostsBreakdown />
         </section>
 
-        <section
-          id="find-cohort"
-          className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 dark:bg-brand-soft-charcoal border border-brand-sand/10 py-10 px-8 rounded-lg"
-        >
-          <SectionHeader
-            header="Get started: Find your cohort"
-            subtitle="Reserve your spot at any stage of your journey. Once your cohort reaches capacity, we’ll email you to finalize registration, process payment, and introduce your group."
-          />
-          <div className="max-w-3xl mx-auto mt-8 px-4">
-            <div className="space-y-4">
-              {FTPCohorts.map((cohort, index) => (
-                <CohortsAccordion key={index} cohort={cohort} />
-              ))}
+        <div className="w-full max-w-full overflow-x-clip">
+          <section
+            id="find-your-cohort"
+            className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 dark:bg-brand-soft-charcoal border border-brand-sand/10 py-10 px-4 md:px-8 rounded-lg w-full"
+          >
+            <SectionHeader
+              header="Get started: Find your cohort"
+              subtitle="Reserve your spot at any stage of your journey. Once your cohort reaches capacity, we’ll email you to finalize registration, process payment, and introduce your group."
+            />
+
+            <div className="max-w-3xl mx-auto mt-8 w-full px-2 md:px-4">
+              <div className="space-y-4">
+                {FTPCohorts.map((cohort, index) => (
+                  <CohortsAccordion key={index} cohort={cohort} />
+                ))}
+              </div>
+
+              <p className="text-center text-xs text-brand-charcoal dark:text-brand-white/80 mt-8 max-w-md mx-auto leading-normal">
+                Don’t see your due date?{" "}
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
+                  className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white/80"
+                >
+                  Join the general interest list
+                </a>{" "}
+                to be the first to know when new cohorts are released.
+              </p>
             </div>
-            <p className="text-center text-xs text-brand-charcoal dark:text-brand-white/80 mt-8 max-w-md mx-auto leading-normal">
-              Don’t see your due date?{" "}
-              <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
-                className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white/80"
-              >
-                Join the general interest list
-              </a>{" "}
-              to be the first to know when new cohorts are released.
-            </p>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
 
       <div id="faq" className="scroll-m-32 mt-6">

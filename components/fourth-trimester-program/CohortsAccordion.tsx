@@ -160,7 +160,7 @@ export default function CohortsAccordion({ cohort }) {
             onClick={() => handleCheckout({ cohort, isClosed })}
             data-umami-event="Fourth Trimester Program: Reserve spot"
             data-umami-event-cohort={cohort.slug}
-            data-umami-event-groupStatus={cohort.groupStatus}
+            data-umami-event-groupstatus={cohort.groupStatus}
           >
             {isClosed ? (
               "Closed"

@@ -95,7 +95,7 @@ export default function CostsBreakdown() {
           {inclusions.map((item, i) => (
             <li
               key={i}
-              className="flex items-start gap-3 text-xs text-brand-soft-charcoal leading-relaxed"
+              className="flex items-start gap-3 text-sm text-brand-soft-charcoal leading-relaxed"
             >
               <svg
                 className="w-4 h-4 text-brand-goldenrod shrink-0 mt-0.5"
@@ -147,7 +147,7 @@ export default function CostsBreakdown() {
       </div>
 
       {/* 4. SLIDING SCALE NOTICE */}
-      <div className="max-w-md text-center mb-12 px-4">
+      <div className="max-w-md text-center mb-8 px-4">
         <p className="text-[11px] text-brand-soft-charcoal dark:text-brand-white/80 leading-relaxed">
           All prices include 21% BTW (VAT). The €25 reservation fee will be
           deducted from this total when you complete registration.
@@ -155,10 +155,10 @@ export default function CostsBreakdown() {
       </div>
 
       {/* 5. TRANSPARENCY BAR */}
-      <div className="w-full border-t border-brand-sand/20 pt-10 flex flex-col items-center">
+      <div className="w-full border-t border-brand-sand/20 pt-8 flex flex-col items-center">
         <StackedCostBar />
 
-        <p className="text-[10px] text-brand-soft-charcoal/60 dark:text-brand-white/80 max-w-lg text-center mt-8 leading-relaxed italic">
+        <p className="text-xs text-brand-soft-charcoal/60 dark:text-brand-white/80 max-w-lg text-center mt-8 leading-relaxed italic">
           One of our core values is transparency. Each cohort costs €966 to run.
           We first cover costs, then use the remainder to support program
           development and other community initiatives.

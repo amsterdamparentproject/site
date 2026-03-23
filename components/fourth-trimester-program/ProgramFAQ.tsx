@@ -6,19 +6,20 @@ export default function ProgramFAQ() {
         "We prioritize building cohorts of parents with similar due dates who live in the same neighborhood. You can reserve your spot at any stage of your journey for a €25 deposit. Once your specific cohort reaches capacity, we will email you to finalize your registration, process the remaining payment, and introduce you to your new group. If a cohort doesn't reach capacity, we’ll offer you a spot in the next closest group or a full refund.",
     },
     {
-      question: "I’m not an expat. Can I still join?",
-      answer:
-        "Absolutely. While the program is conducted in English to support Amsterdam’s international community, we welcome any parent looking for a structured, expert-led support group. Having a mix of internationals and locals often makes for the best community resource sharing.",
-    },
-    {
       question: "Are partners welcome to attend?",
       answer:
         "Yes, yes, yes! Unlike many groups that focus solely on moms/the birthing parent, the Fourth Trimester Program is built for the whole family. Whether you are a birthing parent, a non-birthing parent, or a partner, you are an equal part of this transition. Bringing your partner ensures you’re both receiving the same expert advice and building a shared support network from day one.",
     },
     {
-      question: "Why do I need group postpartum support?",
+      question:
+        "Why do I need structured postpartum support? Can't I get this for free myself?",
       answer:
-        "Finding the right support after you have a baby is a daunting task. Between frantic 2 AM Google searches and overwhelming social media advice, getting an expert's opinion can be expensive and exhausting. We provide that expertise in a grounded, shared environment so you don't have to hunt for it.",
+        "While information is everywhere, expert curation and a local village are not. Instead of vetting conflicting advice during 2 AM WhatsApp scrolling and Google searches, we provide a soft landing by combining professional expertise and peer experiences with a structured timeline. By sharing resources within a group, you get direct access to specialists without the high cost of multiple, fragmented private consultations. You need less mental load and fewer costs as new parents, not more.",
+    },
+    {
+      question: "I’m not an expat. Can I still join?",
+      answer:
+        "Absolutely. While the program is conducted in English to support Amsterdam’s international community, we welcome any parent looking for a structured, expert-led support group. Everyone deserves to be held postpartum ❤️",
     },
     {
       question: "What's different about the Fourth Trimester Program?",
@@ -31,18 +32,18 @@ export default function ProgramFAQ() {
           <ul className="list-disc pl-5 space-y-1 opacity-90">
             <li>
               <strong>Timing:</strong> Answers when you actually have the
-              questions.
+              questions
             </li>
             <li>
-              <strong>Sources:</strong> Accredited experts, not random blogs.
+              <strong>Sources:</strong> Accredited experts, not random blogs
             </li>
             <li>
               <strong>Proximity:</strong> Matching you with neighbors, not just
-              anyone in the city.
+              anyone in the city
             </li>
             <li>
               <strong>Language:</strong> Removing the Dutch-language mental
-              overhead.
+              overhead
             </li>
           </ul>
           <p>
@@ -71,14 +72,15 @@ export default function ProgramFAQ() {
   ];
 
   return (
-    <div className="divide-y divide-brand-sand/30 dark:divide-brand-soft-charcoal/30 mx-4">
+    <div className="w-full max-w-full divide-y divide-brand-sand/30 dark:divide-brand-soft-charcoal/30 px-4 overflow-x-hidden">
       {faqs.map((faq, index) => (
-        <details key={index} className="group py-6">
-          <summary className="flex items-center justify-between cursor-pointer list-none">
-            <span className="text-lg font-medium text-brand-charcoal dark:text-brand-white group-hover:text-brand-soft-green transition-colors pr-8">
+        <details key={index} className="group py-6 w-full block">
+          <summary className="flex flex-nowrap items-start justify-between cursor-pointer list-none gap-4 w-full">
+            <span className="flex-1 min-w-0 text-lg font-medium text-brand-charcoal dark:text-brand-white group-hover:text-brand-soft-green transition-colors break-words">
               {faq.question}
             </span>
-            <span className="transition-transform duration-300 group-open:rotate-45 text-brand-soft-green">
+
+            <span className="shrink-0 transition-transform duration-300 group-open:rotate-45 text-brand-soft-green mt-1">
               <svg
                 width="18"
                 height="18"
@@ -94,7 +96,9 @@ export default function ProgramFAQ() {
               </svg>
             </span>
           </summary>
-          <div className="mt-4 text-brand-soft-charcoal dark:text-brand-white/80 text-sm leading-relaxed max-w-2xl">
+
+          {/* 4. Ensure the answer box also respects the width */}
+          <div className="mt-4 text-brand-soft-charcoal dark:text-brand-white/80 text-sm leading-relaxed max-w-full overflow-hidden">
             {faq.answer}
           </div>
         </details>
