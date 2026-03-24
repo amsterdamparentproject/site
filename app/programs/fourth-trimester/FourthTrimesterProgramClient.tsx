@@ -15,7 +15,7 @@ const highlights = [
     icon: "🩺",
     title: "Expert guidance",
     description:
-      "Regular 'Ask Me Anything' sessions with Amsterdam’s postpartum specialists, covering newborn growth, parenting skills, and shared experiences.",
+      "Regular 'Ask Me Anything' sessions with local postpartum experts, covering newborn development and common experiences.",
   },
   {
     icon: "☕️",
@@ -100,8 +100,7 @@ export default function FourthTrimesterProgramClient() {
           <p className="mb-6 mx-4">
             <b>
               When support from your kraamzorg and midwife ends, we step in to
-              bridge the gap between professional expertise and real-world
-              parenting
+              bridge the gap between professional expertise and peer support
             </b>{" "}
             — because "best practices" come from both science and shared
             experience.

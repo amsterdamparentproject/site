@@ -51,8 +51,8 @@ export default function ProgramJourney() {
             4 months after birth, and beyond
           </p>
           <p className="text-sm text-brand-charcoal/70 leading-relaxed">
-            After the program ends, your local expert network and peer chat
-            remain active. Your neighborhood support is now permanent, for your
+            After the program ends, your local expert network and cohort chat
+            remain active. Your Amsterdam support system is there for your
             family's ever-evolving needs 🫶🏻
           </p>
         </div>

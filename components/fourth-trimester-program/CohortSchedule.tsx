@@ -18,18 +18,18 @@ export default function CohortSchedule({ cohort }) {
           {sortedSessions.map((session, i) => (
             <tr key={i} className="hover:bg-brand-sand/10 transition-colors">
               {/* Event Name */}
-              <td className="p-4 text-brand-soft-charcoal">
+              <td className="p-4 w-[60%] text-brand-soft-charcoal">
                 <span className="font-bold">{session.name}</span>
                 {session.type && (
                   <div className="text-xs text-brand-soft-charcoal italic">
                     <span className="text-xs">{session.type}</span>
-                    <span className="sm:hidden"> - {session.location}</span>
+                    <span className="md:hidden"> - {session.location}</span>
                   </div>
                 )}
               </td>
 
               {/* Date & Time */}
-              <td className="p-4 text-brand-soft-charcoal">
+              <td className="p-4 w-[40%] md:w-[20%] text-right md:text-left text-brand-soft-charcoal">
                 <span className="font-medium">{formatDate(session.date)}</span>
                 {session.time && (
                   <span className="block text-xs text-brand-soft-charcoal italic">
@@ -39,8 +39,7 @@ export default function CohortSchedule({ cohort }) {
               </td>
 
               {/* Location */}
-              {/* TODO: hidden md:table-cell */}
-              <td className="p-4 text-brand-soft-charcoal">
+              <td className="md:p-4 hidden md:table-cell md:w-[20%] text-brand-soft-charcoal">
                 <span className="text-xs">Location:</span>
                 {session.time && (
                   <span className="block text-xs text-brand-soft-charcoal italic">
