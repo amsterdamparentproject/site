@@ -69,6 +69,20 @@ export async function POST(req) {
             ],
           },
         },
+        {
+          key: "language_select",
+          label: {
+            type: "custom",
+            custom: "Language",
+          },
+          type: "dropdown",
+          dropdown: {
+            options: [
+              { label: "English", value: "english" },
+              { label: "Dutch", value: "dutch" },
+            ],
+          },
+        },
       ],
       mode: "payment",
       metadata: { cohortSlug },
