@@ -9,6 +9,7 @@ import ProgramHighlightBox from "@/components/fourth-trimester-program/ProgramHi
 import ProgramFAQ from "@/components/fourth-trimester-program/ProgramFAQ";
 import { ReactNode } from "react";
 import ProgramJourney from "@/components/fourth-trimester-program/ProgramJourney";
+import Link from "@/components/Link";
 
 const highlights = [
   {
@@ -126,7 +127,23 @@ export default function FourthTrimesterProgramClient() {
         <section className="mt-10 mb-8">
           <SectionHeader
             header="Expert curriculum"
-            subtitle="Evidence-based and expert-led discussions plus resource guides for the whole family, tracking your newborn's development — and yours as new parents"
+            subtitle={
+              <>
+                Evidence-based and expert-led discussions plus resource guides
+                for the whole family, tracking your newborn's development — and
+                yours as new parents. Our{" "}
+                <Link
+                  href="/programs/fourth-trimester/facilitators"
+                  className="text-brand-goldenrod hover:text-brand-soft-green dark:hover:text-brand-white"
+                  aria-label="Learn more about our facilitators"
+                  data-umami-event="Fourth Trimester Program: Facilitators"
+                >
+                  program facilitators
+                </Link>{" "}
+                are trusted local postpartum professionals ready to help you on-
+                and offline.
+              </>
+            }
           />
           <SessionsAccordion />
         </section>
@@ -138,12 +155,12 @@ export default function FourthTrimesterProgramClient() {
               <>
                 As a nonprofit, we strive to balance access with fair pay. If
                 price is an issue, please{" "}
-                <a
+                <Link
                   href="mailto:hello@amsterdamparentproject.nl"
                   className="text-brand-goldenrod hover:text-brand-soft-green"
                 >
                   contact us
-                </a>{" "}
+                </Link>{" "}
                 — we're happy to accommodate your financial needs.
               </>
             }

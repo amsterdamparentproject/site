@@ -174,7 +174,7 @@ export const TeamMembers = defineDocumentType(() => ({
 
 export const FTPFacilitators = defineDocumentType(() => ({
   name: "FTPFacilitators",
-  filePathPattern: "fourthTrimesterProgram/facilitators/*.mdx",
+  filePathPattern: "fourth-trimester-program/facilitators/*.mdx",
   contentType: "mdx",
   fields: {
     name: { type: "string", required: true },

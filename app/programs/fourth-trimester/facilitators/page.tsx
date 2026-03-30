@@ -4,6 +4,7 @@ import AuthorLayout from "@/layouts/AuthorLayout";
 import { coreContent } from "pliny/utils/contentlayer";
 import { genPageMetadata } from "app/seo";
 import Link from "@/components/Link";
+import ShowcaseButton from "@/components/ShowcaseButton";
 
 export const metadata = genPageMetadata({
   title: "Fourth Trimester Program: Facilitators",
@@ -45,29 +46,30 @@ export default function Page() {
     <div className="pb-6 flex flex-col items-center">
       <div className="flex flex-col text-center items-center space-y-2 pt-6 md:space-y-5">
         <p className="text-2xl font-extrabold text-brand-goldenrod text-center">
-          Join the Fourth Trimester Program
+          Newborn family support
         </p>
         <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
-          Facilitators
+          Fourth Trimester Program Facilitators
         </h1>
-        <p className="mt-4">
+        <p className="mt-4 max-w-xl">
           Your{" "}
           <b className="dark:text-brand-goldenrod text-brand-soft-green">
-            neighborhood support system in the first months postpartum
+            nonprofit, neighborhood support system in the first months
+            postpartum
           </b>
-          , designed for families with newborns. Expert-led discussions and
-          curated socials with local newborn parents to help you transition with
-          confidence to new parenthood.
-          <Link
-            href="/programs/fourth-trimester"
-            className="text-base leading-6 font-medium italic text-brand-soft-green hover:text-brand-soft-green dark:text-brand-goldenrod"
-            aria-label="jan-2026"
-          >
-            &nbsp;Learn more about the program &rarr;
-          </Link>
+          . Expert-led discussions and curated socials with local newborn
+          parents to help you transition with confidence to new parenthood.
         </p>
       </div>
-      <div className="w-full space-y-12">
+      <div className="mt-6 mb-8">
+        <ShowcaseButton
+          href="/programs/fourth-trimester#find-your-cohort"
+          title="Find your cohort"
+          fill={true}
+          umamiName="Fourth Trimester Program Facilitators: Join program"
+        />
+      </div>
+      <div className="w-full px-4 space-y-12">
         {facilitatorDetails.map((facilitator) => (
           <div
             key={facilitator.coreContent.slug || facilitator.coreContent.name}
