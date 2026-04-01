@@ -67,6 +67,11 @@ module.exports = () => {
     output,
     basePath,
     reactStrictMode: true,
+    experimental: {
+      serverActions: {
+        bodySizeLimit: '6mb', // Accept image upload size up to Netlify's max limit
+      },
+    },
     pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
     eslint: {
       dirs: ["app", "components", "layouts", "scripts"],
@@ -96,9 +101,7 @@ module.exports = () => {
 
       return config;
     },
-    serverActions: {
-      bodySizeLimit: '6mb', // Accept image upload size up to Netlify's max limit
-    },
+  
     async rewrites() {
       return [
         {
