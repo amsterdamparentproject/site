@@ -14,10 +14,10 @@ export default function Page() {
       </div>
 
       <p className="text-lg leading-7 text-gray-600 dark:text-gray-300">
-        The Amsterdam Parent Project (APP) is a nonprofit organization providing
-        peer and professional support to parents of young children in Amsterdam.
-        We run a newsletter, events, and programs to connect the local community
-        with the help they need to thrive in early parenthood.
+        The Amsterdam Parent Project (APP) is a nonprofit organization that
+        provides peer and professional support to parents of young children in
+        Amsterdam. We run a newsletter, events, and programs to connect the
+        local community with the help they need to thrive in early parenthood.
       </p>
 
       {/* Team */}
