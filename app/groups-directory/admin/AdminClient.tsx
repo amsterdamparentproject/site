@@ -5,22 +5,23 @@ import InvalidDirectoryLinkWarning from "@/components/InvalidDirectoryLink";
 import Link from "@/components/Link";
 import { useEffect, useState } from "react";
 import AddGroupForm from "@/components/groups-directory/AddGroupForm";
+import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
 
 export default function AdminClient() {
   const searchParams = useSearchParams();
-  const showWarning = searchParams.get("uid") === "false";
+
+  // Grab the data from the URL (?name=All%20Day%20Mummy-ing)
+  const groupInfo = {
+    name: searchParams.get("name") || "",
+    description: searchParams.get("description") || "",
+    categories: searchParams.get("categories") || "",
+  };
 
   const [hasStoredUid, sethasStoredUid] = useState<boolean | null>(null);
-  useEffect(() => {
-    const uid = localStorage.getItem("app_uid");
-    const maybeValidUid = !!uid && !showWarning;
-    sethasStoredUid(maybeValidUid);
-  }, []);
 
   return (
     <div>
       <div className="mt-6 md:mb-6 mb-3 flex flex-col items-center">
-        {showWarning && <InvalidDirectoryLinkWarning />}
         <h2 className="text-xl md:text-3xl font-bold text-brand-soft-green dark:text-brand-goldenrod text-center mb-2">
           Amsterdam Parent Groups Directory
         </h2>
@@ -76,9 +77,16 @@ export default function AdminClient() {
           before submitting. If your group does not meet the requirements, we
           will not add it to the directory.
         </p>
+
+        {/* Show form */}
         <div className="w-full max-w-lg my-4">
-          <AddGroupForm />
+          {groupInfo.name !== "" ? (
+            <ChangeGroupForm groupInfo={groupInfo} />
+          ) : (
+            <AddGroupForm />
+          )}
         </div>
+
         <div className="max-w-lg px-3">
           <h2 className="font-bold text-xl" id="group-requirements">
             Group requirements

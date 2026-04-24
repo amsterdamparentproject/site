@@ -1,6 +1,8 @@
 "use client";
 
+import { postManageDirectory } from "@/components/PostToWebhook";
 import { CustomSocialIcon, components } from "@/components/social-icons";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 // --- Types ---
@@ -140,6 +142,40 @@ export default function DirectoryClient() {
       </div>
     );
   }
+
+  // --- Handle Reporting ---
+  const handleReport = async (group: Group) => {
+    const confirmed = window.confirm(
+      `Report the link to the ${group.name} group as broken?`,
+    );
+    if (!confirmed) return;
+
+    try {
+      const payload = {
+        groupName: group.name,
+        inviteLink: group.inviteLink,
+      };
+      const result = await postManageDirectory(payload, "report");
+
+      if (result.success) {
+        alert(`Issue with ${group.name} reported to APP. Thanks!`);
+      }
+    } catch (err) {
+      console.error("Report failed:", err);
+    }
+  };
+
+  // --- Handle Claim Admin ---
+  const handleClaimAdmin = async (e: React.MouseEvent, group: Group) => {
+    // 1. Prevent the link from opening immediately to control the flow
+    e.preventDefault();
+
+    try {
+      await postManageDirectory(group, "update");
+    } catch (err) {
+      console.error("Admin failed:", err);
+    }
+  };
 
   const currentUser = data[0];
 
@@ -301,16 +337,44 @@ export default function DirectoryClient() {
                 )}
               </div>
 
-              <a
-                href={group.inviteLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-brand-soft-green text-white px-10 py-2.5 rounded-full cursor-pointer font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal active:scale-95 transition-all shadow-sm text-center"
-                data-umami-event="Groups Directory: Join group"
-                data-umami-event-uid={userUid}
-              >
-                Join
-              </a>
+              <div className="flex flex-col gap-2">
+                <a
+                  href={group.inviteLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-brand-soft-green text-white px-10 py-2.5 rounded-full cursor-pointer font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal active:scale-95 transition-all shadow-sm text-center"
+                  data-umami-event="Groups Directory: Join group"
+                  data-umami-event-uid={userUid}
+                >
+                  Join
+                </a>
+                <div className="flex flex-row gap-3 md:gap-1.5 justify-center">
+                  <Link
+                    href={{
+                      pathname: "/groups-directory/admin",
+                      query: {
+                        name: group.name,
+                        description: group.description,
+                        categories: group.categories,
+                      },
+                    }}
+                    className="hover:text-brand-goldenrod text-brand-soft-green rounded-full text-[10px]"
+                    data-umami-event="Groups Directory: Claim admin"
+                    data-umami-event-group={group.name}
+                  >
+                    Admin
+                  </Link>
+                  <button
+                    onClick={() => handleReport(group)}
+                    className="hover:text-brand-goldenrod text-red-800 rounded-full cursor-pointer text-center text-[10px]"
+                    data-umami-event="Groups Directory: Report issue"
+                    data-umami-event-group={group.name}
+                    data-umami-event-uid={userUid}
+                  >
+                    Report issue
+                  </button>
+                </div>
+              </div>
             </div>
           ))
         ) : (
