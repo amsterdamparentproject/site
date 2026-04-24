@@ -131,7 +131,7 @@ const ChangeGroupForm = ({ groupInfo }: { groupInfo: GroupProps }) => {
       );
       data.append("agreedToTerms", formData.agreedToTerms ? "Yes" : "No");
 
-      const response = await postManageDirectory(data);
+      const response = await postManageDirectory(data, "update");
       if (response.success) {
         setIsSuccess(true);
       } else {
