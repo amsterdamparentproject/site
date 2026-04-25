@@ -49,7 +49,8 @@ export default async function DirectoryPage({ searchParams }: PageProps) {
       recommended={data.recommended}
       allGroups={data.all}
       userName={data.user_name}
-      userEmail={data.user_email_masked}
+      userEmail={data.user_email}
+      userMaskedEmail={data.user_email_masked}
       userInterests={data.user_interests}
       uid={uid}
     />

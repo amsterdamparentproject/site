@@ -16,7 +16,7 @@ export default function AccessClient() {
     const uid = localStorage.getItem("app_uid");
     const maybeValidUid = !!uid && !showWarning;
     sethasStoredUid(maybeValidUid);
-  }, []);
+  }, [showWarning]);
 
   return (
     <div>

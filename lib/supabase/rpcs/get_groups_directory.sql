@@ -31,6 +31,7 @@ BEGIN
         'all', COALESCE(all_groups, '[]'::jsonb),
         'user_interests', COALESCE(user_interests, '{}'::text[]),
         'user_name', COALESCE(user_name, ''),
+        'user_email', COALESCE(user_email, ''),
         'user_email_masked', (
             SELECT 
                 CASE 

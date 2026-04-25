@@ -6,7 +6,16 @@ import { useState } from "react";
 import AddGroupForm from "@/components/groups-directory/AddGroupForm";
 import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
 
-export default function AdminClient() {
+interface UserInfo {
+  name: string;
+  email: string;
+}
+
+interface AdminClientProps {
+  userInfo: UserInfo;
+}
+
+export default function AdminClient({ userInfo }: AdminClientProps) {
   const searchParams = useSearchParams();
 
   // Grab the data from the URL (?name=All%20Day%20Mummy-ing)
@@ -80,9 +89,15 @@ export default function AdminClient() {
         {/* Show form */}
         <div className="w-full max-w-lg my-4">
           {groupInfo.name !== "" ? (
-            <ChangeGroupForm groupInfo={groupInfo} />
+            <ChangeGroupForm
+              groupInfo={{
+                ...groupInfo,
+                userName: userInfo.name,
+                userEmail: userInfo.email,
+              }}
+            />
           ) : (
-            <AddGroupForm />
+            <AddGroupForm userInfo={userInfo} />
           )}
         </div>
 

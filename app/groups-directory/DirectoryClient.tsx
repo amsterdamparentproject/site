@@ -4,6 +4,7 @@ import { postManageDirectory } from "@/components/PostToWebhook";
 import { CustomSocialIcon, components } from "@/components/social-icons";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
 
 // --- Types ---
 interface Group {
@@ -21,6 +22,7 @@ interface DirectoryClientProps {
   userInterests: string[];
   userName: string;
   userEmail: string;
+  userMaskedEmail: string;
   uid?: string;
 }
 
@@ -31,6 +33,7 @@ export default function DirectoryClient({
   uid,
   userName,
   userEmail,
+  userMaskedEmail,
 }: DirectoryClientProps) {
   // --- State ---
   const [activeTab, setActiveTab] = useState<"recommended" | "all">(
@@ -39,6 +42,20 @@ export default function DirectoryClient({
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedGroupForEdit, setSelectedGroupForEdit] =
+    useState<Group | null>(null);
+
+  // --- Modal/Drawer handlers ---
+  const handleEditGroup = (group: Group) => {
+    setSelectedGroupForEdit(group);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedGroupForEdit(null);
+  };
 
   useEffect(() => {
     const storedUid = localStorage.getItem("app_uid");
@@ -124,9 +141,9 @@ export default function DirectoryClient({
         <h2 className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
           Welcome{userName && `, ${userName}`}!
         </h2>
-        {userEmail && (
+        {userMaskedEmail && (
           <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
-            Accessing as: {userEmail}
+            Accessing as: {userMaskedEmail}
           </p>
         )}
         <p className="text-sm text-brand-charcoal dark:text-brand-white mt-2">
@@ -279,19 +296,12 @@ export default function DirectoryClient({
                   Join
                 </a>
                 <div className="flex flex-row gap-3 justify-center text-[10px]">
-                  <Link
-                    href={{
-                      pathname: "/groups-directory/admin",
-                      query: {
-                        name: group.name,
-                        description: group.description,
-                        categories: group.categories?.join(", "),
-                      },
-                    }}
+                  <button
+                    onClick={() => handleEditGroup(group)}
                     className="cursor-pointer text-brand-soft-green hover:underline dark:text-brand-goldenrod"
                   >
                     Admin
-                  </Link>
+                  </button>
                   <button
                     onClick={() => handleReport(group)}
                     className="cursor-pointer text-red-800 hover:underline dark:text-red-400"
@@ -310,6 +320,93 @@ export default function DirectoryClient({
           </div>
         )}
       </div>
+
+      {/* Modal/Drawer for editing groups */}
+      {isModalOpen && selectedGroupForEdit && (
+        <>
+          {/* Mobile: Drawer from bottom */}
+          <div className="md:hidden fixed inset-0 z-50">
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={handleCloseModal}
+              onKeyDown={(e) => e.key === "Escape" && handleCloseModal()}
+              role="button"
+              tabIndex={0}
+              aria-label="Close modal"
+            />
+            <div className="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto bg-white dark:bg-brand-soft-charcoal rounded-t-lg shadow-xl">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-brand-sand/20">
+                <h2 className="text-lg font-bold text-brand-charcoal dark:text-brand-white">
+                  Edit group
+                </h2>
+                <button
+                  onClick={handleCloseModal}
+                  className="cursor-pointer text-brand-soft-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod text-xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Form */}
+              <div className="p-4">
+                <ChangeGroupForm
+                  info={{
+                    name: selectedGroupForEdit.name,
+                    categories:
+                      selectedGroupForEdit.categories?.join(", ") || "",
+                    description: selectedGroupForEdit.description,
+                    userName: userName,
+                    userEmail: userEmail,
+                  }}
+                  onClose={handleCloseModal}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop: Modal */}
+          <div className="hidden md:flex fixed inset-0 z-50 items-center justify-center">
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={handleCloseModal}
+              onKeyDown={(e) => e.key === "Escape" && handleCloseModal()}
+              role="button"
+              tabIndex={0}
+              aria-label="Close modal"
+            />
+            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-brand-soft-charcoal rounded-lg shadow-xl mx-4">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-brand-sand/20">
+                <h2 className="text-xl font-bold text-brand-charcoal dark:text-brand-white">
+                  Change group: {selectedGroupForEdit.name}
+                </h2>
+                <button
+                  onClick={handleCloseModal}
+                  className="cursor-pointer text-brand-soft-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Form */}
+              <div className="p-6">
+                <ChangeGroupForm
+                  info={{
+                    name: selectedGroupForEdit.name,
+                    categories:
+                      selectedGroupForEdit.categories?.join(", ") || "",
+                    description: selectedGroupForEdit.description,
+                    userName: userName,
+                    userEmail: userEmail,
+                  }}
+                  onClose={handleCloseModal}
+                />
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

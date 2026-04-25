@@ -1,9 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { postManageDirectory } from "../PostToWebhook";
 import subscribeToNewsletter from "../Subscribe";
 
-const AddGroupForm = () => {
+interface UserInfo {
+  name: string;
+  email: string;
+}
+
+interface AddGroupFormProps {
+  userInfo?: UserInfo;
+}
+
+const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
   const [formData, setFormData] = useState({
     groupName: "",
     inviteLink: "",
@@ -24,6 +33,17 @@ const AddGroupForm = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Prepopulate form with user info when available
+  useEffect(() => {
+    if (userInfo) {
+      setFormData((prev) => ({
+        ...prev,
+        adminName: userInfo.name || prev.adminName,
+        email: userInfo.email || prev.email,
+      }));
+    }
+  }, [userInfo]);
 
   const categories = [
     "Parenting",
