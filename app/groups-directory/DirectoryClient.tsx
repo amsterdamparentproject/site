@@ -1,11 +1,10 @@
 "use client";
 
 import { postManageDirectory } from "@/components/PostToWebhook";
-import { CustomSocialIcon, components } from "@/components/social-icons";
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import AddGroupForm from "@/components/groups-directory/AddGroupForm";
 import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
+import DirectoryGroupCard from "@/components/groups-directory/DirectoryGroupCard";
 import Modal from "@/components/Modal";
 
 // --- Types ---
@@ -148,7 +147,7 @@ export default function DirectoryClient({
       </div>
 
       {/* Welcome Header */}
-      <div className="mb-8 p-6 bg-brand-sand/30 dark:bg-brand-soft-charcoal rounded-xl border border-brand-sand/20">
+      <div className="mb-8 p-6 pb-4 bg-brand-sand/30 dark:bg-brand-soft-charcoal rounded-xl border border-brand-sand/20">
         <h2 className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
           Welcome{userName && `, ${userName}`}!
         </h2>
@@ -168,6 +167,26 @@ export default function DirectoryClient({
           protect these groups from spammers and more by keeping this directory
           private.
         </p>
+        <button
+          onClick={handleOpenAddModal}
+          className="cursor-pointer mt-2 text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal h-10 flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span className="ml-1">Add new group</span>
+        </button>
       </div>
 
       {/* Tabs */}
@@ -203,14 +222,6 @@ export default function DirectoryClient({
             <div className="absolute bottom-full mb-2 hidden group-hover:block w-45 p-2 bg-white text-brand-charcoal text-xs rounded shadow-lg z-50">
               All groups in the directory
             </div>
-          </div>
-          <div className="flex">
-            <button
-              onClick={handleOpenAddModal}
-              className="ml-4 cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:underline h-10 flex items-center"
-            >
-              Add new group
-            </button>
           </div>
         </div>
       )}
@@ -262,9 +273,22 @@ export default function DirectoryClient({
             setSelectedCategory("All");
             setSelectedType("All");
           }}
-          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:underline h-10 flex items-center"
+          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal h-10 flex items-center"
         >
-          Reset filters
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-4 h-4 mr-1" // Allows you to size it with Tailwind e.g., w-4 h-4
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+          <span>Reset filters</span>
         </button>
       </div>
 
@@ -272,68 +296,14 @@ export default function DirectoryClient({
       <div className="grid gap-4">
         {filteredGroups.length > 0 ? (
           filteredGroups.map((group) => (
-            <div
+            <DirectoryGroupCard
               key={`${group.name}-${group.platform}`}
-              className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-all border ${
-                activeTab === "recommended"
-                  ? "border-brand-soft-green bg-brand-soft-green/5"
-                  : "border-brand-sand/60 dark:border-brand-soft-charcoal"
-              }`}
-            >
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-brand-charcoal dark:text-brand-white flex items-center gap-2">
-                  {group.name}
-                  {group.platform && (
-                    <CustomSocialIcon
-                      kind={
-                        group.platform.toLowerCase() as keyof typeof components
-                      }
-                      size={4}
-                    />
-                  )}
-                </h3>
-                <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 pt-1">
-                  {group.description}
-                </p>
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {group.categories?.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod bg-brand-sand/20 px-1.5 py-0.5 rounded"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <a
-                  href={group.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cursor-pointer bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center"
-                  data-umami-event="Join group"
-                  data-umami-event-uid={uid}
-                >
-                  Join
-                </a>
-                <div className="flex flex-row gap-3 justify-center text-[10px]">
-                  <button
-                    onClick={() => handleEditGroup(group)}
-                    className="cursor-pointer text-brand-soft-green hover:underline dark:text-brand-goldenrod"
-                  >
-                    Admin
-                  </button>
-                  <button
-                    onClick={() => handleReport(group)}
-                    className="cursor-pointer text-red-800 hover:underline dark:text-red-400"
-                  >
-                    Report issue
-                  </button>
-                </div>
-              </div>
-            </div>
+              group={group}
+              activeTab={activeTab}
+              uid={uid}
+              onEdit={handleEditGroup}
+              onReport={handleReport}
+            />
           ))
         ) : (
           <div className="text-center py-20 bg-brand-sand/10 rounded-xl border border-dashed border-brand-sand">
