@@ -4,12 +4,16 @@ import { GROUP_CATEGORIES } from "@/app/types/groups-directory";
 
 interface CategoryChipsProps {
   selectedCategories: string[];
+  formQuestion?: string;
+  formQuestionDescription?: string;
   onChange: (categories: string[]) => void;
   showSelectAll?: boolean;
 }
 
-export default function CategoryChips({
+export default function CategoryChipsFormField({
   selectedCategories,
+  formQuestion = "Which categories apply to your group?",
+  formQuestionDescription = "Tap to select all that apply. If none apply, it will show in the general list.",
   onChange,
   showSelectAll = true,
 }: CategoryChipsProps) {
@@ -36,12 +40,12 @@ export default function CategoryChips({
 
   return (
     <div className="flex flex-wrap mb-6 px-3">
-      <div className="flex justify-between items-end w-full mb-2">
+      <div className="flex justify-between items-end w-full mb-1">
         <label
           htmlFor="categories-chips"
           className="tracking-wide text-brand-charcoal dark:text-brand-white text-md font-bold"
         >
-          Which categories apply to your group?
+          {formQuestion}
         </label>
         {showSelectAll && (
           <button
@@ -54,9 +58,8 @@ export default function CategoryChips({
         )}
       </div>
 
-      <p className="text-xs text-gray-500 mb-3 italic w-full">
-        Tap to select all that apply. If none apply, it will show in the general
-        list.
+      <p className="text-xs text-gray-500 mb-4 italic w-full">
+        {formQuestionDescription}
       </p>
 
       <div id="categories-chips" className="flex flex-wrap gap-2">
