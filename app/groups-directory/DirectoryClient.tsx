@@ -12,7 +12,7 @@ interface Group {
   isRecommended?: boolean; // Optional if not all rows have it
   platform: string;
   description: string;
-  inviteLink: string;
+  link: string;
 }
 
 interface DirectoryClientProps {
@@ -103,7 +103,7 @@ export default function DirectoryClient({
     if (!confirmed) return;
 
     try {
-      const payload = { groupName: group.name, inviteLink: group.inviteLink };
+      const payload = { groupName: group.name, link: group.link };
       const result = await postManageDirectory(payload, "report");
       if (result.success) alert(`Issue reported. Thanks!`);
     } catch (err) {
@@ -269,7 +269,7 @@ export default function DirectoryClient({
 
               <div className="flex flex-col gap-2">
                 <a
-                  href={group.inviteLink}
+                  href={group.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="cursor-pointer bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center"
