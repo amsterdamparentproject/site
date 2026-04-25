@@ -1,29 +1,33 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { postManageDirectory } from "../PostToWebhook";
-import subscribeToNewsletter from "../Subscribe";
+import { GROUP_CATEGORIES } from "@/app/types/groups-directory";
+import CategoryChips from "./CategoryChips";
 
-interface UserInfo {
-  name: string;
-  email: string;
+interface FormProps {
+  userName?: string;
+  userEmail?: string;
 }
 
-interface AddGroupFormProps {
-  userInfo?: UserInfo;
-}
-
-const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
+const AddGroupForm = ({
+  info,
+  onClose,
+}: {
+  info: FormProps;
+  onClose?: () => void;
+}) => {
   const [formData, setFormData] = useState({
     groupName: "",
     inviteLink: "",
     description: "",
-    adminName: "",
-    email: "",
     categories: [] as string[],
+    adminName: info.userName || "",
+    email: info.userEmail || "",
     notes: "",
-    subscribeNewsletter: false,
     agreedToTerms: false,
   });
+
+  const [showLinkInput, setShowLinkInput] = useState(false);
 
   const [touched, setTouched] = useState({
     name: false,
@@ -34,33 +38,23 @@ const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Prepopulate form with user info when available
-  useEffect(() => {
-    if (userInfo) {
-      setFormData((prev) => ({
-        ...prev,
-        adminName: userInfo.name || prev.adminName,
-        email: userInfo.email || prev.email,
-      }));
-    }
-  }, [userInfo]);
-
-  const categories = [
-    "Parenting",
-    "Mom",
-    "Dad",
-    "Twin",
-    "Neighborhood",
-    "Age/due date",
-    "Activities",
-    "Language & country",
-    "Buy & sell",
-  ];
+  const categories = GROUP_CATEGORIES;
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
 
   const isFormValid =
     formData.adminName.trim() !== "" && isEmailValid && formData.agreedToTerms;
+
+  // Prepopulate form with user info when available
+  useEffect(() => {
+    if (info.userName) {
+      setFormData((prev) => ({
+        ...prev,
+        adminName: info.userName || prev.adminName,
+        email: info.userEmail || prev.email,
+      }));
+    }
+  }, [info]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -86,7 +80,7 @@ const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
   };
 
-  const submitEvent = async (e: React.FormEvent) => {
+  const submitEvent = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
     setIsSubmitting(true);
@@ -97,15 +91,6 @@ const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
     const selectedCategories = formData.categories.join(", ");
 
     try {
-      // Subscribe to newsletter
-      if (formData.subscribeNewsletter) {
-        await subscribeToNewsletter({
-          email: formData.email,
-          tag: "website-groups-directory-add-group",
-          referringSite: String(window.location),
-        });
-      }
-
       // Send to n8n
       const data = new FormData();
       data.append("groupName", formData.groupName);
@@ -115,15 +100,15 @@ const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
       data.append("adminName", formData.adminName);
       data.append("email", formData.email);
       data.append("notes", formData.notes);
-      data.append(
-        "subscribeNewsletter",
-        formData.subscribeNewsletter ? "Yes" : "No",
-      );
       data.append("agreedToTerms", formData.agreedToTerms ? "Yes" : "No");
 
-      const response = await postManageDirectory(data);
+      const response = await postManageDirectory(data, "update");
       if (response.success) {
         setIsSuccess(true);
+        // Close modal/drawer after successful submission
+        setTimeout(() => {
+          onClose?.();
+        }, 2000); // Give user time to see success message
       } else {
         throw new Error("Submission failed");
       }
@@ -164,8 +149,8 @@ const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
           Success!
         </h2>
         <p className="text-brand-white">
-          Your request to add a new group has been sent for review. You'll
-          receive an email after we've taken a look!
+          Your request for changes has been sent for review. You'll receive an
+          email after we've taken a look!
         </p>
       </div>
     );
@@ -173,24 +158,44 @@ const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
 
   return (
     <form className="w-full" onSubmit={submitEvent}>
-      <h1 className="text-2xl text-center font-bold text-brand-soft-green mb-5">
-        Add a group
-      </h1>
+      {/* Agreement */}
+      <div className="flex flex-wrap mb-6 px-3">
+        <label
+          htmlFor="agreement-check"
+          className="flex items-start cursor-pointer group select-none" // added select-none to prevent accidental text highlighting
+        >
+          <div className="flex-shrink-0 mt-1">
+            <input
+              id="agreement-check"
+              type="checkbox"
+              name="agreedToTerms"
+              checked={formData.agreedToTerms}
+              onChange={handleChange}
+              className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green cursor-pointer"
+            />
+          </div>
+          <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white leading-tight">
+            <b>I confirm that I am the owner/admin of this group.</b> I agree to
+            keep group info up to date in the directory and to be the contact
+            for questions or concerns.{" "}
+            <span className="text-red-500 font-bold">*</span>
+          </span>
+        </label>
+      </div>
+
       {/* Group info */}
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
           <label className={labelStyle} htmlFor="groupName">
-            Group name <span className="text-red-500">*</span>
+            Name
           </label>
           <input
             className={getStyle("groupName")}
             id="groupName"
             name="groupName"
-            type="groupName"
-            placeholder="Amsterdam Parent Group"
+            type="text"
             value={formData.groupName}
             onChange={handleChange}
-            onBlur={() => handleBlur("groupName")}
           />
         </div>
       </div>
@@ -198,14 +203,14 @@ const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
           <label className={labelStyle} htmlFor="inviteLink">
-            Invite link <span className="text-red-500">*</span>
+            Link
           </label>
           <input
             className={getStyle("inviteLink")}
             id="inviteLink"
             name="inviteLink"
-            type="inviteLink"
-            placeholder="https://chat.whatsapp.com/KniW..."
+            type="text"
+            placeholder="https://chat.whatsapp.com/..."
             value={formData.inviteLink}
             onChange={handleChange}
             onBlur={() => handleBlur("inviteLink")}
@@ -223,76 +228,18 @@ const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
           name="description"
           rows={3}
           placeholder="What is your group about?"
-          value={formData.description}
+          value={formData.description || ""}
           onChange={handleChange}
         />
       </div>
 
-      <div className="flex flex-wrap mb-6 px-3">
-        <label htmlFor="categories-check" className={labelStyle}>
-          Which categories apply to your group?
-        </label>
-        <p className="text-xs text-gray-500 mb-3 italic">
-          Select all that apply. If none apply, we will show your group in the
-          general list.
-        </p>
-        <div id="categories-check" className="w-full space-y-2">
-          {categories.map((option) => (
-            <label
-              key={option}
-              className="flex items-center cursor-pointer group px-2"
-            >
-              <input
-                type="checkbox"
-                name="categories"
-                value={option}
-                checked={formData.categories.includes(option)}
-                onChange={handleChange}
-                className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green"
-              />
-              <span className="ml-3 text-brand-charcoal dark:text-brand-white group-hover:text-brand-soft-green transition-colors">
-                {option}
-              </span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Person info */}
-      <div className="flex flex-wrap mb-6">
-        <div className="w-full px-3">
-          <label className={labelStyle} htmlFor="adminName">
-            Your first name <span className="text-red-500">*</span>
-          </label>
-          <input
-            className={getStyle("adminName")}
-            id="adminName"
-            name="adminName"
-            type="adminName"
-            placeholder="Alex"
-            value={formData.adminName}
-            onChange={handleChange}
-            onBlur={() => handleBlur("adminName")}
-          />
-        </div>
-      </div>
-      <div className="flex flex-wrap mb-6">
-        <div className="w-full px-3">
-          <label className={labelStyle} htmlFor="email">
-            Your email <span className="text-red-500">*</span>
-          </label>
-          <input
-            className={getStyle("email")}
-            id="email"
-            name="email"
-            type="email"
-            placeholder="hello@amsterdamparentproject.nl"
-            value={formData.email}
-            onChange={handleChange}
-            onBlur={() => handleBlur("email")}
-          />
-        </div>
-      </div>
+      <CategoryChips
+        categories={categories}
+        selectedCategories={formData.categories}
+        onChange={(categories) =>
+          setFormData((prev) => ({ ...prev, categories }))
+        }
+      />
 
       <div className="flex flex-wrap mb-6 px-3">
         <label className={labelStyle} htmlFor="notes">
@@ -309,60 +256,21 @@ const AddGroupForm = ({ userInfo }: AddGroupFormProps) => {
         />
       </div>
 
-      {/* Newsletter subscription */}
-      <div className="flex flex-wrap mb-4 px-3">
-        <label className="flex items-center cursor-pointer group">
-          <input
-            type="checkbox"
-            name="subscribeNewsletter"
-            checked={formData.subscribeNewsletter}
-            onChange={handleChange}
-            className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green"
-          />
-          <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white">
-            <b>Please subscribe me to APP's newsletter</b>: a twice-monthly
-            email digest of upcoming activities for babies, toddlers, and
-            parents shared in the groups.
-          </span>
-        </label>
-      </div>
-
-      {/* Agreement */}
-      <div className="flex flex-wrap mb-6 px-3">
-        <label
-          htmlFor="agreement-check"
-          className="flex items-start cursor-pointer group"
-        >
-          <input
-            id="agreement-check"
-            type="checkbox"
-            name="agreedToTerms"
-            checked={formData.agreedToTerms}
-            onChange={handleChange}
-            className="mt-1 w-5 h-5 border-brand-sand rounded accent-brand-soft-green"
-          />
-          <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white">
-            <b>
-              I confirm that this group meets directory requirements and that I
-              am the owner/admin of this group.
-            </b>{" "}
-            I agree to proactively keep the group information up to date in the
-            directory and to be the "admin contact" if there are questions or
-            concerns regarding the group.{" "}
-            <span className="text-red-500">*</span>
-          </span>
-        </label>
-      </div>
-
       <div className="flex flex-wrap mb-6 px-3">
         <button
           className={submitButtonStyle}
           type="submit"
           disabled={!isFormValid || isSubmitting}
         >
-          {isSubmitting ? "Sending..." : "Add group"}
+          {isSubmitting ? "Sending..." : "Request changes"}
         </button>
       </div>
+      <p className="px-3 text-sm italic mb-5">
+        Any group changes go through an APP approval process to ensure that
+        requests are genuine, which may take a few days. APP may contact you if
+        we have any questions or see suspicious directory activity with your
+        group.
+      </p>
     </form>
   );
 };

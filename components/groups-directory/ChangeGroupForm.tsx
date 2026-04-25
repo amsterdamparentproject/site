@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { postManageDirectory } from "../PostToWebhook";
+import CategoryChips from "./CategoryChips";
 
 interface FormProps {
   name: string;
@@ -147,7 +148,7 @@ const ChangeGroupForm = ({
   const inputStyle = `${inputBase} border-brand-sand`;
   const requiredInputStyle = `${inputBase} border-red-500 bg-red-50/30`;
   const submitButtonStyle =
-    `bg-brand-soft-green text-brand-white text-lg mt-2 px-6 py-2 rounded transition-all cursor-pointer hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
+    `bg-brand-soft-green text-white text-lg mt-2 px-6 py-2 rounded-3xl transition-all cursor-pointer hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
     focusStyle;
 
   const getStyle = (field: string) => {
@@ -156,18 +157,6 @@ const ChangeGroupForm = ({
     if (field === "adminName" && !formData.adminName.trim())
       return requiredInputStyle;
     return inputStyle;
-  };
-
-  const allSelected = formData.categories.length === categories.length;
-
-  const handleSelectAll = () => {
-    if (allSelected) {
-      // If all are already there, clear the list
-      setFormData((prev) => ({ ...prev, categories: [] }));
-    } else {
-      // Otherwise, set the list to the full categories array
-      setFormData((prev) => ({ ...prev, categories: [...categories] }));
-    }
   };
 
   if (isSuccess) {
@@ -186,6 +175,31 @@ const ChangeGroupForm = ({
 
   return (
     <form className="w-full" onSubmit={submitEvent}>
+      {/* Agreement */}
+      <div className="flex flex-wrap mb-6 px-3">
+        <label
+          htmlFor="agreement-check"
+          className="flex items-start cursor-pointer group select-none" // added select-none to prevent accidental text highlighting
+        >
+          <div className="flex-shrink-0 mt-1">
+            <input
+              id="agreement-check"
+              type="checkbox"
+              name="agreedToTerms"
+              checked={formData.agreedToTerms}
+              onChange={handleChange}
+              className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green cursor-pointer"
+            />
+          </div>
+          <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white leading-tight">
+            <b>I confirm that I am the owner/admin of this group.</b> I agree to
+            keep group info up to date in the directory and to be the contact
+            for questions or concerns.{" "}
+            <span className="text-red-500 font-bold">*</span>
+          </span>
+        </label>
+      </div>
+
       {/* Group info */}
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
@@ -251,87 +265,13 @@ const ChangeGroupForm = ({
         />
       </div>
 
-      <div className="flex flex-wrap mb-6 px-3">
-        <div className="flex justify-between items-end w-full mb-2">
-          <label
-            htmlFor="categories-chips"
-            className="tracking-wide text-brand-charcoal dark:text-brand-white text-md font-bold"
-          >
-            Which categories apply to your group?
-          </label>
-          <button
-            type="button"
-            onClick={handleSelectAll}
-            className="text-xs font-bold text-brand-soft-green hover:underline transition-colors cursor-pointer"
-          >
-            {allSelected ? "Clear all" : "Select all"}
-          </button>
-        </div>
-
-        <p className="text-xs text-gray-500 mb-3 italic w-full">
-          Tap to select all that apply. If none apply, it will show in the
-          general list.
-        </p>
-
-        <div id="categories-chips" className="flex flex-wrap gap-2">
-          {categories.map((option) => {
-            const isSelected = formData.categories.includes(option);
-            return (
-              <button
-                key={option}
-                type="button"
-                onClick={() => {
-                  const updatedCategories = isSelected
-                    ? formData.categories.filter((i) => i !== option)
-                    : [...formData.categories, option];
-                  setFormData((prev) => ({
-                    ...prev,
-                    categories: updatedCategories,
-                  }));
-                }}
-                className={`cursor-pointer px-4 py-2 rounded-full border text-sm font-medium transition-all flex items-center gap-2 
-                  ${
-                    isSelected
-                      ? "bg-brand-soft-green border-brand-soft-green text-white shadow-md scale-105"
-                      : "bg-brand-sand/10 border-brand-sand text-gray-600 hover:border-brand-soft-green"
-                  }`}
-              >
-                <span>{option}</span>
-                {isSelected ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <CategoryChips
+        categories={categories}
+        selectedCategories={formData.categories}
+        onChange={(categories) =>
+          setFormData((prev) => ({ ...prev, categories }))
+        }
+      />
 
       <div className="flex flex-wrap mb-6 px-3">
         <label className={labelStyle} htmlFor="notes">
@@ -346,32 +286,6 @@ const ChangeGroupForm = ({
           value={formData.notes}
           onChange={handleChange}
         />
-      </div>
-
-      {/* Agreement */}
-      <div className="flex flex-wrap mb-6 px-3">
-        <label
-          htmlFor="agreement-check"
-          className="flex items-start cursor-pointer group select-none" // added select-none to prevent accidental text highlighting
-        >
-          <div className="flex-shrink-0 mt-1">
-            <input
-              id="agreement-check"
-              type="checkbox"
-              name="agreedToTerms"
-              checked={formData.agreedToTerms}
-              onChange={handleChange}
-              className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green cursor-pointer"
-            />
-          </div>
-          <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white leading-tight">
-            <b>I confirm that I am the owner/admin of this group.</b> I agree to
-            proactively keep the group information up to date in the directory
-            and to be the "admin contact" if there are questions or concerns
-            regarding the group.{" "}
-            <span className="text-red-500 font-bold">*</span>
-          </span>
-        </label>
       </div>
 
       <div className="flex flex-wrap mb-6 px-3">

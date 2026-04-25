@@ -4,7 +4,9 @@ import { postManageDirectory } from "@/components/PostToWebhook";
 import { CustomSocialIcon, components } from "@/components/social-icons";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import AddGroupForm from "@/components/groups-directory/AddGroupForm";
 import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
+import Modal from "@/components/Modal";
 
 // --- Types ---
 interface Group {
@@ -43,6 +45,7 @@ export default function DirectoryClient({
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedGroupForEdit, setSelectedGroupForEdit] =
     useState<Group | null>(null);
 
@@ -52,9 +55,17 @@ export default function DirectoryClient({
     setIsModalOpen(true);
   };
 
+  const handleOpenAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedGroupForEdit(null);
+  };
+
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
   };
 
   useEffect(() => {
@@ -178,22 +189,34 @@ export default function DirectoryClient({
               {userInterests.join(", ")}
             </div>
           </div>
-
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all flex-1 md:flex-none ${
-              activeTab === "all"
-                ? "font-bold bg-brand-soft-green p-2 text-brand-white"
-                : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
-            }`}
-          >
-            Browse all ({allGroups.length})
-          </button>
+          <div className="relative group flex items-center">
+            <button
+              onClick={() => setActiveTab("all")}
+              className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all flex-1 md:flex-none ${
+                activeTab === "all"
+                  ? "font-bold bg-brand-soft-green p-2 text-brand-white"
+                  : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
+              }`}
+            >
+              Browse all ({allGroups.length})
+            </button>
+            <div className="absolute bottom-full mb-2 hidden group-hover:block w-45 p-2 bg-white text-brand-charcoal text-xs rounded shadow-lg z-50">
+              All groups in the directory
+            </div>
+          </div>
+          <div className="flex">
+            <button
+              onClick={handleOpenAddModal}
+              className="ml-4 cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:underline h-10 flex items-center"
+            >
+              Add new group
+            </button>
+          </div>
         </div>
       )}
 
       {/* Filters Bar */}
-      <div className="mb-8 grid grid-cols-1 md:grid-cols-3 max-w-sm md:max-w-xl gap-4 items-end my-4">
+      <div className="mb-8 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 sm:min-w-md md:max-w-xl gap-4 items-end my-4">
         <div className="flex flex-col gap-1">
           <label
             htmlFor="category-filter"
@@ -321,92 +344,37 @@ export default function DirectoryClient({
         )}
       </div>
 
-      {/* Modal/Drawer for editing groups */}
-      {isModalOpen && selectedGroupForEdit && (
-        <>
-          {/* Mobile: Drawer from bottom */}
-          <div className="md:hidden fixed inset-0 z-50">
-            <div
-              className="absolute inset-0 bg-black/50"
-              onClick={handleCloseModal}
-              onKeyDown={(e) => e.key === "Escape" && handleCloseModal()}
-              role="button"
-              tabIndex={0}
-              aria-label="Close modal"
-            />
-            <div className="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto bg-white dark:bg-brand-soft-charcoal rounded-t-lg shadow-xl">
-              {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-brand-sand/20">
-                <h2 className="text-lg font-bold text-brand-charcoal dark:text-brand-white">
-                  Edit group
-                </h2>
-                <button
-                  onClick={handleCloseModal}
-                  className="cursor-pointer text-brand-soft-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod text-xl"
-                >
-                  ×
-                </button>
-              </div>
+      {/* Add Group Modal */}
+      <Modal
+        isOpen={isAddModalOpen}
+        onClose={handleCloseAddModal}
+        title="Add new group"
+      >
+        <AddGroupForm
+          info={{ userName: userName, userEmail: userEmail }}
+          onClose={handleCloseAddModal}
+        />
+      </Modal>
 
-              {/* Form */}
-              <div className="p-4">
-                <ChangeGroupForm
-                  info={{
-                    name: selectedGroupForEdit.name,
-                    categories:
-                      selectedGroupForEdit.categories?.join(", ") || "",
-                    description: selectedGroupForEdit.description,
-                    userName: userName,
-                    userEmail: userEmail,
-                  }}
-                  onClose={handleCloseModal}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Desktop: Modal */}
-          <div className="hidden md:flex fixed inset-0 z-50 items-center justify-center">
-            <div
-              className="absolute inset-0 bg-black/50"
-              onClick={handleCloseModal}
-              onKeyDown={(e) => e.key === "Escape" && handleCloseModal()}
-              role="button"
-              tabIndex={0}
-              aria-label="Close modal"
-            />
-            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-brand-soft-charcoal rounded-lg shadow-xl mx-4">
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-brand-sand/20">
-                <h2 className="text-xl font-bold text-brand-charcoal dark:text-brand-white">
-                  Change group: {selectedGroupForEdit.name}
-                </h2>
-                <button
-                  onClick={handleCloseModal}
-                  className="cursor-pointer text-brand-soft-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod text-2xl"
-                >
-                  ×
-                </button>
-              </div>
-
-              {/* Form */}
-              <div className="p-6">
-                <ChangeGroupForm
-                  info={{
-                    name: selectedGroupForEdit.name,
-                    categories:
-                      selectedGroupForEdit.categories?.join(", ") || "",
-                    description: selectedGroupForEdit.description,
-                    userName: userName,
-                    userEmail: userEmail,
-                  }}
-                  onClose={handleCloseModal}
-                />
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+      {/* Edit Group Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title={`Change group${selectedGroupForEdit ? `: ${selectedGroupForEdit.name}` : ""}`}
+      >
+        {selectedGroupForEdit && (
+          <ChangeGroupForm
+            info={{
+              name: selectedGroupForEdit.name,
+              categories: selectedGroupForEdit.categories?.join(", ") || "",
+              description: selectedGroupForEdit.description,
+              userName: userName,
+              userEmail: userEmail,
+            }}
+            onClose={handleCloseModal}
+          />
+        )}
+      </Modal>
     </div>
   );
 }
