@@ -34,8 +34,9 @@ export default function DirectoryClient({
 }: DirectoryClientProps) {
   // --- State ---
   const [activeTab, setActiveTab] = useState<"recommended" | "all">(
-    "recommended",
+    recommended.length > 0 ? "recommended" : "all",
   );
+
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
 
@@ -121,11 +122,13 @@ export default function DirectoryClient({
       {/* Welcome Header */}
       <div className="mb-8 p-6 bg-brand-sand/30 dark:bg-brand-soft-charcoal rounded-xl border border-brand-sand/20">
         <h2 className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
-          Welcome, {userName}!
+          Welcome{userName && `, {userName}`}!
         </h2>
-        <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
-          Accessing as: {userEmail}
-        </p>
+        {userEmail && (
+          <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
+            Accessing as: {userEmail}
+          </p>
+        )}
         <p className="text-sm text-brand-charcoal dark:text-brand-white mt-2">
           This is your personalized community directory: a curated list of
           groups for parents and parents-to-be across Amsterdam. This free
@@ -140,35 +143,37 @@ export default function DirectoryClient({
       </div>
 
       {/* Tabs */}
-      <div className="flex mb-6">
-        <div className="relative group flex items-center">
+      {recommended.length > 0 && (
+        <div className="flex mb-6">
+          <div className="relative group flex items-center">
+            <button
+              onClick={() => setActiveTab("recommended")}
+              className={`pb-3 px-6 text-sm rounded-l-lg cursor-pointer transition-all flex-1 md:flex-none ${
+                activeTab === "recommended"
+                  ? "font-bold bg-brand-soft-green p-2 text-brand-white"
+                  : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
+              }`}
+            >
+              Recommended ({recommended.length})
+            </button>
+            <div className="absolute bottom-full mb-2 hidden group-hover:block w-64 p-2 bg-white text-brand-charcoal text-xs rounded shadow-lg z-50">
+              Recommendations are based on your indicated interests:{" "}
+              {userInterests.join(", ")}
+            </div>
+          </div>
+
           <button
-            onClick={() => setActiveTab("recommended")}
-            className={`pb-3 px-6 text-sm rounded-l-lg cursor-pointer transition-all flex-1 md:flex-none ${
-              activeTab === "recommended"
+            onClick={() => setActiveTab("all")}
+            className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all flex-1 md:flex-none ${
+              activeTab === "all"
                 ? "font-bold bg-brand-soft-green p-2 text-brand-white"
                 : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
             }`}
           >
-            Recommended ({recommended.length})
+            Browse all ({allGroups.length})
           </button>
-          <div className="absolute bottom-full mb-2 hidden group-hover:block w-64 p-2 bg-white text-brand-charcoal text-xs rounded shadow-lg z-50">
-            Recommendations are based on your indicated interests:{" "}
-            {userInterests.join(", ")}
-          </div>
         </div>
-
-        <button
-          onClick={() => setActiveTab("all")}
-          className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all flex-1 md:flex-none ${
-            activeTab === "all"
-              ? "font-bold bg-brand-soft-green p-2 text-brand-white"
-              : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
-          }`}
-        >
-          Browse all ({allGroups.length})
-        </button>
-      </div>
+      )}
 
       {/* Filters Bar */}
       <div className="mb-8 grid grid-cols-1 md:grid-cols-3 max-w-sm md:max-w-xl gap-4 items-end my-4">
@@ -217,7 +222,7 @@ export default function DirectoryClient({
             setSelectedCategory("All");
             setSelectedType("All");
           }}
-          className="text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:underline h-10 flex items-center"
+          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:underline h-10 flex items-center"
         >
           Reset filters
         </button>
@@ -267,7 +272,7 @@ export default function DirectoryClient({
                   href={group.inviteLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center"
+                  className="cursor-pointer bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center"
                   data-umami-event="Join group"
                   data-umami-event-uid={uid}
                 >
@@ -283,13 +288,13 @@ export default function DirectoryClient({
                         categories: group.categories?.join(", "),
                       },
                     }}
-                    className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-violet"
+                    className="cursor-pointer text-brand-soft-green hover:underline dark:text-brand-goldenrod"
                   >
                     Admin
                   </Link>
                   <button
                     onClick={() => handleReport(group)}
-                    className="text-red-800 hover:text-brand-goldenrod dark:text-red-400 dark:hover:text-brand-violet"
+                    className="cursor-pointer text-red-800 hover:underline dark:text-red-400"
                   >
                     Report issue
                   </button>
