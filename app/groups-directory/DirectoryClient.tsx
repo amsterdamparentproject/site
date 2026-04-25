@@ -25,8 +25,8 @@ interface DirectoryClientProps {
 }
 
 export default function DirectoryClient({
-  recommended,
-  allGroups,
+  recommended = [],
+  allGroups = [],
   userInterests,
   uid,
   userName,
@@ -122,7 +122,7 @@ export default function DirectoryClient({
       {/* Welcome Header */}
       <div className="mb-8 p-6 bg-brand-sand/30 dark:bg-brand-soft-charcoal rounded-xl border border-brand-sand/20">
         <h2 className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
-          Welcome{userName && `, {userName}`}!
+          Welcome{userName && `, ${userName}`}!
         </h2>
         {userEmail && (
           <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
