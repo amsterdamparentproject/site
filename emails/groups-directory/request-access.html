@@ -52,7 +52,7 @@
                               </tr>
                               <tr><td style="font-size:0;height:16px" height="16">&nbsp;</td></tr>
                               <tr>
-                                <td dir="ltr" style="color:#222222;font-size:16px;font-family:Helvetica, Arial, sans-serif;white-space:pre-wrap;line-height:1.5;text-align:center;padding:0px 20px">Hi {{ $json.Name }},<br></td>
+                                <td dir="ltr" style="color:#222222;font-size:16px;font-family:Helvetica, Arial, sans-serif;white-space:pre-wrap;line-height:1.5;text-align:center;padding:0px 20px">Hi {{ $json.name }},<br></td>
                               </tr>
                               <tr><td style="font-size:0;height:16px" height="16">&nbsp;</td></tr>
                               <tr>
@@ -68,7 +68,7 @@
                                   <table border="0" cellspacing="0" cellpadding="0">
                                     <tr>
                                       <td align="center" style="border-radius: 6px;" bgcolor="#3f6455">
-                                        <a href="https://amsterdamparentproject.nl/groups-directory?uid={{ $json['Public ID'] }}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 12px 24px; border: 1px solid #3f6455; display: inline-block; font-weight: bold;">Go to directory</a>
+                                        <a href="https://amsterdamparentproject.nl/groups-directory?uid={{ $json.public_id }}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 12px 24px; border: 1px solid #3f6455; display: inline-block; font-weight: bold;">Go to directory</a>
                                       </td>
                                     </tr>
                                   </table>
@@ -80,7 +80,6 @@
                                   <span style="font-weight:700;white-space:pre-wrap">⚠️</span>
                                   <span style="font-weight:700;color:#3f6455;white-space:pre-wrap"> </span>
                                   <span style="font-weight:700;text-decoration:underline;color:#3f6455;white-space:pre-wrap">Important: Please don’t share this link with others!</span>
-                                  <span style="color:#e1ad37;white-space:pre-wrap"> </span>
                                   <span style="color:#222222;white-space:pre-wrap">It’s uniquely tied to your account for community safety. If a spammer gains access, it makes a lot more work for group admins and directory maintainers to regenerate group links. We’re also busy parents, volunteering our time 🙏🏻</span><br>
                                 </td>
                               </tr>
@@ -95,7 +94,7 @@
                                     <tbody>
                                       <tr>
                                         <td style="width:24px;vertical-align:top;padding-right:8px;text-align:right;white-space:nowrap"><span style="font-size:16px;color:#000;display:inline-block">1.&nbsp;</span></td>
-                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Name:</span><span style="white-space:pre-wrap"> {{ $json.Name }}</span></td>
+                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Name:</span><span style="white-space:pre-wrap"> {{ $json.name }}</span></td>
                                       </tr>
                                     </tbody>
                                   </table>
@@ -107,7 +106,7 @@
                                     <tbody>
                                       <tr>
                                         <td style="width:24px;vertical-align:top;padding-right:8px;text-align:right;white-space:nowrap"><span style="font-size:16px;color:#000;display:inline-block">2.&nbsp;</span></td>
-                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Email:</span><span style="white-space:pre-wrap"> {{ $json.Email }}</span></td>
+                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Email:</span><span style="white-space:pre-wrap"> {{ $json.email }}</span></td>
                                       </tr>
                                     </tbody>
                                   </table>
@@ -119,7 +118,7 @@
                                     <tbody>
                                       <tr>
                                         <td style="width:24px;vertical-align:top;padding-right:8px;text-align:right;white-space:nowrap"><span style="font-size:16px;color:#000;display:inline-block">3.&nbsp;</span></td>
-                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Categories: </span><span style="white-space:pre-wrap">{{ $json.Categories }}</span></td>
+                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Categories: </span><span style="white-space:pre-wrap">{{ $json.categories }}</span></td>
                                       </tr>
                                     </tbody>
                                   </table>
@@ -131,7 +130,7 @@
                                     <tbody>
                                       <tr>
                                         <td style="width:24px;vertical-align:top;padding-right:8px;text-align:right;white-space:nowrap"><span style="font-size:16px;color:#000;display:inline-block">4.&nbsp;</span></td>
-                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Other category:</span><span style="white-space:pre-wrap"> {{ $json['Other interests'] }}</span></td>
+                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Other category:</span><span style="white-space:pre-wrap"> {{ $json.other_interests }}</span></td>
                                       </tr>
                                     </tbody>
                                   </table>
@@ -143,7 +142,7 @@
                                     <tbody>
                                       <tr>
                                         <td style="width:24px;vertical-align:top;padding-right:8px;text-align:right;white-space:nowrap"><span style="font-size:16px;color:#000;display:inline-block">5.&nbsp;</span></td>
-                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Remarks:</span><span style="white-space:pre-wrap"> {{ $json.Notes }}</span></td>
+                                        <td style="font-size:16px;font-family:Helvetica, Arial, sans-serif;vertical-align:top"><span style="font-weight:700;white-space:pre-wrap">Remarks:</span><span style="white-space:pre-wrap"> {{ $json.notes }}</span></td>
                                       </tr>
                                     </tbody>
                                   </table>

@@ -8,142 +8,93 @@ import { useEffect, useMemo, useState } from "react";
 // --- Types ---
 interface Group {
   name: string;
-  categories: string;
-  isRecommended: boolean;
+  categories: string[];
+  isRecommended?: boolean; // Optional if not all rows have it
   platform: string;
   description: string;
   inviteLink: string;
 }
 
-interface DirectoryData {
+interface DirectoryClientProps {
+  recommended: Group[];
+  allGroups: Group[];
+  userInterests: string[];
   userName: string;
-  maskedEmail: string;
-  groups: Group[];
-  matchCount: number;
+  userEmail: string;
+  uid?: string;
 }
 
-export default function DirectoryClient() {
+export default function DirectoryClient({
+  recommended,
+  allGroups,
+  userInterests,
+  uid,
+  userName,
+  userEmail,
+}: DirectoryClientProps) {
   // --- State ---
-  const [data, setData] = useState<DirectoryData[]>([]);
-  const [status, setStatus] = useState<"loading" | "error" | "success">(
-    "loading",
-  );
-
   const [activeTab, setActiveTab] = useState<"recommended" | "all">(
     "recommended",
   );
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
 
-  const [userUid, setuserUid] = useState<string | null>(null);
-
-  // --- Data Fetching ---
   useEffect(() => {
-    const fetchDirectory = async () => {
-      try {
-        // 1. Handle UID from URL or LocalStorage
-        const params = new URLSearchParams(window.location.search);
-        let uid = params.get("uid");
+    const storedUid = localStorage.getItem("app_uid");
+    const userId = uid || storedUid;
+    const hasCookie = document.cookie
+      .split(";")
+      .some((cookie) => cookie.trim().startsWith("app_uid="));
 
-        if (uid) {
-          localStorage.setItem("app_uid", uid);
-          // Clean up URL without refreshing the page
-          window.history.replaceState({}, "", window.location.pathname);
-        } else {
-          uid = localStorage.getItem("app_uid");
-        }
+    if (!userId) return;
 
-        if (uid) {
-          setuserUid(uid);
-        }
+    localStorage.setItem("app_uid", userId);
 
-        if (!uid) {
-          // Redirect to the access form if no UID found
-          console.error("No UID found");
-          window.location.href = "groups-directory/access?uid=false";
-        }
+    if (!hasCookie) {
+      document.cookie = `app_uid=${userId}; path=/; max-age=31536000; SameSite=Lax`;
+    }
 
-        // 2. Call n8n Webhook
-        const response = await fetch(`/api/groups-directory?uid=${uid}`);
-
-        if (!response.ok) throw new Error("Unauthorized access");
-
-        // Check if the response actually has content before parsing
-        const text = await response.text();
-
-        if (!text) {
-          throw new Error("n8n returned an empty response");
-        }
-
-        const result = JSON.parse(text);
-
-        // Handle n8n common return types (Array or Object)
-        const formattedData: DirectoryData = Array.isArray(result)
-          ? result[0]
-          : result;
-
-        if (!formattedData?.groups) throw new Error("Invalid data format");
-
-        setData([formattedData]);
-        setStatus("success");
-      } catch (error) {
-        // Redirect to the access form if the link is invalid
-        console.error("Directory Error:", error);
-        window.location.href = "groups-directory/access?uid=false";
-      }
-    };
-
-    fetchDirectory();
-  }, []);
+    if (!uid && storedUid && window.location.search.indexOf("uid=") === -1) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("uid", userId);
+      window.location.replace(url.toString());
+    } else if (uid && window.location.search.indexOf("uid=") !== -1) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("uid");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, [uid]);
 
   // --- Computed Filters ---
   const categories = useMemo(() => {
-    const all =
-      data[0]?.groups.flatMap((g) =>
-        g.categories
-          .split(", ")
-          .map((cat) => cat.trim())
-          .filter(Boolean),
-      ) || [];
-
-    return ["All", ...Array.from(new Set(all)).sort()];
-  }, [data]);
+    const allTags = allGroups.flatMap((g) => g.categories || []);
+    const uniqueTags = Array.from(new Set(allTags)).sort();
+    return ["All", ...uniqueTags];
+  }, [allGroups]);
 
   const types = useMemo(() => {
-    const all =
-      data[0]?.groups
-        .map((g) => g.platform)
-        .filter((p) => p && p.trim() !== "") || [];
-
-    return ["All", ...Array.from(new Set(all)).sort()];
-  }, [data]);
+    const allPlatforms = allGroups
+      .map((g) => g.platform)
+      .filter((p): p is string => Boolean(p && p.trim() !== ""));
+    return ["All", ...Array.from(new Set(allPlatforms)).sort()];
+  }, [allGroups]);
 
   const filteredGroups = useMemo(() => {
-    const groups = data[0]?.groups || [];
-    return groups.filter((group) => {
-      const matchesTab = activeTab === "all" || group.isRecommended;
+    const baseGroups = activeTab === "recommended" ? recommended : allGroups;
+
+    return baseGroups.filter((group) => {
       const matchesCat =
         selectedCategory === "All" ||
-        group.categories.includes(selectedCategory);
+        group.categories?.includes(selectedCategory);
+
       const matchesType =
         selectedType === "All" || group.platform === selectedType;
-      return matchesTab && matchesCat && matchesType;
+
+      return matchesCat && matchesType;
     });
-  }, [data, activeTab, selectedCategory, selectedType]);
+  }, [activeTab, selectedCategory, selectedType, recommended, allGroups]);
 
-  // --- Conditional Renders ---
-  if (status === "loading") {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-soft-green"></div>
-        <p className="mt-4 text-brand-soft-charcoal">
-          Loading your directory...
-        </p>
-      </div>
-    );
-  }
-
-  // --- Handle Reporting ---
+  // --- Actions ---
   const handleReport = async (group: Group) => {
     const confirmed = window.confirm(
       `Report the link to the ${group.name} group as broken?`,
@@ -151,55 +102,34 @@ export default function DirectoryClient() {
     if (!confirmed) return;
 
     try {
-      const payload = {
-        groupName: group.name,
-        inviteLink: group.inviteLink,
-      };
+      const payload = { groupName: group.name, inviteLink: group.inviteLink };
       const result = await postManageDirectory(payload, "report");
-
-      if (result.success) {
-        alert(`Issue with ${group.name} reported to APP. Thanks!`);
-      }
+      if (result.success) alert(`Issue reported. Thanks!`);
     } catch (err) {
       console.error("Report failed:", err);
     }
   };
 
-  // --- Handle Claim Admin ---
-  const handleClaimAdmin = async (e: React.MouseEvent, group: Group) => {
-    // 1. Prevent the link from opening immediately to control the flow
-    e.preventDefault();
-
-    try {
-      await postManageDirectory(group, "update");
-    } catch (err) {
-      console.error("Admin failed:", err);
-    }
-  };
-
-  const currentUser = data[0];
-
   return (
     <div className="max-w-4xl mx-auto px-6">
       <div className="pt-6 pb-6 flex flex-col items-center">
-        <h1 className="text-center text-brand-charcoal dark:text-brand-white text-3xl leading-8 font-extrabold tracking-tight md:text-4xl">
+        <h1 className="text-center text-brand-charcoal dark:text-brand-white text-3xl font-extrabold md:text-4xl">
           Amsterdam Parent Groups Directory
         </h1>
       </div>
 
-      <div className="mb-8 p-6 bg-brand-sand/30 dark:bg-brand-soft-charcoal dark:border-brand-soft-charcoal/30 rounded-xl">
+      {/* Welcome Header */}
+      <div className="mb-8 p-6 bg-brand-sand/30 dark:bg-brand-soft-charcoal rounded-xl border border-brand-sand/20">
         <h2 className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
-          Welcome, {currentUser?.userName}!
+          Welcome, {userName}!
         </h2>
         <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
-          Accessing as: {currentUser?.maskedEmail}
+          Accessing as: {userEmail}
         </p>
         <p className="text-sm text-brand-charcoal dark:text-brand-white mt-2">
-          This is your personalized community directory! Based on your
-          interests, we’ve curated a list of groups and support networks for
-          parents and parents-to-be across Amsterdam and the Netherlands. This
-          resource is built by the community, for the community, with no strings
-          attached.
+          This is your personalized community directory: a curated list of
+          groups for parents and parents-to-be across Amsterdam. This free
+          resource is built by APP and maintained by the community.
         </p>
         <p className="text-sm text-brand-charcoal dark:text-brand-white mt-2">
           To keep our spaces safe and free from spam,{" "}
@@ -211,17 +141,23 @@ export default function DirectoryClient() {
 
       {/* Tabs */}
       <div className="flex mb-6">
-        <button
-          onClick={() => setActiveTab("recommended")}
-          className={`pb-3 px-6 text-sm rounded-l-lg cursor-pointer transition-all flex-1 md:flex-none ${
-            activeTab === "recommended"
-              ? "font-bold bg-brand-soft-green p-2 text-brand-white"
-              : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
-          }`}
-        >
-          Recommended (
-          {currentUser?.groups.filter((g) => g.isRecommended).length})
-        </button>
+        <div className="relative group flex items-center">
+          <button
+            onClick={() => setActiveTab("recommended")}
+            className={`pb-3 px-6 text-sm rounded-l-lg cursor-pointer transition-all flex-1 md:flex-none ${
+              activeTab === "recommended"
+                ? "font-bold bg-brand-soft-green p-2 text-brand-white"
+                : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
+            }`}
+          >
+            Recommended ({recommended.length})
+          </button>
+          <div className="absolute bottom-full mb-2 hidden group-hover:block w-64 p-2 bg-white text-brand-charcoal text-xs rounded shadow-lg z-50">
+            Recommendations are based on your indicated interests:{" "}
+            {userInterests.join(", ")}
+          </div>
+        </div>
+
         <button
           onClick={() => setActiveTab("all")}
           className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all flex-1 md:flex-none ${
@@ -230,7 +166,7 @@ export default function DirectoryClient() {
               : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
           }`}
         >
-          Browse all ({currentUser?.groups.length})
+          Browse all ({allGroups.length})
         </button>
       </div>
 
@@ -238,14 +174,13 @@ export default function DirectoryClient() {
       <div className="mb-8 grid grid-cols-1 md:grid-cols-3 max-w-sm md:max-w-xl gap-4 items-end my-4">
         <div className="flex flex-col gap-1">
           <label
-            htmlFor="category-select"
+            htmlFor="category-filter"
             className="text-xs font-bold text-brand-soft-green dark:text-brand-goldenrod uppercase"
           >
             Category
           </label>
           <select
-            id="category-select"
-            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brand-soft-green outline-none"
+            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm outline-none"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
@@ -259,14 +194,13 @@ export default function DirectoryClient() {
 
         <div className="flex flex-col gap-1">
           <label
-            htmlFor="platform-select"
+            htmlFor="type-filter"
             className="text-xs font-bold text-brand-soft-green dark:text-brand-goldenrod uppercase"
           >
             Platform
           </label>
           <select
-            id="platform-select"
-            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brand-soft-green outline-none"
+            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm outline-none"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
           >
@@ -283,7 +217,7 @@ export default function DirectoryClient() {
             setSelectedCategory("All");
             setSelectedType("All");
           }}
-          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-goldenrod dark:hover:text-brand-soft-green transition-colors h-10 flex items-center"
+          className="text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:underline h-10 flex items-center"
         >
           Reset filters
         </button>
@@ -295,46 +229,37 @@ export default function DirectoryClient() {
           filteredGroups.map((group) => (
             <div
               key={`${group.name}-${group.platform}`}
-              className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-all ${
-                group.isRecommended
-                  ? "border border-brand-soft-green"
-                  : "border border-brand-sand/60 dark:border-brand-soft-charcoal"
+              className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-all border ${
+                activeTab === "recommended"
+                  ? "border-brand-soft-green bg-brand-soft-green/5"
+                  : "border-brand-sand/60 dark:border-brand-soft-charcoal"
               }`}
             >
               <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-brand-charcoal dark:text-brand-white leading-tight">
-                    {group.name}
-
-                    {group.platform && (
-                      <span className="inline-flex align-middle ml-2 -translate-y-[1px]">
-                        <CustomSocialIcon
-                          kind={
-                            group.platform.toLowerCase() as keyof typeof components
-                          }
-                          size={4}
-                        />
-                      </span>
-                    )}
-                  </h3>
+                <h3 className="text-lg font-bold text-brand-charcoal dark:text-brand-white flex items-center gap-2">
+                  {group.name}
+                  {group.platform && (
+                    <CustomSocialIcon
+                      kind={
+                        group.platform.toLowerCase() as keyof typeof components
+                      }
+                      size={4}
+                    />
+                  )}
+                </h3>
+                <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 pt-1">
+                  {group.description}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {group.categories?.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod bg-brand-sand/20 px-1.5 py-0.5 rounded"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
-                {group.description && (
-                  <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 pt-1">
-                    {group.description}
-                  </p>
-                )}
-                {group.categories && (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {group.categories.split(",").map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod p-0.5 rounded"
-                      >
-                        {tag.trim()}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -342,34 +267,29 @@ export default function DirectoryClient() {
                   href={group.inviteLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-brand-soft-green text-white px-10 py-2.5 rounded-full cursor-pointer font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal active:scale-95 transition-all shadow-sm text-center"
-                  data-umami-event="Groups Directory: Join group"
-                  data-umami-event-uid={userUid}
+                  className="bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center"
+                  data-umami-event="Join group"
+                  data-umami-event-uid={uid}
                 >
                   Join
                 </a>
-                <div className="flex flex-row gap-3 md:gap-1.5 justify-center">
+                <div className="flex flex-row gap-3 justify-center text-[10px]">
                   <Link
                     href={{
                       pathname: "/groups-directory/admin",
                       query: {
                         name: group.name,
                         description: group.description,
-                        categories: group.categories,
+                        categories: group.categories?.join(", "),
                       },
                     }}
-                    className="hover:text-brand-goldenrod text-brand-soft-green rounded-full text-[10px]"
-                    data-umami-event="Groups Directory: Claim admin"
-                    data-umami-event-group={group.name}
+                    className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-violet"
                   >
                     Admin
                   </Link>
                   <button
                     onClick={() => handleReport(group)}
-                    className="hover:text-brand-goldenrod text-red-800 rounded-full cursor-pointer text-center text-[10px]"
-                    data-umami-event="Groups Directory: Report issue"
-                    data-umami-event-group={group.name}
-                    data-umami-event-uid={userUid}
+                    className="text-red-800 hover:text-brand-goldenrod dark:text-red-400 dark:hover:text-brand-violet"
                   >
                     Report issue
                   </button>
@@ -378,34 +298,13 @@ export default function DirectoryClient() {
             </div>
           ))
         ) : (
-          <div className="text-center py-20 bg-brand-sand/10 dark:bg-white/5 rounded-xl border border border-brand-sand">
-            <p className="text-brand-soft-charcoal dark:text-brand-white font-medium">
+          <div className="text-center py-20 bg-brand-sand/10 rounded-xl border border-dashed border-brand-sand">
+            <p className="text-brand-soft-charcoal dark:text-brand-white">
               No groups match your current filters.
             </p>
-            <button
-              onClick={() => {
-                setSelectedCategory("All");
-                setSelectedType("All");
-                setActiveTab("all");
-              }}
-              className="mt-2 text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green cursor-pointer"
-            >
-              Clear all filters
-            </button>
           </div>
         )}
       </div>
-
-      <p className="text-center text-xs text-brand-charcoal dark:text-brand-white mt-8 mb-8 italic">
-        Something not working? Please report broken links to{" "}
-        <a
-          href="mailto:hello@amsterdamparentproject.nl"
-          className="dark:text-brand-goldenrod dark:hover:text-brand-soft-green hover:text-brand-goldenrod text-brand-soft-green"
-        >
-          hello@amsterdamparentproject.nl
-        </a>
-        .
-      </p>
     </div>
   );
 }

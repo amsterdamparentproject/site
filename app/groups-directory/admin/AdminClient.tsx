@@ -1,9 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import InvalidDirectoryLinkWarning from "@/components/InvalidDirectoryLink";
 import Link from "@/components/Link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddGroupForm from "@/components/groups-directory/AddGroupForm";
 import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
 
