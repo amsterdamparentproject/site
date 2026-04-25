@@ -266,7 +266,6 @@ const ChangeGroupForm = ({
       </div>
 
       <CategoryChips
-        categories={categories}
         selectedCategories={formData.categories}
         onChange={(categories) =>
           setFormData((prev) => ({ ...prev, categories }))

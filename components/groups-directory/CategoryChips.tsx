@@ -1,18 +1,19 @@
 "use client";
 
+import { GROUP_CATEGORIES } from "@/app/types/groups-directory";
+
 interface CategoryChipsProps {
-  categories: string[];
   selectedCategories: string[];
   onChange: (categories: string[]) => void;
   showSelectAll?: boolean;
 }
 
 export default function CategoryChips({
-  categories,
   selectedCategories,
   onChange,
   showSelectAll = true,
 }: CategoryChipsProps) {
+  const categories = GROUP_CATEGORIES;
   const allSelected = selectedCategories.length === categories.length;
 
   const handleSelectAll = () => {
