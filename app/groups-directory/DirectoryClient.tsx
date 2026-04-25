@@ -169,7 +169,7 @@ export default function DirectoryClient({
         </p>
         <button
           onClick={handleOpenAddModal}
-          className="cursor-pointer mt-2 text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal h-10 flex items-center"
+          className="cursor-pointer mt-2 text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal dark:hover:text-brand-white h-10 flex items-center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -236,7 +236,7 @@ export default function DirectoryClient({
             Category
           </label>
           <select
-            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm outline-none"
+            className="bg-white dark:bg-brand-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm outline-none"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
@@ -256,7 +256,7 @@ export default function DirectoryClient({
             Platform
           </label>
           <select
-            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm outline-none"
+            className="bg-white dark:bg-brand-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm outline-none"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
           >
@@ -273,7 +273,7 @@ export default function DirectoryClient({
             setSelectedCategory("All");
             setSelectedType("All");
           }}
-          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal h-10 flex items-center"
+          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal dark:hover:text-brand-white h-10 flex items-center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

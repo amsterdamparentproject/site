@@ -126,12 +126,12 @@ const AddGroupForm = ({
   const labelStyle = `block tracking-wide text-brand-charcoal dark:text-brand-white text-md font-bold mb-2`;
   const focusStyle = `focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-brand-soft-green`;
   const inputBase =
-    `appearance-none block w-full bg-white text-brand-charcoal placeholder-gray-500 border rounded py-3 px-4 leading-tight focus:bg-white ` +
+    `appearance-none block w-full bg-white dark:bg-brand-white text-brand-charcoal placeholder-gray-500 border rounded py-3 px-4 leading-tight focus:bg-white ` +
     focusStyle;
   const inputStyle = `${inputBase} border-brand-sand`;
   const requiredInputStyle = `${inputBase} border-red-500 bg-red-50/30`;
   const submitButtonStyle =
-    `bg-brand-soft-green text-brand-white text-lg mt-2 px-6 py-2 rounded transition-all cursor-pointer hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
+    `bg-brand-soft-green dark:bg-brand-goldenrod text-white dark:text-brand-charcoal font-bold text-lg mt-2 px-6 py-2 rounded transition-all cursor-pointer hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
     focusStyle;
 
   const getStyle = (field: string) => {

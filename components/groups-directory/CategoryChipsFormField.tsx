@@ -58,7 +58,7 @@ export default function CategoryChipsFormField({
         )}
       </div>
 
-      <p className="text-xs text-gray-500 mb-4 italic w-full">
+      <p className="text-xs text-brand-soft-charcoal dark:text-brand-sand mb-4 italic w-full">
         {formQuestionDescription}
       </p>
 
@@ -73,8 +73,8 @@ export default function CategoryChipsFormField({
               className={`cursor-pointer px-4 py-2 rounded-full border text-sm font-medium transition-all flex items-center gap-2
                 ${
                   isSelected
-                    ? "bg-brand-soft-green border-brand-soft-green text-white shadow-md scale-105"
-                    : "bg-brand-sand/10 border-brand-sand text-gray-600 hover:border-brand-soft-green"
+                    ? "bg-brand-soft-green dark:bg-brand-goldenrod border-brand-soft-green dark:border-brand-goldenrod text-white dark:text-brand-charcoal shadow-md scale-105"
+                    : "bg-brand-sand/10 dark:bg-brand-white/90 border-brand-sand text-gray-600 hover:border-brand-soft-green dark:hover:border-brand-goldenrod"
                 }`}
             >
               <span>{category}</span>

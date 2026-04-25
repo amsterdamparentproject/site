@@ -76,13 +76,13 @@ export default function Modal({
             className={`relative w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto bg-white dark:bg-brand-soft-charcoal rounded-xl shadow-xl mx-4`}
           >
             {/* Header */}
-            <div className="sticky top-0 z-10 bg-white flex items-center justify-between px-6 py-4 border-b border-brand-sand/20">
+            <div className="sticky top-0 z-10 bg-white dark:bg-brand-soft-charcoal flex items-center justify-between px-6 py-4 border-b border-brand-sand/20">
               <div>
-                <h2 className="text-xl font-bold text-brand-charcoal dark:text-brand-white">
+                <h2 className="text-xl font-bold text-brand-charcoal dark:text-brand-goldenrod">
                   {title}
                 </h2>
                 {subtitle && (
-                  <p className="text-sm text-brand-soft-green dark:text-brand-goldenrod">
+                  <p className="text-sm text-brand-soft-green dark:text-brand-white">
                     {subtitle}
                   </p>
                 )}
