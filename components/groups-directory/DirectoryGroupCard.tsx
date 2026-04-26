@@ -5,7 +5,7 @@ import { CustomSocialIcon, components } from "@/components/social-icons";
 interface Group {
   name: string;
   categories: string[];
-  isRecommended?: boolean;
+  recommended: boolean;
   platform: string;
   description: string;
   link: string;
@@ -13,7 +13,6 @@ interface Group {
 
 interface DirectoryGroupProps {
   group: Group;
-  activeTab: "recommended" | "all";
   uid?: string;
   onEdit: (group: Group) => void;
   onReport: (group: Group) => void;
@@ -21,7 +20,6 @@ interface DirectoryGroupProps {
 
 export default function DirectoryGroupCard({
   group,
-  activeTab,
   uid,
   onEdit,
   onReport,
@@ -29,7 +27,7 @@ export default function DirectoryGroupCard({
   return (
     <div
       className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-all border ${
-        activeTab === "recommended"
+        group.recommended
           ? "border-brand-soft-green bg-brand-soft-green/5"
           : "border-brand-sand/60 dark:border-brand-soft-charcoal"
       }`}

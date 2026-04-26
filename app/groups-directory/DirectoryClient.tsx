@@ -11,7 +11,7 @@ import Modal from "@/components/Modal";
 interface Group {
   name: string;
   categories: string[];
-  isRecommended?: boolean; // Optional if not all rows have it
+  recommended: boolean;
   platform: string;
   description: string;
   link: string;
@@ -151,7 +151,7 @@ export default function DirectoryClient({
         <h2 className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
           Welcome{userName && `, ${userName}`}!
         </h2>
-        {userMaskedEmail && (
+        {userEmail && (
           <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
             Accessing as: {userMaskedEmail}
           </p>
@@ -299,7 +299,6 @@ export default function DirectoryClient({
             <DirectoryGroupCard
               key={`${group.name}-${group.platform}`}
               group={group}
-              activeTab={activeTab}
               uid={uid}
               onEdit={handleEditGroup}
               onReport={handleReport}

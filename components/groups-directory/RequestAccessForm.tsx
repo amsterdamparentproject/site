@@ -199,7 +199,7 @@ const RequestAccessForm = () => {
       <CategoryChipsFormField
         selectedCategories={formData.categories}
         formQuestion="Which groups are you interested in?"
-        formQuestionDescription="If none are selected, we'll show you all groups by default."
+        formQuestionDescription="We'll use this to build recommendations."
         onChange={(categories) =>
           setFormData((prev) => ({ ...prev, categories }))
         }
