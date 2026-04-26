@@ -21,11 +21,6 @@ const postToWebhook = async (webhookURL, data) => {
       console.error("postToWebhook error: Missing environment variables");
       return { success: false, error: "Configuration error" };
     }
-    console.log("postToWebhook - URL:", webhookURL);
-    console.log(
-      "postToWebhook - FormData keys:",
-      Array.from(formData.entries()).map(([k]) => k),
-    );
 
     const response = await fetch(webhookURL, {
       method: "POST",
@@ -38,9 +33,6 @@ const postToWebhook = async (webhookURL, data) => {
     const isOk = !!response.ok;
     const statusCode = Number(response.status);
     const responseText = await response.text();
-
-    console.log("postToWebhook - Status:", statusCode, "OK:", isOk);
-    console.log("postToWebhook - Response:", responseText);
 
     return { success: isOk, status: statusCode, response: responseText };
   } catch (error) {
