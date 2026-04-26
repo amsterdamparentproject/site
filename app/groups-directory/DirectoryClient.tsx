@@ -82,11 +82,7 @@ export default function DirectoryClient({
       document.cookie = `app_uid=${userId}; path=/; max-age=31536000; SameSite=Lax`;
     }
 
-    if (!uid && storedUid && window.location.search.indexOf("uid=") === -1) {
-      const url = new URL(window.location.href);
-      url.searchParams.set("uid", userId);
-      window.location.replace(url.toString());
-    } else if (uid && window.location.search.indexOf("uid=") !== -1) {
+    if (uid && window.location.search.indexOf("uid=") !== -1) {
       const url = new URL(window.location.href);
       url.searchParams.delete("uid");
       window.history.replaceState({}, "", url.toString());
