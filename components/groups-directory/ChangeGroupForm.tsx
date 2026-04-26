@@ -1,20 +1,12 @@
 "use client";
+import { EditFormInfo } from "@/app/types/groups-directory";
 import AdminGroupsDirectoryForm from "./AdminGroupsDirectoryForm";
-
-interface FormProps {
-  name: string;
-  categories: string;
-  description: string;
-  link?: string;
-  userName?: string;
-  userEmail?: string;
-}
 
 const ChangeGroupForm = ({
   info,
   onClose,
 }: {
-  info: FormProps;
+  info: EditFormInfo;
   onClose?: () => void;
 }) => {
   return <AdminGroupsDirectoryForm mode="edit" info={info} onClose={onClose} />;

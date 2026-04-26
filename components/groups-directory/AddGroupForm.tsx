@@ -1,16 +1,12 @@
 "use client";
+import { AddFormInfo } from "@/app/types/groups-directory";
 import AdminGroupsDirectoryForm from "./AdminGroupsDirectoryForm";
-
-interface FormProps {
-  userName?: string;
-  userEmail?: string;
-}
 
 const AddGroupForm = ({
   info,
   onClose,
 }: {
-  info: FormProps;
+  info: AddFormInfo;
   onClose?: () => void;
 }) => {
   return <AdminGroupsDirectoryForm mode="add" info={info} onClose={onClose} />;

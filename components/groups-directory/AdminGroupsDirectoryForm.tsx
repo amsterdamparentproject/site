@@ -2,26 +2,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { postManageDirectory } from "../PostToWebhook";
 import CategoryChipsFormField from "./CategoryChipsFormField";
-
-interface BaseFormProps {
-  userName?: string;
-  userEmail?: string;
-}
-
-interface EditFormProps extends BaseFormProps {
-  name: string;
-  categories: string;
-  description: string;
-  link?: string;
-}
+import {
+  AddFormInfo,
+  AdminGroupsDirectoryFormProps,
+  EditFormInfo,
+} from "@/app/types/groups-directory";
 
 type FormMode = "add" | "edit";
-
-interface AdminGroupsDirectoryFormProps {
-  mode: FormMode;
-  info: FormMode extends "add" ? BaseFormProps : EditFormProps;
-  onClose?: () => void;
-}
 
 const REQUIRED_FIELDS = ["groupName", "inviteLink", "acceptedTerms"];
 
@@ -32,7 +19,7 @@ const AdminGroupsDirectoryForm = ({
 }: AdminGroupsDirectoryFormProps) => {
   const [formData, setFormData] = useState(() => {
     if (mode === "edit") {
-      const editInfo = info as EditFormProps;
+      const editInfo = info as EditFormInfo;
       return {
         originalGroupName: editInfo.name, // Keep track of original name for reference
         groupName: editInfo.name,
@@ -47,7 +34,7 @@ const AdminGroupsDirectoryForm = ({
         agreedToTerms: false,
       };
     } else {
-      const addInfo = info as BaseFormProps;
+      const addInfo = info as AddFormInfo;
       return {
         groupName: "",
         inviteLink: "",
@@ -64,7 +51,7 @@ const AdminGroupsDirectoryForm = ({
   // Initialize form data when component mounts or info changes (for edit mode)
   useEffect(() => {
     if (mode === "edit") {
-      const editInfo = info as EditFormProps;
+      const editInfo = info as EditFormInfo;
       // Only sync if the group name actually changed from the source
       if (editInfo.name !== formData.originalGroupName) {
         setFormData((prev) => ({
@@ -78,7 +65,7 @@ const AdminGroupsDirectoryForm = ({
       }
     } else {
       // For add mode, prepopulate user info when available
-      const addInfo = info as BaseFormProps;
+      const addInfo = info as AddFormInfo;
       if (addInfo.userName) {
         setFormData((prev) => ({
           ...prev,
@@ -138,7 +125,10 @@ const AdminGroupsDirectoryForm = ({
       // Send to n8n
       const data = new FormData();
       if (mode === "edit") {
-        data.append("originalGroupName", formData.originalGroupName);
+        data.append(
+          "originalGroupName",
+          formData.originalGroupName ?? formData.groupName,
+        );
       }
       data.append("groupName", formData.groupName);
       data.append("inviteLink", formData.inviteLink);
