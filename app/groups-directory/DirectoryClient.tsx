@@ -337,6 +337,7 @@ export default function DirectoryClient({
               name: selectedGroupForEdit.name,
               categories: selectedGroupForEdit.categories?.join(", ") || "",
               description: selectedGroupForEdit.description,
+              link: selectedGroupForEdit.link,
               userName: userName,
               userEmail: userEmail,
             }}

@@ -21,6 +21,12 @@ const postToWebhook = async (webhookURL, data) => {
       console.error("postToWebhook error: Missing environment variables");
       return { success: false, error: "Configuration error" };
     }
+    console.log("postToWebhook - URL:", webhookURL);
+    console.log(
+      "postToWebhook - FormData keys:",
+      Array.from(formData.entries()).map(([k]) => k),
+    );
+
     const response = await fetch(webhookURL, {
       method: "POST",
       headers: {
@@ -31,8 +37,12 @@ const postToWebhook = async (webhookURL, data) => {
 
     const isOk = !!response.ok;
     const statusCode = Number(response.status);
+    const responseText = await response.text();
 
-    return { success: isOk, status: statusCode };
+    console.log("postToWebhook - Status:", statusCode, "OK:", isOk);
+    console.log("postToWebhook - Response:", responseText);
+
+    return { success: isOk, status: statusCode, response: responseText };
   } catch (error) {
     console.error("postToWebhook error:", error);
     return { success: false, error: error.message || "Unknown error" };
@@ -62,10 +72,24 @@ export const postManageDirectory = async (data, action = "add") => {
   }
 
   const url = isLocal
-    ? `${process.env.TEST_N8N_MANAGE_DIRECTORY_WEBHOOK_URL}/${action}`
-    : `${process.env.N8N_MANAGE_DIRECTORY_WEBHOOK_URL}/${action}`;
+    ? process.env.TEST_N8N_MANAGE_DIRECTORY_WEBHOOK_URL
+    : process.env.N8N_MANAGE_DIRECTORY_WEBHOOK_URL;
 
-  return postToWebhook(url, data);
+  // Add action to FormData if data is an object, or append to existing FormData
+  let formData: FormData;
+  if (data instanceof FormData) {
+    formData = data;
+    formData.append("action", action);
+  } else {
+    formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value as string);
+    });
+    formData.append("action", action);
+  }
+
+  const result = await postToWebhook(url, formData);
+  return result;
 };
 
 export const postSpotlight = async (data) => {
