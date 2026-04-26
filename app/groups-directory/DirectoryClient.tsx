@@ -1,169 +1,161 @@
 "use client";
 
-import { CustomSocialIcon, components } from "@/components/social-icons";
+import { postManageDirectory } from "@/components/PostToWebhook";
 import { useEffect, useMemo, useState } from "react";
+import AddGroupForm from "@/components/groups-directory/AddGroupForm";
+import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
+import DirectoryGroupCard from "@/components/groups-directory/DirectoryGroupCard";
+import Modal from "@/components/Modal";
 
 // --- Types ---
 interface Group {
   name: string;
-  categories: string;
-  isRecommended: boolean;
+  categories: string[];
+  recommended: boolean;
   platform: string;
   description: string;
-  inviteLink: string;
+  link: string;
 }
 
-interface DirectoryData {
+interface DirectoryClientProps {
+  recommended: Group[];
+  allGroups: Group[];
+  userInterests: string[];
   userName: string;
-  maskedEmail: string;
-  groups: Group[];
-  matchCount: number;
+  userEmail: string;
+  userMaskedEmail: string;
+  uid?: string;
 }
 
-export default function DirectoryClient() {
+export default function DirectoryClient({
+  recommended = [],
+  allGroups = [],
+  userInterests,
+  uid,
+  userName,
+  userEmail,
+  userMaskedEmail,
+}: DirectoryClientProps) {
   // --- State ---
-  const [data, setData] = useState<DirectoryData[]>([]);
-  const [status, setStatus] = useState<"loading" | "error" | "success">(
-    "loading",
+  const [activeTab, setActiveTab] = useState<"recommended" | "all">(
+    recommended.length > 0 ? "recommended" : "all",
   );
 
-  const [activeTab, setActiveTab] = useState<"recommended" | "all">(
-    "recommended",
-  );
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedGroupForEdit, setSelectedGroupForEdit] =
+    useState<Group | null>(null);
 
-  const [userUid, setuserUid] = useState<string | null>(null);
+  // --- Modal/Drawer handlers ---
+  const handleEditGroup = (group: Group) => {
+    setSelectedGroupForEdit(group);
+    setIsModalOpen(true);
+  };
 
-  // --- Data Fetching ---
+  const handleOpenAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedGroupForEdit(null);
+  };
+
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+
   useEffect(() => {
-    const fetchDirectory = async () => {
-      try {
-        // 1. Handle UID from URL or LocalStorage
-        const params = new URLSearchParams(window.location.search);
-        let uid = params.get("uid");
+    const storedUid = localStorage.getItem("app_uid");
+    const userId = uid || storedUid;
+    const hasCookie = document.cookie
+      .split(";")
+      .some((cookie) => cookie.trim().startsWith("app_uid="));
 
-        if (uid) {
-          localStorage.setItem("app_uid", uid);
-          // Clean up URL without refreshing the page
-          window.history.replaceState({}, "", window.location.pathname);
-        } else {
-          uid = localStorage.getItem("app_uid");
-        }
+    if (!userId) return;
 
-        if (uid) {
-          setuserUid(uid);
-        }
+    localStorage.setItem("app_uid", userId);
 
-        if (!uid) {
-          // Redirect to the access form if no UID found
-          console.error("No UID found");
-          window.location.href = "groups-directory/access?uid=false";
-        }
+    if (!hasCookie) {
+      document.cookie = `app_uid=${userId}; path=/; max-age=31536000; SameSite=Lax`;
+    }
 
-        // 2. Call n8n Webhook
-        const response = await fetch(`/api/groups-directory?uid=${uid}`);
-
-        if (!response.ok) throw new Error("Unauthorized access");
-
-        // Check if the response actually has content before parsing
-        const text = await response.text();
-
-        if (!text) {
-          throw new Error("n8n returned an empty response");
-        }
-
-        const result = JSON.parse(text);
-
-        // Handle n8n common return types (Array or Object)
-        const formattedData: DirectoryData = Array.isArray(result)
-          ? result[0]
-          : result;
-
-        if (!formattedData?.groups) throw new Error("Invalid data format");
-
-        setData([formattedData]);
-        setStatus("success");
-      } catch (error) {
-        // Redirect to the access form if the link is invalid
-        console.error("Directory Error:", error);
-        window.location.href = "groups-directory/access?uid=false";
-      }
-    };
-
-    fetchDirectory();
-  }, []);
+    if (uid && window.location.search.indexOf("uid=") !== -1) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("uid");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, [uid]);
 
   // --- Computed Filters ---
   const categories = useMemo(() => {
-    const all =
-      data[0]?.groups.flatMap((g) =>
-        g.categories
-          .split(", ")
-          .map((cat) => cat.trim())
-          .filter(Boolean),
-      ) || [];
-
-    return ["All", ...Array.from(new Set(all)).sort()];
-  }, [data]);
+    const allTags = allGroups.flatMap((g) => g.categories || []);
+    const uniqueTags = Array.from(new Set(allTags)).sort();
+    return ["All", ...uniqueTags];
+  }, [allGroups]);
 
   const types = useMemo(() => {
-    const all =
-      data[0]?.groups
-        .map((g) => g.platform)
-        .filter((p) => p && p.trim() !== "") || [];
-
-    return ["All", ...Array.from(new Set(all)).sort()];
-  }, [data]);
+    const allPlatforms = allGroups
+      .map((g) => g.platform)
+      .filter((p): p is string => Boolean(p && p.trim() !== ""));
+    return ["All", ...Array.from(new Set(allPlatforms)).sort()];
+  }, [allGroups]);
 
   const filteredGroups = useMemo(() => {
-    const groups = data[0]?.groups || [];
-    return groups.filter((group) => {
-      const matchesTab = activeTab === "all" || group.isRecommended;
+    const baseGroups = activeTab === "recommended" ? recommended : allGroups;
+
+    return baseGroups.filter((group) => {
       const matchesCat =
         selectedCategory === "All" ||
-        group.categories.includes(selectedCategory);
+        group.categories?.includes(selectedCategory);
+
       const matchesType =
         selectedType === "All" || group.platform === selectedType;
-      return matchesTab && matchesCat && matchesType;
+
+      return matchesCat && matchesType;
     });
-  }, [data, activeTab, selectedCategory, selectedType]);
+  }, [activeTab, selectedCategory, selectedType, recommended, allGroups]);
 
-  // --- Conditional Renders ---
-  if (status === "loading") {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-soft-green"></div>
-        <p className="mt-4 text-brand-soft-charcoal">
-          Loading your directory...
-        </p>
-      </div>
+  // --- Actions ---
+  const handleReport = async (group: Group) => {
+    const confirmed = window.confirm(
+      `Report the link to the ${group.name} group as broken?`,
     );
-  }
+    if (!confirmed) return;
 
-  const currentUser = data[0];
+    try {
+      const payload = { groupName: group.name, link: group.link };
+      const result = await postManageDirectory(payload, "report");
+      if (result.success) alert(`Issue reported. Thanks!`);
+    } catch (err) {
+      console.error("Report failed:", err);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-6">
       <div className="pt-6 pb-6 flex flex-col items-center">
-        <h1 className="text-center text-brand-charcoal dark:text-brand-white text-3xl leading-8 font-extrabold tracking-tight md:text-4xl">
+        <h1 className="text-center text-brand-charcoal dark:text-brand-white text-3xl font-extrabold md:text-4xl">
           Amsterdam Parent Groups Directory
         </h1>
       </div>
 
-      <div className="mb-8 p-6 bg-brand-sand/30 dark:bg-brand-soft-charcoal dark:border-brand-soft-charcoal/30 rounded-xl">
+      {/* Welcome Header */}
+      <div className="mb-8 p-6 pb-4 bg-brand-sand/30 dark:bg-brand-soft-charcoal rounded-xl border border-brand-sand/20">
         <h2 className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
-          Welcome, {currentUser?.userName}!
+          Welcome{userName && `, ${userName}`}!
         </h2>
-        <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
-          Accessing as: {currentUser?.maskedEmail}
-        </p>
+        {userEmail && (
+          <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
+            Accessing as: {userMaskedEmail}
+          </p>
+        )}
         <p className="text-sm text-brand-charcoal dark:text-brand-white mt-2">
-          This is your personalized community directory! Based on your
-          interests, we’ve curated a list of groups and support networks for
-          parents and parents-to-be across Amsterdam and the Netherlands. This
-          resource is built by the community, for the community, with no strings
-          attached.
+          This is your personalized community directory: a curated list of
+          groups for parents and parents-to-be across Amsterdam. This free
+          resource is built by APP and maintained by the community.
         </p>
         <p className="text-sm text-brand-charcoal dark:text-brand-white mt-2">
           To keep our spaces safe and free from spam,{" "}
@@ -171,45 +163,76 @@ export default function DirectoryClient() {
           protect these groups from spammers and more by keeping this directory
           private.
         </p>
+        <button
+          onClick={handleOpenAddModal}
+          className="cursor-pointer mt-2 text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal dark:hover:text-brand-white h-10 flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span className="ml-1">Add new group</span>
+        </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex mb-6">
-        <button
-          onClick={() => setActiveTab("recommended")}
-          className={`pb-3 px-6 text-sm rounded-l-lg cursor-pointer transition-all flex-1 md:flex-none ${
-            activeTab === "recommended"
-              ? "font-bold bg-brand-soft-green p-2 text-brand-white"
-              : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
-          }`}
-        >
-          Recommended (
-          {currentUser?.groups.filter((g) => g.isRecommended).length})
-        </button>
-        <button
-          onClick={() => setActiveTab("all")}
-          className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all flex-1 md:flex-none ${
-            activeTab === "all"
-              ? "font-bold bg-brand-soft-green p-2 text-brand-white"
-              : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
-          }`}
-        >
-          Browse all ({currentUser?.groups.length})
-        </button>
-      </div>
+      {recommended.length > 0 && (
+        <div className="flex mb-6">
+          <div className="relative group flex items-center">
+            <button
+              onClick={() => setActiveTab("recommended")}
+              className={`pb-3 px-6 text-sm rounded-l-lg cursor-pointer transition-all flex-1 md:flex-none ${
+                activeTab === "recommended"
+                  ? "font-bold bg-brand-soft-green p-2 text-brand-white"
+                  : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
+              }`}
+            >
+              Recommended ({recommended.length})
+            </button>
+            <div className="absolute bottom-full mb-2 hidden group-hover:block w-64 p-2 bg-white text-brand-charcoal text-xs rounded shadow-lg z-50">
+              Recommendations are based on your indicated interests:{" "}
+              {userInterests.join(", ")}
+            </div>
+          </div>
+          <div className="relative group flex items-center">
+            <button
+              onClick={() => setActiveTab("all")}
+              className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all flex-1 md:flex-none ${
+                activeTab === "all"
+                  ? "font-bold bg-brand-soft-green p-2 text-brand-white"
+                  : "bg-brand-soft-green/10 dark:bg-brand-soft-green/40 p-2 text-brand-soft-charcoal dark:text-brand-white"
+              }`}
+            >
+              Browse all ({allGroups.length})
+            </button>
+            <div className="absolute bottom-full mb-2 hidden group-hover:block w-45 p-2 bg-white text-brand-charcoal text-xs rounded shadow-lg z-50">
+              All groups in the directory
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filters Bar */}
-      <div className="mb-8 grid grid-cols-1 md:grid-cols-3 max-w-sm md:max-w-xl gap-4 items-end my-4">
+      <div className="mb-8 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 sm:min-w-md md:max-w-xl gap-4 items-end my-4">
         <div className="flex flex-col gap-1">
           <label
-            htmlFor="category-select"
+            htmlFor="category-filter"
             className="text-xs font-bold text-brand-soft-green dark:text-brand-goldenrod uppercase"
           >
             Category
           </label>
           <select
-            id="category-select"
-            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brand-soft-green outline-none"
+            className="bg-white dark:bg-brand-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm outline-none"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
@@ -223,14 +246,13 @@ export default function DirectoryClient() {
 
         <div className="flex flex-col gap-1">
           <label
-            htmlFor="platform-select"
+            htmlFor="type-filter"
             className="text-xs font-bold text-brand-soft-green dark:text-brand-goldenrod uppercase"
           >
             Platform
           </label>
           <select
-            id="platform-select"
-            className="bg-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-brand-soft-green outline-none"
+            className="bg-white dark:bg-brand-white text-brand-charcoal border border-brand-sand/60 rounded-lg px-3 py-2 text-sm outline-none"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
           >
@@ -247,9 +269,22 @@ export default function DirectoryClient() {
             setSelectedCategory("All");
             setSelectedType("All");
           }}
-          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-goldenrod dark:hover:text-brand-soft-green transition-colors h-10 flex items-center"
+          className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal dark:hover:text-brand-white h-10 flex items-center"
         >
-          Reset filters
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-4 h-4 mr-1" // Allows you to size it with Tailwind e.g., w-4 h-4
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+          <span>Reset filters</span>
         </button>
       </div>
 
@@ -257,91 +292,55 @@ export default function DirectoryClient() {
       <div className="grid gap-4">
         {filteredGroups.length > 0 ? (
           filteredGroups.map((group) => (
-            <div
+            <DirectoryGroupCard
               key={`${group.name}-${group.platform}`}
-              className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-all ${
-                group.isRecommended
-                  ? "border border-brand-soft-green"
-                  : "border border-brand-sand/60 dark:border-brand-soft-charcoal"
-              }`}
-            >
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-brand-charcoal dark:text-brand-white leading-tight">
-                    {group.name}
-
-                    {group.platform && (
-                      <span className="inline-flex align-middle ml-2 -translate-y-[1px]">
-                        <CustomSocialIcon
-                          kind={
-                            group.platform.toLowerCase() as keyof typeof components
-                          }
-                          size={4}
-                        />
-                      </span>
-                    )}
-                  </h3>
-                </div>
-                {group.description && (
-                  <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 pt-1">
-                    {group.description}
-                  </p>
-                )}
-                {group.categories && (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {group.categories.split(",").map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod p-0.5 rounded"
-                      >
-                        {tag.trim()}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <a
-                href={group.inviteLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-brand-soft-green text-white px-10 py-2.5 rounded-full cursor-pointer font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal active:scale-95 transition-all shadow-sm text-center"
-                data-umami-event="Groups Directory: Join group"
-                data-umami-event-uid={userUid}
-              >
-                Join
-              </a>
-            </div>
+              group={group}
+              uid={uid}
+              onEdit={handleEditGroup}
+              onReport={handleReport}
+            />
           ))
         ) : (
-          <div className="text-center py-20 bg-brand-sand/10 dark:bg-white/5 rounded-xl border border border-brand-sand">
-            <p className="text-brand-soft-charcoal dark:text-brand-white font-medium">
+          <div className="text-center py-20 bg-brand-sand/10 rounded-xl border border-dashed border-brand-sand">
+            <p className="text-brand-soft-charcoal dark:text-brand-white">
               No groups match your current filters.
             </p>
-            <button
-              onClick={() => {
-                setSelectedCategory("All");
-                setSelectedType("All");
-                setActiveTab("all");
-              }}
-              className="mt-2 text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-soft-green cursor-pointer"
-            >
-              Clear all filters
-            </button>
           </div>
         )}
       </div>
 
-      <p className="text-center text-xs text-brand-charcoal dark:text-brand-white mt-8 mb-8 italic">
-        Something not working? Please report broken links to{" "}
-        <a
-          href="mailto:hello@amsterdamparentproject.nl"
-          className="dark:text-brand-goldenrod dark:hover:text-brand-soft-green hover:text-brand-goldenrod text-brand-soft-green"
-        >
-          hello@amsterdamparentproject.nl
-        </a>
-        .
-      </p>
+      {/* Add Group Modal */}
+      <Modal
+        isOpen={isAddModalOpen}
+        onClose={handleCloseAddModal}
+        title="Add new group"
+      >
+        <AddGroupForm
+          info={{ userName: userName, userEmail: userEmail }}
+          onClose={handleCloseAddModal}
+        />
+      </Modal>
+
+      {/* Edit Group Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title={`Change group${selectedGroupForEdit ? `: ${selectedGroupForEdit.name}` : ""}`}
+      >
+        {selectedGroupForEdit && (
+          <ChangeGroupForm
+            info={{
+              name: selectedGroupForEdit.name,
+              categories: selectedGroupForEdit.categories?.join(", ") || "",
+              description: selectedGroupForEdit.description,
+              link: selectedGroupForEdit.link,
+              userName: userName,
+              userEmail: userEmail,
+            }}
+            onClose={handleCloseModal}
+          />
+        )}
+      </Modal>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { postRequestDirectory } from "../PostToWebhook";
 import subscribeToNewsletter from "../Subscribe";
+import CategoryChipsFormField from "./CategoryChipsFormField";
 
 const RequestAccessForm = () => {
   const [formData, setFormData] = useState({
@@ -133,7 +134,7 @@ const RequestAccessForm = () => {
   const inputStyle = `${inputBase} border-brand-sand`;
   const requiredInputStyle = `${inputBase} border-red-500 bg-red-50/30`;
   const submitButtonStyle =
-    `bg-brand-soft-green text-brand-white text-lg mt-2 px-6 py-2 rounded transition-all cursor-pointer hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
+    `bg-brand-soft-green dark:bg-brand-goldenrod text-white dark:text-brand-charcoal font-bold text-lg mt-2 px-6 py-2 rounded transition-all cursor-pointer hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
     focusStyle;
 
   const getStyle = (field: string) => {
@@ -195,62 +196,14 @@ const RequestAccessForm = () => {
         </div>
       </div>
 
-      {/* Resources list */}
-      <div className="flex flex-wrap mb-6 px-3">
-        <label htmlFor="categories-check" className={labelStyle}>
-          Which groups are you interested in?
-        </label>
-        <p className="text-xs text-gray-500 mb-3 italic">
-          If none are selected, we'll show you all groups by default.
-        </p>
-        <div id="categories-check" className="w-full space-y-2">
-          <label className="flex items-center p-2 mb-2 bg-brand-sand/10 rounded-md cursor-pointer hover:bg-brand-sand/20 transition-colors">
-            <input
-              type="checkbox"
-              onChange={handleToggleAll}
-              checked={isAllSelected}
-              ref={(el) => {
-                if (el) el.indeterminate = isAnySelected && !isAllSelected;
-              }}
-              className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green"
-            />
-            <span className="ml-3 font-semibold text-brand-charcoal dark:text-brand-white">
-              {isAllSelected ? "Deselect all" : "Select all"}
-            </span>
-          </label>
-          {categories.map((option) => (
-            <label
-              key={option}
-              className="flex items-center cursor-pointer group px-2"
-            >
-              <input
-                type="checkbox"
-                name="categories"
-                value={option}
-                checked={formData.categories.includes(option)}
-                onChange={handleChange}
-                className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green"
-              />
-              <span className="ml-3 text-brand-charcoal dark:text-brand-white group-hover:text-brand-soft-green transition-colors">
-                {option}
-              </span>
-            </label>
-          ))}
-          <div className="flex items-center mt-2 px-2">
-            <span className="text-brand-charcoal dark:text-brand-white mr-2">
-              Other:
-            </span>
-            <input
-              type="text"
-              name="otherInterest"
-              value={formData.otherInterest}
-              onChange={handleChange}
-              placeholder="Please specify"
-              className={getStyle("other")}
-            />
-          </div>
-        </div>
-      </div>
+      <CategoryChipsFormField
+        selectedCategories={formData.categories}
+        formQuestion="Which groups are you interested in?"
+        formQuestionDescription="We'll use this to build recommendations."
+        onChange={(categories) =>
+          setFormData((prev) => ({ ...prev, categories }))
+        }
+      />
 
       <div className="flex flex-wrap mb-6 px-3">
         <label className={labelStyle} htmlFor="notes">
@@ -280,7 +233,7 @@ const RequestAccessForm = () => {
           <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white">
             <b>Please subscribe me to APP's newsletter</b>: a twice-monthly
             email digest of upcoming activities for babies, toddlers, and
-            parents shared in the groups
+            parents shared in the groups.
           </span>
         </label>
       </div>

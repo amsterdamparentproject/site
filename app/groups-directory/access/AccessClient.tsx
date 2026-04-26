@@ -9,14 +9,14 @@ import { useEffect, useState } from "react";
 
 export default function AccessClient() {
   const searchParams = useSearchParams();
-  const showWarning = searchParams.get("uid") === "false";
+  const showWarning = searchParams.get("noUid") === "true";
 
   const [hasStoredUid, sethasStoredUid] = useState<boolean | null>(null);
   useEffect(() => {
     const uid = localStorage.getItem("app_uid");
     const maybeValidUid = !!uid && !showWarning;
     sethasStoredUid(maybeValidUid);
-  }, []);
+  }, [showWarning]);
 
   return (
     <div>
