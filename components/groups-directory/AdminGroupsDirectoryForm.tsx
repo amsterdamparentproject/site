@@ -114,10 +114,6 @@ const AdminGroupsDirectoryForm = ({
     if (!isFormValid) return;
     setIsSubmitting(true);
 
-    console.log("Form submission starting...");
-    console.log("Mode:", mode);
-    console.log("Form data:", formData);
-
     // categories
     const selectedCategories = formData.categories.join(", ");
 
