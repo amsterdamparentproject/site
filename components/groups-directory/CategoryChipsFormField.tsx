@@ -51,7 +51,7 @@ export default function CategoryChipsFormField({
           <button
             type="button"
             onClick={handleSelectAll}
-            className="text-xs font-bold text-brand-soft-green hover:underline transition-colors cursor-pointer"
+            className="text-xs font-bold text-brand-soft-green dark:text-brand-goldenrod hover:underline transition-colors cursor-pointer"
           >
             {allSelected ? "Clear all" : "Select all"}
           </button>

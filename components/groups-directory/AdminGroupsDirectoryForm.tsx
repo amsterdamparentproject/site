@@ -247,14 +247,14 @@ const AdminGroupsDirectoryForm = ({
             {mode === "edit" ? "Change invite link" : "Link"}
           </label>
           {mode === "edit" && !showLinkInput ? (
-            <div className="flex items-center justify-between p-3 border border-brand-soft-green rounded bg-brand-soft-green/10">
-              <span className="text-sm text-gray-500 tracking-wider">
+            <div className="flex items-center justify-between p-3 border border-brand-soft-green dark:border-brand-sand rounded bg-brand-soft-green/10 dark:bg-brand-sand/10">
+              <span className="text-sm text-gray-500 dark:text-brand-white tracking-wider">
                 ••••••••••••••••
               </span>
               <button
                 type="button"
                 onClick={() => setShowLinkInput(true)}
-                className="text-xs font-bold text-brand-soft-green hover:underline cursor-pointer"
+                className="text-xs font-bold text-brand-soft-green dark:text-brand-goldenrod hover:underline cursor-pointer"
               >
                 Change link
               </button>
@@ -320,7 +320,7 @@ const AdminGroupsDirectoryForm = ({
           {isSubmitting ? "Sending..." : "Request changes"}
         </button>
         {!isFormValid && (
-          <div className="mt-2 text-xs text-red-600 italic">
+          <div className="mt-2 text-xs text-red-600 dark:text-red-400 italic">
             It is required to fill in the name, link, and confirm ownership to
             submit.
           </div>
