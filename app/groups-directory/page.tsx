@@ -29,8 +29,14 @@ export default async function DirectoryPage({ searchParams }: PageProps) {
   // 3. Initialize Supabase Server Client
   const supabase = await createClient();
 
-  // 4. If neither URL nor Cookie has a UID, redirect
-  if (!uid) {
+  // 4. If neither URL nor Cookie has a valid UID, redirect
+  const isValidUid =
+    uid &&
+    uid.trim() !== "" &&
+    uid !== "false" &&
+    uid !== "null" &&
+    uid !== "undefined";
+  if (!isValidUid) {
     redirect("/groups-directory/access?noUid=true");
   }
 
@@ -39,8 +45,14 @@ export default async function DirectoryPage({ searchParams }: PageProps) {
   });
 
   if (error || !data) {
-    console.error("Supabase Error:", error);
+    console.error("Groups Directory: Supabase error:", error);
     redirect("/groups-directory/access?noUid=true");
+  }
+
+  if (uid && !data.user_name) {
+    // We couldn't find the user, so reroute to /access with a warning
+    console.warn("Groups Directory: No user found for UID:", uid);
+    redirect("/groups-directory/access?badUid=true");
   }
 
   // 6. Pass data to your Client Component

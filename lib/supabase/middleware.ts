@@ -13,11 +13,19 @@ export const updateSession = async (request: NextRequest) => {
   if (urlUid) {
     const cleanUid = urlUid.trim();
 
-    response.cookies.set("app_uid", cleanUid, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: "lax",
-    });
+    // Only set valid UIDs as cookies
+    if (
+      cleanUid &&
+      cleanUid !== "false" &&
+      cleanUid !== "null" &&
+      cleanUid !== "undefined"
+    ) {
+      response.cookies.set("app_uid", cleanUid, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: "lax",
+      });
+    }
   }
 
   const supabase = createServerClient(

@@ -22,15 +22,9 @@ const InvalidDirectoryLinkWarning = () => {
             Invalid directory link
           </h3>
           <p className="mt-2 text-sm text-brand-soft-charcoal dark:text-brand-white/70">
-            Please use the personalized link sent to your email to access the
-            directory.
-          </p>
-          <p className="mt-1 text-sm text-brand-soft-charcoal dark:text-brand-white/70">
-            Otherwise,{" "}
-            <span className="font-medium text-brand-charcoal dark:text-brand-white">
-              please fill out the form below
-            </span>{" "}
-            to get a new access link! It should only take a minute ☺️
+            Please <b>use the personal directory link sent to your email</b>, or
+            request a new link with the form below. It should only take a minute
+            😌
           </p>
         </div>
       </div>

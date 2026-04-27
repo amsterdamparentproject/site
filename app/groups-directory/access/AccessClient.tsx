@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export default function AccessClient() {
   const searchParams = useSearchParams();
-  const showWarning = searchParams.get("noUid") === "true";
+  const showWarning = searchParams.get("badUid") === "true";
 
   const [hasStoredUid, sethasStoredUid] = useState<boolean | null>(null);
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function AccessClient() {
         </h1>
       </div>
       <div className="flex justify-center mb-1 md:mb-0">
-        {hasStoredUid && (
+        {hasStoredUid && !showWarning && (
           <Link
             href="/groups-directory"
             className="group inline-flex items-center italic py-2 px-4 rounded-2xl text-lg font-medium text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
