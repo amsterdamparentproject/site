@@ -3,12 +3,13 @@ import { useState } from "react";
 import { postRequestDirectory } from "../PostToWebhook";
 import subscribeToNewsletter from "../Subscribe";
 import CategoryChipsFormField from "./CategoryChipsFormField";
+import { GROUP_CATEGORIES } from "@/app/types/groups-directory";
 
 const RequestAccessForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    categories: [] as string[],
+    categories: GROUP_CATEGORIES, // Default to all categories
     otherInterest: "",
     notes: "",
     subscribeNewsletter: false,
@@ -24,20 +25,6 @@ const RequestAccessForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const categories = [
-    "Parenting groups",
-    "Mom groups",
-    "Dad groups",
-    "Twin groups",
-    "Neighborhood groups",
-    "Groups by age/due date",
-    "Activities groups",
-    "Language & country groups",
-    "Buy & sell groups",
-  ];
-
-  const isAllSelected = formData.categories.length === categories.length;
-  const isAnySelected = formData.categories.length > 0;
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
 
   const isFormValid =
@@ -63,13 +50,6 @@ const RequestAccessForm = () => {
     }
   };
 
-  const handleToggleAll = () => {
-    setFormData((prev) => ({
-      ...prev,
-      categories: isAllSelected ? [] : [...categories],
-    }));
-  };
-
   const handleBlur = (field: string) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
   };
@@ -80,11 +60,7 @@ const RequestAccessForm = () => {
     setIsSubmitting(true);
 
     // categories
-    let selectedCategories = formData.categories.join(", ");
-    if (!isAnySelected && !formData.otherInterest.trim()) {
-      // Select all if none provided
-      selectedCategories = "";
-    }
+    const selectedCategories = formData.categories.join(", ");
 
     try {
       // Subscribe to newsletter

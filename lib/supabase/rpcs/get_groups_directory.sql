@@ -7,7 +7,7 @@ DECLARE
     user_interests text[];
     user_name text;
     user_email text;
-    recommended_groups jsonb;
+    recommended_groups jsonb; -- This will be populated by the other RPC
     all_groups jsonb;
 BEGIN
     -- 1. Get user details
@@ -16,27 +16,26 @@ BEGIN
     FROM users 
     WHERE public_id = user_id_input;
 
-    -- 2. Fetch recommended groups
-    -- '||' merges the original row object with our new boolean
-    SELECT jsonb_agg(
-        to_jsonb(g) || jsonb_build_object('recommended', true)
-        ORDER BY g.name ASC
-    ) INTO recommended_groups
-    FROM groups g
-    WHERE g.categories && COALESCE(user_interests, '{}'::text[]);
+    -- 2. Call the second RPC to get recommendations
+    -- We pass the same input ID
+    recommended_groups := get_user_recommendations(user_id_input);
 
-    -- 3. Fetch all groups
+    -- 3. Fetch all groups (keep the boolean logic here)
     SELECT jsonb_agg(
         to_jsonb(a) || jsonb_build_object(
-            'recommended', (a.categories && COALESCE(user_interests, '{}'::text[]))
+            'recommended', EXISTS (
+                SELECT 1 
+                FROM unnest(a.categories) AS ac
+                WHERE LOWER(ac) = ANY (SELECT LOWER(uc) FROM unnest(COALESCE(user_interests, '{}'::text[])) AS uc)
+            )
         )
         ORDER BY a.name ASC
     ) INTO all_groups
     FROM groups a;
 
-    -- 4. Final Return
+    -- 4. Final Return (Masking logic remains same)
     RETURN jsonb_build_object(
-        'recommended', COALESCE(recommended_groups, '[]'::jsonb),
+        'recommended', recommended_groups,
         'all', COALESCE(all_groups, '[]'::jsonb),
         'user_interests', COALESCE(user_interests, '{}'::text[]),
         'user_name', COALESCE(user_name, ''),

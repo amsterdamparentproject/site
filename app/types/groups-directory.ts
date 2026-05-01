@@ -6,11 +6,11 @@ export const GROUP_CATEGORIES = [
   "Dad",
   "Twin",
   "Neighborhood",
-  "Age/due date",
+  "Age/Due date",
   "Activities",
   "Language & country",
   "Buy & sell",
-] as const;
+] as string[];
 
 export type GroupCategory = (typeof GROUP_CATEGORIES)[number];
 

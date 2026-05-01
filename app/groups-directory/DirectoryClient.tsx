@@ -2,7 +2,6 @@
 
 import { postManageDirectory } from "@/components/PostToWebhook";
 import { useEffect, useMemo, useState } from "react";
-import { redirect } from "next/navigation";
 import AddGroupForm from "@/components/groups-directory/AddGroupForm";
 import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
 import DirectoryGroupCard from "@/components/groups-directory/DirectoryGroupCard";
@@ -42,7 +41,6 @@ export default function DirectoryClient({
     recommended.length > 0 ? "recommended" : "all",
   );
 
-  const [badUid, setBadUid] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);

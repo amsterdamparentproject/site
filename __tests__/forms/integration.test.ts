@@ -135,14 +135,14 @@ describe("Forms Integration - External Service Calls", () => {
     });
 
     it("should preserve category order through pipeline", () => {
-      const original = ["Twin", "Parenting", "Age/due date"];
+      const original = ["Twin", "Parenting", "Age/Due date"];
       const joined = original.join(", ");
       const parsed = joined.split(", ");
 
       expect(parsed).toEqual(original);
       expect(parsed[0]).toBe("Twin");
       expect(parsed[1]).toBe("Parenting");
-      expect(parsed[2]).toBe("Age/due date");
+      expect(parsed[2]).toBe("Age/Due date");
     });
 
     it("should handle empty categories through pipeline", () => {
