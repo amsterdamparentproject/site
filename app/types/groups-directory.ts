@@ -33,12 +33,13 @@ export interface GroupDetails {
 // The specific "shapes" for info
 export type AddFormInfo = UserInfo;
 export type EditFormInfo = UserInfo & GroupDetails;
+export type AddFormInfoNoAuth = Omit<AddFormInfo, "userName" | "userEmail">;
 
-// The Discriminated Union
+// The union
 export type AdminGroupsDirectoryFormProps =
   | {
       mode: "add";
-      info: AddFormInfo;
+      info: AddFormInfo | AddFormInfoNoAuth;
       onClose?: () => void;
     }
   | {

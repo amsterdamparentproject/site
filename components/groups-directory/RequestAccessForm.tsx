@@ -91,7 +91,7 @@ const RequestAccessForm = () => {
       if (formData.subscribeNewsletter) {
         await subscribeToNewsletter({
           email: formData.email,
-          tag: "website-groups-directory-request",
+          tags: ["website-groups-directory-request"],
           referringSite: String(window.location),
         });
       }

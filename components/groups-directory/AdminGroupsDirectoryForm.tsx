@@ -7,21 +7,39 @@ import {
   AdminGroupsDirectoryFormProps,
   EditFormInfo,
 } from "@/app/types/groups-directory";
-
-type FormMode = "add" | "edit";
+import subscribeToNewsletter from "../Subscribe";
 
 const REQUIRED_FIELDS = ["groupName", "inviteLink", "acceptedTerms"];
+const REQUIRED_ADMIN_FIELDS = ["adminName", "email"];
+
+const getFieldLabel = (fieldName: string) => {
+  const baseLabels: Record<string, string | { add: string; edit: string }> = {
+    groupName: "Name",
+    inviteLink: "Link",
+    description: "Description",
+    adminName: "Your first name",
+    email: "Your email",
+    notes: "Anything else to add?",
+  };
+  return baseLabels[fieldName];
+};
 
 const AdminGroupsDirectoryForm = ({
   mode,
   info,
   onClose,
 }: AdminGroupsDirectoryFormProps) => {
+  // Check if there's existing admin info
+  const hasAdminInfo =
+    "userName" in info &&
+    "userEmail" in info &&
+    info.userName &&
+    info.userEmail;
+
   const [formData, setFormData] = useState(() => {
     if (mode === "edit") {
       const editInfo = info as EditFormInfo;
       return {
-        originalGroupName: editInfo.name, // Keep track of original name for reference
         groupName: editInfo.name,
         inviteLink: editInfo.link || "", // Pre-fill with existing link for edit mode
         description: editInfo.description,
@@ -44,6 +62,8 @@ const AdminGroupsDirectoryForm = ({
         email: addInfo.userEmail || "",
         notes: "",
         agreedToTerms: false,
+        // If they're not signed in, offer newsletter subscription option
+        subscribeNewsletter: false,
       };
     }
   });
@@ -52,8 +72,7 @@ const AdminGroupsDirectoryForm = ({
   useEffect(() => {
     if (mode === "edit") {
       const editInfo = info as EditFormInfo;
-      // Only sync if the group name actually changed from the source
-      if (editInfo.name !== formData.originalGroupName) {
+      {
         setFormData((prev) => ({
           ...prev,
           groupName: editInfo.name,
@@ -74,22 +93,40 @@ const AdminGroupsDirectoryForm = ({
         }));
       }
     }
-  }, [mode, info, formData.originalGroupName]);
+  }, [mode, info]);
 
   const [showLinkInput, setShowLinkInput] = useState(mode === "add");
-
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  // Check if the form is valid
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isFormValid = useMemo(() => {
     const textFieldsValid = REQUIRED_FIELDS.every(
       (field) =>
         formData[field as keyof typeof formData]?.toString().trim() !== "",
     );
-    return textFieldsValid && formData.agreedToTerms;
-  }, [formData]);
+    const adminFieldsValid =
+      REQUIRED_ADMIN_FIELDS.every(
+        (field) =>
+          formData[field as keyof typeof formData]?.toString().trim() !== "",
+      ) && isEmailValid;
+    return textFieldsValid && adminFieldsValid && formData.agreedToTerms;
+  }, [formData, isEmailValid]);
+
+  // Add required star
+  const formatFieldLabel = (fieldName: string) => {
+    const isRequired =
+      REQUIRED_FIELDS.includes(fieldName) ||
+      REQUIRED_ADMIN_FIELDS.includes(fieldName);
+    return (
+      <>
+        {getFieldLabel(fieldName)}
+        {isRequired && <span className="pl-1 text-red-500">*</span>}
+      </>
+    );
+  };
 
   const handleBlur = (field: string) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -121,10 +158,7 @@ const AdminGroupsDirectoryForm = ({
       // Send to n8n
       const data = new FormData();
       if (mode === "edit") {
-        data.append(
-          "originalGroupName",
-          formData.originalGroupName ?? formData.groupName,
-        );
+        data.append("originalGroupName", info.name ?? formData.groupName);
       }
       data.append("groupName", formData.groupName);
       data.append("inviteLink", formData.inviteLink);
@@ -134,6 +168,13 @@ const AdminGroupsDirectoryForm = ({
       data.append("email", formData.email);
       data.append("notes", formData.notes);
       data.append("agreedToTerms", formData.agreedToTerms ? "Yes" : "No");
+
+      // Sign them up for the directory if they don't have an account
+      data.append("createAccount", hasAdminInfo ? "No" : "Yes");
+      data.append(
+        "subscribeNewsletter",
+        formData.subscribeNewsletter ? "Yes" : "No",
+      );
 
       const response = await postManageDirectory(
         data,
@@ -163,21 +204,29 @@ const AdminGroupsDirectoryForm = ({
     }
   };
 
+  // Submit button based on mode
+  const submitButtonText = mode === "add" ? "Add group" : "Request changes";
+  const submitButtonWidth = mode === "add" ? "w-40" : "w-64";
+
   // Styles
   const labelStyle = `block tracking-wide text-brand-charcoal dark:text-brand-white text-md font-bold mb-2`;
   const focusStyle = `focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-brand-soft-green`;
   const inputBase =
-    `appearance-none block w-full bg-white text-brand-charcoal placeholder-gray-500 border rounded py-3 px-4 leading-tight focus:bg-white ` +
+    `appearance-none block w-full bg-white text-brand-charcoal placeholder-gray-400/80 border rounded py-3 px-4 leading-tight focus:bg-white ` +
     focusStyle;
   const inputStyle = `${inputBase} border-brand-sand`;
   const requiredInputStyle = `${inputBase} border-red-500 bg-red-50/30 focus:border-red-600 focus:ring-red-200`;
   const submitButtonStyle =
-    `bg-brand-soft-green dark:bg-brand-goldenrod text-white dark:text-brand-charcoal w-52 font-bold text-lg mt-2 px-6 py-2 rounded transition-all cursor-pointer hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
+    `bg-brand-soft-green dark:bg-brand-goldenrod text-white dark:text-brand-charcoal ${submitButtonWidth} font-bold text-lg mt-2 px-6 py-2 rounded transition-all cursor-pointer hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed ` +
     focusStyle;
 
   const getStyle = (field: string) => {
     if (!touched[field]) return inputStyle;
-    if (REQUIRED_FIELDS.includes(field) && !formData[field].trim())
+    if (
+      (REQUIRED_FIELDS.includes(field) ||
+        REQUIRED_ADMIN_FIELDS.includes(field)) &&
+      !formData[field].trim()
+    )
       return requiredInputStyle;
     return inputStyle;
   };
@@ -198,36 +247,11 @@ const AdminGroupsDirectoryForm = ({
 
   return (
     <form className="w-full" onSubmit={submitEvent}>
-      {/* Agreement */}
-      <div className="flex flex-wrap mb-6 px-3">
-        <label
-          htmlFor="agreement-check"
-          className="flex items-start cursor-pointer group select-none" // added select-none to prevent accidental text highlighting
-        >
-          <div className="flex-shrink-0 mt-1">
-            <input
-              id="agreement-check"
-              type="checkbox"
-              name="agreedToTerms"
-              checked={formData.agreedToTerms}
-              onChange={handleChange}
-              className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green cursor-pointer"
-            />
-          </div>
-          <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white leading-tight">
-            <b>I confirm that I am the owner/admin of this group.</b> I agree to
-            keep group info up to date in the directory and to be the contact
-            for questions or concerns.{" "}
-            <span className="text-red-500 font-bold">*</span>
-          </span>
-        </label>
-      </div>
-
       {/* Group info */}
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
           <label className={labelStyle} htmlFor="groupName">
-            {mode === "edit" ? "Change name" : "Name"}
+            {formatFieldLabel("groupName")}
           </label>
           <input
             className={getStyle("groupName")}
@@ -244,7 +268,7 @@ const AdminGroupsDirectoryForm = ({
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
           <label className={labelStyle} htmlFor="inviteLink">
-            {mode === "edit" ? "Change invite link" : "Link"}
+            {formatFieldLabel("inviteLink")}
           </label>
           {mode === "edit" && !showLinkInput ? (
             <div className="flex items-center justify-between p-3 border border-brand-soft-green dark:border-brand-sand rounded bg-brand-soft-green/10 dark:bg-brand-sand/10">
@@ -276,7 +300,7 @@ const AdminGroupsDirectoryForm = ({
 
       <div className="flex flex-wrap mb-6 px-3">
         <label className={labelStyle} htmlFor="description">
-          {mode === "edit" ? "Change description" : "Description"}
+          {formatFieldLabel("description")}
         </label>
         <textarea
           className={inputStyle}
@@ -296,6 +320,76 @@ const AdminGroupsDirectoryForm = ({
         }
       />
 
+      {/* Agreement */}
+      <div className="flex flex-wrap mb-6 px-3">
+        <label
+          htmlFor="agreement-check"
+          className="flex items-start cursor-pointer group select-none" // added select-none to prevent accidental text highlighting
+        >
+          <div className="flex-shrink-0 mt-1">
+            <input
+              id="agreement-check"
+              type="checkbox"
+              name="agreedToTerms"
+              checked={formData.agreedToTerms}
+              onChange={handleChange}
+              className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green cursor-pointer"
+            />
+          </div>
+          <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white leading-tight">
+            <span
+              className={`${formData.agreedToTerms ? "text-brand-soft-green" : "text-red-500"} font-bold`}
+            >
+              I confirm that I am the owner/admin of this group.
+            </span>{" "}
+            I agree to keep group info up to date in the directory and to be the
+            contact for questions or concerns.{" "}
+            <span className="text-red-500 font-bold">*</span>
+          </span>
+        </label>
+      </div>
+
+      {/* Person info */}
+      {!hasAdminInfo && (
+        <div className="flex flex-wrap mb-6">
+          <div className="w-full px-3">
+            <label className={labelStyle} htmlFor="adminName">
+              {formatFieldLabel("adminName")}
+            </label>
+            <input
+              className={getStyle("adminName")}
+              id="adminName"
+              name="adminName"
+              type="text"
+              placeholder="Alex"
+              value={formData.adminName}
+              onChange={handleChange}
+              onBlur={() => handleBlur("adminName")}
+            />
+          </div>
+        </div>
+      )}
+
+      {!hasAdminInfo && (
+        <div className="flex flex-wrap mb-6">
+          <div className="w-full px-3">
+            <label className={labelStyle} htmlFor="email">
+              {formatFieldLabel("email")}
+            </label>
+            <input
+              className={getStyle("email")}
+              id="email"
+              name="email"
+              type="email"
+              placeholder="hello@amsterdamparentproject.nl"
+              value={formData.email}
+              onChange={handleChange}
+              onBlur={() => handleBlur("email")}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-wrap mb-6 px-3">
         <label className={labelStyle} htmlFor="notes">
           Anything else to add?
@@ -311,26 +405,47 @@ const AdminGroupsDirectoryForm = ({
         />
       </div>
 
+      {/* Newsletter subscription */}
+      {!hasAdminInfo && (
+        <div className="flex flex-wrap mb-4 px-3">
+          <label className="flex items-center cursor-pointer group">
+            <input
+              type="checkbox"
+              name="subscribeNewsletter"
+              checked={formData.subscribeNewsletter}
+              onChange={handleChange}
+              className="w-5 h-5 border-brand-sand rounded accent-brand-soft-green"
+            />
+            <span className="ml-3 text-sm text-brand-charcoal dark:text-brand-white">
+              <b>Please subscribe me to APP's newsletter</b>: a twice-monthly
+              email digest of upcoming activities for babies, toddlers, and
+              parents shared in the groups.
+            </span>
+          </label>
+        </div>
+      )}
+
       <div className="flex flex-col mb-6 px-3">
         <button
           className={submitButtonStyle}
           type="submit"
           disabled={!isFormValid || isSubmitting}
         >
-          {isSubmitting ? "Sending..." : "Request changes"}
+          {isSubmitting ? "Sending..." : submitButtonText}
         </button>
         {!isFormValid && (
           <div className="mt-2 text-xs text-red-600 dark:text-red-400 italic">
-            It is required to fill in the name, link, and confirm ownership to
+            It is required to fill in the name, link,{" "}
+            {!hasAdminInfo && "your contact details, "}and confirm ownership to
             submit.
           </div>
         )}
       </div>
       <p className="px-3 text-sm italic mb-5">
-        Any group changes go through an APP approval process to ensure that
-        requests are genuine, which may take a few days. APP may contact you if
-        we have any questions or see suspicious directory activity with your
-        group.
+        Any group directory changes go through an APP approval process to ensure
+        that requests are genuine, which may take a few days. APP may contact
+        you if we have any questions or see suspicious directory activity with
+        your group.
       </p>
     </form>
   );

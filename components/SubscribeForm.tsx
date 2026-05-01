@@ -19,7 +19,7 @@ const SubscribeForm = (Props) => {
 
     subscribeToNewsletter({
       email: emailInput,
-      tag: tag,
+      tags: [tag],
       referringSite: String(window.location),
     });
 
