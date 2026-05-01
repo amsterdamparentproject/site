@@ -9,7 +9,7 @@ const RequestAccessForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    categories: GROUP_CATEGORIES, // Default to all categories
+    categories: [] as string[],
     otherInterest: "",
     notes: "",
     subscribeNewsletter: false,
@@ -59,7 +59,7 @@ const RequestAccessForm = () => {
     if (!isFormValid) return;
     setIsSubmitting(true);
 
-    // categories
+    // Default to all categories
     const selectedCategories = formData.categories.join(", ");
 
     try {
