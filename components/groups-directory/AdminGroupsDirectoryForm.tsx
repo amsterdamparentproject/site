@@ -225,7 +225,7 @@ const AdminGroupsDirectoryForm = ({
     if (
       (REQUIRED_FIELDS.includes(field) ||
         REQUIRED_ADMIN_FIELDS.includes(field)) &&
-      !formData[field].trim()
+      (!formData[field].trim() || (field === "email" && !isEmailValid))
     )
       return requiredInputStyle;
     return inputStyle;
