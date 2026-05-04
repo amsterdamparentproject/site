@@ -1,5 +1,5 @@
 import { genPageMetadata } from "app/seo";
-import { createClient } from "@/lib/supabase/server";
+import { createDirectoryClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import DirectoryClient from "./DirectoryClient";
 import { cookies } from "next/headers";
@@ -27,7 +27,7 @@ export default async function DirectoryPage({ searchParams }: PageProps) {
   const uid = urlUid || cookieStore.get("app_uid")?.value;
 
   // 3. Initialize Supabase Server Client
-  const supabase = await createClient();
+  const supabase = await createDirectoryClient();
 
   // 4. If neither URL nor Cookie has a valid UID, redirect
   const isValidUid =

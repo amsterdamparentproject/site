@@ -3,7 +3,6 @@ import { useState } from "react";
 import { postRequestDirectory } from "../PostToWebhook";
 import subscribeToNewsletter from "../Subscribe";
 import CategoryChipsFormField from "./CategoryChipsFormField";
-import { GROUP_CATEGORIES } from "@/app/types/groups-directory";
 
 const RequestAccessForm = () => {
   const [formData, setFormData] = useState({
