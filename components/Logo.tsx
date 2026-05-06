@@ -14,6 +14,7 @@ function Logo({ size, style }: { size: string; style?: string }) {
         height={dimension}
         alt="Amsterdam Parent Project Logo"
         priority
+        unoptimized
         className="dark:hidden"
       />
 
@@ -23,6 +24,7 @@ function Logo({ size, style }: { size: string; style?: string }) {
         height={dimension}
         alt="Amsterdam Parent Project Logo"
         priority
+        unoptimized
         className="hidden dark:block"
       />
     </div>

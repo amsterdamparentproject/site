@@ -103,7 +103,12 @@ function ShowcaseButton(args) {
   };
 
   return (
-    <Link href={href} className="mb-2" target={newTab ? "_blank" : ""}>
+    <Link
+      href={href}
+      className="mb-2"
+      target={newTab ? "_blank" : ""}
+      prefetch={newTab ? false : undefined}
+    >
       <button
         type="button"
         className={buttonStyle + getBackgroundStyle(fill, background)}
