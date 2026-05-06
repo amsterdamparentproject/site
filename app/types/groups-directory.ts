@@ -35,6 +35,11 @@ export type AddFormInfo = UserInfo;
 export type EditFormInfo = UserInfo & GroupDetails;
 export type AddFormInfoNoAuth = Omit<AddFormInfo, "userName" | "userEmail">;
 
+export interface ReportFormInfo {
+  name: string;
+  link: string;
+}
+
 // The union
 export type AdminGroupsDirectoryFormProps =
   | {

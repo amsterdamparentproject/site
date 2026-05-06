@@ -14,9 +14,9 @@ const DESCRIPTION_MAX_LENGTH = 500;
 
 const getFieldLabel = (fieldName: string) => {
   const baseLabels: Record<string, string | { add: string; edit: string }> = {
-    groupName: "Name",
-    inviteLink: "Link",
-    description: "Description",
+    groupName: "Group name",
+    inviteLink: "Group link",
+    description: "Group description",
     adminName: "Your first name",
     email: "Your email",
     notes: "Anything else to add?",

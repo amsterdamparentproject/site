@@ -1,9 +1,9 @@
 "use client";
 
-import { postManageDirectory } from "@/components/PostToWebhook";
 import { useEffect, useMemo, useState } from "react";
 import AddGroupForm from "@/components/groups-directory/AddGroupForm";
 import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
+import ReportIssueForm from "@/components/groups-directory/ReportIssueForm";
 import DirectoryGroupCard from "@/components/groups-directory/DirectoryGroupCard";
 import Modal from "@/components/Modal";
 
@@ -45,7 +45,10 @@ export default function DirectoryClient({
   const [selectedType, setSelectedType] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [selectedGroupForEdit, setSelectedGroupForEdit] =
+    useState<Group | null>(null);
+  const [selectedGroupForReport, setSelectedGroupForReport] =
     useState<Group | null>(null);
 
   // --- Modal/Drawer handlers ---
@@ -65,6 +68,11 @@ export default function DirectoryClient({
 
   const handleCloseAddModal = () => {
     setIsAddModalOpen(false);
+  };
+
+  const handleCloseReportModal = () => {
+    setIsReportModalOpen(false);
+    setSelectedGroupForReport(null);
   };
 
   useEffect(() => {
@@ -130,19 +138,9 @@ export default function DirectoryClient({
   }, [activeTab, selectedCategory, selectedType, recommended, allGroups]);
 
   // --- Actions ---
-  const handleReport = async (group: Group) => {
-    const confirmed = window.confirm(
-      `Report the link to the ${group.name} group as broken?`,
-    );
-    if (!confirmed) return;
-
-    try {
-      const payload = { groupName: group.name, link: group.link };
-      const result = await postManageDirectory(payload, "report");
-      if (result.success) alert(`Issue reported. Thanks!`);
-    } catch (err) {
-      console.error("Report failed:", err);
-    }
+  const handleReport = (group: Group) => {
+    setSelectedGroupForReport(group);
+    setIsReportModalOpen(true);
   };
 
   return (
@@ -349,6 +347,23 @@ export default function DirectoryClient({
               userEmail: userEmail,
             }}
             onClose={handleCloseModal}
+          />
+        )}
+      </Modal>
+
+      {/* Report Issue Modal */}
+      <Modal
+        isOpen={isReportModalOpen}
+        onClose={handleCloseReportModal}
+        title={`Report issue${selectedGroupForReport ? `: ${selectedGroupForReport.name}` : ""}`}
+      >
+        {selectedGroupForReport && (
+          <ReportIssueForm
+            info={{
+              name: selectedGroupForReport.name,
+              link: selectedGroupForReport.link,
+            }}
+            onClose={handleCloseReportModal}
           />
         )}
       </Modal>
