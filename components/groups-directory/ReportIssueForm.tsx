@@ -3,6 +3,8 @@ import { useState } from "react";
 import { postManageDirectory } from "../PostToWebhook";
 import { ReportFormInfo } from "@/app/types/groups-directory";
 
+type IssueType = "link" | "other";
+
 const ReportIssueForm = ({
   info,
   onClose,
@@ -10,12 +12,13 @@ const ReportIssueForm = ({
   info: ReportFormInfo;
   onClose?: () => void;
 }) => {
+  const [issueType, setIssueType] = useState<IssueType>("link");
   const [newInviteLink, setNewInviteLink] = useState("");
-  const [notes, setNotes] = useState("");
+  const [explanation, setExplanation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const isFormValid = newInviteLink.trim() !== "" || notes.trim() !== "";
+  const isFormValid = issueType === "link" || explanation.trim() !== "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,10 +28,13 @@ const ReportIssueForm = ({
     try {
       const data = new FormData();
       data.append("groupName", info.name);
-      data.append("issue", newInviteLink.trim() !== "" ? "link" : "other");
+      data.append("issue", issueType);
       data.append("originalInviteLink", info.link);
-      data.append("newInviteLink", newInviteLink.trim());
-      data.append("notes", notes.trim());
+      data.append(
+        "newInviteLink",
+        issueType === "link" ? newInviteLink.trim() : "",
+      );
+      data.append("notes", issueType === "other" ? explanation.trim() : "");
 
       const response = await postManageDirectory(data, "report");
       if (response.success) {
@@ -72,32 +78,72 @@ const ReportIssueForm = ({
 
   return (
     <form className="w-full" onSubmit={handleSubmit}>
-      <div className="flex flex-wrap mb-6 px-3">
-        <label className={labelStyle} htmlFor="newInviteLink">
-          New invite link{" "}
+      {/* Radio buttons */}
+      <div className="flex flex-col gap-2 mb-6 px-3">
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="radio"
+            name="issueType"
+            value="link"
+            checked={issueType === "link"}
+            onChange={() => setIssueType("link")}
+            className="w-4 h-4 accent-brand-soft-green cursor-pointer"
+          />
+          <span className="text-md font-bold text-brand-charcoal dark:text-brand-white">
+            Broken link
+          </span>
         </label>
-        <input
-          className={inputStyle}
-          id="newInviteLink"
-          type="text"
-          placeholder="https://chat.whatsapp.com/..."
-          value={newInviteLink}
-          onChange={(e) => setNewInviteLink(e.target.value)}
-        />
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="radio"
+            name="issueType"
+            value="other"
+            checked={issueType === "other"}
+            onChange={() => setIssueType("other")}
+            className="w-4 h-4 accent-brand-soft-green cursor-pointer"
+          />
+          <span className="text-md font-bold text-brand-charcoal dark:text-brand-white">
+            Other issue
+          </span>
+        </label>
       </div>
 
+      {/* Dynamic field */}
       <div className="flex flex-wrap mb-6 px-3">
-        <label className={labelStyle} htmlFor="notes">
-          Other issue{" "}
-        </label>
-        <textarea
-          className={inputStyle}
-          id="notes"
-          rows={3}
-          placeholder="Describe the issue..."
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-        />
+        {issueType === "link" ? (
+          <>
+            <label className={labelStyle + " w-full"} htmlFor="newInviteLink">
+              New invite link{" "}
+              <span className="text-gray-400 font-normal">(optional)</span>
+            </label>
+            <input
+              className={inputStyle}
+              id="newInviteLink"
+              type="text"
+              placeholder="https://chat.whatsapp.com/..."
+              value={newInviteLink}
+              onChange={(e) => setNewInviteLink(e.target.value)}
+            />
+            <p className="mt-1.5 text-xs text-gray-400 dark:text-brand-white/60">
+              If you know the new link, sharing it helps us fix this faster!
+            </p>
+          </>
+        ) : (
+          <>
+            <label className={labelStyle + " w-full"} htmlFor="explanation">
+              Explain the issue
+              <span className="pl-1 text-red-500">*</span>
+            </label>
+            <textarea
+              className={inputStyle}
+              id="explanation"
+              rows={3}
+              placeholder="Describe the issue..."
+              value={explanation}
+              onChange={(e) => setExplanation(e.target.value)}
+            />
+          </>
+        )}
       </div>
 
       <div className="flex flex-col mb-6 px-3">
@@ -110,7 +156,7 @@ const ReportIssueForm = ({
         </button>
         {!isFormValid && (
           <div className="mt-2 text-xs text-red-600 dark:text-red-400 italic">
-            Please provide a new invite link or describe the issue.
+            Please describe the issue.
           </div>
         )}
       </div>
