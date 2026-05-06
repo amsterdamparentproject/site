@@ -85,7 +85,7 @@ export default function Home({ posts }) {
           <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
             What's next
           </h2>
-          {createEventList(upcomingEvents).map((event) => (
+          {upcomingEvents.map((event) => (
             <ShowcaseButton
               key={event.title + event.date}
               href={event.href ? event.href : "/calendar"}

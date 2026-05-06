@@ -7,10 +7,10 @@ import {
   AdminGroupsDirectoryFormProps,
   EditFormInfo,
 } from "@/app/types/groups-directory";
-import subscribeToNewsletter from "../Subscribe";
 
 const REQUIRED_FIELDS = ["groupName", "inviteLink", "acceptedTerms"];
 const REQUIRED_ADMIN_FIELDS = ["adminName", "email"];
+const DESCRIPTION_MAX_LENGTH = 500;
 
 const getFieldLabel = (fieldName: string) => {
   const baseLabels: Record<string, string | { add: string; edit: string }> = {
@@ -308,9 +308,15 @@ const AdminGroupsDirectoryForm = ({
           name="description"
           rows={3}
           placeholder="What is your group about?"
+          maxLength={DESCRIPTION_MAX_LENGTH}
           value={formData.description || ""}
           onChange={handleChange}
         />
+        <p
+          className={`mt-1 text-xs text-right w-full ${(formData.description?.length ?? 0) >= DESCRIPTION_MAX_LENGTH ? "text-red-500 font-semibold" : "text-gray-400"}`}
+        >
+          {formData.description?.length ?? 0}/{DESCRIPTION_MAX_LENGTH}
+        </p>
       </div>
 
       <CategoryChipsFormField
