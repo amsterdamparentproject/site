@@ -2,7 +2,7 @@ import { genPageMetadata } from "app/seo";
 import CalendarClient from "./CalendarClient";
 import { getCalendarEvents } from "@/lib/supabase/queries/events";
 
-export const revalidate = 3600;
+export const dynamic = "force-static";
 
 export const metadata = genPageMetadata({
   title: "Calendar",

@@ -3,7 +3,7 @@ import { allBlogs } from "contentlayer/generated";
 import Main from "./Main";
 import { getCalendarEvents } from "@/lib/supabase/queries/events";
 
-export const revalidate = 3600;
+export const dynamic = "force-static";
 
 export default async function Page() {
   const sortedPosts = sortPosts(allBlogs);
