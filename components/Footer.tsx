@@ -17,6 +17,13 @@ export default function Footer() {
 
         <div className="flex space-x-2 text-sm text-brand-soft-charcoal dark:text-brand-white">
           <Link
+            href="/about"
+            className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
+          >
+            About us
+          </Link>
+          <div>{` • `}</div>
+          <Link
             href="mailto:amsterdamparentproject@gmail.com"
             className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
           >

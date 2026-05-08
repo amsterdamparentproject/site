@@ -153,16 +153,16 @@ const eventsData: CalendarEvent[] = [
   {
     title: "Postpartum Exchange",
     description:
-      "Our monthly networking circle centered on the local experts providing postpartum support in Amsterdam. The goal is to connect, share experiences, and swap ideas with others in the field.",
+      "APP's monthly learning circle for local experts providing postpartum support",
     date: "2026-05-15",
     href: "https://luma.com/jv15puku",
     imgSrc:
       "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,anim=false,background=white,quality=75,width=500,height=500/event-covers/8h/6376a800-1077-41ec-a7c4-5322b7bbf14e.png",
   },
   {
-    title: "Autumn/Winter 2026-2027 Babies Hang",
+    title: "Autumn/Winter Babies Hang",
     description:
-      "Are you having a baby this Autumn/Winter in Amsterdam? Join us to connect with other expecting & newborn families all welcome.",
+      "Connect with other families expecting babies in Autumn/Winter 2026-2027 in Amsterdam",
     date: "2026-06-07",
     href: "https://luma.com/4gsubwro",
     imgSrc:
@@ -171,16 +171,16 @@ const eventsData: CalendarEvent[] = [
   {
     title: "Postpartum Exchange",
     description:
-      "Our monthly networking circle centered on the local experts providing postpartum support in Amsterdam. The goal is to connect, share experiences, and swap ideas with others in the field.",
+      "APP's monthly learning circle for local experts providing postpartum support",
     date: "2026-06-10",
     href: "https://luma.com/12lz6gpq",
     imgSrc:
       "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,anim=false,background=white,quality=75,width=500,height=500/event-covers/8h/6376a800-1077-41ec-a7c4-5322b7bbf14e.png",
   },
   {
-    title: "Spring/Summer 2026 Babies Hang",
+    title: "Spring/Summer Babies Hang",
     description:
-      "Are you having a baby (or already had one!) this Spring/Summer in Amsterdam? Join us to connect with other expecting & newborn families — pregnancy rants, birth stories, and newborn cuddles all welcome 🫶🏻",
+      "Connect with other families expecting or having babies in Spring/Summer 2026 in Amsterdam",
     date: "2026-07-03",
     href: "https://luma.com/0g2u33op",
     imgSrc:

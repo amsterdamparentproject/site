@@ -45,7 +45,7 @@ export default function Home({
     <div className="px-4 sm:px-0 py-6 space-y-10">
       {/* Mobile-only brand title + tagline */}
       <div className="sm:hidden text-center space-y-2">
-        <div className="text-2xl font-semibold text-brand-charcoal dark:text-brand-white">
+        <div className="text-2xl font-semibold text-brand-soft-green dark:text-brand-goldenrod">
           {siteMetadata.headerTitle}
         </div>
         <p className="text-base text-brand-charcoal dark:text-brand-white">
