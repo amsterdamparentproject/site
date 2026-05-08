@@ -1,176 +1,182 @@
-import Logo from "@/components/Logo";
+import React from "react";
 import Link from "@/components/Link";
-import { formatDate } from "pliny/utils/formatDate";
-import ShowcaseButton from "@/components/ShowcaseButton";
+import HighlightSection from "@/components/homepage/HighlightSection";
 import siteMetadata from "@/data/siteMetadata";
-import eventsData from "@/data/eventsData";
+import eventsData, { CalendarEvent } from "@/data/eventsData";
+import { LayoutGrid, BookOpen, Flame, Calendar, Newspaper } from "lucide-react";
+import { ResourceRow } from "@/components/homepage/ResourceRow";
+import { EventRow } from "@/components/homepage/EventRow";
 
-const createEventList = (events, MAX_DISPLAY = 3) => {
+type EventWithDate = CalendarEvent & { dateObj: Date };
+
+const createEventList = (events: CalendarEvent[], MAX_DISPLAY = 3) => {
   const today = new Date();
-
-  // 1. Convert strings to Dates and filter in one go
   const comingUp = events
-    .map((event) => ({ ...event, dateObj: new Date(event.date) })) // Temporary date object for logic
+    .map(
+      (event): EventWithDate => ({ ...event, dateObj: new Date(event.date) }),
+    )
     .filter((event) => event.dateObj >= today)
-    .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()); // Sort by the actual time
-
-  // 2. Handle "Coming Soon" fillers
+    .sort(
+      (a: EventWithDate, b: EventWithDate) =>
+        a.dateObj.getTime() - b.dateObj.getTime(),
+    );
   if (comingUp.length < MAX_DISPLAY) {
     const comingSoon = events.filter((event) => event.comingSoon);
     const needed = MAX_DISPLAY - comingUp.length;
-
-    // Combine and return
-    return comingUp.concat(comingSoon.slice(0, needed));
+    return (comingUp as CalendarEvent[]).concat(comingSoon.slice(0, needed));
   }
-
   return comingUp.slice(0, MAX_DISPLAY);
 };
 
-export default function Home({ posts }) {
+export default function Home({
+  posts,
+}: {
+  posts: { slug: string; title: string; date: string }[];
+}) {
   const upcomingEvents = createEventList(eventsData);
 
-  const latestPost = posts[0];
-  const { slug, date, title } = latestPost;
-  const latestPostUrl = `/advice/${slug}`;
+  const isSpotlight = (post: { slug: string }) =>
+    post.slug.startsWith("expert-spotlight/") ||
+    post.slug.startsWith("community-spotlight/");
+  const latestSpotlight = posts.find(isSpotlight);
+  const latestAdvicePost = posts.find((p) => !isSpotlight(p));
 
   return (
-    <>
-      <div className="flex-column justify-center divide-y divide-gray-200 dark:divide-gray-700">
-        <div
-          key="container"
-          className="flex flex-col items-center space-y-2 pt-2 pb-8 md:space-y-5"
-        >
-          <Logo size="100" style="hidden sm:block" />
-          <div className="h-6 text-2xl/5 pt-0 mb-8 text-brand-charcoal dark:text-brand-white font-semibold sm:hidden text-center">
-            {siteMetadata.headerTitle}
-          </div>
-          <div>
-            <p className="text-center max-w-md">
-              We're a{" "}
-              <span className="text-brand-goldenrod font-bold">
-                nonprofit, parent-powered
-              </span>{" "}
-              (and expert-supported!) organization that runs{" "}
-              <Link
-                href="/programs/fourth-trimester"
-                className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
-                aria-label="fourth-tri-tagline"
-                data-umami-event="Tagline: Fourth Trimester Program"
-              >
-                postpartum support groups
-              </Link>
-              , family events, and a local activities{" "}
-              <Link
-                href="/subscribe"
-                className="text-brand-soft-green font-bold hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white"
-                aria-label="subscribe-tagline"
-                data-umami-event="Tagline: Subscribe"
-              >
-                newsletter
-              </Link>{" "}
-              to help families with babies and toddlers thrive in Amsterdam.
-            </p>
-            <p className="mb-4 font-medium text-center mt-1">
-              <Link
-                href="/about"
-                className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
-                aria-label="about-tagline"
-                data-umami-event="Tagline: About"
-              >
-                About us &rarr;
-              </Link>
-            </p>
-          </div>
+    <div className="px-4 sm:px-0 py-6 space-y-10">
+      {/* Mobile-only brand title + tagline */}
+      <div className="sm:hidden text-center space-y-2">
+        <div className="text-2xl font-semibold text-brand-charcoal dark:text-brand-white">
+          {siteMetadata.headerTitle}
+        </div>
+        <p className="text-base text-brand-charcoal dark:text-brand-white">
+          A{" "}
+          <Link
+            href="/about"
+            className="text-brand-soft-green hover:text-brand-goldenrod"
+          >
+            nonprofit community organization
+          </Link>{" "}
+          helping parents with babies and toddlers thrive in Amsterdam
+        </p>
+      </div>
 
-          <h2 className="text-md mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
-            What's next
-          </h2>
-          {upcomingEvents.map((event) => (
-            <ShowcaseButton
-              key={event.title + event.date}
-              href={event.href ? event.href : "/calendar"}
-              title={event.title}
-              date={event.date}
-              until={event.until}
-              comingSoon={event.comingSoon}
-              umamiName={"Main: Event"}
-            />
-          ))}
-          <div className="flex justify-end text-base leading-6 font-medium">
-            <Link
-              href="/calendar"
-              className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
-              aria-label="All events"
-              data-umami-event="Main: See all events"
-            >
-              See all &rarr;
-            </Link>
-          </div>
+      {/* Hero heading */}
+      <section className="text-center space-y-3 max-w-3xl mx-auto mb-12">
+        <h1 className="text-2xl sm:text-4xl font-bold text-brand-charcoal dark:text-brand-white leading-tight">
+          Join over 1,000 Amsterdam parents and experts showing up for each
+          other
+        </h1>
+        <p className="hidden sm:block text-lg font-semibold text-brand-charcoal dark:text-brand-white">
+          Amsterdam Parent Project (APP) is a{" "}
+          <Link
+            href="/about"
+            className="text-brand-soft-green hover:text-brand-goldenrod"
+          >
+            nonprofit community organization
+          </Link>{" "}
+          helping parents with babies and toddlers thrive in Amsterdam
+        </p>
+      </section>
 
-          <h2 className="text-md mt-2 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
-            What we do
+      <HighlightSection />
+
+      {/* Next events + Resources */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        {/* Next events */}
+        <div>
+          <h2 className="text-2xl font-bold text-brand-charcoal dark:text-brand-white mb-6">
+            Next events
           </h2>
-          <ShowcaseButton
-            key={"ftp"}
-            href={"/programs/fourth-trimester"}
-            title={"Fourth Trimester Program"}
-            umamiName={"Main: Fourth Trimester Program"}
-          />
-          <ShowcaseButton
-            key={"groups-directory"}
-            href={"/groups-directory/access"}
-            title={"Amsterdam Parent Groups Directory"}
-            umamiName={"Main: Request Groups Directory Access"}
-          />
-          <ShowcaseButton
+          <div className="space-y-6">
+            {upcomingEvents.map((event) => (
+              <EventRow
+                key={event.title + event.date}
+                event={event}
+                locale={siteMetadata.locale}
+              />
+            ))}
+          </div>
+          <hr className="border-brand-sand mt-6 mb-4" />
+          <ResourceRow
+            icon={<Calendar className="w-5 h-5" />}
             href="/calendar"
-            title="Family events"
-            umamiName={"Main: Calendar"}
-          />
-          <ShowcaseButton
-            key={"bsp"}
-            href={"/programs/burnout"}
-            title={"Burnout Support Program"}
-            umamiName={"Main: Burnout Support Program"}
-          />
-
-          <h2 className="text-md mt-6 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
-            Latest post
-          </h2>
-          <ShowcaseButton
-            key={title}
-            href={latestPostUrl}
-            title={title}
-            date={formatDate(date, siteMetadata.locale)}
-            umamiName="Main: Latest post"
-          />
-          <div className="flex justify-end text-base leading-6 font-medium">
-            <Link
-              href="/advice"
-              className="text-brand-charcoal hover:text-brand-soft-green dark:text-brand-white dark:hover:text-brand-goldenrod"
-              aria-label="All advice"
-              data-umami-event="Main: See all posts"
-            >
-              See all &rarr;
-            </Link>
-          </div>
-
-          <h2 className="text-md mt-4 mb-2 font-bold text-brand-soft-green dark:text-brand-goldenrod">
-            Follow us
-          </h2>
-          <ShowcaseButton
-            href="/newsletter"
-            title="Newsletter"
-            newTab={true}
-            umamiName={"Main: Newsletter"}
-          />
-          <ShowcaseButton
-            href={siteMetadata.instagram}
-            title="Instagram"
-            umamiName={"Main: Instagram"}
+            title="Go to the Community Calendar"
+            subtitle="A curated list of local events for babies, toddlers, and their parents"
+            umamiEvent="Home: Calendar"
+            subLinks={[
+              {
+                href: "/calendar/submit-event",
+                label: "Add your own event",
+                umamiEvent: "Home: Submit event (Resources)",
+              },
+            ]}
           />
         </div>
+
+        {/* Resources */}
+        <div>
+          <h2 className="text-2xl font-bold text-brand-charcoal dark:text-brand-white mb-6">
+            Resources
+          </h2>
+          <div className="space-y-6">
+            <ResourceRow
+              icon={<LayoutGrid className="w-5 h-5" />}
+              href="/programs/fourth-trimester"
+              title="Fourth Trimester Program"
+              subtitle="Your neighborhood support system in the first months postpartum"
+              umamiEvent="Home: Fourth Trimester Program"
+            />
+            <ResourceRow
+              icon={<Newspaper className="w-5 h-5" />}
+              href="/newsletter"
+              title="Newsletter: Just a Phase"
+              subtitle="Local events & expert advice sent every other Monday"
+              umamiEvent="Home: Newsletter (Resources)"
+              subLinks={[
+                {
+                  href: "/newsletter",
+                  label: "Read past issues",
+                  umamiEvent: "Home: Newsletter (Resources)",
+                },
+              ]}
+            />
+            <ResourceRow
+              icon={<BookOpen className="w-5 h-5" />}
+              href="/advice"
+              title="Dear Dr. Mom: You ask, a local expert answers"
+              umamiEvent="Home: Dear Dr. Mom"
+              subtitle="Postpartum advice and community spotlights"
+              subLinks={[
+                ...(latestAdvicePost
+                  ? [
+                      {
+                        href: `/advice/${latestAdvicePost.slug}`,
+                        label: latestAdvicePost.title,
+                        umamiEvent: "Home: Latest Advice Post",
+                      },
+                    ]
+                  : []),
+                ...(latestSpotlight
+                  ? [
+                      {
+                        href: `/advice/${latestSpotlight.slug}`,
+                        label: latestSpotlight.title,
+                        umamiEvent: "Home: Latest Spotlight",
+                      },
+                    ]
+                  : []),
+              ]}
+            />
+            <ResourceRow
+              icon={<Flame className="w-5 h-5" />}
+              href="/programs/burnout"
+              title="Burnout Support Program"
+              subtitle="Tackle parental burnout, together"
+              umamiEvent="Home: Burnout Support Program"
+            />
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

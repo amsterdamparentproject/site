@@ -7,6 +7,7 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   subtitle?: string;
+  description?: ReactNode;
   children: ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
 }
@@ -16,6 +17,7 @@ export default function Modal({
   onClose,
   title,
   subtitle,
+  description,
   children,
   size = "lg",
 }: ModalProps) {
@@ -64,6 +66,11 @@ export default function Modal({
                 ×
               </button>
             </div>
+            {description && (
+              <div className="px-4 py-3 text-sm text-brand-soft-charcoal dark:text-brand-sand">
+                {description}
+              </div>
+            )}
 
             {/* Content */}
             <div className="p-4">{children}</div>
@@ -95,6 +102,11 @@ export default function Modal({
                 ×
               </button>
             </div>
+            {description && (
+              <div className="px-6 py-3 text-sm text-brand-soft-charcoal dark:text-brand-sand">
+                {description}
+              </div>
+            )}
 
             {/* Content */}
             <div className="p-6">{children}</div>

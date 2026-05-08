@@ -13,7 +13,58 @@ import {
 } from "body-scroll-lock";
 import { Fragment, useState, useEffect, useRef } from "react";
 import Link from "./Link";
-import headerNavLinks from "@/data/headerNavLinks";
+import {
+  LayoutGrid,
+  BookOpen,
+  Flame,
+  Calendar,
+  Newspaper,
+  ArrowRight,
+} from "lucide-react";
+
+type NavSubLink = { href: string; label: string };
+type NavItem = {
+  icon: React.ReactNode;
+  href: string;
+  title: string;
+  subtitle?: string;
+  subLinks?: NavSubLink[];
+};
+
+const resourceItems: NavItem[] = [
+  {
+    icon: <LayoutGrid className="w-5 h-5" />,
+    href: "/programs/fourth-trimester",
+    title: "Fourth Trimester Program",
+    subtitle: "Your neighborhood support system in the first months postpartum",
+  },
+  {
+    icon: <Newspaper className="w-5 h-5" />,
+    href: "/newsletter",
+    title: "Newsletter: Just a Phase",
+    subtitle: "Local events & expert advice sent every other Monday",
+    subLinks: [{ href: "/newsletter", label: "Read past issues" }],
+  },
+  {
+    icon: <BookOpen className="w-5 h-5" />,
+    href: "/advice",
+    title: "Dear Dr. Mom",
+    subtitle: "You ask, a local expert answers",
+  },
+  {
+    icon: <Calendar className="w-5 h-5" />,
+    href: "/calendar",
+    title: "Community Calendar",
+    subtitle: "Local events for babies, toddlers, and their parents",
+    subLinks: [{ href: "/calendar/submit-event", label: "Add your own event" }],
+  },
+  {
+    icon: <Flame className="w-5 h-5" />,
+    href: "/programs/burnout",
+    title: "Burnout Support Program",
+    subtitle: "Tackle parental burnout, together",
+  },
+];
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false);
@@ -24,7 +75,6 @@ const MobileNav = () => {
       if (status) {
         enableBodyScroll(navRef.current);
       } else {
-        // Prevent scrolling
         disableBodyScroll(navRef.current);
       }
       return !status;
@@ -55,6 +105,7 @@ const MobileNav = () => {
           />
         </svg>
       </button>
+
       <Transition appear show={navShow} as={Fragment} unmount={false}>
         <Dialog as="div" onClose={onToggleNav} unmount={false}>
           <TransitionChild
@@ -83,18 +134,67 @@ const MobileNav = () => {
             <DialogPanel className="fixed top-0 left-0 z-70 h-full w-full bg-brand-white/95 duration-300 dark:bg-gray-950/98">
               <nav
                 ref={navRef}
-                className="mt-8 flex h-full basis-0 flex-col items-start overflow-y-auto pt-2 pl-12 text-left"
+                className="mt-8 flex h-full basis-0 flex-col overflow-y-auto pt-2 px-8 pb-8"
               >
-                {headerNavLinks.map((link) => (
+                <div className="space-y-6">
+                  {resourceItems.map((item) => (
+                    <div key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={onToggleNav}
+                        className="flex gap-4 group"
+                      >
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-soft-green dark:bg-brand-soft-charcoal flex items-center justify-center text-brand-white group-hover:text-brand-goldenrod dark:group-hover:text-brand-violet transition-colors">
+                          {item.icon}
+                        </div>
+                        <div>
+                          <p className="font-bold text-brand-soft-green dark:text-brand-goldenrod group-hover:text-brand-goldenrod dark:group-hover:text-brand-violet transition-colors">
+                            {item.title}
+                          </p>
+                          {item.subtitle && (
+                            <p className="text-sm text-brand-soft-charcoal dark:text-brand-sand">
+                              {item.subtitle}
+                            </p>
+                          )}
+                        </div>
+                      </Link>
+                      {item.subLinks && item.subLinks.length > 0 && (
+                        <div className="ml-14 mt-2 space-y-1.5">
+                          {item.subLinks.map((sub) => (
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              onClick={onToggleNav}
+                              className="flex items-start gap-1 text-sm text-brand-soft-green dark:text-brand-white hover:text-brand-goldenrod dark:hover:text-brand-violet transition-colors"
+                            >
+                              <ArrowRight className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                              <span>{sub.label}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <hr className="border-brand-sand my-6" />
+
+                <div className="space-y-4">
                   <Link
-                    key={link.title}
-                    href={link.href}
-                    className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod mb-4 py-2 pr-4 text-2xl font-bold tracking-widest text-brand-charcoal outline outline-0 dark:text-brand-white"
+                    href="/about"
                     onClick={onToggleNav}
+                    className="block font-bold text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
                   >
-                    {link.title}
+                    About
                   </Link>
-                ))}
+                  <Link
+                    href="/donate"
+                    onClick={onToggleNav}
+                    className="block font-bold text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
+                  >
+                    Donate
+                  </Link>
+                </div>
               </nav>
 
               <button
