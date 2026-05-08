@@ -52,7 +52,7 @@ export default function Home({
           A{" "}
           <Link
             href="/about"
-            className="text-brand-soft-green hover:text-brand-goldenrod"
+            className="text-brand-soft-green dark:text-brand-goldenrod hover:text-brand-goldenrod dark:hover:text-brand-violet"
           >
             nonprofit community organization
           </Link>{" "}
@@ -70,7 +70,7 @@ export default function Home({
           Amsterdam Parent Project (APP) is a{" "}
           <Link
             href="/about"
-            className="text-brand-soft-green hover:text-brand-goldenrod"
+            className="text-brand-soft-green dark:text-brand-violet hover:text-brand-goldenrod"
           >
             nonprofit community organization
           </Link>{" "}

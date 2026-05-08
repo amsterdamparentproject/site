@@ -19,8 +19,10 @@ import {
   Flame,
   Calendar,
   Newspaper,
+  Users,
   ArrowRight,
 } from "lucide-react";
+import siteMetadata from "@/data/siteMetadata";
 
 type NavSubLink = { href: string; label: string };
 type NavItem = {
@@ -39,11 +41,16 @@ const resourceItems: NavItem[] = [
     subtitle: "Your neighborhood support system in the first months postpartum",
   },
   {
+    icon: <Users className="w-5 h-5" />,
+    href: "/groups-directory",
+    title: "Parent Groups Directory",
+    subtitle: "Find local parent groups in your neighbourhood",
+  },
+  {
     icon: <Newspaper className="w-5 h-5" />,
     href: "/newsletter",
     title: "Newsletter: Just a Phase",
     subtitle: "Local events & expert advice sent every other Monday",
-    subLinks: [{ href: "/newsletter", label: "Read past issues" }],
   },
   {
     icon: <BookOpen className="w-5 h-5" />,
@@ -136,6 +143,16 @@ const MobileNav = () => {
                 ref={navRef}
                 className="mt-8 flex h-full basis-0 flex-col overflow-y-auto pt-2 px-8 pb-8"
               >
+                <div className="flex items-center mb-6 pr-16">
+                  <Link
+                    href="/"
+                    onClick={onToggleNav}
+                    className="text-3xl font-bold text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
+                  >
+                    APP
+                  </Link>
+                </div>
+
                 <div className="space-y-6">
                   {resourceItems.map((item) => (
                     <div key={item.href}>
@@ -144,7 +161,7 @@ const MobileNav = () => {
                         onClick={onToggleNav}
                         className="flex gap-4 group"
                       >
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-soft-green dark:bg-brand-soft-charcoal flex items-center justify-center text-brand-white group-hover:text-brand-goldenrod dark:group-hover:text-brand-violet transition-colors">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-soft-green dark:bg-brand-soft-charcoal flex items-center justify-center text-brand-white dark:text-brand-goldenrod group-hover:text-brand-goldenrod dark:group-hover:text-brand-violet transition-colors">
                           {item.icon}
                         </div>
                         <div>
@@ -152,7 +169,7 @@ const MobileNav = () => {
                             {item.title}
                           </p>
                           {item.subtitle && (
-                            <p className="text-sm text-brand-soft-charcoal dark:text-brand-sand">
+                            <p className="text-sm text-brand-soft-charcoal dark:text-brand-white">
                               {item.subtitle}
                             </p>
                           )}
@@ -165,7 +182,7 @@ const MobileNav = () => {
                               key={sub.href}
                               href={sub.href}
                               onClick={onToggleNav}
-                              className="flex items-start gap-1 text-sm text-brand-soft-green dark:text-brand-white hover:text-brand-goldenrod dark:hover:text-brand-violet transition-colors"
+                              className="flex items-start gap-1 text-sm text-brand-soft-green dark:text-brand-sand hover:text-brand-goldenrod dark:hover:text-brand-violet transition-colors"
                             >
                               <ArrowRight className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
                               <span>{sub.label}</span>
@@ -177,7 +194,7 @@ const MobileNav = () => {
                   ))}
                 </div>
 
-                <hr className="border-brand-sand my-6" />
+                <hr className="border-brand-sand/20 my-6" />
 
                 <div className="space-y-4">
                   <Link
@@ -193,6 +210,13 @@ const MobileNav = () => {
                     className="block font-bold text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
                   >
                     Donate
+                  </Link>
+                  <Link
+                    href="/instagram"
+                    onClick={onToggleNav}
+                    className="block font-bold text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
+                  >
+                    Instagram
                   </Link>
                 </div>
               </nav>

@@ -17,7 +17,7 @@ export default function HighlightSection() {
         </p>
         <Link
           href="/programs/fourth-trimester"
-          className="font-semibold text-brand-soft-green dark:text-brand-goldenrod hover:text-brand-goldenrod dark:hover:text-brand-white font-medium transition-colors"
+          className="font-semibold text-brand-soft-green dark:text-brand-goldenrod hover:text-brand-goldenrod dark:hover:text-brand-violet font-medium transition-colors"
           data-umami-event="Home: Join the next cohort"
         >
           Join the next cohort
@@ -33,11 +33,11 @@ export default function HighlightSection() {
           Discover your local parent communities: 80+ groups and counting
         </p>
         <Link
-          href="/groups-directory/access"
-          className="font-semibold text-brand-soft-green dark:text-brand-goldenrod hover:text-brand-goldenrod dark:hover:text-brand-white font-medium transition-colors"
-          data-umami-event="Home: Access groups directory"
+          href="/groups-directory"
+          className="font-semibold text-brand-soft-green dark:text-brand-goldenrod hover:text-brand-goldenrod dark:hover:text-brand-violet font-medium transition-colors"
+          data-umami-event="Home: Groups directory"
         >
-          Gain access
+          Find your groups
         </Link>
       </div>
     </div>

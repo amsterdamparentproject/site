@@ -19,7 +19,7 @@ export default function NewsletterCard() {
         </p>
         <button
           onClick={() => setIsOpen(true)}
-          className="font-semibold text-brand-soft-green dark:text-brand-goldenrod hover:text-brand-goldenrod dark:hover:text-brand-white font-medium transition-colors cursor-pointer"
+          className="font-semibold text-brand-soft-green dark:text-brand-goldenrod hover:text-brand-goldenrod dark:hover:text-brand-violet font-medium transition-colors cursor-pointer"
           data-umami-event="Home: Subscribe newsletter"
         >
           Subscribe
