@@ -96,11 +96,11 @@ export default function Home({
               />
             ))}
           </div>
-          <hr className="border-brand-sand mt-6 mb-4" />
+          <hr className="border-brand-sand/20 mt-6 mb-4" />
           <ResourceRow
             icon={<Calendar className="w-5 h-5" />}
             href="/calendar"
-            title="Go to the Community Calendar"
+            title="Community Calendar"
             subtitle="A curated list of local events for babies, toddlers, and their parents"
             umamiEvent="Home: Calendar"
             subLinks={[
