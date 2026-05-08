@@ -44,7 +44,8 @@ const resourceItems: NavItem[] = [
     icon: <Users className="w-5 h-5" />,
     href: "/groups-directory",
     title: "Parent Groups Directory",
-    subtitle: "Find local parent groups in your neighbourhood",
+    subtitle:
+      "Find your online community: based on interest, language, and more",
   },
   {
     icon: <Newspaper className="w-5 h-5" />,
