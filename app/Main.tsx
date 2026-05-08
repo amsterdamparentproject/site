@@ -2,7 +2,7 @@ import React from "react";
 import Link from "@/components/Link";
 import HighlightSection from "@/components/homepage/HighlightSection";
 import siteMetadata from "@/data/siteMetadata";
-import eventsData, { CalendarEvent } from "@/data/eventsData";
+import { CalendarEvent } from "@/data/eventsData";
 import { LayoutGrid, BookOpen, Flame, Calendar, Newspaper } from "lucide-react";
 import { ResourceRow } from "@/components/homepage/ResourceRow";
 import { EventRow } from "@/components/homepage/EventRow";
@@ -30,10 +30,12 @@ const createEventList = (events: CalendarEvent[], MAX_DISPLAY = 3) => {
 
 export default function Home({
   posts,
+  events,
 }: {
   posts: { slug: string; title: string; date: string }[];
+  events: CalendarEvent[];
 }) {
-  const upcomingEvents = createEventList(eventsData);
+  const upcomingEvents = createEventList(events);
 
   const isSpotlight = (post: { slug: string }) =>
     post.slug.startsWith("expert-spotlight/") ||

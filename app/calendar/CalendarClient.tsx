@@ -1,6 +1,6 @@
 "use client";
 
-import eventsData, { CalendarEvent } from "@/data/eventsData";
+import { CalendarEvent } from "@/data/eventsData";
 import Card from "@/components/Card";
 import { genPageMetadata } from "app/seo";
 import ShowcaseButton from "@/components/ShowcaseButton";
@@ -93,7 +93,7 @@ const PastEventsList = ({ events }: { events: CalendarEvent[] }) => {
   );
 };
 
-export default function Events() {
+export default function Events({ events }: { events: CalendarEvent[] }) {
   const { current, past, groupedPast } = useMemo(() => {
     const now = new Date();
     const todayStr = now.toISOString().split("T")[0];
@@ -102,7 +102,7 @@ export default function Events() {
     const currentList: CalendarEvent[] = [];
     const pastList: CalendarEvent[] = [];
 
-    eventsData.forEach((event) => {
+    events.forEach((event) => {
       if (event.date >= todayStr || event.comingSoon) {
         currentList.push(event);
       } else {

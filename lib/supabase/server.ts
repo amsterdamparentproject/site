@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 // 1. The base server creator that handles schemas
@@ -30,8 +31,18 @@ const createBaseServerClient = async (
   );
 };
 
-// Specialized exported clients
+// Cookie-based clients (auth-aware, for user sessions)
 export const createClient = () => createBaseServerClient("public");
 export const createActivitiesClient = () =>
   createBaseServerClient("activities");
 export const createDirectoryClient = () => createBaseServerClient("directory");
+
+// Service role client (bypasses RLS, server-only, never expose to client)
+export const createServiceClient = (
+  schema: "public" | "directory" | "activities" = "public",
+) =>
+  createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { db: { schema } },
+  );

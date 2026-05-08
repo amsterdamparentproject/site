@@ -3,7 +3,8 @@ const siteMetadata = {
   title: "Amsterdam Parent Project",
   author: "Alex Siega",
   headerTitle: "Amsterdam Parent Project",
-  description: "Parent-to-parent support, (em)powered by professionals",
+  description:
+    "A nonprofit, parent-powered, and expert-supported community organization helping parents with babies and toddlers thrive in Amsterdam",
   language: "en-us",
   theme: "light", // Start with light as the default
   siteUrl: "https://amsterdamparentproject.nl",
