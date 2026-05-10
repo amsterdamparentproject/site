@@ -1,9 +1,14 @@
 import { createServiceClient } from "@/lib/supabase/server";
-import { CalendarEvent } from "@/data/eventsData";
+import { CalendarEvent } from "@/lib/calendar";
+
+export type { CalendarEvent } from "@/lib/calendar";
+export { getEventDescription } from "@/lib/calendar";
 
 type EventRow = {
+  description: string | null;
+  newsletter_description: string | null;
   title: string;
-  description: string;
+  tagline: string | null;
   url: string | null;
   start_date: string;
   end_date: string | null;
@@ -12,14 +17,17 @@ type EventRow = {
 
 const toCalendarEvent = (row: EventRow): CalendarEvent => ({
   title: row.title,
+  newsletter_description: row.newsletter_description,
   description: row.description,
+  tagline: row.tagline,
   href: row.url ?? "/calendar",
   date: row.start_date,
   until: row.end_date ?? undefined,
   imgSrc: row.file_url ?? undefined,
 });
 
-const SELECT = "title, description, url, start_date, end_date, file_url";
+const SELECT =
+  "title, newsletter_description, description, tagline, url, start_date, end_date, file_url";
 
 export async function getCalendarEvents(): Promise<CalendarEvent[]> {
   const supabase = createServiceClient("activities");

@@ -13,7 +13,7 @@ function Card(args) {
         {"Coming Soon"}
       </p>
     );
-  } else if (date && until) {
+  } else if (date && until && date !== until) {
     dateElement = (
       <p className="prose mb-3 max-w-none text-brand-soft-charcoal dark:text-brand-white">
         {formatDate(date, siteMetadata.locale)} -{" "}

@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarEvent } from "@/data/eventsData";
+import { CalendarEvent, getEventDescription } from "@/lib/calendar";
 import Card from "@/components/Card";
 import { genPageMetadata } from "app/seo";
 import ShowcaseButton from "@/components/ShowcaseButton";
@@ -10,9 +10,6 @@ import Link from "@/components/Link";
 import { useMemo } from "react";
 
 export const metadata = genPageMetadata({ title: "Events & Programs" });
-
-// --- Types & Interfaces ---
-type EnhancedEvent = CalendarEvent & { dateObj: Date };
 
 // --- Logic Helpers ---
 const processEvents = (events: CalendarEvent[]) => {
@@ -82,7 +79,7 @@ const PastEventsList = ({ events }: { events: CalendarEvent[] }) => {
                   </Link>
                 </b>
                 <span className="text-brand-soft-charcoal dark:text-brand-white">
-                  : {event.description}
+                  : {getEventDescription(event)}
                 </span>
               </li>
             ))}
@@ -192,7 +189,7 @@ export default function Events({ events }: { events: CalendarEvent[] }) {
               <Card
                 key={event.title + event.date}
                 title={event.title}
-                description={event.description}
+                description={getEventDescription(event)}
                 date={event.date}
                 until={event.until}
                 imgSrc={event.imgSrc || "/static/images/web-share/default.png"}

@@ -1,6 +1,7 @@
 import { Calendar } from "lucide-react";
 import { formatDate } from "pliny/utils/formatDate";
 import Link from "../Link";
+import { getEventDescription } from "@/lib/calendar";
 
 export const EventRow = ({ event, locale }) => {
   return (
@@ -20,11 +21,9 @@ export const EventRow = ({ event, locale }) => {
           {event.comingSoon ? "Coming Soon" : formatDate(event.date, locale)}
           {event.until && ` — ${formatDate(event.until, locale)}`}
         </p>
-        {event.description && (
-          <p className="text-sm text-brand-soft-charcoal dark:text-brand-white line-clamp-2">
-            {event.description}
-          </p>
-        )}
+        <p className="text-sm text-brand-soft-charcoal dark:text-brand-white line-clamp-2">
+          {getEventDescription(event)}
+        </p>
       </div>
     </Link>
   );
