@@ -148,6 +148,16 @@ module.exports = () => {
           destination: 'https://the-siegas.app.n8n.cloud/form/73f32c7f-2caf-45cb-818a-e96b352a2845', // Auth on the form to prevent expensive API calls
           permanent: true,
         },
+        {
+          source: '/meet',
+          destination: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3m4sBfJ8NENWuP7gUaz7CeeGLJAAAxpcHfxeMPEeI6hzur3pn6EIiH0uVpqyrVoePy_BszUDmO",
+          permanent: true,
+        },
+        {
+          source: '/add-event',
+          destination: "/calendar/submit-event",
+          permanent: true,
+        },
       ]
     },
   });
