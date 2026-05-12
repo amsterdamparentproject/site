@@ -2,7 +2,7 @@ import React from "react";
 import Link from "@/components/Link";
 import HighlightSection from "@/components/homepage/HighlightSection";
 import siteMetadata from "@/data/siteMetadata";
-import { CalendarEvent } from "@/data/eventsData";
+import { CalendarEvent } from "@/lib/calendar";
 import { LayoutGrid, BookOpen, Flame, Calendar, Newspaper } from "lucide-react";
 import { ResourceRow } from "@/components/homepage/ResourceRow";
 import { EventRow } from "@/components/homepage/EventRow";
