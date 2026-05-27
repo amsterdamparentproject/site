@@ -14,7 +14,7 @@ const eventsData: CalendarEvent[] = [
     description: `Taking a walk is one of the simplest acts of self-care and community building you can do. So come do it with us!`,
     date: "2025-03-17",
     href: "https://www.eventbrite.nl/e/app-wellness-walk-tickets-1245241574069?aff=oddtdtcreator",
-    imgSrc: "/static/images/calendar/wellness-walk.png",
+    imgSrc: "/static/images/calendar/wellness-walk.webp",
   },
   {
     title: "Panel: Navigating Career Transitions in Tech",
@@ -50,7 +50,7 @@ const eventsData: CalendarEvent[] = [
     title: "Co-Work with Kids",
     description: `APP is partnering with Hola Nanny to bring the magic of childcare to our monthly co-working.`,
     date: "2025-04-08",
-    imgSrc: "/static/images/calendar/co-work-with-kids.png",
+    imgSrc: "/static/images/calendar/co-work-with-kids.webp",
     href: `https://www.eventbrite.nl/e/co-work-with-kids-in-partnership-with-hola-nanny-registration-1288101719919?aff=oddtdtcreator`,
   },
   {
@@ -58,13 +58,13 @@ const eventsData: CalendarEvent[] = [
     description: `Taking a walk is one of the simplest acts of self-care and community building you can do.`,
     date: "2025-04-14",
     href: "https://www.eventbrite.nl/e/app-wellness-walk-tickets-1245241574069",
-    imgSrc: "/static/images/calendar/wellness-walk.png",
+    imgSrc: "/static/images/calendar/wellness-walk.webp",
   },
   {
     title: "BBABBY Fair",
     description: `Over 50 birth and postpartum professionals are gathering at the BBABBY Fair to share their expertise ranging from conception to early parenting.`,
     href: "https://www.eventbrite.nl/e/tickets-bbabby-fair-1218084747269?aff=oddtdtcreator",
-    imgSrc: "/static/images/calendar/bbabby-fair.png",
+    imgSrc: "/static/images/calendar/bbabby-fair.webp",
     date: "2025-10-11",
   },
   {
@@ -84,7 +84,7 @@ const eventsData: CalendarEvent[] = [
   },
   {
     title: "Pumping Party: Summer 2025",
-    imgSrc: "/static/images/calendar/pumping-party-summer-2025.png",
+    imgSrc: "/static/images/calendar/pumping-party-summer-2025.webp",
     href: "https://www.instagram.com/p/DL-bm_BtTNv/",
     description: `A casual meet up with fellow mums where we can try out different pumps and gadgets.`,
     date: "2025-07-13",
@@ -106,7 +106,7 @@ const eventsData: CalendarEvent[] = [
   },
   {
     title: "Family Tour at the Rijksmuseum",
-    imgSrc: "/static/images/calendar/rijksmuseum.jpg",
+    imgSrc: "/static/images/calendar/rijksmuseum.webp",
     href: "https://www.eventbrite.nl/e/family-tour-at-the-rijksmuseum-parents-children-from-0-4-years-old-tickets-1976387211352?aff=oddtdtcreator",
     description: `Meet fellow local parents and learn about the museum's most famous pieces.`,
     date: "2026-01-22",
@@ -129,14 +129,14 @@ const eventsData: CalendarEvent[] = [
   },
   {
     title: "Rijksmuseum Family Tour",
-    imgSrc: "/static/images/calendar/rijksmuseum.jpg",
+    imgSrc: "/static/images/calendar/rijksmuseum.webp",
     href: "https://www.eventbrite.nl/e/rijksmuseum-family-tour-tickets-1982609593665",
     description: `Learn about Rembrandt and Vermeer in the Gallery of Honor.`,
     date: "2026-03-15",
   },
   {
     title: "Van Gogh Museum Parent & Baby Tour",
-    imgSrc: "/static/images/calendar/vangogh.jpg",
+    imgSrc: "/static/images/calendar/vangogh.webp",
     href: "https://www.eventbrite.nl/e/van-gogh-museum-parent-baby-tour-tickets-1984753296538",
     description: `Designed for parents with pre-walking babies (0-1 year old).`,
     date: "2026-04-14",
@@ -169,13 +169,27 @@ const eventsData: CalendarEvent[] = [
       "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,anim=false,background=white,quality=75,width=500,height=500/event-covers/fv/a55abcd0-e851-40ee-80db-b3206f151240.jpg",
   },
   {
-    title: "Postpartum Exchange",
+    title: "Postpartum Exchange: Tech & AI",
     description:
-      "APP's monthly learning circle for local experts providing postpartum support",
+      "APP's monthly learning circle for local experts providing postpartum support. This month's theme: Tech & AI in postpartum care",
     date: "2026-06-10",
     href: "https://luma.com/12lz6gpq",
     imgSrc:
       "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,anim=false,background=white,quality=75,width=500,height=500/event-covers/8h/6376a800-1077-41ec-a7c4-5322b7bbf14e.png",
+  },
+  {
+    title: "Stedelijk Museum Toddler Tour",
+    imgSrc: "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/uploads/hq/7155872c-86b9-4008-a071-4765ce39a22e.png",
+    href: "https://luma.com/gy0bxu2o",
+    description: `Tour the Stedelijk Museum with your toddler (1-4 years old) and learn about the museum's most famous pieces.`,
+    date: "2026-06-17",
+  },
+  {
+    title: "Rijksmuseum Gardens Family Tour",
+    imgSrc: "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/uploads/lb/8143d101-f7cc-43ad-be2b-cd73b47cbd46.png",
+    href: "https://luma.com/22pocp8s",
+    description: `Explore the Rijksmuseum Gardens with your family on this guided tour.`,
+    date: "2026-06-25",
   },
   {
     title: "Spring/Summer Babies Hang",

@@ -1,7 +1,3 @@
-"use client";
-
-import { memo } from "react";
-
 import siteMetadata from "@/data/siteMetadata";
 import headerNavLinks from "@/data/headerNavLinks";
 import Logo from "./Logo";
@@ -9,6 +5,8 @@ import Link from "./Link";
 import MobileNav from "./MobileNav";
 import SocialIcon from "@/components/social-icons";
 
+// Server component — no "use client" needed here.
+// MobileNav and any other interactive children carry their own "use client".
 const Header = () => {
   const stickyClass = siteMetadata.stickyNav ? " sticky top-0 z-50" : "";
   const headerClass = `flex items-center h-28 md:h-32 w-full text-brand-charcoal bg-brand-white dark:bg-brand-charcoal justify-between px-5 md:px-10 xl:px-50 2xl:px-80 ${stickyClass}`;
@@ -52,4 +50,4 @@ const Header = () => {
   );
 };
 
-export default memo(Header);
+export default Header;

@@ -4,6 +4,7 @@ import Main from "./Main";
 import { getCalendarEvents } from "@/lib/supabase/queries/events";
 
 export const dynamic = "force-static";
+export const revalidate = 3600; // Revalidate at most once per hour
 
 export default async function Page() {
   const sortedPosts = sortPosts(allBlogs);

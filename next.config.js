@@ -91,6 +91,27 @@ module.exports = () => {
           source: "/(.*)",
           headers: securityHeaders,
         },
+        // Cache static marketing pages aggressively at the CDN edge.
+        // stale-while-revalidate lets Netlify serve a stale copy instantly
+        // while it fetches a fresh one in the background.
+        {
+          source: "/",
+          headers: [
+            {
+              key: "Cache-Control",
+              value: "public, s-maxage=3600, stale-while-revalidate=86400",
+            },
+          ],
+        },
+        {
+          source: "/calendar",
+          headers: [
+            {
+              key: "Cache-Control",
+              value: "public, s-maxage=3600, stale-while-revalidate=86400",
+            },
+          ],
+        },
       ];
     },
     webpack: (config, options) => {
