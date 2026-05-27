@@ -1,5 +1,7 @@
 "use server";
 
+import { createServiceClient } from "@/lib/supabase/server";
+
 const isLocal = process.env.NODE_ENV === "development";
 
 const postToWebhook = async (webhookURL, data) => {
@@ -41,11 +43,39 @@ const postToWebhook = async (webhookURL, data) => {
   }
 };
 
-export const postEvent = async (data) => {
-  const url = isLocal
+export const postEvent = async (data: FormData) => {
+  const title = data.get("title") as string;
+  const url = data.get("url") as string;
+  const email = data.get("email") as string;
+  const notes = data.get("notes") as string;
+  const imageFile = data.get("image") as File | null;
+
+  // Upload image to Supabase storage before sending to n8n so that the
+  // webhook receives a public URL rather than raw binary data. This URL
+  // then flows through the Slack review message and on to the Desk card.
+  let file_url: string | null = null;
+  if (imageFile && imageFile.size > 0) {
+    const supabase = createServiceClient("activities");
+    const ext = imageFile.name.split(".").pop();
+    const uploadId = crypto.randomUUID();
+    const path = `captures/${uploadId}.${ext}`;
+    const { error: uploadError } = await supabase.storage
+      .from("activities")
+      .upload(path, imageFile, { contentType: imageFile.type, upsert: true });
+    if (uploadError) {
+      console.error("Image upload failed:", uploadError.message);
+    } else {
+      file_url = supabase.storage
+        .from("activities")
+        .getPublicUrl(path).data.publicUrl;
+    }
+  }
+
+  const webhookUrl = isLocal
     ? process.env.TEST_N8N_EVENT_SUBMIT_WEBHOOK_URL
     : process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
-  return postToWebhook(url, data);
+
+  return postToWebhook(webhookUrl, { title, url, email, notes, file_url });
 };
 
 export const postRequestDirectory = async (data) => {
@@ -89,3 +119,4 @@ export const postSpotlight = async (data) => {
   const url = process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
   return postToWebhook(url, data);
 };
+
