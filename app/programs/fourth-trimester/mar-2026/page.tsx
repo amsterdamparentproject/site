@@ -8,6 +8,10 @@ import ShowcaseButton from "@/components/ShowcaseButton";
 
 export const metadata = genPageMetadata({
   title: "Fourth Trimester Program: March-May 2026",
+  robots: {
+    index: false,
+    follow: false,
+  },
 });
 
 export default function Page() {

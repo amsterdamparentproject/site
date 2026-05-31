@@ -6,6 +6,10 @@ import ShowcaseButton from "@/components/ShowcaseButton";
 
 export const metadata = genPageMetadata({
   title: "Burnout Support Program: Spring 2025",
+  robots: {
+    index: false,
+    follow: false,
+  },
 });
 
 export default function Page() {

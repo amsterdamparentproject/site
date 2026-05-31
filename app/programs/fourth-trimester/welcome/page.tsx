@@ -9,6 +9,10 @@ export const metadata = genPageMetadata({
       `${process.env.BASE_PATH || ""}/static/images/web-share/fourth-trimester-program.png`,
     ],
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 });
 
 export default function page() {
