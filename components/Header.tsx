@@ -44,7 +44,12 @@ const Header = () => {
               </Link>
             ))}
         </div>
-        <SocialIcon kind="instagram" href={siteMetadata.instagram} size={5} data-umami-event="Header: Instagram" />
+        <SocialIcon
+          kind="instagram"
+          href={siteMetadata.instagram}
+          size={5}
+          data-umami-event="Header: Instagram"
+        />
         <MobileNav />
       </div>
     </header>

@@ -65,9 +65,8 @@ export const postEvent = async (data: FormData) => {
     if (uploadError) {
       console.error("Image upload failed:", uploadError.message);
     } else {
-      file_url = supabase.storage
-        .from("activities")
-        .getPublicUrl(path).data.publicUrl;
+      file_url = supabase.storage.from("activities").getPublicUrl(path)
+        .data.publicUrl;
     }
   }
 
@@ -119,4 +118,3 @@ export const postSpotlight = async (data) => {
   const url = process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
   return postToWebhook(url, data);
 };
-

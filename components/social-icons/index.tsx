@@ -26,7 +26,12 @@ type SocialIconProps = {
   "data-umami-event"?: string;
 };
 
-const SocialIcon = ({ kind, href, size = 8, "data-umami-event": umamiEvent }: SocialIconProps) => {
+const SocialIcon = ({
+  kind,
+  href,
+  size = 8,
+  "data-umami-event": umamiEvent,
+}: SocialIconProps) => {
   if (
     !href ||
     (kind === "mail" &&
