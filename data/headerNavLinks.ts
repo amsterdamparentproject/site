@@ -18,7 +18,12 @@ const headerNavLinks = [
     prefetch: false,
     umamiEvent: "Header: Newsletter",
   },
-  { href: "/donate", title: "Donate", style: highlightStyle, umamiEvent: "Header: Donate" },
+  {
+    href: "/donate",
+    title: "Donate",
+    style: highlightStyle,
+    umamiEvent: "Header: Donate",
+  },
 ];
 
 export default headerNavLinks;

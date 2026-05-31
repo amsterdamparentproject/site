@@ -179,14 +179,16 @@ const eventsData: CalendarEvent[] = [
   },
   {
     title: "Stedelijk Museum Toddler Tour",
-    imgSrc: "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/uploads/hq/7155872c-86b9-4008-a071-4765ce39a22e.png",
+    imgSrc:
+      "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/uploads/hq/7155872c-86b9-4008-a071-4765ce39a22e.png",
     href: "https://luma.com/gy0bxu2o",
     description: `Tour the Stedelijk Museum with your toddler (1-4 years old) and learn about the museum's most famous pieces.`,
     date: "2026-06-17",
   },
   {
     title: "Rijksmuseum Gardens Family Tour",
-    imgSrc: "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/uploads/lb/8143d101-f7cc-43ad-be2b-cd73b47cbd46.png",
+    imgSrc:
+      "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/uploads/lb/8143d101-f7cc-43ad-be2b-cd73b47cbd46.png",
     href: "https://luma.com/22pocp8s",
     description: `Explore the Rijksmuseum Gardens with your family on this guided tour.`,
     date: "2026-06-25",

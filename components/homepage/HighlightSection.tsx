@@ -9,7 +9,8 @@ export default function HighlightSection() {
           Postpartum Post
         </h2>
         <p className="text-brand-charcoal dark:text-brand-white mb-6">
-          Meet a new or expecting parent each month, plus local things to do together
+          Meet a new or expecting parent each month, plus local things to do
+          together
         </p>
         <Link
           href="https://postpartumpost.com"

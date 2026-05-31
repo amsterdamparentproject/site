@@ -3,7 +3,16 @@ import Link from "@/components/Link";
 import HighlightSection from "@/components/homepage/HighlightSection";
 import siteMetadata from "@/data/siteMetadata";
 import { CalendarEvent } from "@/lib/calendar";
-import { LayoutGrid, BookOpen, Flame, Calendar, Newspaper, Mailbox, CirclePile, HeartHandshake } from "lucide-react";
+import {
+  LayoutGrid,
+  BookOpen,
+  Flame,
+  Calendar,
+  Newspaper,
+  Mailbox,
+  CirclePile,
+  HeartHandshake,
+} from "lucide-react";
 import { ResourceRow } from "@/components/homepage/ResourceRow";
 import { EventRow } from "@/components/homepage/EventRow";
 
