@@ -3,7 +3,7 @@ import Link from "@/components/Link";
 import HighlightSection from "@/components/homepage/HighlightSection";
 import siteMetadata from "@/data/siteMetadata";
 import { CalendarEvent } from "@/lib/calendar";
-import { LayoutGrid, BookOpen, Flame, Calendar, Newspaper } from "lucide-react";
+import { LayoutGrid, BookOpen, Flame, Calendar, Newspaper, Mailbox, CirclePile, HeartHandshake } from "lucide-react";
 import { ResourceRow } from "@/components/homepage/ResourceRow";
 import { EventRow } from "@/components/homepage/EventRow";
 
@@ -122,11 +122,18 @@ export default function Home({
           </h2>
           <div className="space-y-6">
             <ResourceRow
-              icon={<LayoutGrid className="w-5 h-5" />}
+              icon={<HeartHandshake className="w-5 h-5" />}
               href="/programs/fourth-trimester"
               title="Fourth Trimester Program"
               subtitle="Your neighborhood support system in the first months postpartum"
               umamiEvent="Home: Fourth Trimester Program"
+            />
+            <ResourceRow
+              icon={<Mailbox className="w-5 h-5" />}
+              href="https://postpartumpost.com"
+              title="Postpartum Post"
+              subtitle="Monthly friendship starter packs for new and expecting parents: meet someone new and get a curated list of things to do together"
+              umamiEvent="Home: Postpartum Post"
             />
             <ResourceRow
               icon={<Newspaper className="w-5 h-5" />}
