@@ -8,6 +8,7 @@ const headerNavLinks = [
     href: "/programs/fourth-trimester",
     title: "Newborn support",
     style: defaultStyle,
+    umamiEvent: "Header: Fourth Trimester Program",
   },
   {
     href: "/newsletter",
@@ -15,8 +16,9 @@ const headerNavLinks = [
     style: defaultStyle,
     newTab: true,
     prefetch: false,
+    umamiEvent: "Header: Newsletter",
   },
-  { href: "/donate", title: "Donate", style: highlightStyle },
+  { href: "/donate", title: "Donate", style: highlightStyle, umamiEvent: "Header: Donate" },
 ];
 
 export default headerNavLinks;

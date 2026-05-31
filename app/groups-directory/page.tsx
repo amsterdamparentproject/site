@@ -11,6 +11,10 @@ export const metadata = genPageMetadata({
       `${process.env.BASE_PATH || ""}/static/images/web-share/groups-directory.png`,
     ],
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 });
 
 // Ensure we don't cache stale user data

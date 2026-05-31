@@ -12,6 +12,10 @@ export const metadata = genPageMetadata({
       `${process.env.BASE_PATH || ""}/static/images/web-share/groups-directory.png`,
     ],
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 });
 
 // This page is for users to request access to the directory, so we don't have any user info to pass in.

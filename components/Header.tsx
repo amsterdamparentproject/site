@@ -38,12 +38,13 @@ const Header = () => {
                 className={link.style}
                 target={link.newTab ? "_blank" : ""}
                 prefetch={link.prefetch}
+                data-umami-event={link.umamiEvent}
               >
                 {link.title}
               </Link>
             ))}
         </div>
-        <SocialIcon kind="instagram" href={siteMetadata.instagram} size={5} />
+        <SocialIcon kind="instagram" href={siteMetadata.instagram} size={5} data-umami-event="Header: Instagram" />
         <MobileNav />
       </div>
     </header>

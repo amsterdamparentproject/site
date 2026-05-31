@@ -31,6 +31,7 @@ type NavItem = {
   title: string;
   subtitle?: string;
   subLinks?: NavSubLink[];
+  umamiEvent?: string;
 };
 
 const resourceItems: NavItem[] = [
@@ -39,6 +40,7 @@ const resourceItems: NavItem[] = [
     href: "/programs/fourth-trimester",
     title: "Fourth Trimester Program",
     subtitle: "Your neighborhood support system in the first months postpartum",
+    umamiEvent: "Header: Fourth Trimester Program",
   },
   {
     icon: <Users className="w-5 h-5" />,
@@ -52,6 +54,7 @@ const resourceItems: NavItem[] = [
     href: "/newsletter",
     title: "Newsletter: Just a Phase",
     subtitle: "Local events & expert advice sent every other Monday",
+    umamiEvent: "Header: Newsletter",
   },
   {
     icon: <BookOpen className="w-5 h-5" />,
@@ -161,6 +164,7 @@ const MobileNav = () => {
                         href={item.href}
                         onClick={onToggleNav}
                         className="flex gap-4 group"
+                        data-umami-event={item.umamiEvent}
                       >
                         <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-soft-green dark:bg-brand-soft-charcoal flex items-center justify-center text-brand-white dark:text-brand-goldenrod group-hover:text-brand-goldenrod dark:group-hover:text-brand-violet transition-colors">
                           {item.icon}
@@ -209,6 +213,7 @@ const MobileNav = () => {
                     href="/donate"
                     onClick={onToggleNav}
                     className="block font-bold text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
+                    data-umami-event="Header: Donate"
                   >
                     Donate
                   </Link>
@@ -216,6 +221,7 @@ const MobileNav = () => {
                     href="/instagram"
                     onClick={onToggleNav}
                     className="block font-bold text-brand-charcoal dark:text-brand-white hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
+                    data-umami-event="Header: Instagram"
                   >
                     Instagram
                   </Link>

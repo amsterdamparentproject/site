@@ -23,9 +23,10 @@ type SocialIconProps = {
   href?: string | undefined;
   size?: number;
   style?: string;
+  "data-umami-event"?: string;
 };
 
-const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
+const SocialIcon = ({ kind, href, size = 8, "data-umami-event": umamiEvent }: SocialIconProps) => {
   if (
     !href ||
     (kind === "mail" &&
@@ -41,6 +42,7 @@ const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
       target="_blank"
       rel="noopener noreferrer"
       href={href}
+      data-umami-event={umamiEvent}
     >
       <span className="sr-only">{kind}</span>
       <SocialSvg
