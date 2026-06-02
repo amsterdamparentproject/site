@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { slug } from "github-slugger";
 import { formatDate } from "pliny/utils/formatDate";
@@ -23,10 +24,13 @@ interface ListLayoutProps {
   pagination?: PaginationProps;
 }
 
-function Pagination({ totalPages, currentPage }: PaginationProps) {
+function Pagination({
+  totalPages,
+  currentPage,
+  selectedType,
+}: PaginationProps & { selectedType?: string | null }) {
   const pathname = usePathname();
-  const segments = pathname.split("/");
-  const lastSegment = segments[segments.length - 1];
+  const queryString = selectedType ? `?type=${selectedType}` : "";
   const basePath = pathname
     .replace(/^\//, "") // Remove leading slash
     .replace(/\/page\/\d+$/, ""); // Remove any trailing /page
@@ -48,8 +52,8 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           <Link
             href={
               currentPage - 1 === 1
-                ? `/${basePath}/`
-                : `/${basePath}/page/${currentPage - 1}`
+                ? `/${basePath}/${queryString}`
+                : `/${basePath}/page/${currentPage - 1}${queryString}`
             }
             rel="prev"
           >
@@ -68,7 +72,10 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           </button>
         )}
         {nextPage && (
-          <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next">
+          <Link
+            href={`/${basePath}/page/${currentPage + 1}${queryString}`}
+            rel="next"
+          >
             Next
           </Link>
         )}
@@ -91,6 +98,15 @@ export default function ListLayoutWithTags({
 
   const displayPosts =
     initialDisplayPosts.length > 0 ? initialDisplayPosts : posts;
+
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  useEffect(() => {
+    const sp =
+      typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search)
+        : null;
+    setSelectedType(sp?.get("type") ?? null);
+  }, []);
 
   return (
     <>
@@ -150,15 +166,17 @@ export default function ListLayoutWithTags({
                 return (
                   <li key={path} className="py-5">
                     <article className="flex flex-col space-y-2 xl:space-y-0">
-                      <dl>
-                        <dt className="sr-only">Published on</dt>
-                        <dd className="text-base leading-6 font-medium text-gray-500 dark:text-brand-white">
-                          <time dateTime={date} suppressHydrationWarning>
-                            {formatDate(date, siteMetadata.locale)}
-                          </time>
-                        </dd>
-                      </dl>
                       <div className="space-y-3">
+                        <div className="flex flex-wrap items-center gap-3 text-sm">
+                          <span className="inline-flex rounded-full border border-gray-200 bg-gray-100 px-2 py-1 font-semibold uppercase text-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                            {path.startsWith("stories/") ? "Story" : "Advice"}
+                          </span>
+                          <span className="text-base leading-6 font-medium text-gray-500 dark:text-brand-white">
+                            <time dateTime={date} suppressHydrationWarning>
+                              {formatDate(date, siteMetadata.locale)}
+                            </time>
+                          </span>
+                        </div>
                         <div>
                           <h2 className="text-2xl leading-8 font-bold tracking-tight">
                             <Link
@@ -185,6 +203,7 @@ export default function ListLayoutWithTags({
               <Pagination
                 currentPage={pagination.currentPage}
                 totalPages={pagination.totalPages}
+                selectedType={selectedType}
               />
             )}
           </div>

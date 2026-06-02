@@ -30,16 +30,16 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const slug = decodeURI(params.slug.join("/"));
   const post = allBlogs.find(
-    (p) => p.slug === slug && p.path.startsWith("advice/"),
+    (p) => p.slug === slug && p.path.startsWith("stories/"),
   );
+  if (!post) {
+    return;
+  }
   const authorList = post?.authors || ["default"];
   const authorDetails = authorList.map((author) => {
     const authorResults = allAuthors.find((p) => p.slug === author);
     return coreContent(authorResults as Authors);
   });
-  if (!post) {
-    return;
-  }
 
   const publishedAt = new Date(post.date).toISOString();
   const modifiedAt = new Date(post.lastmod || post.date).toISOString();
@@ -48,11 +48,9 @@ export async function generateMetadata(props: {
   if (post.images) {
     imageList = typeof post.images === "string" ? [post.images] : post.images;
   }
-  const ogImages = imageList.map((img) => {
-    return {
-      url: img.includes("http") ? img : siteMetadata.siteUrl + img,
-    };
-  });
+  const ogImages = imageList.map((img) => ({
+    url: img.includes("http") ? img : siteMetadata.siteUrl + img,
+  }));
 
   return {
     title: post.title,
@@ -80,7 +78,7 @@ export async function generateMetadata(props: {
 
 export const generateStaticParams = async () => {
   return allBlogs
-    .filter((p) => p.path.startsWith("advice/"))
+    .filter((post) => post.path.startsWith("stories/"))
     .map((p) => ({
       slug: p.slug.split("/").map((name) => decodeURI(name)),
     }));
@@ -91,9 +89,8 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const slug = decodeURI(params.slug.join("/"));
-  // Filter out drafts in production
   const sortedCoreContents = allCoreContent(
-    sortPosts(allBlogs.filter((post) => post.path.startsWith("advice/"))),
+    sortPosts(allBlogs.filter((post) => post.path.startsWith("stories/"))),
   );
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug);
   if (postIndex === -1) {
@@ -102,7 +99,9 @@ export default async function Page(props: {
 
   const prev = sortedCoreContents[postIndex + 1];
   const next = sortedCoreContents[postIndex - 1];
-  const post = allBlogs.find((p) => p.slug === slug) as Blog;
+  const post = allBlogs.find(
+    (p) => p.slug === slug && p.path.startsWith("stories/"),
+  ) as Blog;
   const authorList = post?.authors || ["default"];
   const authorDetails = authorList.map((author) => {
     const authorResults = allAuthors.find((p) => p.slug === author);
@@ -110,12 +109,10 @@ export default async function Page(props: {
   });
   const mainContent = coreContent(post);
   const jsonLd = post.structuredData;
-  jsonLd["author"] = authorDetails.map((author) => {
-    return {
-      "@type": "Person",
-      name: author.name,
-    };
-  });
+  jsonLd["author"] = authorDetails.map((author) => ({
+    "@type": "Person",
+    name: author.name,
+  }));
 
   const Layout = layouts[post.layout || defaultLayout];
 

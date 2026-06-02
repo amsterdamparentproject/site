@@ -12,6 +12,8 @@ import {
   Mailbox,
   CirclePile,
   HeartHandshake,
+  Lightbulb,
+  Microscope,
 } from "lucide-react";
 import { ResourceRow } from "@/components/homepage/ResourceRow";
 import { EventRow } from "@/components/homepage/EventRow";
@@ -41,16 +43,15 @@ export default function Home({
   posts,
   events,
 }: {
-  posts: { slug: string; title: string; date: string }[];
+  posts: { slug: string; title: string; date: string; path?: string }[];
   events: CalendarEvent[];
 }) {
   const upcomingEvents = createEventList(events);
 
-  const isSpotlight = (post: { slug: string }) =>
-    post.slug.startsWith("expert-spotlight/") ||
-    post.slug.startsWith("community-spotlight/");
+  const isSpotlight = (post: { slug: string; path?: string }) =>
+    !!post.path?.startsWith("stories/");
   const latestSpotlight = posts.find(isSpotlight);
-  const latestAdvicePost = posts.find((p) => !isSpotlight(p));
+  const latestAdvicePost = posts.find((p) => p.path?.startsWith("advice/"));
 
   return (
     <div className="px-4 sm:px-0 py-6 space-y-10">
@@ -131,20 +132,6 @@ export default function Home({
           </h2>
           <div className="space-y-6">
             <ResourceRow
-              icon={<HeartHandshake className="w-5 h-5" />}
-              href="/programs/fourth-trimester"
-              title="Fourth Trimester Program"
-              subtitle="Your neighborhood support system in the first months postpartum"
-              umamiEvent="Home: Fourth Trimester Program"
-            />
-            <ResourceRow
-              icon={<Mailbox className="w-5 h-5" />}
-              href="https://postpartumpost.com"
-              title="Postpartum Post"
-              subtitle="Monthly friendship starter packs for new and expecting parents: meet someone new and get a curated list of things to do together"
-              umamiEvent="Home: Postpartum Post"
-            />
-            <ResourceRow
               icon={<Newspaper className="w-5 h-5" />}
               href="/newsletter"
               title="Newsletter: Just a Phase"
@@ -159,11 +146,25 @@ export default function Home({
               ]}
             />
             <ResourceRow
-              icon={<BookOpen className="w-5 h-5" />}
+              icon={<HeartHandshake className="w-5 h-5" />}
+              href="/programs/fourth-trimester"
+              title="Fourth Trimester Program"
+              subtitle="Your neighborhood support system in the first months postpartum"
+              umamiEvent="Home: Fourth Trimester Program"
+            />
+            <ResourceRow
+              icon={<Mailbox className="w-5 h-5" />}
+              href="https://postpartumpost.com"
+              title="Postpartum Post"
+              subtitle="Meet a new parent nearby and get a curated list of things to do together"
+              umamiEvent="Home: Postpartum Post"
+            />
+            <ResourceRow
+              icon={<Microscope className="w-5 h-5" />}
               href="/advice"
-              title="Dear Dr. Mom: You ask, a local expert answers"
+              title="Dear Dr. Mom: Postpartum advice"
               umamiEvent="Home: Dear Dr. Mom"
-              subtitle="Postpartum advice and community spotlights"
+              subtitle="You ask, a local postpartum expert answers"
               subLinks={[
                 ...(latestAdvicePost
                   ? [
@@ -174,10 +175,19 @@ export default function Home({
                       },
                     ]
                   : []),
+              ]}
+            />
+            <ResourceRow
+              icon={<BookOpen className="w-5 h-5" />}
+              href="/stories"
+              title="Community stories"
+              umamiEvent="Home: Community Stories"
+              subtitle="Hear from local parents and experts about their real-life experiences"
+              subLinks={[
                 ...(latestSpotlight
                   ? [
                       {
-                        href: `/advice/${latestSpotlight.slug}`,
+                        href: `/stories/${latestSpotlight.slug}`,
                         label: latestSpotlight.title,
                         umamiEvent: "Home: Latest Spotlight",
                       },

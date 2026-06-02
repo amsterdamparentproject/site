@@ -7,14 +7,12 @@ const POSTS_PER_PAGE = 5;
 
 export const generateStaticParams = async () => {
   const totalPages = Math.ceil(
-    allBlogs.filter((post) => post.path.startsWith("advice/")).length /
+    allBlogs.filter((post) => post.path.startsWith("stories/")).length /
       POSTS_PER_PAGE,
   );
-  const paths = Array.from({ length: totalPages }, (_, i) => ({
+  return Array.from({ length: totalPages }, (_, i) => ({
     page: (i + 1).toString(),
   }));
-
-  return paths;
 };
 
 export default async function Page(props: {
@@ -22,15 +20,15 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const posts = allCoreContent(
-    sortPosts(allBlogs.filter((post) => post.path.startsWith("advice/"))),
+    sortPosts(allBlogs.filter((post) => post.path.startsWith("stories/"))),
   );
   const pageNumber = parseInt(params.page as string);
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
 
-  // Return 404 for invalid page numbers or empty pages
   if (pageNumber <= 0 || pageNumber > totalPages || isNaN(pageNumber)) {
     return notFound();
   }
+
   const initialDisplayPosts = posts.slice(
     POSTS_PER_PAGE * (pageNumber - 1),
     POSTS_PER_PAGE * pageNumber,
@@ -45,7 +43,8 @@ export default async function Page(props: {
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
-      title="All Posts"
+      title="Stories"
+      subtitle="Community spotlight, expert spotlight, and founder notes"
     />
   );
 }

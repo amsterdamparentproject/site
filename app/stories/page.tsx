@@ -5,13 +5,11 @@ import ListLayout from "@/layouts/ListLayoutWithTags";
 
 const POSTS_PER_PAGE = 5;
 
-export const metadata = genPageMetadata({ title: "Advice" });
+export const metadata = genPageMetadata({ title: "Stories" });
 
-export default async function BlogPage(props: {
-  searchParams: Promise<{ page: string }>;
-}) {
+export default async function StoriesPage() {
   const posts = allCoreContent(
-    sortPosts(allBlogs.filter((post) => post.path.startsWith("advice/"))),
+    sortPosts(allBlogs.filter((post) => post.path.startsWith("stories/"))),
   );
   const pageNumber = 1;
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
@@ -26,8 +24,8 @@ export default async function BlogPage(props: {
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
-      title="Dear Dr. Mom"
-      subtitle="Expert advice from parenting professionals"
+      title="Stories"
+      subtitle="Community spotlight, expert spotlight, and founder notes"
     />
   );
 }

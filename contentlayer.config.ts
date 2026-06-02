@@ -60,6 +60,11 @@ const computedFields: ComputedFields = {
     type: "string",
     resolve: (doc) => doc._raw.sourceFilePath,
   },
+  contentType: {
+    type: "string",
+    resolve: (doc) =>
+      doc._raw.flattenedPath.startsWith("stories/") ? "stories" : "advice",
+  },
   toc: { type: "json", resolve: (doc) => extractTocHeadings(doc.body.raw) },
 };
 
@@ -101,7 +106,7 @@ function createSearchIndex(allBlogs) {
 
 export const Blog = defineDocumentType(() => ({
   name: "Blog",
-  filePathPattern: "advice/**/*.mdx",
+  filePathPattern: "{advice,stories}/**/*.mdx",
   contentType: "mdx",
   fields: {
     title: { type: "string", required: true },

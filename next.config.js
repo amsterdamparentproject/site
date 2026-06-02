@@ -155,6 +155,46 @@ module.exports = () => {
           permanent: true,
         },
         {
+          source: '/advice/community-spotlight/:slug*',
+          destination: '/stories/:slug*',
+          permanent: true,
+        },
+        {
+          source: '/advice/expert-spotlight/:slug*',
+          destination: '/stories/:slug*',
+          permanent: true,
+        },
+        {
+          source: '/advice/community-spotlight',
+          destination: '/stories',
+          permanent: true,
+        },
+        {
+          source: '/advice/expert-spotlight',
+          destination: '/stories',
+          permanent: true,
+        },
+        {
+          source: '/stories/community-spotlight/:slug*',
+          destination: '/stories/:slug*',
+          permanent: true,
+        },
+        {
+          source: '/stories/expert-spotlight/:slug*',
+          destination: '/stories/:slug*',
+          permanent: true,
+        },
+        {
+          source: '/stories/community-spotlight',
+          destination: '/stories',
+          permanent: true,
+        },
+        {
+          source: '/stories/expert-spotlight',
+          destination: '/stories',
+          permanent: true,
+        },
+        {
           source: '/community-calendar',
           destination: '/calendar',
           permanent: true,
