@@ -90,7 +90,7 @@ export const postManageDirectory = async (data, action = "add") => {
 
   if (!allowedActions.includes(action)) {
     console.error("postManageDirectory error: Invalid action", action);
-    return { success: false, error: "Invalid action" };
+    return { success: false, error: "Invalid action", userCreated: false };
   }
 
   const url = isLocal
@@ -110,22 +110,55 @@ export const postManageDirectory = async (data, action = "add") => {
     formData.append("action", action);
   }
 
+  let userCreated = false;
+
   if (!(formData.get("email") as string)?.trim()) {
+    // No email — resolve from cookie; user already exists
     const cookieStore = await cookies();
     const uid = cookieStore.get("app_uid")?.value;
     if (uid) {
       const supabase = createServiceClient("directory");
       const { data: user } = await supabase
         .from("users")
-        .select("email")
+        .select("id, email")
         .eq("public_id", uid)
         .single();
-      if (user?.email) formData.set("email", user.email);
+      if (user?.email) {
+        formData.set("email", user.email);
+        formData.set("userId", String(user.id));
+        formData.set("publicId", uid);
+      }
+    }
+  } else {
+    // Email present — look up or create user so all identifiers are in the payload
+    const email = (formData.get("email") as string).trim();
+    const supabase = createServiceClient("directory");
+    const { data: user } = await supabase
+      .from("users")
+      .select("id, public_id")
+      .eq("email", email)
+      .single();
+
+    if (user?.id) {
+      formData.set("userId", String(user.id));
+      formData.set("publicId", user.public_id);
+    } else {
+      const newPublicId = crypto.randomUUID();
+      const { data: newUser, error } = await supabase
+        .from("users")
+        .insert({ public_id: newPublicId, email, name: null, categories: [] })
+        .select("id")
+        .single();
+      if (!error && newUser?.id) {
+        formData.set("userId", String(newUser.id));
+        formData.set("publicId", newPublicId);
+        userCreated = true;
+      }
     }
   }
 
   const result = await postToWebhook(url, formData);
-  return result;
+  return { ...result, userCreated };
 };
 
 export const postSpotlight = async (data) => {

@@ -45,7 +45,12 @@ async function getGroups(): Promise<GroupOption[]> {
   }
 }
 
-export default async function Page() {
+interface PageProps {
+  searchParams: Promise<{ group?: string }>;
+}
+
+export default async function Page({ searchParams }: PageProps) {
+  const { group } = await searchParams;
   const groups = await getGroups();
 
   return (
@@ -67,7 +72,7 @@ export default async function Page() {
           </p>
         </div>
 
-        <UpdateClient groups={groups} />
+        <UpdateClient groups={groups} initialGroupName={group} />
       </div>
     </Suspense>
   );

@@ -190,7 +190,7 @@ const AdminGroupsDirectoryForm = ({
       );
 
       if (response.success) {
-        if (!hasIdentity && formData.email) {
+        if (response.userCreated) {
           const accessData = new FormData();
           accessData.append("name", "");
           accessData.append("email", formData.email);

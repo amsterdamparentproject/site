@@ -20,9 +20,10 @@ const submitButtonStyle =
 
 interface Props {
   groups: GroupOption[];
+  initialGroupName?: string;
 }
 
-export default function UpdateClient({ groups }: Props) {
+export default function UpdateClient({ groups, initialGroupName }: Props) {
   // --- Group name autocomplete ---
   const [inputValue, setInputValue] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<GroupOption | null>(null);
@@ -76,6 +77,9 @@ export default function UpdateClient({ groups }: Props) {
     setSelectedGroup(null);
     setShowDropdown(true);
     setActiveIndex(-1);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("group");
+    window.history.replaceState({}, "", url.toString());
   };
 
   const confirmSelection = (group: GroupOption) => {
@@ -83,10 +87,21 @@ export default function UpdateClient({ groups }: Props) {
     setInputValue(group.name);
     setShowDropdown(false);
     setActiveIndex(-1);
-    // Pre-fill description and categories from the existing group data
     setDescription(group.description ?? "");
     setCategories(group.categories ?? []);
+    const url = new URL(window.location.href);
+    url.searchParams.set("group", group.name);
+    window.history.replaceState({}, "", url.toString());
   };
+
+  useEffect(() => {
+    if (!initialGroupName) return;
+    const match = groups.find(
+      (g) => g.name.toLowerCase() === initialGroupName.toLowerCase(),
+    );
+    if (match) confirmSelection(match);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialGroupName, groups]);
 
   const handleInputBlur = () => {
     setTimeout(() => {
@@ -147,7 +162,7 @@ export default function UpdateClient({ groups }: Props) {
 
       const response = await postManageDirectory(data, "update");
       if (response.success) {
-        if (!storedUid && email.trim()) {
+        if (response.userCreated) {
           const accessData = new FormData();
           accessData.append("name", "");
           accessData.append("email", email.trim());
