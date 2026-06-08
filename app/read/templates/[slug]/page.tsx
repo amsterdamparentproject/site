@@ -17,7 +17,8 @@ const layouts = { PostSimple, PostLayout, PostBanner };
 // Templates live in data/advice/templates/ — their slug is "templates/<name>"
 function findTemplate(slug: string) {
   return allBlogs.find(
-    (p) => p.slug === `templates/${slug}` && p.path.startsWith("advice/templates/"),
+    (p) =>
+      p.slug === `templates/${slug}` && p.path.startsWith("advice/templates/"),
   );
 }
 
@@ -46,7 +47,11 @@ export default async function TemplatePage(props: {
 
   return (
     <Layout content={mainContent} authorDetails={authorDetails}>
-      <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
+      <MDXLayoutRenderer
+        code={post.body.code}
+        components={components}
+        toc={post.toc}
+      />
     </Layout>
   );
 }

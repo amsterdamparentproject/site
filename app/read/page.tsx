@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { allCoreContent, sortPosts } from "pliny/utils/contentlayer";
 import { allBlogs, allAuthors } from "contentlayer/generated";
 import { genPageMetadata } from "app/seo";
@@ -16,13 +17,15 @@ export default async function ReadPage() {
   );
 
   return (
-    <PostListClient
-      posts={posts}
-      filterDimensions={["type", "series", "stage", "topic", "freeResource"]}
-      primary="all"
-      title="Read"
-      subtitle="All advice and stories"
-      authorMap={authorMap}
-    />
+    <Suspense>
+      <PostListClient
+        posts={posts}
+        filterDimensions={["type", "series", "stage", "topic", "freeResource"]}
+        primary="all"
+        title="Read"
+        subtitle="All advice and stories"
+        authorMap={authorMap}
+      />
+    </Suspense>
   );
 }

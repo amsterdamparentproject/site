@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { allCoreContent, sortPosts } from "pliny/utils/contentlayer";
 import { allBlogs, allAuthors } from "contentlayer/generated";
 import { genPageMetadata } from "app/seo";
@@ -15,13 +16,15 @@ export default async function AdvicePage() {
   );
 
   return (
-    <PostListClient
-      posts={posts}
-      filterDimensions={["stage", "topic", "freeResource"]}
-      primary="advice"
-      title="Dear Dr. Mom"
-      subtitle="Expert advice from parenting professionals"
-      authorMap={authorMap}
-    />
+    <Suspense>
+      <PostListClient
+        posts={posts}
+        filterDimensions={["stage", "topic", "freeResource"]}
+        primary="advice"
+        title="Dear Dr. Mom"
+        subtitle="Expert advice from parenting professionals"
+        authorMap={authorMap}
+      />
+    </Suspense>
   );
 }

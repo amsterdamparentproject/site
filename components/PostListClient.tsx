@@ -12,7 +12,12 @@ import { BookOpen, Microscope } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type FilterDimension = "type" | "series" | "stage" | "topic" | "freeResource";
+export type FilterDimension =
+  | "type"
+  | "series"
+  | "stage"
+  | "topic"
+  | "freeResource";
 export type Primary = "all" | "stories" | "advice";
 
 export interface AuthorInfo {
@@ -52,7 +57,10 @@ const TYPE_LABELS: Record<string, string> = {
 
 function toTitleCase(str: string): string {
   // Capitalize the first letter after spaces and slashes
-  return str.replace(/(^|[\s/])(\S)/g, (_, sep, char) => sep + char.toUpperCase());
+  return str.replace(
+    /(^|[\s/])(\S)/g,
+    (_, sep, char) => sep + char.toUpperCase(),
+  );
 }
 
 function getContentType(post: CoreContent<Blog>): "advice" | "stories" {
@@ -173,12 +181,13 @@ function PostCard({
   showType: boolean;
   authorMap?: Record<string, AuthorInfo>;
 }) {
-  const { path, date, title, summary, tags, authors, series, freeResource } = post as CoreContent<Blog> & {
-    series?: string;
-    childStage?: string[];
-    freeResource?: boolean;
-    authors?: string[];
-  };
+  const { path, date, title, summary, tags, authors, series, freeResource } =
+    post as CoreContent<Blog> & {
+      series?: string;
+      childStage?: string[];
+      freeResource?: boolean;
+      authors?: string[];
+    };
   const type = getContentType(post);
 
   const postAuthors: AuthorInfo[] = (authors ?? [])
@@ -199,69 +208,74 @@ function PostCard({
 
         {/* Content */}
         <div className="flex flex-col space-y-2 min-w-0">
-        {/* Title */}
-        <h2 className="text-2xl leading-8 font-bold tracking-tight">
-          <Link href={`/${path}`} className="text-brand-charcoal dark:text-brand-white">
-            {title}
-          </Link>
-        </h2>
+          {/* Title */}
+          <h2 className="text-2xl leading-8 font-bold tracking-tight">
+            <Link
+              href={`/${path}`}
+              className="text-brand-charcoal dark:text-brand-white"
+            >
+              {title}
+            </Link>
+          </h2>
 
-        {/* Author byline */}
-        {postAuthors.length > 0 && (
-          <div className="flex items-center gap-2">
-            <div className="flex -space-x-2">
-              {postAuthors.map((author) =>
-                author.avatar ? (
-                  <Image
-                    key={author.name}
-                    src={author.avatar}
-                    width={28}
-                    height={28}
-                    alt={author.name}
-                    className="h-7 w-7 rounded-full ring-1 ring-brand-white dark:ring-gray-900 object-cover"
-                  />
-                ) : null
-              )}
+          {/* Author byline */}
+          {postAuthors.length > 0 && (
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-2">
+                {postAuthors.map((author) =>
+                  author.avatar ? (
+                    <Image
+                      key={author.name}
+                      src={author.avatar}
+                      width={28}
+                      height={28}
+                      alt={author.name}
+                      className="h-7 w-7 rounded-full ring-1 ring-brand-white dark:ring-gray-900 object-cover"
+                    />
+                  ) : null,
+                )}
+              </div>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {postAuthors.map((a) => a.name).join(", ")}
+              </span>
             </div>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {postAuthors.map((a) => a.name).join(", ")}
-            </span>
-          </div>
-        )}
-
-        {/* Summary */}
-        {summary && (
-          <div className="prose max-w-none text-brand-soft-charcoal dark:text-brand-white">
-            {summary}
-          </div>
-        )}
-
-        {/* Meta row — after summary, styled like tags */}
-        <div className="flex flex-wrap items-center mt-2 gap-2">
-          <span className="text-xs text-gray-400 dark:text-gray-500">
-            <time dateTime={date} suppressHydrationWarning>
-              {formatDate(date, siteMetadata.locale)}
-            </time>
-          </span>
-          {freeResource && (
-            <span className="text-xs text-brand-soft-green font-medium">🎁 Free resource</span>
           )}
-        </div>
 
-        {/* Tags */}
-        {tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag: string) => (
-              <Link
-                key={tag}
-                href={`/read?topic=${encodeURIComponent(tag)}`}
-                className="text-xs text-gray-500 hover:text-brand-soft-green dark:text-gray-400 dark:hover:text-brand-goldenrod"
-              >
-                #{toTitleCase(tag)}
-              </Link>
-            ))}
+          {/* Summary */}
+          {summary && (
+            <div className="prose max-w-none text-brand-soft-charcoal dark:text-brand-white">
+              {summary}
+            </div>
+          )}
+
+          {/* Meta row — after summary, styled like tags */}
+          <div className="flex flex-wrap items-center mt-2 gap-2">
+            <span className="text-xs text-gray-400 dark:text-gray-500">
+              <time dateTime={date} suppressHydrationWarning>
+                {formatDate(date, siteMetadata.locale)}
+              </time>
+            </span>
+            {freeResource && (
+              <span className="text-xs text-brand-soft-green font-medium">
+                🎁 Free resource
+              </span>
+            )}
           </div>
-        )}
+
+          {/* Tags */}
+          {tags && tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag: string) => (
+                <Link
+                  key={tag}
+                  href={`/read?topic=${encodeURIComponent(tag)}`}
+                  className="text-xs text-gray-500 hover:text-brand-soft-green dark:text-gray-400 dark:hover:text-brand-goldenrod"
+                >
+                  #{toTitleCase(tag)}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </article>
     </li>
@@ -285,12 +299,21 @@ function SearchResults({
 
   if (primary === "all") {
     if (matched.length === 0) {
-      return <p className="py-8 text-gray-500">No results for &ldquo;{query}&rdquo;</p>;
+      return (
+        <p className="py-8 text-gray-500">
+          No results for &ldquo;{query}&rdquo;
+        </p>
+      );
     }
     return (
       <ul className="divide-y divide-gray-200 dark:divide-gray-700">
         {matched.map((p) => (
-          <PostCard key={p.path} post={p} showType={true} authorMap={authorMap} />
+          <PostCard
+            key={p.path}
+            post={p}
+            showType={true}
+            authorMap={authorMap}
+          />
         ))}
       </ul>
     );
@@ -298,12 +321,16 @@ function SearchResults({
 
   const primaryPosts = matched.filter((p) => getContentType(p) === primary);
   const secondaryType = primary === "stories" ? "advice" : "stories";
-  const secondaryPosts = matched.filter((p) => getContentType(p) === secondaryType);
+  const secondaryPosts = matched.filter(
+    (p) => getContentType(p) === secondaryType,
+  );
 
   return (
     <div>
       {primaryPosts.length === 0 && secondaryPosts.length === 0 && (
-        <p className="py-8 text-gray-500">No results for &ldquo;{query}&rdquo;</p>
+        <p className="py-8 text-gray-500">
+          No results for &ldquo;{query}&rdquo;
+        </p>
       )}
       {primaryPosts.length > 0 && (
         <>
@@ -312,7 +339,12 @@ function SearchResults({
           </h3>
           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
             {primaryPosts.map((p) => (
-              <PostCard key={p.path} post={p} showType={false} authorMap={authorMap} />
+              <PostCard
+                key={p.path}
+                post={p}
+                showType={false}
+                authorMap={authorMap}
+              />
             ))}
           </ul>
         </>
@@ -324,7 +356,12 @@ function SearchResults({
           </h3>
           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
             {secondaryPosts.map((p) => (
-              <PostCard key={p.path} post={p} showType={false} authorMap={authorMap} />
+              <PostCard
+                key={p.path}
+                post={p}
+                showType={false}
+                authorMap={authorMap}
+              />
             ))}
           </ul>
         </div>
@@ -395,15 +432,36 @@ export default function PostListClient({
   // Apply filters (each dimension is OR within itself, AND across dimensions)
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
-      const p = post as CoreContent<Blog> & { series?: string; childStage?: string[]; freeResource?: boolean };
-      if (activeTypes.length > 0 && !activeTypes.includes(getContentType(post))) return false;
-      if (activeSeries.length > 0 && !activeSeries.includes(p.series ?? "")) return false;
-      if (activeStages.length > 0 && !(p.childStage ?? []).some((s) => activeStages.includes(s))) return false;
-      if (activeTopics.length > 0 && !(post.tags ?? []).some((t) => activeTopics.includes(t))) return false;
+      const p = post as CoreContent<Blog> & {
+        series?: string;
+        childStage?: string[];
+        freeResource?: boolean;
+      };
+      if (activeTypes.length > 0 && !activeTypes.includes(getContentType(post)))
+        return false;
+      if (activeSeries.length > 0 && !activeSeries.includes(p.series ?? ""))
+        return false;
+      if (
+        activeStages.length > 0 &&
+        !(p.childStage ?? []).some((s) => activeStages.includes(s))
+      )
+        return false;
+      if (
+        activeTopics.length > 0 &&
+        !(post.tags ?? []).some((t) => activeTopics.includes(t))
+      )
+        return false;
       if (activeFreeResource && !p.freeResource) return false;
       return true;
     });
-  }, [posts, activeTypes, activeSeries, activeStages, activeTopics, activeFreeResource]);
+  }, [
+    posts,
+    activeTypes,
+    activeSeries,
+    activeStages,
+    activeTopics,
+    activeFreeResource,
+  ]);
 
   const hasActiveFilter =
     activeTypes.length > 0 ||
@@ -424,8 +482,11 @@ export default function PostListClient({
   }
 
   const displayPosts =
-    showAll || hasActiveFilter ? filteredPosts : filteredPosts.slice(0, INITIAL_DISPLAY);
-  const hasMore = !showAll && !hasActiveFilter && filteredPosts.length > INITIAL_DISPLAY;
+    showAll || hasActiveFilter
+      ? filteredPosts
+      : filteredPosts.slice(0, INITIAL_DISPLAY);
+  const hasMore =
+    !showAll && !hasActiveFilter && filteredPosts.length > INITIAL_DISPLAY;
 
   const isSearching = searchQuery.trim().length > 0;
 
@@ -485,7 +546,10 @@ export default function PostListClient({
           {filterDimensions.includes("type") && (
             <FilterDropdown
               label="Type"
-              options={Object.entries(TYPE_LABELS).map(([v, l]) => ({ value: v, label: l }))}
+              options={Object.entries(TYPE_LABELS).map(([v, l]) => ({
+                value: v,
+                label: l,
+              }))}
               active={activeTypes}
               onToggle={(v) => toggleParam("type", v)}
             />
@@ -493,7 +557,10 @@ export default function PostListClient({
           {filterDimensions.includes("series") && (
             <FilterDropdown
               label="Series"
-              options={Object.entries(SERIES_LABELS).map(([v, l]) => ({ value: v, label: l }))}
+              options={Object.entries(SERIES_LABELS).map(([v, l]) => ({
+                value: v,
+                label: l,
+              }))}
               active={activeSeries}
               onToggle={(v) => toggleParam("series", v)}
             />
@@ -501,7 +568,10 @@ export default function PostListClient({
           {filterDimensions.includes("stage") && (
             <FilterDropdown
               label="Stage"
-              options={Object.entries(STAGE_LABELS).map(([v, l]) => ({ value: v, label: l }))}
+              options={Object.entries(STAGE_LABELS).map(([v, l]) => ({
+                value: v,
+                label: l,
+              }))}
               active={activeStages}
               onToggle={(v) => toggleParam("stage", v)}
             />
@@ -539,11 +609,18 @@ export default function PostListClient({
 
       {/* Content */}
       {isSearching ? (
-        <SearchResults query={searchQuery} posts={posts} primary={primary} authorMap={authorMap} />
+        <SearchResults
+          query={searchQuery}
+          posts={posts}
+          primary={primary}
+          authorMap={authorMap}
+        />
       ) : (
         <>
           {displayPosts.length === 0 ? (
-            <p className="py-8 text-gray-500">No posts match the selected filters.</p>
+            <p className="py-8 text-gray-500">
+              No posts match the selected filters.
+            </p>
           ) : (
             <ul className="divide-y divide-gray-200 dark:divide-gray-700">
               {displayPosts.map((post) => (

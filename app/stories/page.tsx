@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { allCoreContent, sortPosts } from "pliny/utils/contentlayer";
 import { allBlogs, allAuthors } from "contentlayer/generated";
 import { genPageMetadata } from "app/seo";
@@ -15,13 +16,15 @@ export default async function StoriesPage() {
   );
 
   return (
-    <PostListClient
-      posts={posts}
-      filterDimensions={["series", "stage", "topic"]}
-      primary="stories"
-      title="Stories"
-      subtitle="Community spotlight, expert spotlight, and founder notes"
-      authorMap={authorMap}
-    />
+    <Suspense>
+      <PostListClient
+        posts={posts}
+        filterDimensions={["series", "stage", "topic"]}
+        primary="stories"
+        title="Stories"
+        subtitle="Community spotlight, expert spotlight, and founder notes"
+        authorMap={authorMap}
+      />
+    </Suspense>
   );
 }

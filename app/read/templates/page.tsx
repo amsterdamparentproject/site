@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { coreContent, sortPosts } from "pliny/utils/contentlayer";
 import { allBlogs, allAuthors } from "contentlayer/generated";
 import type { Blog } from "contentlayer/generated";
@@ -15,13 +16,15 @@ export default async function TemplatesPage() {
   );
 
   return (
-    <PostListClient
-      posts={posts}
-      filterDimensions={["series"]}
-      primary="all"
-      title="Templates"
-      subtitle="Story templates for contributors"
-      authorMap={authorMap}
-    />
+    <Suspense>
+      <PostListClient
+        posts={posts}
+        filterDimensions={["series"]}
+        primary="all"
+        title="Templates"
+        subtitle="Story templates for contributors"
+        authorMap={authorMap}
+      />
+    </Suspense>
   );
 }
