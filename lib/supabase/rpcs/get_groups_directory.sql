@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION get_groups_directory(user_id_input text)
+CREATE OR REPLACE FUNCTION directory.get_groups_directory(user_id_input text)
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -18,7 +18,7 @@ BEGIN
 
     -- 2. Call the second RPC to get recommendations
     -- We pass the same input ID
-    recommended_groups := get_user_recommendations(user_id_input);
+    recommended_groups := directory.get_user_recommendations(user_id_input);
 
     -- 3. Fetch all groups (keep the boolean logic here)
     SELECT jsonb_agg(

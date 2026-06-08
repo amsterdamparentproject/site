@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION get_user_recommendations(user_id_input text)
+CREATE OR REPLACE FUNCTION directory.get_user_recommendations(user_id_input text)
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
