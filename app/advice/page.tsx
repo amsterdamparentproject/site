@@ -17,7 +17,7 @@ export default async function AdvicePage() {
   return (
     <PostListClient
       posts={posts}
-      filterDimensions={["stage", "topic"]}
+      filterDimensions={["stage", "topic", "freeResource"]}
       primary="advice"
       title="Dear Dr. Mom"
       subtitle="Expert advice from parenting professionals"

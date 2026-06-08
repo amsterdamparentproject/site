@@ -76,6 +76,7 @@ export const Blog = defineDocumentType(() => ({
     tags: { type: "list", of: { type: "string" }, default: [] },
     series: { type: "string" },
     childStage: { type: "list", of: { type: "string" }, default: [] },
+    freeResource: { type: "boolean" },
     lastmod: { type: "date" },
     draft: { type: "boolean" },
     summary: { type: "string" },

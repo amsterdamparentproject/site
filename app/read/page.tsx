@@ -18,7 +18,7 @@ export default async function ReadPage() {
   return (
     <PostListClient
       posts={posts}
-      filterDimensions={["type", "series", "stage", "topic"]}
+      filterDimensions={["type", "series", "stage", "topic", "freeResource"]}
       primary="all"
       title="Read"
       subtitle="All advice and stories"

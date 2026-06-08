@@ -12,7 +12,7 @@ import { BookOpen, Microscope } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type FilterDimension = "type" | "series" | "stage" | "topic";
+export type FilterDimension = "type" | "series" | "stage" | "topic" | "freeResource";
 export type Primary = "all" | "stories" | "advice";
 
 export interface AuthorInfo {
@@ -173,9 +173,10 @@ function PostCard({
   showType: boolean;
   authorMap?: Record<string, AuthorInfo>;
 }) {
-  const { path, date, title, summary, tags, authors, series } = post as CoreContent<Blog> & {
+  const { path, date, title, summary, tags, authors, series, freeResource } = post as CoreContent<Blog> & {
     series?: string;
     childStage?: string[];
+    freeResource?: boolean;
     authors?: string[];
   };
   const type = getContentType(post);
@@ -237,27 +238,14 @@ function PostCard({
 
         {/* Meta row — after summary, styled like tags */}
         <div className="flex flex-wrap items-center mt-2 gap-2">
-          {showType && (
-            <Link
-              href={`/read?type=${type}`}
-              className="text-xs text-brand-soft-green hover:opacity-80 font-semibold uppercase"
-            >
-              {TYPE_LABELS[type]}
-            </Link>
-          )}
-          {series && SERIES_LABELS[series] && (
-            <Link
-              href={`/read?series=${series}`}
-              className="text-xs text-brand-soft-green hover:opacity-80 font-semibold uppercase dark:text-brand-goldenrod"
-            >
-              {SERIES_LABELS[series]}
-            </Link>
-          )}
           <span className="text-xs text-gray-400 dark:text-gray-500">
             <time dateTime={date} suppressHydrationWarning>
               {formatDate(date, siteMetadata.locale)}
             </time>
           </span>
+          {freeResource && (
+            <span className="text-xs text-brand-soft-green font-medium">🎁 Free resource</span>
+          )}
         </div>
 
         {/* Tags */}
@@ -370,6 +358,7 @@ export default function PostListClient({
   const activeSeries = parseParam(searchParams.get("series"));
   const activeStages = parseParam(searchParams.get("stage"));
   const activeTopics = parseParam(searchParams.get("topic"));
+  const activeFreeResource = searchParams.get("free") === "1";
 
   // Reset showAll when filters change
   useEffect(() => {
@@ -406,20 +395,33 @@ export default function PostListClient({
   // Apply filters (each dimension is OR within itself, AND across dimensions)
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
-      const p = post as CoreContent<Blog> & { series?: string; childStage?: string[] };
+      const p = post as CoreContent<Blog> & { series?: string; childStage?: string[]; freeResource?: boolean };
       if (activeTypes.length > 0 && !activeTypes.includes(getContentType(post))) return false;
       if (activeSeries.length > 0 && !activeSeries.includes(p.series ?? "")) return false;
       if (activeStages.length > 0 && !(p.childStage ?? []).some((s) => activeStages.includes(s))) return false;
       if (activeTopics.length > 0 && !(post.tags ?? []).some((t) => activeTopics.includes(t))) return false;
+      if (activeFreeResource && !p.freeResource) return false;
       return true;
     });
-  }, [posts, activeTypes, activeSeries, activeStages, activeTopics]);
+  }, [posts, activeTypes, activeSeries, activeStages, activeTopics, activeFreeResource]);
 
   const hasActiveFilter =
     activeTypes.length > 0 ||
     activeSeries.length > 0 ||
     activeStages.length > 0 ||
-    activeTopics.length > 0;
+    activeTopics.length > 0 ||
+    activeFreeResource;
+
+  function toggleFreeResource() {
+    const params = new URLSearchParams(searchParams.toString());
+    if (activeFreeResource) {
+      params.delete("free");
+    } else {
+      params.set("free", "1");
+    }
+    const qs = params.toString();
+    router.push(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
+  }
 
   const displayPosts =
     showAll || hasActiveFilter ? filteredPosts : filteredPosts.slice(0, INITIAL_DISPLAY);
@@ -511,6 +513,18 @@ export default function PostListClient({
               active={activeTopics}
               onToggle={(v) => toggleParam("topic", v)}
             />
+          )}
+          {filterDimensions.includes("freeResource") && (
+            <button
+              onClick={toggleFreeResource}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition cursor-pointer ${
+                activeFreeResource
+                  ? "border-brand-soft-green bg-brand-soft-green/10 text-brand-charcoal dark:text-brand-white"
+                  : "border-gray-200 bg-white text-gray-600 hover:border-brand-soft-green hover:text-brand-charcoal dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:text-brand-white"
+              }`}
+            >
+              🎁 Free Resource
+            </button>
           )}
           {hasActiveFilter && (
             <button
