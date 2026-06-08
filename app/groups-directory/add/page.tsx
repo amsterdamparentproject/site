@@ -27,7 +27,7 @@ export default function Page() {
     <Suspense
       fallback={<div className="min-h-screen p-10 text-center">Loading...</div>}
     >
-      <div className="max-w-lg mx-auto p-6">
+      <div className="max-w-xl mx-auto p-6">
         <div className="mb-10">
           <h2 className="text-xl md:text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod text-center mb-2">
             Amsterdam Parent Groups Directory

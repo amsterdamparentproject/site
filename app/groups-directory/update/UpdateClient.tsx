@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { postManageDirectory } from "@/components/PostToWebhook";
-import { directoryClient } from "@/lib/supabase/client";
+import { postManageDirectory, postRequestDirectory } from "@/components/PostToWebhook";
 import CategoryChipsFormField from "@/components/groups-directory/CategoryChipsFormField";
 import type { GroupOption } from "./page";
 
@@ -38,16 +37,6 @@ export default function UpdateClient({ groups }: Props) {
     const uid = localStorage.getItem("app_uid");
     if (!uid || ["false", "null", "undefined"].includes(uid) || !uid.trim()) return;
     setStoredUid(uid);
-    directoryClient()
-      .from("users")
-      .select("email")
-      .eq("public_id", uid)
-      .single()
-      .then(({ data }) => {
-        if (data?.email) {
-          setEmail((prev) => prev || data.email);
-        }
-      });
   }, []);
 
   // --- Core fields ---
@@ -153,12 +142,22 @@ export default function UpdateClient({ groups }: Props) {
       data.append("email", email.trim());
       data.append("notes", "");
       data.append("isAdmin", isAdmin ? "Yes" : "No");
-      data.append("createAccount", "No");
       data.append("subscribeNewsletter", "No");
       data.append("source", "direct");
 
       const response = await postManageDirectory(data, "update");
       if (response.success) {
+        if (!storedUid && email.trim()) {
+          const accessData = new FormData();
+          accessData.append("name", "");
+          accessData.append("email", email.trim());
+          accessData.append("categories", "");
+          accessData.append("otherInterest", "");
+          accessData.append("notes", "");
+          accessData.append("subscribeNewsletter", "No");
+          accessData.append("agreedToTerms", "Yes");
+          postRequestDirectory(accessData);
+        }
         setIsSuccess(true);
       } else {
         throw new Error(response.error || `HTTP ${response.status}`);
@@ -299,7 +298,7 @@ export default function UpdateClient({ groups }: Props) {
               onBlur={() => setTouched((p) => ({ ...p, email: true }))}
             />
             <p className="mt-1.5 text-xs text-gray-400 dark:text-brand-white/60">
-              To confirm humanity ❤️ and for any follow-up questions
+              To confirm you're not a robot 🤖
             </p>
           </div>
         </div>
@@ -357,9 +356,20 @@ export default function UpdateClient({ groups }: Props) {
         <>
           {/* Description */}
           <div className="flex flex-wrap mb-6 px-3">
-            <label className={labelStyle + " w-full"} htmlFor="description">
-              Group description
-            </label>
+            <div className="flex justify-between items-baseline w-full mb-2">
+              <label className={labelStyle.replace(" mb-2", "")} htmlFor="description">
+                Group description
+              </label>
+              <span
+                className={`text-xs ${
+                  description.length >= DESCRIPTION_MAX_LENGTH
+                    ? "text-red-500 font-semibold"
+                    : "text-gray-400"
+                }`}
+              >
+                {description.length}/{DESCRIPTION_MAX_LENGTH}
+              </span>
+            </div>
             <textarea
               className={inputStyle}
               id="description"
@@ -370,15 +380,6 @@ export default function UpdateClient({ groups }: Props) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            <p
-              className={`mt-1 text-xs text-right w-full ${
-                description.length >= DESCRIPTION_MAX_LENGTH
-                  ? "text-red-500 font-semibold"
-                  : "text-gray-400"
-              }`}
-            >
-              {description.length}/{DESCRIPTION_MAX_LENGTH}
-            </p>
           </div>
 
           {/* Categories */}

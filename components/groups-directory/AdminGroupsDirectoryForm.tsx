@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { postManageDirectory } from "../PostToWebhook";
+import { postManageDirectory, postRequestDirectory } from "../PostToWebhook";
 import CategoryChipsFormField from "./CategoryChipsFormField";
-import { directoryClient } from "@/lib/supabase/client";
 import {
   AddFormInfo,
   AdminGroupsDirectoryFormProps,
@@ -35,16 +34,6 @@ const AdminGroupsDirectoryForm = ({
     const uid = localStorage.getItem("app_uid");
     if (!uid || ["false", "null", "undefined"].includes(uid) || !uid.trim()) return;
     setStoredUid(uid);
-    directoryClient()
-      .from("users")
-      .select("email")
-      .eq("public_id", uid)
-      .single()
-      .then(({ data }) => {
-        if (data?.email) {
-          setFormData((prev) => ({ ...prev, email: prev.email || data.email }));
-        }
-      });
   }, []);
 
   // Explicit userId from info (authenticated directory) or fall back to localStorage
@@ -190,7 +179,6 @@ const AdminGroupsDirectoryForm = ({
       data.append("isAdmin", formData.isAdmin ? "Yes" : "No");
 
       // Sign them up for the directory if they don't have an account
-      data.append("createAccount", hasIdentity ? "No" : "Yes");
       data.append(
         "subscribeNewsletter",
         formData.subscribeNewsletter ? "Yes" : "No",
@@ -202,6 +190,17 @@ const AdminGroupsDirectoryForm = ({
       );
 
       if (response.success) {
+        if (!hasIdentity && formData.email) {
+          const accessData = new FormData();
+          accessData.append("name", "");
+          accessData.append("email", formData.email);
+          accessData.append("categories", "");
+          accessData.append("otherInterest", "");
+          accessData.append("notes", "");
+          accessData.append("subscribeNewsletter", "No");
+          accessData.append("agreedToTerms", "Yes");
+          postRequestDirectory(accessData);
+        }
         setIsSuccess(true);
         // Close modal/drawer after successful submission
         setTimeout(() => {
@@ -318,7 +317,7 @@ const AdminGroupsDirectoryForm = ({
         </div>
       </div>
 
-            {/* Person info */}
+      {/* Person info */}
 
       {!hasIdentity && (
         <div className="flex flex-wrap mb-6">
@@ -336,6 +335,9 @@ const AdminGroupsDirectoryForm = ({
               onChange={handleChange}
               onBlur={() => handleBlur("email")}
             />
+            <p className="mt-1.5 text-xs text-gray-400 dark:text-brand-white/60">
+              To confirm you're not a robot 🤖
+            </p>
           </div>
         </div>
       )}
@@ -365,9 +367,16 @@ const AdminGroupsDirectoryForm = ({
       </div>
 
       <div className="flex flex-wrap mb-6 px-3">
-        <label className={labelStyle} htmlFor="description">
-          {formatFieldLabel("description")}
-        </label>
+        <div className="flex justify-between items-baseline w-full mb-2">
+          <label className={labelStyle.replace(" mb-2", "")} htmlFor="description">
+            {formatFieldLabel("description")}
+          </label>
+          <span
+            className={`text-xs ${(formData.description?.length ?? 0) >= DESCRIPTION_MAX_LENGTH ? "text-red-500 font-semibold" : "text-gray-400"}`}
+          >
+            {formData.description?.length ?? 0}/{DESCRIPTION_MAX_LENGTH}
+          </span>
+        </div>
         <textarea
           className={inputStyle}
           id="description"
@@ -378,11 +387,6 @@ const AdminGroupsDirectoryForm = ({
           value={formData.description || ""}
           onChange={handleChange}
         />
-        <p
-          className={`mt-1 text-xs text-right w-full ${(formData.description?.length ?? 0) >= DESCRIPTION_MAX_LENGTH ? "text-red-500 font-semibold" : "text-gray-400"}`}
-        >
-          {formData.description?.length ?? 0}/{DESCRIPTION_MAX_LENGTH}
-        </p>
       </div>
 
       <CategoryChipsFormField

@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
 
 const isLocal = process.env.NODE_ENV === "development";
@@ -107,6 +108,20 @@ export const postManageDirectory = async (data, action = "add") => {
       formData.append(key, value as string);
     });
     formData.append("action", action);
+  }
+
+  if (!(formData.get("email") as string)?.trim()) {
+    const cookieStore = await cookies();
+    const uid = cookieStore.get("app_uid")?.value;
+    if (uid) {
+      const supabase = createServiceClient("directory");
+      const { data: user } = await supabase
+        .from("users")
+        .select("email")
+        .eq("public_id", uid)
+        .single();
+      if (user?.email) formData.set("email", user.email);
+    }
   }
 
   const result = await postToWebhook(url, formData);

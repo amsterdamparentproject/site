@@ -10,7 +10,6 @@ test.describe("AddGroupForm (/add)", () => {
       'input[name="inviteLink"]',
       "https://chat.whatsapp.com/testlink789",
     );
-    await page.fill('input[name="adminName"]', "Alex");
     await page.fill('input[name="email"]', "alex@example.com");
 
     await page.click('button:has-text("Add group")');
@@ -21,7 +20,7 @@ test.describe("AddGroupForm (/add)", () => {
     await page.goto("/groups-directory/add");
 
     await page.fill('input[name="groupName"]', "Incomplete Group");
-    // leave inviteLink, adminName, email empty
+    // leave inviteLink and email empty
 
     await expect(page.locator('button:has-text("Add group")')).toBeDisabled();
   });
@@ -34,7 +33,6 @@ test.describe("AddGroupForm (/add)", () => {
       'input[name="inviteLink"]',
       "https://chat.whatsapp.com/test",
     );
-    await page.fill('input[name="adminName"]', "Alex");
     await page.fill('input[name="email"]', "notanemail");
 
     await expect(page.locator('button:has-text("Add group")')).toBeDisabled();
