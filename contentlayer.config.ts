@@ -3,9 +3,7 @@ import {
   ComputedFields,
   makeSource,
 } from "contentlayer2/source-files";
-import { writeFileSync } from "fs";
 import readingTime from "reading-time";
-import { slug } from "github-slugger";
 import path from "path";
 import { fromHtmlIsomorphic } from "hast-util-from-html-isomorphic";
 // Remark packages
@@ -26,9 +24,8 @@ import rehypeKatexNoTranslate from "rehype-katex-notranslate";
 import rehypeCitation from "rehype-citation";
 import rehypePrismPlus from "rehype-prism-plus";
 import rehypePresetMinify from "rehype-preset-minify";
-import siteMetadata from "./data/siteMetadata";
 import { allCoreContent, sortPosts } from "pliny/utils/contentlayer.js";
-import prettier from "prettier";
+import siteMetadata from "./data/siteMetadata";
 
 const root = process.cwd();
 const isProduction = process.env.NODE_ENV === "production";
@@ -68,41 +65,6 @@ const computedFields: ComputedFields = {
   toc: { type: "json", resolve: (doc) => extractTocHeadings(doc.body.raw) },
 };
 
-/**
- * Count the occurrences of all tags across blog posts and write to json file
- */
-async function createTagCount(allBlogs) {
-  const tagCount: Record<string, number> = {};
-  allBlogs.forEach((file) => {
-    if (file.tags && (!isProduction || file.draft !== true)) {
-      file.tags.forEach((tag) => {
-        const formattedTag = slug(tag);
-        if (formattedTag in tagCount) {
-          tagCount[formattedTag] += 1;
-        } else {
-          tagCount[formattedTag] = 1;
-        }
-      });
-    }
-  });
-  const formatted = await prettier.format(JSON.stringify(tagCount, null, 2), {
-    parser: "json",
-  });
-  writeFileSync("./app/tag-data.json", formatted);
-}
-
-function createSearchIndex(allBlogs) {
-  if (
-    siteMetadata?.search?.provider === "kbar" &&
-    siteMetadata.search.kbarConfig.searchDocumentsPath
-  ) {
-    writeFileSync(
-      `public/${path.basename(siteMetadata.search.kbarConfig.searchDocumentsPath)}`,
-      JSON.stringify(allCoreContent(sortPosts(allBlogs))),
-    );
-    console.log("Local search index generated...");
-  }
-}
 
 export const Blog = defineDocumentType(() => ({
   name: "Blog",
@@ -112,6 +74,8 @@ export const Blog = defineDocumentType(() => ({
     title: { type: "string", required: true },
     date: { type: "date", required: true },
     tags: { type: "list", of: { type: "string" }, default: [] },
+    series: { type: "string" },
+    childStage: { type: "list", of: { type: "string" }, default: [] },
     lastmod: { type: "date" },
     draft: { type: "boolean" },
     summary: { type: "string" },
@@ -227,10 +191,5 @@ export default makeSource({
       [rehypePrismPlus, { defaultLanguage: "js", ignoreMissing: true }],
       rehypePresetMinify,
     ],
-  },
-  onSuccess: async (importData) => {
-    const { allBlogs } = await importData();
-    createTagCount(allBlogs);
-    createSearchIndex(allBlogs);
   },
 });

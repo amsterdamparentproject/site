@@ -3,12 +3,13 @@ import { allBlogs, allAuthors } from "contentlayer/generated";
 import { genPageMetadata } from "app/seo";
 import PostListClient from "@/components/PostListClient";
 
-export const metadata = genPageMetadata({ title: "Stories" });
+export const metadata = genPageMetadata({
+  title: "Read",
+  description: "All posts — advice and stories — from Amsterdam Parent Project",
+});
 
-export default async function StoriesPage() {
-  const posts = allCoreContent(
-    sortPosts(allBlogs.filter((post) => post.path.startsWith("stories/"))),
-  );
+export default async function ReadPage() {
+  const posts = allCoreContent(sortPosts(allBlogs));
 
   const authorMap = Object.fromEntries(
     allAuthors.map((a) => [a.slug, { name: a.name, avatar: a.avatar }]),
@@ -17,10 +18,10 @@ export default async function StoriesPage() {
   return (
     <PostListClient
       posts={posts}
-      filterDimensions={["series", "stage", "topic"]}
-      primary="stories"
-      title="Stories"
-      subtitle="Community spotlight, expert spotlight, and founder notes"
+      filterDimensions={["type", "series", "stage", "topic"]}
+      primary="all"
+      title="Read"
+      subtitle="All advice and stories"
       authorMap={authorMap}
     />
   );
