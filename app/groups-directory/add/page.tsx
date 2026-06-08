@@ -4,9 +4,9 @@ import AddGroupForm from "@/components/groups-directory/AddGroupForm";
 import { AddFormInfoNoAuth } from "@/app/types/groups-directory";
 
 export const metadata = genPageMetadata({
-  title: "Find Your Parent Groups",
+  title: "Groups Directory: Add a Group",
   description:
-    "Did you know there's a huge, thriving community of 1000+ Amsterdam parents(-to-be) on WhatsApp, Facebook, and other platforms? Request access to the Amsterdam Parent Groups Directory, with peronalized invite links to the online groups.",
+    "Add your group to the Amsterdam Parent Groups Directory.",
   openGraph: {
     images: [
       `${process.env.BASE_PATH || ""}/static/images/web-share/groups-directory.png`,

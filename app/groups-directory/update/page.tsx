@@ -4,8 +4,8 @@ import UpdateClient from "./UpdateClient";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export const metadata = genPageMetadata({
-  title: "Update Group Invite Link",
-  description: "Submit a new invite link for your Amsterdam Parent group.",
+  title: "Groups Directory: Update Group",
+  description: "Update your group details in the Amsterdam Parent Groups Directory",
   robots: {
     index: false,
     follow: false,

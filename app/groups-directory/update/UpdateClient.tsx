@@ -112,8 +112,7 @@ export default function UpdateClient({ groups }: Props) {
     }
   };
 
-  const groupFieldInvalid =
-    touched.group && (selectedGroup === null || selectedGroup === "");
+  const groupFieldInvalid = touched.group && selectedGroup === null;
 
   // --- Submit ---
   const handleSubmit = async (e: React.FormEvent) => {
