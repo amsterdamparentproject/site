@@ -27,12 +27,6 @@ const siteMetadata = {
   umamiAnalytics: {
     websiteId: process.env.NEXT_PUBLIC_UMAMI_ID,
   },
-  search: {
-    provider: "kbar",
-    kbarConfig: {
-      searchDocumentsPath: `${process.env.BASE_PATH || ""}/search.json`, // path to load documents to search
-    },
-  },
 };
 
 module.exports = siteMetadata;

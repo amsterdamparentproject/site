@@ -219,6 +219,32 @@ module.exports = () => {
           destination: "/calendar/submit-event",
           permanent: true,
         },
+        // /tags removed — redirects to /read or /stories with series filter
+        {
+          source: '/tags/expert-spotlight',
+          destination: '/stories?series=expert-spotlight',
+          permanent: true,
+        },
+        {
+          source: '/tags/community-spotlight',
+          destination: '/stories?series=community-spotlight',
+          permanent: true,
+        },
+        {
+          source: '/tags/founder-notes',
+          destination: '/stories?series=founder-notes',
+          permanent: true,
+        },
+        {
+          source: '/tags/:tag',
+          destination: '/read',
+          permanent: true,
+        },
+        {
+          source: '/tags',
+          destination: '/read',
+          permanent: true,
+        },
       ]
     },
   });

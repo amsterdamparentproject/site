@@ -1,33 +1,30 @@
+import { Suspense } from "react";
 import { allCoreContent, sortPosts } from "pliny/utils/contentlayer";
-import { allBlogs } from "contentlayer/generated";
+import { allBlogs, allAuthors } from "contentlayer/generated";
 import { genPageMetadata } from "app/seo";
-import ListLayout from "@/layouts/ListLayoutWithTags";
-
-const POSTS_PER_PAGE = 5;
+import PostListClient from "@/components/PostListClient";
 
 export const metadata = genPageMetadata({ title: "Advice" });
 
-export default async function BlogPage(props: {
-  searchParams: Promise<{ page: string }>;
-}) {
+export default async function AdvicePage() {
   const posts = allCoreContent(
     sortPosts(allBlogs.filter((post) => post.path.startsWith("advice/"))),
   );
-  const pageNumber = 1;
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-  const initialDisplayPosts = posts.slice(0, POSTS_PER_PAGE * pageNumber);
-  const pagination = {
-    currentPage: pageNumber,
-    totalPages: totalPages,
-  };
+
+  const authorMap = Object.fromEntries(
+    allAuthors.map((a) => [a.slug, { name: a.name, avatar: a.avatar }]),
+  );
 
   return (
-    <ListLayout
-      posts={posts}
-      initialDisplayPosts={initialDisplayPosts}
-      pagination={pagination}
-      title="Dear Dr. Mom"
-      subtitle="Expert advice from parenting professionals"
-    />
+    <Suspense>
+      <PostListClient
+        posts={posts}
+        filterDimensions={["stage", "topic", "freeResource"]}
+        primary="advice"
+        title="Dear Dr. Mom"
+        subtitle="Expert advice from parenting professionals"
+        authorMap={authorMap}
+      />
+    </Suspense>
   );
 }
