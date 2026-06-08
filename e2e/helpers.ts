@@ -25,4 +25,8 @@ export async function seedUid(page: Page) {
   await page.context().addCookies([
     { name: "app_uid", value: uid, domain: "localhost", path: "/" },
   ]);
+  // Also seed localStorage so client components that read app_uid from
+  // localStorage (e.g. UpdateClient email field visibility) behave correctly.
+  await page.goto("/");
+  await page.evaluate((id) => localStorage.setItem("app_uid", id), uid);
 }

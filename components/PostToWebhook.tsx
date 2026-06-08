@@ -3,7 +3,8 @@
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
 
-const isLocal = process.env.NODE_ENV === "development";
+const isLocal =
+  process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
 
 const postToWebhook = async (webhookURL, data) => {
   const authSecret = process.env.N8N_WEBHOOK_SECRET;
@@ -113,7 +114,7 @@ export const postManageDirectory = async (data, action = "add") => {
   let userCreated = false;
 
   if (!(formData.get("email") as string)?.trim()) {
-    // No email — resolve from cookie; user already exists
+    // No email — resolve from cookie (app_uid = public_id)
     const cookieStore = await cookies();
     const uid = cookieStore.get("app_uid")?.value;
     if (uid) {
@@ -125,12 +126,12 @@ export const postManageDirectory = async (data, action = "add") => {
         .single();
       if (user?.email) {
         formData.set("email", user.email);
-        formData.set("userId", String(user.id));
+        formData.set("userId", user.id);
         formData.set("publicId", uid);
       }
     }
   } else {
-    // Email present — look up or create user so all identifiers are in the payload
+    // Email present — look up or create user so all three identifiers are in the payload
     const email = (formData.get("email") as string).trim();
     const supabase = createServiceClient("directory");
     const { data: user } = await supabase
@@ -140,21 +141,41 @@ export const postManageDirectory = async (data, action = "add") => {
       .single();
 
     if (user?.id) {
-      formData.set("userId", String(user.id));
+      formData.set("userId", user.id);
       formData.set("publicId", user.public_id);
     } else {
-      const newPublicId = crypto.randomUUID();
+      // Create user and assign public_id
+      const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+      const newPublicId = Array.from({ length: 20 }, () =>
+        chars.charAt(Math.floor(Math.random() * chars.length)),
+      ).join("");
       const { data: newUser, error } = await supabase
         .from("users")
         .insert({ public_id: newPublicId, email, name: null, categories: [] })
         .select("id")
         .single();
       if (!error && newUser?.id) {
-        formData.set("userId", String(newUser.id));
+        formData.set("userId", newUser.id);
         formData.set("publicId", newPublicId);
         userCreated = true;
       }
     }
+  }
+
+  // Resolve groupId — use originalGroupName for updates (new name doesn't exist yet),
+  // fall back to groupName for adds (no originalGroupName present)
+  const lookupName = (
+    (formData.get("originalGroupName") as string) ||
+    (formData.get("groupName") as string)
+  )?.trim();
+  if (lookupName) {
+    const supabase = createServiceClient("directory");
+    const { data: group } = await supabase
+      .from("groups")
+      .select("id")
+      .eq("name", lookupName)
+      .single();
+    if (group?.id) formData.set("groupId", group.id);
   }
 
   const result = await postToWebhook(url, formData);

@@ -70,7 +70,7 @@ INSERT INTO directory.groups (name, categories, link, description, platform, adm
 DROP TABLE IF EXISTS directory.users CASCADE;
 
 CREATE TABLE directory.users (
-  id          bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   public_id   text UNIQUE NOT NULL,
   name        text,
   email       text,

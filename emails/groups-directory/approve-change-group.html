@@ -153,20 +153,11 @@
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      color: #222222;
-                                      font-size: 16px;
-                                      font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
-                                      line-height: 1.5;
-                                      text-align: center;
-                                      padding: 0px 20px;
-                                    "
-                                  >
-                                    Hi {{ $json.admin_name }},<br />
-                                  </td>
+                                <td dir="ltr" style="color:#222222;font-size:16px;font-family:Helvetica, Arial, sans-serif;white-space:pre-wrap;line-height:1.5;padding:0px 20px">Hi there,<br></td>
+                              </tr>
+                              <tr><td style="font-size:0;height:16px" height="16">&nbsp;</td></tr>
+                              <tr>
+                                <td dir="ltr" style="color:#222222;font-size:16px;font-family:Helvetica, Arial, sans-serif;white-space:pre-wrap;line-height:1.5;padding:0px 20px">Thanks for updating the group <span style="font-weight:700;white-space:pre-wrap">{{ $('Update a row').item.json.name }}</span> in the Amsterdam Parent Groups Directory! Your request has been approved and the changes have been made. You can see it in the Directory now.</td>
                                 </tr>
                                 <tr>
                                   <td
@@ -177,438 +168,33 @@
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      color: #222222;
-                                      font-size: 16px;
-                                      font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
-                                      line-height: 1.5;
-                                      text-align: center;
-                                      padding: 0px 20px;
-                                    "
-                                  >
-                                    Thanks for updating a group in the Amsterdam
-                                    Parent Groups Directory! Your request has
-                                    been approved and changes have been made.
-                                    You can see it in the directory
-                                    <a
-                                      href="http://amsterdamparentproject.nl/groups-directory"
-                                      target="_blank"
-                                      rel="noopener nofollow"
-                                      >here</a
-                                    >.
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      font-size: 16px;
-                                      font-family: Helvetica, Arial, sans-serif;
-                                      line-height: 1.5;
-                                      text-align: center;
-                                      padding: 0px 20px;
-                                    "
-                                  >
-                                    <span
-                                      style="
-                                        font-weight: 700;
-                                        white-space: pre-wrap;
-                                      "
-                                      >⚠️</span
-                                    >
-                                    <span
-                                      style="
-                                        font-weight: 700;
-                                        text-decoration: underline;
-                                        color: #3f6455;
-                                        white-space: pre-wrap;
-                                      "
-                                      >Important: Please ensure that your
-                                      group's information stays up to
-                                      date!</span
-                                    >
-                                    <span
-                                      style="
-                                        color: #222222;
-                                        white-space: pre-wrap;
-                                      "
-                                      >If the group name, description, invite
-                                      link, or categories change, it is up to
-                                      you to keep this information current in
-                                      the directory. You can make changes
-                                      through the Directory at any time.</span
-                                    ><br />
-                                    <br />
-                                  </td>
-                                </tr>
-                                <tr>
                                   <td align="center" style="padding: 0px 20px">
-                                    <table
-                                      border="0"
-                                      cellspacing="0"
-                                      cellpadding="0"
-                                    >
+                                    <table border="0" cellspacing="0" cellpadding="0">
                                       <tr>
-                                        <td
-                                          align="center"
-                                          style="border-radius: 6px"
-                                          bgcolor="#3f6455"
-                                        >
-                                          <a
-                                            href="https://amsterdamparentproject.nl/groups-directory"
-                                            target="_blank"
-                                            style="
-                                              font-size: 16px;
-                                              font-family:
-                                                Helvetica, Arial, sans-serif;
-                                              color: #ffffff;
-                                              text-decoration: none;
-                                              border-radius: 6px;
-                                              padding: 12px 24px;
-                                              border: 1px solid #3f6455;
-                                              display: inline-block;
-                                              font-weight: bold;
-                                            "
-                                            >See & manage group</a
-                                          >
+                                        <td align="center" style="border-radius: 6px;" bgcolor="#3f6455">
+                                          <a href="https://amsterdamparentproject.nl/groups-directory?uid={{ $('Admin: Add/change group').item.json.body.publicId }}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 12px 24px; border: 1px solid #3f6455; display: inline-block; font-weight: bold;">See & manage group</a>
                                         </td>
                                       </tr>
                                     </table>
                                   </td>
                                 </tr>
+                                <tr><td style="font-size:0;height:16px" height="16">&nbsp;</td></tr>
+                                <tr><td style="font-size:0;height:16px" height="16">&nbsp;</td></tr>
+                                 <tr>
+                                <td dir="ltr" style="font-size:16px;font-family:Helvetica, Arial, sans-serif;line-height:1.5;padding:0px 20px">
+                                  <span style="font-weight:700;white-space:pre-wrap">⚠️</span>
+                                  <span style="font-weight:700;text-decoration:underline;color:#3f6455;white-space:pre-wrap">Important: Help us keep the group's information up to date!</span>
+                                  <span style="color:#222222;white-space:pre-wrap">We rely on our community to ensure that group information stays current in the directory. You can make changes through the Directory at any time.</span><br>
+                                  <br>
+                                </td>
+                              </tr>
+                                <tr><td style="font-size:0;height:16px" height="16">&nbsp;</td></tr>
                                 <tr>
-                                  <td
-                                    style="font-size: 0; height: 16px"
-                                    height="16"
-                                  >
-                                    &nbsp;
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      font-size: 16px;
-                                      font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
-                                      line-height: 1.5;
-                                      text-align: center;
-                                      padding: 0px 20px;
-                                    "
-                                  >
-                                    As a reminder, here’s the info we have about
-                                    your group:<br />
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    style="font-size: 0; height: 16px"
-                                    height="16"
-                                  >
-                                    &nbsp;
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      line-height: 1.5;
-                                      text-align: left;
-                                      padding: 0px 20px;
-                                      font-size: 0;
-                                    "
-                                  >
-                                    <table
-                                      width="100%"
-                                      cellpadding="0"
-                                      cellspacing="0"
-                                      style="
-                                        border-collapse: collapse;
-                                        font-family:
-                                          Arial, Helvetica, sans-serif;
-                                      "
-                                    >
-                                      <tbody>
-                                        <tr>
-                                          <td
-                                            style="
-                                              width: 24px;
-                                              vertical-align: top;
-                                              padding-right: 8px;
-                                              text-align: right;
-                                              white-space: nowrap;
-                                            "
-                                          >
-                                            <span
-                                              style="
-                                                font-size: 16px;
-                                                color: #000;
-                                                display: inline-block;
-                                              "
-                                              >1.&nbsp;</span
-                                            >
-                                          </td>
-                                          <td
-                                            style="
-                                              font-size: 16px;
-                                              font-family:
-                                                Helvetica, Arial, sans-serif;
-                                              vertical-align: top;
-                                            "
-                                          >
-                                            <span
-                                              style="
-                                                font-weight: 700;
-                                                white-space: pre-wrap;
-                                              "
-                                              >Group name:</span
-                                            ><span
-                                              style="white-space: pre-wrap"
-                                            >
-                                              {{ $json.name }}</span
-                                            >
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      line-height: 1.5;
-                                      text-align: left;
-                                      padding: 0px 20px;
-                                      font-size: 0;
-                                    "
-                                  >
-                                    <table
-                                      width="100%"
-                                      cellpadding="0"
-                                      cellspacing="0"
-                                      style="
-                                        border-collapse: collapse;
-                                        font-family:
-                                          Arial, Helvetica, sans-serif;
-                                      "
-                                    >
-                                      <tbody>
-                                        <tr>
-                                          <td
-                                            style="
-                                              width: 24px;
-                                              vertical-align: top;
-                                              padding-right: 8px;
-                                              text-align: right;
-                                              white-space: nowrap;
-                                            "
-                                          >
-                                            <span
-                                              style="
-                                                font-size: 16px;
-                                                color: #000;
-                                                display: inline-block;
-                                              "
-                                              >2.&nbsp;</span
-                                            >
-                                          </td>
-                                          <td
-                                            style="
-                                              font-size: 16px;
-                                              font-family:
-                                                Helvetica, Arial, sans-serif;
-                                              vertical-align: top;
-                                            "
-                                          >
-                                            <span
-                                              style="
-                                                font-weight: 700;
-                                                white-space: pre-wrap;
-                                              "
-                                              >Invite link:</span
-                                            ><span
-                                              style="white-space: pre-wrap"
-                                            >
-                                              {{ $json.link }}</span
-                                            >
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      line-height: 1.5;
-                                      text-align: left;
-                                      padding: 0px 20px;
-                                      font-size: 0;
-                                    "
-                                  >
-                                    <table
-                                      width="100%"
-                                      cellpadding="0"
-                                      cellspacing="0"
-                                      style="
-                                        border-collapse: collapse;
-                                        font-family:
-                                          Arial, Helvetica, sans-serif;
-                                      "
-                                    >
-                                      <tbody>
-                                        <tr>
-                                          <td
-                                            style="
-                                              width: 24px;
-                                              vertical-align: top;
-                                              padding-right: 8px;
-                                              text-align: right;
-                                              white-space: nowrap;
-                                            "
-                                          >
-                                            <span
-                                              style="
-                                                font-size: 16px;
-                                                color: #000;
-                                                display: inline-block;
-                                              "
-                                              >2.&nbsp;</span
-                                            >
-                                          </td>
-                                          <td
-                                            style="
-                                              font-size: 16px;
-                                              font-family:
-                                                Helvetica, Arial, sans-serif;
-                                              vertical-align: top;
-                                            "
-                                          >
-                                            <span
-                                              style="
-                                                font-weight: 700;
-                                                white-space: pre-wrap;
-                                              "
-                                              >Description:</span
-                                            ><span
-                                              style="white-space: pre-wrap"
-                                            >
-                                              {{ $json.description }}</span
-                                            >
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      line-height: 1.5;
-                                      text-align: left;
-                                      padding: 0px 20px;
-                                      font-size: 0;
-                                    "
-                                  >
-                                    <table
-                                      width="100%"
-                                      cellpadding="0"
-                                      cellspacing="0"
-                                      style="
-                                        border-collapse: collapse;
-                                        font-family:
-                                          Arial, Helvetica, sans-serif;
-                                      "
-                                    >
-                                      <tbody>
-                                        <tr>
-                                          <td
-                                            style="
-                                              width: 24px;
-                                              vertical-align: top;
-                                              padding-right: 8px;
-                                              text-align: right;
-                                              white-space: nowrap;
-                                            "
-                                          >
-                                            <span
-                                              style="
-                                                font-size: 16px;
-                                                color: #000;
-                                                display: inline-block;
-                                              "
-                                              >3.&nbsp;</span
-                                            >
-                                          </td>
-                                          <td
-                                            style="
-                                              font-size: 16px;
-                                              font-family:
-                                                Helvetica, Arial, sans-serif;
-                                              vertical-align: top;
-                                            "
-                                          >
-                                            <span
-                                              style="
-                                                font-weight: 700;
-                                                white-space: pre-wrap;
-                                              "
-                                              >Categories: </span
-                                            ><span style="white-space: pre-wrap"
-                                              >{{ $json.categories.join(', ')
-                                              }}</span
-                                            >
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    style="font-size: 0; height: 16px"
-                                    height="16"
-                                  >
-                                    &nbsp;
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      font-size: 16px;
-                                      font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
-                                      line-height: 1.5;
-                                      text-align: center;
-                                      padding: 0px 20px;
-                                    "
-                                  >
-                                    Thanks,<br />
-                                  </td>
+                                  <td dir="ltr" style="font-size:16px;font-family:Helvetica, Arial, sans-serif;line-height:1.5;padding:0px 20px">Thanks,<br /></td>
                                 </tr>
 
                                 <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      font-size: 16px;
-                                      font-style: italic;
-                                      font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
-                                      line-height: 1.5;
-                                      text-align: center;
-                                      padding: 0px 20px;
-                                    "
-                                  >
-                                    Alex from the Amsterdam Parent Project<br />
-                                  </td>
+                                  <td dir="ltr" style="font-size:16px;font-style:italic;font-family:Helvetica, Arial, sans-serif;line-height:1.5;padding:0px 20px">Alex from the Amsterdam Parent Project<br /></td>
                                 </tr>
                                 <tr>
                                   <td
@@ -661,111 +247,27 @@
                                     </table>
                                   </td>
                                 </tr>
-                                <tr>
-                                  <td
-                                    style="font-size: 0; height: 16px"
-                                    height="16"
-                                  >
-                                    &nbsp;
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      font-size: 16px;
-                                      font-family: Helvetica, Arial, sans-serif;
-                                      text-align: center;
-                                      padding: 0px 20px;
-                                    "
-                                  >
-                                    <a
-                                      href="http://amsterdamparentproject.nl"
-                                      target="_blank"
-                                      rel="noopener nofollow"
-                                      style="
-                                        color: inherit;
-                                        text-decoration: inherit;
-                                      "
-                                    >
-                                      <span
-                                        style="
-                                          text-decoration: underline;
-                                          color: #e1ad37;
-                                          white-space: pre-wrap;
-                                        "
-                                        >amsterdamparentproject.nl</span
-                                      > </a
-                                    ><br />
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    style="font-size: 0; height: 16px"
-                                    height="16"
-                                  >
-                                    &nbsp;
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    dir="ltr"
-                                    style="
-                                      font-size: 16px;
-                                      font-family: Helvetica, Arial, sans-serif;
-                                      text-align: center;
-                                      padding: 0px 20px;
-                                    "
-                                  >
-                                    <a
-                                      href="http://amsterdamparentproject.nl"
-                                      target="_blank"
-                                      rel="noopener nofollow"
-                                      style="
-                                        color: inherit;
-                                        text-decoration: inherit;
-                                      "
-                                    >
-                                      <span
-                                        style="
-                                          text-decoration: underline;
-                                          color: #3f6455;
-                                          white-space: pre-wrap;
-                                        "
-                                        >Homepage</span
-                                      >
-                                    </a>
-                                    <span style="white-space: pre-wrap">
-                                      -
-                                    </span>
-                                    <a
-                                      href="http://amsterdamparentproject.nl/subscribe"
-                                      target="_blank"
-                                      rel="noopener nofollow"
-                                      style="
-                                        color: inherit;
-                                        text-decoration: inherit;
-                                      "
-                                    >
-                                      <span
-                                        style="
-                                          text-decoration: underline;
-                                          color: #3f6455;
-                                          white-space: pre-wrap;
-                                        "
-                                        >Subscribe</span
-                                      > </a
-                                    ><br />
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    style="font-size: 0; height: 16px"
-                                    height="16"
-                                  >
-                                    &nbsp;
-                                  </td>
-                                </tr>
+                                <tr><td style="font-size:0;height:16px" height="16">&nbsp;</td></tr>
+                              <tr>
+                                <td dir="ltr" style="text-align:center;font-size:16px;font-family:Helvetica, Arial, sans-serif;padding:0px 20px">
+                                  <a href="http://amsterdamparentproject.nl" target="_blank" rel="noopener nofollow" style="color:inherit;text-decoration:inherit">
+                                    <span style="text-decoration:underline;color:#e1ad37;white-space:pre-wrap">amsterdamparentproject.nl</span>
+                                  </a><br>
+                                </td>
+                              </tr>
+                              <tr><td style="font-size:0;height:16px" height="16">&nbsp;</td></tr>
+                              <tr>
+                                <td dir="ltr" style="text-align:center;font-size:16px;font-family:Helvetica, Arial, sans-serif;padding:0px 20px">
+                                  <a href="http://amsterdamparentproject.nl" target="_blank" rel="noopener nofollow" style="color:inherit;text-decoration:inherit">
+                                    <span style="text-decoration:underline;color:#3f6455;white-space:pre-wrap">Homepage</span>
+                                  </a>
+                                  <span style="white-space:pre-wrap"> - </span>
+                                  <a href="http://amsterdamparentproject.nl/subscribe" target="_blank" rel="noopener nofollow" style="color:inherit;text-decoration:inherit">
+                                    <span style="text-decoration:underline;color:#3f6455;white-space:pre-wrap">Subscribe</span>
+                                  </a><br>
+                                </td>
+                              </tr>
+                              <tr><td style="font-size:0;height:16px" height="16">&nbsp;</td></tr>
                               </tbody>
                             </table>
                           </td>
