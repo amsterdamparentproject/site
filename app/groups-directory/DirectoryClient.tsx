@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import AddGroupForm from "@/components/groups-directory/AddGroupForm";
-import ChangeGroupForm from "@/components/groups-directory/ChangeGroupForm";
+import AdminGroupsDirectoryForm from "@/components/groups-directory/AdminGroupsDirectoryForm";
 import ReportIssueForm from "@/components/groups-directory/ReportIssueForm";
 import DirectoryGroupCard from "@/components/groups-directory/DirectoryGroupCard";
 import Modal from "@/components/Modal";
@@ -324,8 +323,9 @@ export default function DirectoryClient({
         onClose={handleCloseAddModal}
         title="Add new group"
       >
-        <AddGroupForm
-          info={{ userName: userName, userEmail: userEmail }}
+        <AdminGroupsDirectoryForm
+          mode="add"
+          info={{ userName: userName, userEmail: userEmail, userId: uid }}
           onClose={handleCloseAddModal}
         />
       </Modal>
@@ -337,7 +337,8 @@ export default function DirectoryClient({
         title={`Change group${selectedGroupForEdit ? `: ${selectedGroupForEdit.name}` : ""}`}
       >
         {selectedGroupForEdit && (
-          <ChangeGroupForm
+          <AdminGroupsDirectoryForm
+            mode="edit"
             info={{
               name: selectedGroupForEdit.name,
               categories: selectedGroupForEdit.categories?.join(", ") || "",
@@ -345,6 +346,7 @@ export default function DirectoryClient({
               link: selectedGroupForEdit.link,
               userName: userName,
               userEmail: userEmail,
+              userId: uid,
             }}
             onClose={handleCloseModal}
           />

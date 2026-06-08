@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { postManageDirectory } from "@/components/PostToWebhook";
 import CategoryChipsFormField from "@/components/groups-directory/CategoryChipsFormField";
 import type { GroupOption } from "./page";
@@ -30,9 +30,20 @@ export default function UpdateClient({ groups }: Props) {
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // --- Stored UID from localStorage ---
+  const [storedUid, setStoredUid] = useState<string | null>(null);
+
+  useEffect(() => {
+    const uid = localStorage.getItem("app_uid");
+    if (uid && !["false", "null", "undefined"].includes(uid) && uid.trim()) {
+      setStoredUid(uid);
+    }
+  }, []);
+
   // --- Core fields ---
   const [newLink, setNewLink] = useState("");
   const [email, setEmail] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // --- Expandable "other fields" ---
   const [showOtherFields, setShowOtherFields] = useState(false);
@@ -57,7 +68,8 @@ export default function UpdateClient({ groups }: Props) {
     newLink.trim().startsWith("http://") ||
     newLink.trim().startsWith("https://");
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  const isFormValid = selectedGroup !== null && isLinkValid && isEmailValid;
+  const isFormValid =
+    selectedGroup !== null && isLinkValid && (!!storedUid || isEmailValid);
 
   // --- Autocomplete handlers ---
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,10 +140,10 @@ export default function UpdateClient({ groups }: Props) {
       data.append("inviteLink", newLink.trim());
       data.append("description", description.trim());
       data.append("categories", categories.join(", "));
-      data.append("adminName", "");
       data.append("email", email.trim());
       data.append("notes", "");
-      data.append("agreedToTerms", "Yes");
+      data.append("isAdmin", isAdmin ? "Yes" : "No");
+      data.append("user_id", storedUid ?? "");
       data.append("createAccount", "No");
       data.append("subscribeNewsletter", "No");
       data.append("source", "direct");
@@ -257,27 +269,54 @@ export default function UpdateClient({ groups }: Props) {
         </div>
       </div>
 
-      {/* Optional email */}
-      <div className="flex flex-wrap mb-6">
-        <div className="w-full px-3">
-          <label className={labelStyle} htmlFor="email">
-            Your email <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="email"
-            type="email"
-            className={
-              touched.email && !isEmailValid ? requiredInputStyle : inputStyle
-            }
-            placeholder="hello@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onBlur={() => setTouched((p) => ({ ...p, email: true }))}
-          />
-          <p className="mt-1.5 text-xs text-gray-400 dark:text-brand-white/60">
-            To confirm humanity ❤️ and for any follow-up questions
-          </p>
+      {/* Email — hidden when a stored UID is available */}
+      {!storedUid && (
+        <div className="flex flex-wrap mb-6">
+          <div className="w-full px-3">
+            <label className={labelStyle} htmlFor="email">
+              Your email <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="email"
+              type="email"
+              className={
+                touched.email && !isEmailValid
+                  ? requiredInputStyle
+                  : inputStyle
+              }
+              placeholder="hello@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setTouched((p) => ({ ...p, email: true }))}
+            />
+            <p className="mt-1.5 text-xs text-gray-400 dark:text-brand-white/60">
+              To confirm humanity ❤️ and for any follow-up questions
+            </p>
+          </div>
         </div>
+      )}
+
+      {/* Admin flag */}
+      <div className="flex flex-wrap mb-6 px-3">
+        <label
+          htmlFor="isAdmin-check"
+          className="flex items-center gap-3 cursor-pointer select-none"
+        >
+          <div className="relative">
+            <input
+              id="isAdmin-check"
+              type="checkbox"
+              checked={isAdmin}
+              onChange={(e) => setIsAdmin(e.target.checked)}
+              className="sr-only peer"
+            />
+            <div className="w-10 h-6 rounded-full bg-brand-sand peer-checked:bg-brand-soft-green transition-colors" />
+            <div className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform peer-checked:translate-x-4" />
+          </div>
+          <span className="text-sm text-brand-charcoal dark:text-brand-white">
+            I'm the group admin
+          </span>
+        </label>
       </div>
 
       {/* Expandable: other fields */}
@@ -349,6 +388,10 @@ export default function UpdateClient({ groups }: Props) {
         >
           {isSubmitting ? "Sending..." : "Submit update"}
         </button>
+        <p className="mt-3 text-xs text-gray-400 dark:text-brand-white/60 italic">
+          By submitting, you agree to be listed as a group contact for any
+          questions.
+        </p>
       </div>
 
       <p className="px-3 text-sm italic text-brand-soft-charcoal dark:text-brand-white/60">

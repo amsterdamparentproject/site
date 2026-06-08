@@ -23,7 +23,6 @@ test.describe("ChangeGroupForm (directory)", () => {
       'input[name="inviteLink"]',
       "https://chat.whatsapp.com/updatedlink456",
     );
-    await page.check('input[name="agreedToTerms"]');
 
     await page.click('button:has-text("Request changes")');
     await waitForSuccess(page, "Success!");

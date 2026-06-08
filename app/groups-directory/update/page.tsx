@@ -5,7 +5,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 
 export const metadata = genPageMetadata({
   title: "Groups Directory: Update Group",
-  description: "Update your group details in the Amsterdam Parent Groups Directory",
+  description: "Update group details in the Amsterdam Parent Groups Directory",
   robots: {
     index: false,
     follow: false,
@@ -61,7 +61,7 @@ export default async function Page() {
             Update a group
           </h1>
           <p className="mt-4 text-center text-brand-soft-charcoal dark:text-brand-white/80 text-sm">
-            Update your group details here, and we'll update the Directory. This is for existing groups only — if you want to add a new group please use our <a href="/groups-directory/add" className="text-brand-soft-green dark:text-brand-goldenrod hover:underline">
+            Update group details here, and we'll update the Directory. This is for existing groups only — if you want to add a new group please use our <a href="/groups-directory/add" className="text-brand-soft-green dark:text-brand-goldenrod hover:underline">
               Add a Group
             </a> form.
           </p>

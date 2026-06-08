@@ -1,6 +1,6 @@
 import { genPageMetadata } from "app/seo";
 import { Suspense } from "react";
-import AddGroupForm from "@/components/groups-directory/AddGroupForm";
+import AdminGroupsDirectoryForm from "@/components/groups-directory/AdminGroupsDirectoryForm";
 import { AddFormInfoNoAuth } from "@/app/types/groups-directory";
 
 export const metadata = genPageMetadata({
@@ -27,17 +27,22 @@ export default function Page() {
     <Suspense
       fallback={<div className="min-h-screen p-10 text-center">Loading...</div>}
     >
-      <div className="max-w-2xl mx-auto p-6">
-        <div className="mb-10 md:mb-12">
-          <h2 className="text-xl md:text-3xl font-bold text-brand-soft-green dark:text-brand-goldenrod text-center mb-2">
+      <div className="max-w-lg mx-auto p-6">
+        <div className="mb-10">
+          <h2 className="text-xl md:text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod text-center mb-2">
             Amsterdam Parent Groups Directory
           </h2>
-          <h1 className="text-center text-brand-charcoal dark:text-brand-white text-3xl leading-8 font-extrabold tracking-tight md:text-5xl md:leading-10">
+          <h1 className="text-center text-brand-charcoal dark:text-brand-white text-3xl leading-8 font-extrabold tracking-tight md:text-4xl md:leading-10">
             Add a group
           </h1>
+          <p className="mt-4 text-center text-brand-soft-charcoal dark:text-brand-white/80 text-sm">
+            Submit your group here, and we'll add it the Directory. This is for new groups only — if you want to update an existing group please use our <a href="/groups-directory/add" className="text-brand-soft-green dark:text-brand-goldenrod hover:underline">
+              Update Group
+            </a> form.
+          </p>
         </div>
 
-        <AddGroupForm info={info} />
+        <AdminGroupsDirectoryForm mode="add" info={info} />
       </div>
     </Suspense>
   );

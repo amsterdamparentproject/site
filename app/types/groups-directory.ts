@@ -20,6 +20,7 @@ export type GroupCategory = (typeof GROUP_CATEGORIES)[number];
 export interface UserInfo {
   userName?: string;
   userEmail?: string;
+  userId?: string;
 }
 
 // Fields required ONLY when editing

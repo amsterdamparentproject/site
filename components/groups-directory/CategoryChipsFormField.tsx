@@ -12,7 +12,7 @@ interface CategoryChipsProps {
 
 export default function CategoryChipsFormField({
   selectedCategories,
-  formQuestion = "Which categories apply to your group?",
+  formQuestion = "Which categories apply to the group?",
   formQuestionDescription = "Tap to select all that apply. If none apply, it will show in the general list.",
   onChange,
   showSelectAll = true,

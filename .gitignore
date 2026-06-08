@@ -48,3 +48,6 @@ yarn-error.log*
 # Playwright
 /playwright-report
 /test-results
+
+# Claude
+__claude__

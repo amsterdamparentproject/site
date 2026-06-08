@@ -12,7 +12,6 @@ test.describe("AddGroupForm (/add)", () => {
     );
     await page.fill('input[name="adminName"]', "Alex");
     await page.fill('input[name="email"]', "alex@example.com");
-    await page.check('input[name="agreedToTerms"]');
 
     await page.click('button:has-text("Add group")');
     await waitForSuccess(page, "Success!");
@@ -22,7 +21,7 @@ test.describe("AddGroupForm (/add)", () => {
     await page.goto("/groups-directory/add");
 
     await page.fill('input[name="groupName"]', "Incomplete Group");
-    // leave inviteLink, adminName, email, agreedToTerms empty
+    // leave inviteLink, adminName, email empty
 
     await expect(page.locator('button:has-text("Add group")')).toBeDisabled();
   });
@@ -37,7 +36,6 @@ test.describe("AddGroupForm (/add)", () => {
     );
     await page.fill('input[name="adminName"]', "Alex");
     await page.fill('input[name="email"]', "notanemail");
-    await page.check('input[name="agreedToTerms"]');
 
     await expect(page.locator('button:has-text("Add group")')).toBeDisabled();
   });
