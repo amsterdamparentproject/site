@@ -5,8 +5,7 @@ import { AddFormInfoNoAuth } from "@/app/types/groups-directory";
 
 export const metadata = genPageMetadata({
   title: "Groups Directory: Add a Group",
-  description:
-    "Add your group to the Amsterdam Parent Groups Directory.",
+  description: "Add your group to the Amsterdam Parent Groups Directory.",
   openGraph: {
     images: [
       `${process.env.BASE_PATH || ""}/static/images/web-share/groups-directory.png`,
@@ -36,9 +35,16 @@ export default function Page() {
             Add a group
           </h1>
           <p className="mt-4 text-center text-brand-soft-charcoal dark:text-brand-white/80 text-sm">
-            Submit your group here, and we'll add it the Directory. This is for new groups only — if you want to update an existing group please use our <a href="/groups-directory/add" className="text-brand-soft-green dark:text-brand-goldenrod hover:underline">
+            Submit your group here, and we'll add it the Directory. This is for
+            new groups only — if you want to update an existing group please use
+            our{" "}
+            <a
+              href="/groups-directory/add"
+              className="text-brand-soft-green dark:text-brand-goldenrod hover:underline"
+            >
               Update Group
-            </a> form.
+            </a>{" "}
+            form.
           </p>
         </div>
 

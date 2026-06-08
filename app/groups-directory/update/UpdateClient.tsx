@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { postManageDirectory, postRequestDirectory } from "@/components/PostToWebhook";
+import {
+  postManageDirectory,
+  postRequestDirectory,
+} from "@/components/PostToWebhook";
 import CategoryChipsFormField from "@/components/groups-directory/CategoryChipsFormField";
 import type { GroupOption } from "./page";
 
@@ -36,7 +39,8 @@ export default function UpdateClient({ groups, initialGroupName }: Props) {
 
   useEffect(() => {
     const uid = localStorage.getItem("app_uid");
-    if (!uid || ["false", "null", "undefined"].includes(uid) || !uid.trim()) return;
+    if (!uid || ["false", "null", "undefined"].includes(uid) || !uid.trim())
+      return;
     setStoredUid(uid);
   }, []);
 
@@ -50,7 +54,11 @@ export default function UpdateClient({ groups, initialGroupName }: Props) {
   const [description, setDescription] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
 
-  const [touched, setTouched] = useState({ group: false, newLink: false, email: false });
+  const [touched, setTouched] = useState({
+    group: false,
+    newLink: false,
+    email: false,
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -100,7 +108,7 @@ export default function UpdateClient({ groups, initialGroupName }: Props) {
       (g) => g.name.toLowerCase() === initialGroupName.toLowerCase(),
     );
     if (match) confirmSelection(match);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialGroupName, groups]);
 
   const handleInputBlur = () => {
@@ -303,9 +311,7 @@ export default function UpdateClient({ groups, initialGroupName }: Props) {
               id="email"
               type="email"
               className={
-                touched.email && !isEmailValid
-                  ? requiredInputStyle
-                  : inputStyle
+                touched.email && !isEmailValid ? requiredInputStyle : inputStyle
               }
               placeholder="hello@example.com"
               value={email}
@@ -372,7 +378,10 @@ export default function UpdateClient({ groups, initialGroupName }: Props) {
           {/* Description */}
           <div className="flex flex-wrap mb-6 px-3">
             <div className="flex justify-between items-baseline w-full mb-2">
-              <label className={labelStyle.replace(" mb-2", "")} htmlFor="description">
+              <label
+                className={labelStyle.replace(" mb-2", "")}
+                htmlFor="description"
+              >
                 Group description
               </label>
               <span

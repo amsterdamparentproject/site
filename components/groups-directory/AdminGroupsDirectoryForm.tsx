@@ -32,7 +32,8 @@ const AdminGroupsDirectoryForm = ({
 
   useEffect(() => {
     const uid = localStorage.getItem("app_uid");
-    if (!uid || ["false", "null", "undefined"].includes(uid) || !uid.trim()) return;
+    if (!uid || ["false", "null", "undefined"].includes(uid) || !uid.trim())
+      return;
     setStoredUid(uid);
   }, []);
 
@@ -368,7 +369,10 @@ const AdminGroupsDirectoryForm = ({
 
       <div className="flex flex-wrap mb-6 px-3">
         <div className="flex justify-between items-baseline w-full mb-2">
-          <label className={labelStyle.replace(" mb-2", "")} htmlFor="description">
+          <label
+            className={labelStyle.replace(" mb-2", "")}
+            htmlFor="description"
+          >
             {formatFieldLabel("description")}
           </label>
           <span

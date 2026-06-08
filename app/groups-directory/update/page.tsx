@@ -66,9 +66,16 @@ export default async function Page({ searchParams }: PageProps) {
             Update a group
           </h1>
           <p className="mt-4 text-center text-brand-soft-charcoal dark:text-brand-white/80 text-sm">
-            Update group details here, and we'll update the Directory. This is for existing groups only — if you want to add a new group please use our <a href="/groups-directory/add" className="text-brand-soft-green dark:text-brand-goldenrod hover:underline">
+            Update group details here, and we'll update the Directory. This is
+            for existing groups only — if you want to add a new group please use
+            our{" "}
+            <a
+              href="/groups-directory/add"
+              className="text-brand-soft-green dark:text-brand-goldenrod hover:underline"
+            >
               Add a Group
-            </a> form.
+            </a>{" "}
+            form.
           </p>
         </div>
 
