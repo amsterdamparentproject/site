@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { postManageDirectory } from "../PostToWebhook";
 import CategoryChipsFormField from "./CategoryChipsFormField";
+import { directoryClient } from "@/lib/supabase/client";
 import {
   AddFormInfo,
   AdminGroupsDirectoryFormProps,
@@ -32,14 +33,22 @@ const AdminGroupsDirectoryForm = ({
 
   useEffect(() => {
     const uid = localStorage.getItem("app_uid");
-    if (uid && !["false", "null", "undefined"].includes(uid) && uid.trim()) {
-      setStoredUid(uid);
-    }
+    if (!uid || ["false", "null", "undefined"].includes(uid) || !uid.trim()) return;
+    setStoredUid(uid);
+    directoryClient()
+      .from("users")
+      .select("email")
+      .eq("public_id", uid)
+      .single()
+      .then(({ data }) => {
+        if (data?.email) {
+          setFormData((prev) => ({ ...prev, email: prev.email || data.email }));
+        }
+      });
   }, []);
 
   // Explicit userId from info (authenticated directory) or fall back to localStorage
   const explicitUserId = "userId" in info ? info.userId : undefined;
-  const resolvedUserId = explicitUserId || storedUid || "";
 
   // Hide name/email when we have explicit user info or a stored UID
   const hasIdentity =
@@ -118,12 +127,14 @@ const AdminGroupsDirectoryForm = ({
         formData[field as keyof typeof formData]?.toString().trim() !== "",
     );
     const adminFieldsValid =
-      REQUIRED_ADMIN_FIELDS.every(
+      hasIdentity ||
+      (REQUIRED_ADMIN_FIELDS.every(
         (field) =>
           formData[field as keyof typeof formData]?.toString().trim() !== "",
-      ) && isEmailValid;
+      ) &&
+        isEmailValid);
     return textFieldsValid && adminFieldsValid;
-  }, [formData, isEmailValid]);
+  }, [formData, isEmailValid, hasIdentity]);
 
   // Add required star
   const formatFieldLabel = (fieldName: string) => {
@@ -177,7 +188,6 @@ const AdminGroupsDirectoryForm = ({
       data.append("email", formData.email);
       data.append("notes", formData.notes);
       data.append("isAdmin", formData.isAdmin ? "Yes" : "No");
-      data.append("user_id", resolvedUserId);
 
       // Sign them up for the directory if they don't have an account
       data.append("createAccount", hasIdentity ? "No" : "Yes");

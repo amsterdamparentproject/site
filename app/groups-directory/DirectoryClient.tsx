@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import AdminGroupsDirectoryForm from "@/components/groups-directory/AdminGroupsDirectoryForm";
+import EditProfileForm from "@/components/groups-directory/EditProfileForm";
 import ReportIssueForm from "@/components/groups-directory/ReportIssueForm";
 import DirectoryGroupCard from "@/components/groups-directory/DirectoryGroupCard";
 import Modal from "@/components/Modal";
@@ -45,6 +46,7 @@ export default function DirectoryClient({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedGroupForEdit, setSelectedGroupForEdit] =
     useState<Group | null>(null);
   const [selectedGroupForReport, setSelectedGroupForReport] =
@@ -155,11 +157,9 @@ export default function DirectoryClient({
         <h2 className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
           Welcome{userName && `, ${userName}`}!
         </h2>
-        {userEmail && (
-          <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
-            Accessing as: {userMaskedEmail}
-          </p>
-        )}
+        <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 italic">
+          Accessing as: {userMaskedEmail || userEmail}
+        </p>
         <p className="text-sm text-brand-charcoal dark:text-brand-white mt-2">
           This is your personalized community directory: a curated list of
           groups for parents and parents-to-be across Amsterdam. This free
@@ -171,26 +171,48 @@ export default function DirectoryClient({
           protect these groups from spammers and more by keeping this directory
           private.
         </p>
-        <button
-          onClick={handleOpenAddModal}
-          className="cursor-pointer mt-2 text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal dark:hover:text-brand-white h-10 flex items-center"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        <div className="flex items-center gap-4 mt-2">
+          <button
+            onClick={handleOpenAddModal}
+            className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal dark:hover:text-brand-white h-10 flex items-center"
           >
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          <span className="ml-1">Add new group</span>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span className="ml-1">Add new group</span>
+          </button>
+          <button
+            onClick={() => setIsProfileModalOpen(true)}
+            className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal dark:hover:text-brand-white h-10 flex items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            <span className="ml-1">Update profile</span>
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -368,6 +390,21 @@ export default function DirectoryClient({
             onClose={handleCloseReportModal}
           />
         )}
+      </Modal>
+
+      {/* Profile Modal */}
+      <Modal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        title="Update profile"
+      >
+        <EditProfileForm
+          uid={uid!}
+          userName={userName}
+          userEmail={userEmail}
+          userInterests={userInterests}
+          onClose={() => setIsProfileModalOpen(false)}
+        />
       </Modal>
     </div>
   );

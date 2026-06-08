@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { postManageDirectory } from "@/components/PostToWebhook";
+import { directoryClient } from "@/lib/supabase/client";
 import CategoryChipsFormField from "@/components/groups-directory/CategoryChipsFormField";
 import type { GroupOption } from "./page";
 
@@ -35,9 +36,18 @@ export default function UpdateClient({ groups }: Props) {
 
   useEffect(() => {
     const uid = localStorage.getItem("app_uid");
-    if (uid && !["false", "null", "undefined"].includes(uid) && uid.trim()) {
-      setStoredUid(uid);
-    }
+    if (!uid || ["false", "null", "undefined"].includes(uid) || !uid.trim()) return;
+    setStoredUid(uid);
+    directoryClient()
+      .from("users")
+      .select("email")
+      .eq("public_id", uid)
+      .single()
+      .then(({ data }) => {
+        if (data?.email) {
+          setEmail((prev) => prev || data.email);
+        }
+      });
   }, []);
 
   // --- Core fields ---
@@ -143,7 +153,6 @@ export default function UpdateClient({ groups }: Props) {
       data.append("email", email.trim());
       data.append("notes", "");
       data.append("isAdmin", isAdmin ? "Yes" : "No");
-      data.append("user_id", storedUid ?? "");
       data.append("createAccount", "No");
       data.append("subscribeNewsletter", "No");
       data.append("source", "direct");

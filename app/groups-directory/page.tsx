@@ -53,8 +53,8 @@ export default async function DirectoryPage({ searchParams }: PageProps) {
     redirect("/groups-directory/access?noUid=true");
   }
 
-  if (uid && !data.user_name) {
-    // We couldn't find the user, so reroute to /access with a warning
+  if (uid && !data.user_email) {
+    // UID exists but no matching user found in the directory
     console.warn("Groups Directory: No user found for UID:", uid);
     redirect("/groups-directory/access?badUid=true");
   }
