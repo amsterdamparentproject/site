@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/groups-directory/add", "/groups-directory$"],
+      disallow: ["/groups-directory/add", "/groups-directory/update", "/groups-directory$"],
     },
     sitemap: `${siteMetadata.siteUrl}/sitemap.xml`,
     host: siteMetadata.siteUrl,
