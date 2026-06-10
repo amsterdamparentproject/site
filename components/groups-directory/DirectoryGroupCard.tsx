@@ -9,6 +9,7 @@ interface Group {
   platform: string;
   description: string;
   link: string;
+  reported?: boolean;
 }
 
 interface DirectoryGroupProps {
@@ -58,16 +59,22 @@ export default function DirectoryGroupCard({
       </div>
 
       <div className="flex flex-col gap-2">
-        <a
-          href={group.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="cursor-pointer bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center"
-          data-umami-event="Join group"
-          data-umami-event-uid={uid}
-        >
-          Join
-        </a>
+        {group.reported ? (
+          <span className="cursor-default bg-brand-sand/40 text-brand-soft-charcoal dark:text-brand-white/50 px-10 py-2.5 rounded-full font-bold text-center">
+            Broken link
+          </span>
+        ) : (
+          <a
+            href={group.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center"
+            data-umami-event="Join group"
+            data-umami-event-uid={uid}
+          >
+            Join
+          </a>
+        )}
         <div className="flex flex-row gap-3 justify-center text-[10px]">
           <button
             onClick={() => onEdit(group)}
@@ -79,7 +86,7 @@ export default function DirectoryGroupCard({
             onClick={() => onReport(group)}
             className="cursor-pointer text-red-800 hover:underline dark:text-red-400"
           >
-            Report issue
+            {group.reported ? "Fix link" : "Report issue"}
           </button>
         </div>
       </div>

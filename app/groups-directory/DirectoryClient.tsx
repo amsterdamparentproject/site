@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import AdminGroupsDirectoryForm from "@/components/groups-directory/AdminGroupsDirectoryForm";
 import EditProfileForm from "@/components/groups-directory/EditProfileForm";
 import ReportIssueForm from "@/components/groups-directory/ReportIssueForm";
+import FixLinkForm from "@/components/groups-directory/FixLinkForm";
 import DirectoryGroupCard from "@/components/groups-directory/DirectoryGroupCard";
 import Modal from "@/components/Modal";
 
@@ -15,6 +16,7 @@ interface Group {
   platform: string;
   description: string;
   link: string;
+  reported?: boolean;
 }
 
 interface DirectoryClientProps {
@@ -46,10 +48,13 @@ export default function DirectoryClient({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isFixLinkModalOpen, setIsFixLinkModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedGroupForEdit, setSelectedGroupForEdit] =
     useState<Group | null>(null);
   const [selectedGroupForReport, setSelectedGroupForReport] =
+    useState<Group | null>(null);
+  const [selectedGroupForFixLink, setSelectedGroupForFixLink] =
     useState<Group | null>(null);
 
   // --- Modal/Drawer handlers ---
@@ -74,6 +79,11 @@ export default function DirectoryClient({
   const handleCloseReportModal = () => {
     setIsReportModalOpen(false);
     setSelectedGroupForReport(null);
+  };
+
+  const handleCloseFixLinkModal = () => {
+    setIsFixLinkModalOpen(false);
+    setSelectedGroupForFixLink(null);
   };
 
   useEffect(() => {
@@ -140,8 +150,13 @@ export default function DirectoryClient({
 
   // --- Actions ---
   const handleReport = (group: Group) => {
-    setSelectedGroupForReport(group);
-    setIsReportModalOpen(true);
+    if (group.reported) {
+      setSelectedGroupForFixLink(group);
+      setIsFixLinkModalOpen(true);
+    } else {
+      setSelectedGroupForReport(group);
+      setIsReportModalOpen(true);
+    }
   };
 
   return (
@@ -388,6 +403,23 @@ export default function DirectoryClient({
               link: selectedGroupForReport.link,
             }}
             onClose={handleCloseReportModal}
+          />
+        )}
+      </Modal>
+
+      {/* Fix Link Modal */}
+      <Modal
+        isOpen={isFixLinkModalOpen}
+        onClose={handleCloseFixLinkModal}
+        title={`Fix broken link${selectedGroupForFixLink ? `: ${selectedGroupForFixLink.name}` : ""}`}
+      >
+        {selectedGroupForFixLink && (
+          <FixLinkForm
+            info={{
+              name: selectedGroupForFixLink.name,
+              link: selectedGroupForFixLink.link,
+            }}
+            onClose={handleCloseFixLinkModal}
           />
         )}
       </Modal>
