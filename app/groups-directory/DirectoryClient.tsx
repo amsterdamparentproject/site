@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import AdminGroupsDirectoryForm from "@/components/groups-directory/AdminGroupsDirectoryForm";
 import EditProfileForm from "@/components/groups-directory/EditProfileForm";
 import ReportIssueForm from "@/components/groups-directory/ReportIssueForm";
@@ -49,6 +49,9 @@ export default function DirectoryClient({
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isFixLinkModalOpen, setIsFixLinkModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedGroupForEdit, setSelectedGroupForEdit] =
     useState<Group | null>(null);
@@ -119,6 +122,34 @@ export default function DirectoryClient({
     }
   }, [uid]);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (!searchTerm.trim() || activeTab !== "recommended") return;
+    const lower = searchTerm.toLowerCase().trim();
+    const inRecommended = recommended.some(
+      (g) =>
+        g.name.toLowerCase().includes(lower) ||
+        g.description?.toLowerCase().includes(lower) ||
+        g.categories?.some((c) => c.toLowerCase().includes(lower)),
+    );
+    const inAll = allGroups.some(
+      (g) =>
+        g.name.toLowerCase().includes(lower) ||
+        g.description?.toLowerCase().includes(lower) ||
+        g.categories?.some((c) => c.toLowerCase().includes(lower)),
+    );
+    if (!inRecommended && inAll) setActiveTab("all");
+  }, [searchTerm, activeTab, recommended, allGroups]);
+
   // --- Computed Filters ---
   const categories = useMemo(() => {
     const allTags = allGroups.flatMap((g) => g.categories || []);
@@ -133,8 +164,18 @@ export default function DirectoryClient({
     return ["All", ...Array.from(new Set(allPlatforms)).sort()];
   }, [allGroups]);
 
+  const suggestions = useMemo(() => {
+    if (!searchTerm.trim()) return [];
+    const lower = searchTerm.toLowerCase();
+    return allGroups
+      .filter((g) => g.name.toLowerCase().includes(lower))
+      .map((g) => g.name)
+      .slice(0, 6);
+  }, [searchTerm, allGroups]);
+
   const filteredGroups = useMemo(() => {
     const baseGroups = activeTab === "recommended" ? recommended : allGroups;
+    const lower = searchTerm.toLowerCase().trim();
 
     return baseGroups.filter((group) => {
       const matchesCat =
@@ -144,9 +185,22 @@ export default function DirectoryClient({
       const matchesType =
         selectedType === "All" || group.platform === selectedType;
 
-      return matchesCat && matchesType;
+      const matchesSearch =
+        !lower ||
+        group.name.toLowerCase().includes(lower) ||
+        group.description?.toLowerCase().includes(lower) ||
+        group.categories?.some((c) => c.toLowerCase().includes(lower));
+
+      return matchesCat && matchesType && matchesSearch;
     });
-  }, [activeTab, selectedCategory, selectedType, recommended, allGroups]);
+  }, [
+    activeTab,
+    selectedCategory,
+    selectedType,
+    searchTerm,
+    recommended,
+    allGroups,
+  ]);
 
   // --- Actions ---
   const handleReport = (group: Group) => {
@@ -235,7 +289,7 @@ export default function DirectoryClient({
         <div className="flex mb-6">
           <div className="relative group flex items-center">
             <button
-              onClick={() => setActiveTab("recommended")}
+              onClick={() => { setActiveTab("recommended"); setSearchTerm(""); }}
               className={`pb-3 px-6 text-sm rounded-l-lg cursor-pointer transition-all flex-1 md:flex-none ${
                 activeTab === "recommended"
                   ? "font-bold bg-brand-soft-green p-2 text-brand-white"
@@ -251,7 +305,7 @@ export default function DirectoryClient({
           </div>
           <div className="relative group flex items-center">
             <button
-              onClick={() => setActiveTab("all")}
+              onClick={() => { setActiveTab("all"); setSearchTerm(""); }}
               className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all flex-1 md:flex-none ${
                 activeTab === "all"
                   ? "font-bold bg-brand-soft-green p-2 text-brand-white"
@@ -266,6 +320,73 @@ export default function DirectoryClient({
           </div>
         </div>
       )}
+
+      {/* Search */}
+      <div ref={searchRef} className="relative mb-4 md:max-w-xl">
+        <div className="relative">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-sand pointer-events-none"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search groups..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onFocus={() => setShowSuggestions(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setShowSuggestions(false);
+            }}
+            className="w-full bg-white dark:bg-brand-white text-brand-charcoal placeholder-gray-400 border border-brand-sand/60 rounded-lg pl-9 pr-9 py-2 text-sm outline-none focus:border-brand-soft-green"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-charcoal cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
+        </div>
+        {showSuggestions && suggestions.length > 0 && (
+          <ul className="absolute z-50 w-full mt-1 bg-white border border-brand-sand/60 rounded-lg shadow-lg overflow-hidden">
+            {suggestions.map((name) => (
+              <li key={name}>
+                <button
+                  className="w-full text-left px-4 py-2 text-sm text-brand-charcoal hover:bg-brand-sand/20 cursor-pointer"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    setSearchTerm(name);
+                    setShowSuggestions(false);
+                  }}
+                >
+                  {name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {/* Filters Bar */}
       <div className="mb-8 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 sm:min-w-md md:max-w-xl gap-4 items-end my-4">
@@ -313,6 +434,7 @@ export default function DirectoryClient({
           onClick={() => {
             setSelectedCategory("All");
             setSelectedType("All");
+            setSearchTerm("");
           }}
           className="cursor-pointer text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium hover:text-brand-charcoal dark:hover:text-brand-white h-10 flex items-center"
         >
