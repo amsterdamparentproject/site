@@ -289,7 +289,10 @@ export default function DirectoryClient({
         <div className="flex mb-6">
           <div className="relative group flex items-center">
             <button
-              onClick={() => { setActiveTab("recommended"); setSearchTerm(""); }}
+              onClick={() => {
+                setActiveTab("recommended");
+                setSearchTerm("");
+              }}
               className={`pb-3 px-6 text-sm rounded-l-lg cursor-pointer transition-all flex-1 md:flex-none ${
                 activeTab === "recommended"
                   ? "font-bold bg-brand-soft-green p-2 text-brand-white"
@@ -305,7 +308,10 @@ export default function DirectoryClient({
           </div>
           <div className="relative group flex items-center">
             <button
-              onClick={() => { setActiveTab("all"); setSearchTerm(""); }}
+              onClick={() => {
+                setActiveTab("all");
+                setSearchTerm("");
+              }}
               className={`pb-3 px-6 text-sm rounded-r-lg cursor-pointer transition-all flex-1 md:flex-none ${
                 activeTab === "all"
                   ? "font-bold bg-brand-soft-green p-2 text-brand-white"
