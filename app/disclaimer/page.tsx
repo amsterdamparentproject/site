@@ -1,4 +1,5 @@
 import { genPageMetadata } from "app/seo";
+import Link from "@/components/Link";
 
 export const metadata = genPageMetadata({ title: "Disclaimer" });
 
@@ -31,94 +32,15 @@ export default function Page() {
           Privacy Policy
         </h1>
         <p>
-          This Privacy Policy describes the types of personal information
-          collected, stored, and used through our website and how we protect
-          your personal information. By using our website, you agree to the
-          terms of this Privacy Policy.
-        </p>
-
-        <h2
-          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
-          id="information-collection-and-use"
-        >
-          Information Collection and Use
-        </h2>
-        <p>
-          We may collect personal information such as your name, the age of your
-          children, email address, phone number, and address when you register
-          or make a purchase on our website. We will use this information to
-          communicate with you and to provide you with the products or services
-          you have requested. We may also use your information to improve our
-          website and services.
-        </p>
-        <p>
-          We will not sell, rent, or disclose your personal information to any
-          third party without your consent, except as required by law or as
-          necessary to provide you with the products or services you have
-          requested.
-        </p>
-
-        <h2
-          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
-          id="cookies"
-        >
-          Cookies
-        </h2>
-        <p>
-          We may use cookies to store and track information about your
-          preferences and usage of our website. Cookies are small data files
-          that are placed on your device. Most browsers allow you to control
-          cookies, including whether or not to accept them and how to remove
-          them.
-        </p>
-
-        <h2
-          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
-          id="security"
-        >
-          Security
-        </h2>
-        <p>
-          We take reasonable steps to protect your personal information from
-          unauthorized access and disclosure. We use industry-standard security
-          measures like firewalls and encryption to protect your information.
-        </p>
-
-        <h2
-          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
-          id="links-to-other-websites"
-        >
-          Links to Other Websites
-        </h2>
-        <p>
-          Our website may contain links to other websites not owned or operated
-          by us. We are not responsible for the privacy practices or content of
-          those websites. We encourage you to review the privacy policies of any
-          third-party websites you visit.
-        </p>
-
-        <h2
-          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
-          id="changes-to-this-privacy-policy"
-        >
-          Changes to this Privacy Policy
-        </h2>
-        <p>
-          We reserve the right to amend this Privacy Policy at any time. Changes
-          will be posted on this page. Your continued use of our website after
-          any changes to this Privacy Policy will constitute your acceptance of
-          such changes.
-        </p>
-
-        <h2
-          className="text-brand-charcoal dark:text-brand-white mt-4 mb-2 text-xl font-bold"
-          id="contact-us"
-        >
-          Contact Us
-        </h2>
-        <p>
-          If you have any questions or concerns about this Privacy Policy,
-          please contact us at amsterdamparentproject@gmail.com.
+          For details on the personal information we collect, how we use and
+          protect it, and your rights, please see our{" "}
+          <Link
+            href="/privacy"
+            className="text-brand-goldenrod hover:text-brand-soft-green underline underline-offset-2"
+          >
+            Privacy Policy
+          </Link>
+          .
         </p>
 
         <hr className="mt-4 mb-2" />
