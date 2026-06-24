@@ -35,8 +35,8 @@ export default function Page() {
             Amsterdam Parent Project is a community organization based in
             Amsterdam, the Netherlands (KvK 95875921). We are the data
             controller responsible for the personal information described in
-            this policy, which covers our website at amsterdamparentproject.nl
-            — including our newsletter, parent-groups directory, donations and
+            this policy, which covers our website at amsterdamparentproject.nl —
+            including our newsletter, parent-groups directory, donations and
             program registrations, and community calendar.
           </p>
           <p className="mb-2">
