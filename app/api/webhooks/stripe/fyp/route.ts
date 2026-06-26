@@ -18,8 +18,18 @@ import Stripe from "stripe";
 //   Post profile is the source of truth for profile data (zip, bio, etc.).
 
 const MONTH_INDEX: Record<string, number> = {
-  jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
-  jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11,
+  jan: 0,
+  feb: 1,
+  mar: 2,
+  apr: 3,
+  may: 4,
+  jun: 5,
+  jul: 6,
+  aug: 7,
+  sep: 8,
+  oct: 9,
+  nov: 10,
+  dec: 11,
 };
 
 /**
@@ -41,7 +51,9 @@ function billingStartTimestamp(dueMonth: string): number {
       ? thisYear + 1
       : thisYear + yearBump;
 
-  return Math.floor(new Date(Date.UTC(candidateYear, billingIdx, 1)).getTime() / 1000);
+  return Math.floor(
+    new Date(Date.UTC(candidateYear, billingIdx, 1)).getTime() / 1000,
+  );
 }
 
 /** Returns a YYYY-MM-DD string for a Unix timestamp */
@@ -58,7 +70,7 @@ function addSixMonths(date: string): string {
 
 function getCustomField(
   fields: Stripe.Checkout.Session.CustomField[],
-  key: string
+  key: string,
 ): string | undefined {
   return fields.find((f) => f.key === key)?.dropdown?.value ?? undefined;
 }
@@ -76,7 +88,7 @@ export async function POST(req: NextRequest) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET_FYP!
+      process.env.STRIPE_WEBHOOK_SECRET_FYP!,
     );
   } catch {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
@@ -96,7 +108,10 @@ export async function POST(req: NextRequest) {
     // 1. Create deferred subscription with APP_FYP_DEPOSIT coupon
     // 2. Insert member row
     if (product === "fyp_deposit") {
-      const dueOrBirthMonth = getCustomField(customFields, "due_or_birth_month");
+      const dueOrBirthMonth = getCustomField(
+        customFields,
+        "due_or_birth_month",
+      );
       const dueOrBirthYear = getCustomField(customFields, "due_or_birth_year");
       // language and zip collected via Post profile, not checkout
       const language = getCustomField(customFields, "language");
@@ -107,13 +122,16 @@ export async function POST(req: NextRequest) {
       if (!customerId) {
         console.error("[fyp webhook] no customer on fyp_deposit session");
       } else if (!dueOrBirthMonth) {
-        console.error("[fyp webhook] missing due_or_birth_month in custom_fields");
+        console.error(
+          "[fyp webhook] missing due_or_birth_month in custom_fields",
+        );
       } else {
         try {
           const trialEnd = billingStartTimestamp(dueOrBirthMonth);
           billingStartDate = toDateString(trialEnd);
 
-          const lookupKey = familyType === "multi" ? "fyp_monthly_multi" : "fyp_monthly_single";
+          const lookupKey =
+            familyType === "multi" ? "fyp_monthly_multi" : "fyp_monthly_single";
           const prices = await stripe.prices.list({ lookup_keys: [lookupKey] });
           const price = prices.data[0];
           if (!price) throw new Error(`Price not found: ${lookupKey}`);
@@ -125,9 +143,14 @@ export async function POST(req: NextRequest) {
             discounts: [{ coupon: process.env.STRIPE_FYP_DEPOSIT_COUPON_ID! }],
           });
           subscriptionId = subscription.id;
-          console.log(`[fyp webhook] subscription ${subscriptionId} deferred to ${billingStartDate}`);
+          console.log(
+            `[fyp webhook] subscription ${subscriptionId} deferred to ${billingStartDate}`,
+          );
         } catch (err) {
-          console.error("[fyp webhook] failed to create deferred subscription:", err);
+          console.error(
+            "[fyp webhook] failed to create deferred subscription:",
+            err,
+          );
         }
       }
 
@@ -143,12 +166,19 @@ export async function POST(req: NextRequest) {
         due_or_birth_year: dueOrBirthYear,
         billing_start_date: billingStartDate,
       });
-      if (insertError) console.error("[fyp webhook] insert error (expecting_monthly):", insertError);
+      if (insertError)
+        console.error(
+          "[fyp webhook] insert error (expecting_monthly):",
+          insertError,
+        );
     }
 
     // ── expecting_bundle ───────────────────────────────────────────────────────
     if (product === "fyp_bundle_expecting") {
-      const dueOrBirthMonth = getCustomField(customFields, "due_or_birth_month");
+      const dueOrBirthMonth = getCustomField(
+        customFields,
+        "due_or_birth_month",
+      );
       const dueOrBirthYear = getCustomField(customFields, "due_or_birth_year");
 
       let billingStartDate: string | null = null;
@@ -171,12 +201,19 @@ export async function POST(req: NextRequest) {
         billing_start_date: billingStartDate,
         bundle_expires_at: bundleExpiresAt,
       });
-      if (insertError) console.error("[fyp webhook] insert error (expecting_bundle):", insertError);
+      if (insertError)
+        console.error(
+          "[fyp webhook] insert error (expecting_bundle):",
+          insertError,
+        );
     }
 
     // ── baby_monthly ───────────────────────────────────────────────────────────
     if (product === "fyp_monthly_baby") {
-      const dueOrBirthMonth = getCustomField(customFields, "due_or_birth_month");
+      const dueOrBirthMonth = getCustomField(
+        customFields,
+        "due_or_birth_month",
+      );
       const dueOrBirthYear = getCustomField(customFields, "due_or_birth_year");
       const subscriptionId = session.subscription as string | null;
 
@@ -191,12 +228,19 @@ export async function POST(req: NextRequest) {
         due_or_birth_month: dueOrBirthMonth,
         due_or_birth_year: dueOrBirthYear,
       });
-      if (insertError) console.error("[fyp webhook] insert error (baby_monthly):", insertError);
+      if (insertError)
+        console.error(
+          "[fyp webhook] insert error (baby_monthly):",
+          insertError,
+        );
     }
 
     // ── baby_bundle ────────────────────────────────────────────────────────────
     if (product === "fyp_bundle_baby") {
-      const dueOrBirthMonth = getCustomField(customFields, "due_or_birth_month");
+      const dueOrBirthMonth = getCustomField(
+        customFields,
+        "due_or_birth_month",
+      );
       const dueOrBirthYear = getCustomField(customFields, "due_or_birth_year");
       const today = new Date().toISOString().slice(0, 10);
 
@@ -212,7 +256,8 @@ export async function POST(req: NextRequest) {
         billing_start_date: today,
         bundle_expires_at: addSixMonths(today),
       });
-      if (insertError) console.error("[fyp webhook] insert error (baby_bundle):", insertError);
+      if (insertError)
+        console.error("[fyp webhook] insert error (baby_bundle):", insertError);
     }
   }
 

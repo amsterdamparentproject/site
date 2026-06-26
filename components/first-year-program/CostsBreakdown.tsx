@@ -66,21 +66,34 @@ const MonthlyCard = () => (
     <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
       <div className="space-y-3 flex-1">
         <div className="flex items-baseline justify-between">
-          <span className="text-sm text-brand-charcoal dark:text-brand-white/80">Single parent family</span>
+          <span className="text-sm text-brand-charcoal dark:text-brand-white/80">
+            Single parent family
+          </span>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">€55</span>
-            <span className="text-xs text-brand-charcoal/40 dark:text-brand-white/40">/mo</span>
+            <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">
+              €55
+            </span>
+            <span className="text-xs text-brand-charcoal/40 dark:text-brand-white/40">
+              /mo
+            </span>
           </div>
         </div>
         <div className="flex items-baseline justify-between">
-          <span className="text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium">2+ parent family</span>
+          <span className="text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium">
+            2+ parent family
+          </span>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">€68</span>
-            <span className="text-xs text-brand-soft-green/50 dark:text-brand-goldenrod/50">/mo</span>
+            <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
+              €68
+            </span>
+            <span className="text-xs text-brand-soft-green/50 dark:text-brand-goldenrod/50">
+              /mo
+            </span>
           </div>
         </div>
         <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
-          Pregnant? Reserve with a €25 deposit — credited to your first invoice, refundable if you cancel during pregnancy.
+          Pregnant? Reserve with a €25 deposit — credited to your first invoice,
+          refundable if you cancel during pregnancy.
         </p>
       </div>
       <a
@@ -101,21 +114,34 @@ const BundleCard = () => (
     <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
       <div className="space-y-3 flex-1">
         <div className="flex items-baseline justify-between">
-          <span className="text-sm text-brand-charcoal dark:text-brand-white/80">Single parent family</span>
+          <span className="text-sm text-brand-charcoal dark:text-brand-white/80">
+            Single parent family
+          </span>
           <div className="flex items-baseline gap-2">
-            <span className="text-xs line-through text-brand-charcoal/30">€330</span>
-            <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">€305</span>
+            <span className="text-xs line-through text-brand-charcoal/30">
+              €330
+            </span>
+            <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">
+              €305
+            </span>
           </div>
         </div>
         <div className="flex items-baseline justify-between">
-          <span className="text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium">2+ parent family</span>
+          <span className="text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium">
+            2+ parent family
+          </span>
           <div className="flex items-baseline gap-2">
-            <span className="text-xs line-through text-brand-charcoal/30">€408</span>
-            <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">€383</span>
+            <span className="text-xs line-through text-brand-charcoal/30">
+              €408
+            </span>
+            <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
+              €383
+            </span>
           </div>
         </div>
         <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
-          Pay upfront for the program, save €25. Fully refundable if you cancel during pregnancy.
+          Pay upfront for the program, save €25. Fully refundable if you cancel
+          during pregnancy.
         </p>
       </div>
       <a
@@ -192,7 +218,12 @@ export default function CostsBreakdown() {
       rest: (
         <>
           via{" "}
-          <a href="https://postpartumpost.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-soft-green">
+          <a
+            href="https://postpartumpost.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-brand-soft-green"
+          >
             Postpartum Post
           </a>{" "}
           with someone who gets where you are
@@ -208,7 +239,7 @@ export default function CostsBreakdown() {
       rest: "at baby-friendly Amsterdam spots, plus ad-hoc meetups",
     },
     {
-      bold: "6 digital resource guides",
+      bold: "7 digital resource guides",
       rest: "providing evidence-based context for every stage",
     },
     {
@@ -260,7 +291,8 @@ export default function CostsBreakdown() {
       {/* Billing note */}
       <div className="max-w-md text-center mb-8 px-4">
         <p className="text-[11px] text-brand-soft-charcoal dark:text-brand-white/80 leading-relaxed">
-          All prices include 21% BTW (VAT). Monthly billing starts the calendar month after your due date, or immediately if you already have a baby.
+          All prices include 21% BTW (VAT). Monthly billing starts the calendar
+          month after your due date, or immediately if you already have a baby.
         </p>
       </div>
 
@@ -269,8 +301,9 @@ export default function CostsBreakdown() {
         <StackedCostBar />
 
         <p className="text-xs text-brand-soft-charcoal/60 dark:text-brand-white/80 max-w-lg text-center mt-8 leading-relaxed italic">
-          One of our core values is transparency. Each cohort costs €1,347 to run over 6 months.
-          We first cover costs, then use the remainder to support program development and other community initiatives.
+          One of our core values is transparency. Each cohort costs €1,347 to
+          run over 6 months. We first cover costs, then use the remainder to
+          support program development and other community initiatives.
         </p>
       </div>
     </section>

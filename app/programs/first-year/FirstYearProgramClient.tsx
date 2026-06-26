@@ -9,7 +9,11 @@ import { ReactNode, useState } from "react";
 import Link from "@/components/Link";
 import { MoveRight } from "lucide-react";
 
-type Flow = "expecting_monthly" | "expecting_bundle" | "baby_monthly" | "baby_bundle";
+type Flow =
+  | "expecting_monthly"
+  | "expecting_bundle"
+  | "baby_monthly"
+  | "baby_bundle";
 type FamilyType = "single" | "multi";
 
 async function startCheckout(flow: Flow, familyType: FamilyType) {
@@ -70,12 +74,14 @@ const highlights = [
   {
     icon: "☕️",
     feature: "Group socials",
-    scenario: "For discovering the baby-friendly side of Amsterdam — alongside other families",
+    scenario:
+      "For discovering the baby-friendly side of Amsterdam alongside other families",
   },
   {
     icon: "💬",
     feature: "Moderated community",
-    scenario: "For when you need reassurance from a small group of local parents, not AI",
+    scenario:
+      "For when you need reassurance from a small group of local parents, not AI",
   },
 ];
 
@@ -103,7 +109,13 @@ const SectionHeader = ({ header, subtitle }: SectionHeaderProps) => {
   );
 };
 
-function ExpectingCard({ familyType, isSingleParent }: { familyType: FamilyType; isSingleParent: boolean }) {
+function ExpectingCard({
+  familyType,
+  isSingleParent,
+}: {
+  familyType: FamilyType;
+  isSingleParent: boolean;
+}) {
   const isMulti = familyType === "multi";
 
   return (
@@ -116,15 +128,34 @@ function ExpectingCard({ familyType, isSingleParent }: { familyType: FamilyType;
           Still expecting? Reserve now and immediately get:
         </p>
         <ul className="flex-1 space-y-2 mb-3">
-          {["Peer matching", "Private WhatsApp group access", "Understanding the Village guide"].map((item) => (
-            <li key={item} className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80">
-              <svg className="w-4 h-4 text-brand-soft-green dark:text-brand-goldenrod shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+          {[
+            "Peer matching",
+            "Private WhatsApp group access",
+            "Understanding the Village guide",
+          ].map((item) => (
+            <li
+              key={item}
+              className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80"
+            >
+              <svg
+                className="w-4 h-4 text-brand-soft-green dark:text-brand-goldenrod shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="3"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               {item}
             </li>
           ))}
         </ul>
         <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 mb-5">
-          This is for your whole family: {isSingleParent ? "you and your child(ren)" : "you, your partner, and your child(ren)"}.
+          This is for your whole family:{" "}
+          {isSingleParent
+            ? "you and your child(ren)"
+            : "you, your partner, and your child(ren)"}
+          .
         </p>
         <div className="flex flex-col gap-3">
           <CheckoutButton
@@ -149,7 +180,13 @@ function ExpectingCard({ familyType, isSingleParent }: { familyType: FamilyType;
   );
 }
 
-function BabyCard({ familyType, isSingleParent }: { familyType: FamilyType; isSingleParent: boolean }) {
+function BabyCard({
+  familyType,
+  isSingleParent,
+}: {
+  familyType: FamilyType;
+  isSingleParent: boolean;
+}) {
   const isMulti = familyType === "multi";
 
   return (
@@ -162,15 +199,35 @@ function BabyCard({ familyType, isSingleParent }: { familyType: FamilyType; isSi
           Join anytime while your baby is under 12 months and immediately get:
         </p>
         <ul className="flex-1 space-y-2 mb-3">
-          {["Peer matching", "Private WhatsApp group access", "All 6 resource guides", "Invites to this month's events"].map((item) => (
-            <li key={item} className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80">
-              <svg className="w-4 h-4 text-brand-goldenrod shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+          {[
+            "Peer matching",
+            "Private WhatsApp group access",
+            "All 7 resource guides",
+            "Invites to this month's events",
+          ].map((item) => (
+            <li
+              key={item}
+              className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80"
+            >
+              <svg
+                className="w-4 h-4 text-brand-goldenrod shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="3"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               {item}
             </li>
           ))}
         </ul>
         <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 mb-5">
-          This is for your whole family: {isSingleParent ? "you and your child(ren)" : "you, your partner, and your child(ren)"}.
+          This is for your whole family:{" "}
+          {isSingleParent
+            ? "you and your child(ren)"
+            : "you, your partner, and your child(ren)"}
+          .
         </p>
         <div className="flex flex-col gap-3">
           <CheckoutButton
@@ -211,14 +268,22 @@ function JoinSection() {
 
       {/* Single parent slide toggle */}
       <div className="flex flex-col items-center gap-2 mt-4 mb-8">
-        <label className="flex items-center gap-3 cursor-pointer select-none">
-          <span className="text-sm text-brand-charcoal dark:text-brand-white/80">I am a single parent</span>
+        <div className="flex items-center gap-3 cursor-pointer select-none">
+          <span
+            id="single-parent-toggle-label"
+            className="text-sm text-brand-charcoal dark:text-brand-white/80"
+          >
+            I am a single parent
+          </span>
           <button
             role="switch"
             aria-checked={isSingleParent}
+            aria-labelledby="single-parent-toggle-label"
             onClick={() => setIsSingleParent((v) => !v)}
             className={`cursor-pointer relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
-              isSingleParent ? "bg-brand-soft-green" : "bg-brand-sand/60 dark:bg-brand-white/20"
+              isSingleParent
+                ? "bg-brand-soft-green"
+                : "bg-brand-sand/60 dark:bg-brand-white/20"
             }`}
           >
             <span
@@ -227,14 +292,18 @@ function JoinSection() {
               }`}
             />
           </button>
-        </label>
+        </div>
         <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 text-center max-w-sm">
-          We offer a discount to ensure everyone can access support, regardless of family structure.
+          We offer a discount to ensure everyone can access support, regardless
+          of family structure.
         </p>
       </div>
 
       <div className="max-w-2xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ExpectingCard familyType={familyType} isSingleParent={isSingleParent} />
+        <ExpectingCard
+          familyType={familyType}
+          isSingleParent={isSingleParent}
+        />
         <BabyCard familyType={familyType} isSingleParent={isSingleParent} />
       </div>
 
@@ -270,10 +339,12 @@ export default function FirstYearProgramClient() {
           <p className="mt-4 max-w-xl">
             A{" "}
             <b className="dark:text-brand-goldenrod text-brand-soft-green">
-              local, nonprofit, whole family support system built for your baby's first year
+              local, nonprofit, whole family support system built for your
+              baby's first year
             </b>
             . Expert-led discussions, curated socials, 1:1 peer matching, and a
-            moderated community — all you need to transition with confidence into newborn parenthood.
+            moderated community — all you need to transition with confidence
+            into newborn parenthood.
           </p>
         </div>
 
@@ -288,7 +359,15 @@ export default function FirstYearProgramClient() {
 
         <div className="max-w-xl">
           <p className="mb-6 mx-4">
-            When support from your kraamzorg and midwife ends, we step in to bridge the gap between professional expertise and peer support: because &lsquo;best practices&rsquo; come from both science and shared experience. The program is a <b>community labor of love from local postpartum experts</b> — psychologists, lactation consultants, parental return-to-work specialists, postpartum coaches, and more — and the founders of APP, who stood up this whole organization because they felt the support gap firsthand.
+            When support from your kraamzorg and midwife ends, we step in to
+            bridge the gap between expert and peer guidance:
+            because best parenting practices come from both science and
+            shared experience. The program is a{" "}
+            <b>community labor of love from local postpartum experts</b> —
+            psychologists, lactation consultants, return-to-work
+            specialists, postpartum coaches, and more — and the founders of APP,
+            who stood up this whole organization because they felt the support
+            gap firsthand with their babies.
           </p>
         </div>
 
@@ -299,12 +378,20 @@ export default function FirstYearProgramClient() {
           </h2>
           <div className="flex flex-col gap-2">
             {highlights.map((item, index) => (
-              <div key={index} className="flex flex-col md:grid md:items-center gap-1 md:gap-4 py-2 md:min-h-[5rem]" style={{ gridTemplateColumns: "1fr auto 1fr" }}>
+              <div
+                key={index}
+                className="flex flex-col md:grid md:items-center gap-1 md:gap-4 py-2 md:min-h-[5rem]"
+                style={{ gridTemplateColumns: "1fr auto 1fr" }}
+              >
                 <div className="flex items-center gap-3 md:contents">
                   <span className="inline-flex items-center gap-4 px-4 py-2 rounded-full bg-brand-goldenrod text-base font-bold text-brand-charcoal whitespace-nowrap">
                     {item.icon} {item.feature}
                   </span>
-                  <MoveRight className="text-brand-soft-green dark:text-brand-goldenrod shrink-0" size={20} strokeWidth={2.5} />
+                  <MoveRight
+                    className="text-brand-soft-green dark:text-brand-goldenrod shrink-0"
+                    size={20}
+                    strokeWidth={2.5}
+                  />
                 </div>
                 <span className="text-sm text-brand-charcoal/70 dark:text-brand-white/60 italic md:hidden ml-4 mt-1">
                   {item.scenario}
@@ -321,7 +408,7 @@ export default function FirstYearProgramClient() {
         <section className="py-8 px-4 max-w-4xl mx-auto flex items-center flex-col justify-center">
           <SectionHeader
             header="How it works"
-            subtitle="Join in pregnancy with a €25 deposit and the whole family gets immediate access to support — free until your baby arrives. Already have a baby under 12 months? Jump straight in. Support is there for you when and where you need it, for as long as you need."
+            subtitle="Join in pregnancy with a €25 deposit and the whole family gets immediate csupport — free until your baby arrives. Already have a baby under 12 months? Jump straight in. Support is there for you when and where you need it, for as long as you need."
           />
           <ProgramJourney />
         </section>
@@ -332,10 +419,10 @@ export default function FirstYearProgramClient() {
             header="Expert curriculum"
             subtitle={
               <>
-                Evidence-based, expert-led discussions and resource guides covering
-                every major transition in your first year — from newborn basics to
-                returning to work. Topics rotate every 6 months so the conversation
-                deepens as your family grows.
+                Evidence-based, expert-led discussions and resource guides
+                covering every major transition in your first year — from
+                newborn basics to returning to work. Topics rotate every 6
+                months so the conversation deepens as your family grows.
               </>
             }
           />
@@ -348,8 +435,8 @@ export default function FirstYearProgramClient() {
             header="Program fees"
             subtitle={
               <>
-                As a nonprofit, we strive to balance access with fair pay for our experts and facilitators. If
-                price is a barrier, please{" "}
+                As a nonprofit, we strive to balance access with fair pay for
+                our experts and facilitators. If price is a barrier, please{" "}
                 <Link
                   href="mailto:hello@amsterdamparentproject.nl"
                   className="text-brand-goldenrod hover:text-brand-soft-green"

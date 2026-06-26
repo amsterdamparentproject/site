@@ -11,7 +11,9 @@ export const metadata = genPageMetadata({
 });
 
 export default function FirstYearWelcomePage() {
-  const session = sessionData.find((s) => s.title === "Understanding the Village");
+  const session = sessionData.find(
+    (s) => s.title === "Understanding the Village",
+  );
 
   return (
     <div className="flex-column justify-center mx-2">
@@ -34,10 +36,11 @@ export default function FirstYearWelcomePage() {
             grows our heart grows ❤️
           </p>
           <p className="max-w-xl">
-            We'll be in touch over email with next steps. While you get settled in, 
-            here's our guide on building the village to support your growing family. 
-            It covers both formal and informal support systems
-            here in Amsterdam. Feel free to ask us any questions about it in the WhatsApp group! 
+            We'll be in touch over email with next steps. While you get settled
+            in, here's our guide on building the village to support your growing
+            family. It covers both formal and informal support systems here in
+            Amsterdam. Feel free to ask us any questions about it in the
+            WhatsApp group!
           </p>
           {session && (
             <div className="flex justify-center w-full">

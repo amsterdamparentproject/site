@@ -39,7 +39,8 @@ export default function ProgramFAQ() {
         "Yes — the program is built for the whole family. Whether you are a birthing parent, non-birthing parent, or co-parent, you are an equal part of this transition. 2+ parent families join at one family price (€68/month), so all partners are included.",
     },
     {
-      question: "What is Postpartum Post? Why is it part of my First Year subscription?",
+      question:
+        "What is Postpartum Post? Why is it part of my First Year subscription?",
       answer: (
         <>
           <PP /> is a 1:1 peer support platform that matches you with another
@@ -54,11 +55,11 @@ export default function ProgramFAQ() {
       question: "What happens if I join mid-cohort?",
       answer: (
         <>
-          That's completely fine. The program is designed for rolling entry — you
-          join the cohort at whatever stage you're at, connect with your WhatsApp
-          group, get your <PP /> match, and join the next discussion and social.
-          The curriculum repeats every 6 months, so you'll catch any topics you
-          missed.
+          That's completely fine. The program is designed for rolling entry —
+          you join the cohort at whatever stage you're at, connect with your
+          WhatsApp group, get your <PP /> match, and join the next discussion
+          and social. The curriculum repeats every 6 months, so you'll catch any
+          topics you missed.
         </>
       ),
     },
@@ -88,7 +89,10 @@ export default function ProgramFAQ() {
     <div className="w-full max-w-full divide-y divide-brand-sand/30 dark:divide-brand-soft-charcoal/30 px-4 overflow-x-hidden">
       {faqs.map((faq, index) => (
         <details key={index} className="group py-6 w-full block">
-          <summary className="flex flex-nowrap items-start justify-between cursor-pointer list-none gap-4 w-full" style={{cursor: 'pointer'}}>
+          <summary
+            className="flex flex-nowrap items-start justify-between cursor-pointer list-none gap-4 w-full"
+            style={{ cursor: "pointer" }}
+          >
             <span className="flex-1 min-w-0 text-lg font-medium text-brand-charcoal dark:text-brand-white group-hover:text-brand-soft-green transition-colors break-words">
               {faq.question}
             </span>

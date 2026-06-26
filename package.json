@@ -16,6 +16,9 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
+    "test:fyp": "yarn test:fyp:unit && yarn test:fyp:e2e",
+    "test:fyp:unit": "vitest run --passWithNoTests fyp first-year",
+    "test:fyp:e2e": "playwright test fyp",
     "prepare": "husky"
   },
   "dependencies": {

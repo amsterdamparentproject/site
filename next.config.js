@@ -66,6 +66,10 @@ module.exports = () => {
   return plugins.reduce((acc, next) => next(acc), {
     output,
     basePath,
+    // Allow an isolated build directory (e.g. for Playwright's dev server) so
+    // two Next servers never write to the same .next dir concurrently, which
+    // corrupts the webpack manifest ("Cannot find module './1331.js'").
+    distDir: process.env.NEXT_DIST_DIR || ".next",
     reactStrictMode: true,
     experimental: {
       serverActions: {

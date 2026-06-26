@@ -29,9 +29,7 @@ export default function SessionsAccordion() {
             >
               <button
                 className="cursor-pointer w-full text-left px-6 py-5 flex items-center justify-between gap-4 group/header hover:bg-brand-soft-green/5 transition-all"
-                onClick={() =>
-                  setOpenIndex(openIndex === index ? null : index)
-                }
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-1">
@@ -55,7 +53,9 @@ export default function SessionsAccordion() {
                         style={{ zIndex: sessionAuthors.length - i }}
                       >
                         <Image
-                          src={expert?.avatar || "/static/images/logo/light.png"}
+                          src={
+                            expert?.avatar || "/static/images/logo/light.png"
+                          }
                           width={40}
                           height={40}
                           alt={`${expert?.name} headshot`}
@@ -150,7 +150,8 @@ export default function SessionsAccordion() {
         })}
       </div>
       <p className="text-center text-xs text-brand-soft-charcoal/50 dark:text-brand-white/40 mt-6 italic">
-        Topics repeat every 6 months. The curriculum evolves as new modules are added.
+        Topics repeat every 6 months. The curriculum evolves as new modules are
+        added.
       </p>
     </div>
   );

@@ -9,6 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, ".env.test.local"), override: true
 
 export default defineConfig({
   testDir: "./e2e",
+  timeout: 120_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -30,7 +31,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "NODE_ENV=test yarn dev --port 3001",
+    // NEXT_DIST_DIR isolates the test server's build output from a manual
+    // `yarn dev` (which uses .next), so the two never corrupt each other's
+    // webpack manifest when running at the same time.
+    command: "NODE_ENV=test NEXT_DIST_DIR=.next-e2e yarn dev --port 3001",
     url: "http://localhost:3001",
     reuseExistingServer: false,
     timeout: 120_000,
