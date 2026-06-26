@@ -32,10 +32,8 @@ const SELECT =
 export async function getCalendarEvents(): Promise<CalendarEvent[]> {
   const supabase = createServiceClient("activities");
   const { data, error } = await supabase
-    .from("events")
+    .from("app_events")
     .select(SELECT)
-    .eq("calendar_skip", false)
-    .eq("organization", "Amsterdam Parent Project")
     .order("start_date", { ascending: true });
 
   if (error) {

@@ -24,10 +24,17 @@ export default function Footer() {
           </Link>
           <div>{` • `}</div>
           <Link
-            href="mailto:amsterdamparentproject@gmail.com"
+            href="mailto:hello@amsterdamparentproject.nl"
             className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
           >
             Contact us
+          </Link>
+          <div>{` • `}</div>
+          <Link
+            href="/privacy"
+            className="hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
+          >
+            Privacy
           </Link>
           <div>{` • `}</div>
           <Link
