@@ -118,7 +118,7 @@ function ExpectingCard({ familyType, isSingleParent }: { familyType: FamilyType;
         <ul className="flex-1 space-y-2 mb-3">
           {["Peer matching", "Private WhatsApp group access", "Understanding the Village guide"].map((item) => (
             <li key={item} className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80">
-              <svg className="w-4 h-4 text-brand-soft-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+              <svg className="w-4 h-4 text-brand-soft-green dark:text-brand-goldenrod shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
               {item}
             </li>
           ))}
@@ -202,7 +202,7 @@ function JoinSection() {
   return (
     <section
       id="join"
-      className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 dark:bg-brand-soft-charcoal border border-brand-sand/10 py-10 px-4 md:px-8 rounded-lg w-full"
+      className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 dark:bg-brand-soft-charcoal/40 py-10 px-4 md:px-8 rounded-lg w-full"
     >
       <SectionHeader
         header="Join the program"
@@ -218,7 +218,7 @@ function JoinSection() {
             aria-checked={isSingleParent}
             onClick={() => setIsSingleParent((v) => !v)}
             className={`cursor-pointer relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
-              isSingleParent ? "bg-brand-soft-green" : "bg-brand-sand/60 dark:bg-brand-soft-charcoal/60"
+              isSingleParent ? "bg-brand-soft-green" : "bg-brand-sand/60 dark:bg-brand-white/20"
             }`}
           >
             <span
@@ -233,7 +233,7 @@ function JoinSection() {
         </p>
       </div>
 
-      <div className="max-w-2xl mx-auto w-full px-2 md:px-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="max-w-2xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-4">
         <ExpectingCard familyType={familyType} isSingleParent={isSingleParent} />
         <BabyCard familyType={familyType} isSingleParent={isSingleParent} />
       </div>
@@ -288,7 +288,7 @@ export default function FirstYearProgramClient() {
 
         <div className="max-w-xl">
           <p className="mb-6 mx-4">
-            When support from your kraamzorg and midwife ends, we step in to bridge the gap between professional expertise and peer support: because &lsquo;best practices&rsquo; come from both science and shared experience. The program is a <b>community labor of love from local postpartum experts</b> — psychologists, lactation consultants, parental return-to-work specialists, and more — <b>and the founders of APP</b>, who stood up this whole organization because they felt the support gap firsthand.
+            When support from your kraamzorg and midwife ends, we step in to bridge the gap between professional expertise and peer support: because &lsquo;best practices&rsquo; come from both science and shared experience. The program is a <b>community labor of love from local postpartum experts</b> — psychologists, lactation consultants, parental return-to-work specialists, postpartum coaches, and more — and the founders of APP, who stood up this whole organization because they felt the support gap firsthand.
           </p>
         </div>
 
@@ -299,9 +299,9 @@ export default function FirstYearProgramClient() {
           </h2>
           <div className="flex flex-col gap-2">
             {highlights.map((item, index) => (
-              <div key={index} className="flex flex-col md:grid items-start md:items-center gap-1 md:gap-4 py-2" style={{ gridTemplateColumns: "1fr auto 1fr" }}>
+              <div key={index} className="flex flex-col md:grid md:items-center gap-1 md:gap-4 py-2 md:min-h-[5rem]" style={{ gridTemplateColumns: "1fr auto 1fr" }}>
                 <div className="flex items-center gap-3 md:contents">
-                  <span className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-brand-goldenrod text-base font-bold text-brand-charcoal whitespace-nowrap">
+                  <span className="inline-flex items-center gap-4 px-4 py-2 rounded-full bg-brand-goldenrod text-base font-bold text-brand-charcoal whitespace-nowrap">
                     {item.icon} {item.feature}
                   </span>
                   <MoveRight className="text-brand-soft-green dark:text-brand-goldenrod shrink-0" size={20} strokeWidth={2.5} />

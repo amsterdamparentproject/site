@@ -25,8 +25,7 @@ const firstYearProgramData: Session[] = [
     title: "Newborn Feeding Strategies",
     subtitle: "A whole-family approach to feeding",
     description: `
-      Feeding is one of the most consuming parts of new parenthood — and it evolves constantly through the first year.
-      We cover the full arc from newborn feeding to introducing solids, with a whole-family lens that keeps both parents in the picture and reduces the mental load on one person.
+       You've got the basics of breastfeeding and/or bottle-feeding down. Now you're wondering: "How can we possibly keep doing this for the next 6 months?" Learn our inclusive approach to feeding that grows with you and your baby — so that mom, dad/partner, and baby all get what they need in this special yet intense time.
     `,
     experts: ["heatherBerry", "irenaDomachowska"],
     components: [

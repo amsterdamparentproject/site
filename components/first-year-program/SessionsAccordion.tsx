@@ -135,7 +135,7 @@ export default function SessionsAccordion() {
                             <span className="text-sm font-bold text-brand-charcoal dark:text-brand-white/80 leading-tight">
                               {expert?.name}
                             </span>
-                            <span className="text-xs text-brand-soft-green font-medium">
+                            <span className="text-xs text-brand-soft-green dark:text-brand-goldenrod font-medium">
                               {expert?.occupation || "Postpartum Specialist"}
                             </span>
                           </div>

@@ -63,7 +63,7 @@ const MonthlyCard = () => (
     <div className="bg-brand-soft-green px-6 py-4">
       <p className="text-sm font-black text-white">Monthly</p>
     </div>
-    <div className="bg-white dark:bg-brand-charcoal p-6 flex flex-col flex-1">
+    <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
       <div className="space-y-3 flex-1">
         <div className="flex items-baseline justify-between">
           <span className="text-sm text-brand-charcoal dark:text-brand-white/80">Single parent family</span>
@@ -73,10 +73,10 @@ const MonthlyCard = () => (
           </div>
         </div>
         <div className="flex items-baseline justify-between">
-          <span className="text-sm text-brand-soft-green font-medium">2+ parent family</span>
+          <span className="text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium">2+ parent family</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-brand-soft-green">€68</span>
-            <span className="text-xs text-brand-soft-green/50">/mo</span>
+            <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">€68</span>
+            <span className="text-xs text-brand-soft-green/50 dark:text-brand-goldenrod/50">/mo</span>
           </div>
         </div>
         <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
@@ -98,7 +98,7 @@ const BundleCard = () => (
     <div className="bg-brand-goldenrod px-6 py-4">
       <p className="text-sm font-black text-white">6-month bundle</p>
     </div>
-    <div className="bg-white dark:bg-brand-charcoal p-6 flex flex-col flex-1">
+    <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
       <div className="space-y-3 flex-1">
         <div className="flex items-baseline justify-between">
           <span className="text-sm text-brand-charcoal dark:text-brand-white/80">Single parent family</span>
@@ -108,10 +108,10 @@ const BundleCard = () => (
           </div>
         </div>
         <div className="flex items-baseline justify-between">
-          <span className="text-sm text-brand-soft-green font-medium">2+ parent family</span>
+          <span className="text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium">2+ parent family</span>
           <div className="flex items-baseline gap-2">
             <span className="text-xs line-through text-brand-charcoal/30">€408</span>
-            <span className="text-2xl font-bold text-brand-soft-green">€383</span>
+            <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">€383</span>
           </div>
         </div>
         <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
