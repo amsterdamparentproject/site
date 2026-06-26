@@ -26,17 +26,17 @@ export default function ProgramFAQ() {
     {
       question: "How does billing work?",
       answer:
-        "If you joined in pregnancy on the monthly plan, your first invoice is charged the calendar month after your due date — with your €25 deposit credited, so you pay €30 (single-parent) or €43 (multi-parent) for month 1, then full price from month 2. If you chose the 6-month bundle, you've already paid upfront and the full program begins after your due date. If you joined with a baby already, monthly billing starts immediately. You can cancel at any time, and your subscription will continue until the end of the month.",
+        "If you joined in pregnancy on the monthly plan, your first invoice is charged the calendar month after your due date — with your €25 deposit credited, so you pay €30 (1-parent families) or €43 (2+ parent families) for month 1, then full price from month 2. If you chose the 6-month bundle, you've already paid upfront and the full program begins after your due date. If you joined with a baby already, monthly billing starts immediately. You can cancel at any time, and your subscription will continue until the end of the month.",
     },
     {
       question: "What is the 6-month bundle?",
       answer:
-        "The 6-month bundle lets you pay for the full program upfront at a discount — €305 for single-parent families or €383 for multi-parent families (saving €25 vs. monthly). If you're pregnant, the full program starts after your due date and the bundle is fully refundable if you cancel during pregnancy. If you already have a baby, the program starts immediately.",
+        "The 6-month bundle lets you pay for the full program upfront at a discount — €305 for single parent families or €383 for 2+ parent families (saving €25 vs. monthly). If you're pregnant, the full program starts after your due date and the bundle is fully refundable if you cancel during pregnancy. If you already have a baby, the program starts immediately.",
     },
     {
       question: "Are partners welcome?",
       answer:
-        "Yes — the program is built for the whole family. Whether you are a birthing parent, non-birthing parent, or co-parent, you are an equal part of this transition. Multi-parent families join at one family price (€68/month), so all partners are included.",
+        "Yes — the program is built for the whole family. Whether you are a birthing parent, non-birthing parent, or co-parent, you are an equal part of this transition. 2+ parent families join at one family price (€68/month), so all partners are included.",
     },
     {
       question: "What is Postpartum Post? Why is it part of my First Year subscription?",

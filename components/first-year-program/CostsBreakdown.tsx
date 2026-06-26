@@ -1,4 +1,6 @@
-import React, { ReactNode } from "react";
+"use client";
+
+import React, { ReactNode, useRef, useState } from "react";
 
 const StackedCostBar = () => {
   const segments = [
@@ -56,6 +58,133 @@ const StackedCostBar = () => {
   );
 };
 
+const MonthlyCard = () => (
+  <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col h-full">
+    <div className="bg-brand-soft-green px-6 py-4">
+      <p className="text-sm font-black text-white">Monthly</p>
+    </div>
+    <div className="bg-white dark:bg-brand-charcoal p-6 flex flex-col flex-1">
+      <div className="space-y-3 flex-1">
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm text-brand-charcoal dark:text-brand-white/80">Single parent family</span>
+          <div className="flex items-baseline gap-1">
+            <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">€55</span>
+            <span className="text-xs text-brand-charcoal/40 dark:text-brand-white/40">/mo</span>
+          </div>
+        </div>
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm text-brand-soft-green font-medium">2+ parent family</span>
+          <div className="flex items-baseline gap-1">
+            <span className="text-2xl font-bold text-brand-soft-green">€68</span>
+            <span className="text-xs text-brand-soft-green/50">/mo</span>
+          </div>
+        </div>
+        <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
+          Pregnant? Reserve with a €25 deposit — credited to your first invoice, refundable if you cancel during pregnancy.
+        </p>
+      </div>
+      <a
+        href="#join"
+        className="mt-6 block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
+      >
+        Join or reserve your spot
+      </a>
+    </div>
+  </div>
+);
+
+const BundleCard = () => (
+  <div className="rounded-2xl border border-brand-goldenrod/40 overflow-hidden flex flex-col h-full">
+    <div className="bg-brand-goldenrod px-6 py-4">
+      <p className="text-sm font-black text-white">6-month bundle</p>
+    </div>
+    <div className="bg-white dark:bg-brand-charcoal p-6 flex flex-col flex-1">
+      <div className="space-y-3 flex-1">
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm text-brand-charcoal dark:text-brand-white/80">Single parent family</span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-xs line-through text-brand-charcoal/30">€330</span>
+            <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">€305</span>
+          </div>
+        </div>
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm text-brand-soft-green font-medium">2+ parent family</span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-xs line-through text-brand-charcoal/30">€408</span>
+            <span className="text-2xl font-bold text-brand-soft-green">€383</span>
+          </div>
+        </div>
+        <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
+          Pay upfront for the program, save €25. Fully refundable if you cancel during pregnancy.
+        </p>
+      </div>
+      <a
+        href="#join"
+        className="mt-6 block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
+      >
+        Get the 6-month bundle
+      </a>
+    </div>
+  </div>
+);
+
+function PriceCards() {
+  const [activeCard, setActiveCard] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const cards = [<BundleCard key="bundle" />, <MonthlyCard key="monthly" />];
+  const labels = ["6-month bundle", "Monthly"];
+  const dotColors = ["bg-brand-goldenrod", "bg-brand-soft-green"];
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 40) {
+      if (delta > 0) setActiveCard((c) => Math.min(c + 1, cards.length - 1));
+      else setActiveCard((c) => Math.max(c - 1, 0));
+    }
+    touchStartX.current = null;
+  }
+
+  return (
+    <div className="w-full max-w-2xl mb-8">
+      {/* Mobile carousel */}
+      <div className="md:hidden">
+        <div className="flex justify-center gap-3 mb-4">
+          {labels.map((label, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveCard(i)}
+              className={`cursor-pointer px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                i === activeCard
+                  ? `${dotColors[i]} text-white`
+                  : "bg-brand-sand/30 text-brand-charcoal/60 dark:text-brand-white/50"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          className="select-none"
+        >
+          {cards[activeCard]}
+        </div>
+      </div>
+
+      {/* Desktop grid */}
+      <div className="hidden md:grid grid-cols-2 gap-4">
+        <MonthlyCard />
+        <BundleCard />
+      </div>
+    </div>
+  );
+}
+
 export default function CostsBreakdown() {
   const inclusions: { bold: string; rest: ReactNode }[] = [
     {
@@ -66,7 +195,7 @@ export default function CostsBreakdown() {
           <a href="https://postpartumpost.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-soft-green">
             Postpartum Post
           </a>{" "}
-          — a matched parent who gets where you are
+          with someone who gets where you are
         </>
       ),
     },
@@ -84,11 +213,11 @@ export default function CostsBreakdown() {
     },
     {
       bold: "A private WhatsApp group",
-      rest: "moderated by a psychotherapist, active 24/7",
+      rest: "moderated by a psychotherapist",
     },
     {
       bold: "All parents included",
-      rest: "multi-parent families join together at one family price",
+      rest: "because the transition affects the whole family",
     },
   ];
 
@@ -126,77 +255,7 @@ export default function CostsBreakdown() {
       </div>
 
       {/* Price summary */}
-      <div className="w-full max-w-2xl mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Monthly */}
-          <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col">
-            <div className="bg-brand-soft-green px-6 py-4">
-              <p className="text-sm font-black text-white">Monthly</p>
-            </div>
-            <div className="bg-white dark:bg-brand-charcoal p-6 flex flex-col flex-1">
-              <div className="space-y-3 flex-1">
-                <div className="flex items-baseline justify-between">
-                  <span className="text-sm text-brand-charcoal dark:text-brand-white/80">Single-parent</span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">€55</span>
-                    <span className="text-xs text-brand-charcoal/40 dark:text-brand-white/40">/mo</span>
-                  </div>
-                </div>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-sm text-brand-soft-green font-medium">Multi-parent</span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-brand-soft-green">€68</span>
-                    <span className="text-xs text-brand-soft-green/50">/mo</span>
-                  </div>
-                </div>
-                <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
-                  Pregnant? Reserve with a €25 deposit — credited to your first invoice, refundable if you cancel during pregnancy.
-                </p>
-              </div>
-              <a
-                href="#join"
-                className="mt-6 block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
-              >
-                Join or reserve your spot
-              </a>
-            </div>
-          </div>
-
-          {/* 6-month bundle */}
-          <div className="rounded-2xl border border-brand-goldenrod/40 overflow-hidden flex flex-col">
-            <div className="bg-brand-goldenrod px-6 py-4">
-              <p className="text-sm font-black text-white">6-month bundle</p>
-            </div>
-            <div className="bg-white dark:bg-brand-charcoal p-6 flex flex-col flex-1">
-              <div className="space-y-3 flex-1">
-                <div className="flex items-baseline justify-between">
-                  <span className="text-sm text-brand-charcoal dark:text-brand-white/80">Single-parent</span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xs line-through text-brand-charcoal/30">€330</span>
-                    <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">€305</span>
-                  </div>
-                </div>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-sm text-brand-soft-green font-medium">Multi-parent</span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xs line-through text-brand-charcoal/30">€408</span>
-                    <span className="text-2xl font-bold text-brand-soft-green">€383</span>
-                  </div>
-                </div>
-                <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
-                  Pay upfront for the program, save €25. Fully refundable if you cancel during pregnancy.
-                </p>
-              </div>
-              <a
-                href="#stripe"
-                className="mt-6 block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
-              >
-                Get the 6-month bundle
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PriceCards />
 
       {/* Billing note */}
       <div className="max-w-md text-center mb-8 px-4">

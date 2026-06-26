@@ -3,43 +3,79 @@
 import ShowcaseButton from "@/components/ShowcaseButton";
 import SessionsAccordion from "@/components/first-year-program/SessionsAccordion";
 import CostsBreakdown from "@/components/first-year-program/CostsBreakdown";
-import ProgramHighlightBox from "@/components/fourth-trimester-program/ProgramHighlightBox";
 import ProgramFAQ from "@/components/first-year-program/ProgramFAQ";
 import ProgramJourney from "@/components/first-year-program/ProgramJourney";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import Link from "@/components/Link";
+import { MoveRight } from "lucide-react";
+
+type Flow = "expecting_monthly" | "expecting_bundle" | "baby_monthly" | "baby_bundle";
+type FamilyType = "single" | "multi";
+
+async function startCheckout(flow: Flow, familyType: FamilyType) {
+  const res = await fetch("/api/checkout/fyp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ flow, familyType }),
+  });
+  const data = await res.json();
+  if (data.url) {
+    window.open(data.url, "_blank");
+  } else {
+    console.error("Checkout error:", data.error);
+  }
+}
+
+function CheckoutButton({
+  flow,
+  familyType,
+  className,
+  children,
+  umamiEvent,
+}: {
+  flow: Flow;
+  familyType: FamilyType;
+  className: string;
+  children: ReactNode;
+  umamiEvent?: string;
+}) {
+  const [loading, setLoading] = useState(false);
+  return (
+    <button
+      className={`cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
+      data-umami-event={umamiEvent}
+      disabled={loading}
+      onClick={async () => {
+        setLoading(true);
+        await startCheckout(flow, familyType);
+        setLoading(false);
+      }}
+    >
+      {loading ? "Redirecting…" : children}
+    </button>
+  );
+}
 
 const highlights = [
   {
-    icon: "🤝",
-    title: "1:1 peer match",
-    description: (
-      <>
-        Get matched with another parent via{" "}
-        <a href="https://postpartumpost.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-soft-green">
-          Postpartum Post
-        </a>{" "}
-        — someone who gets where you are or where you're headed, for personal support beyond the group.
-      </>
-    ),
+    icon: "🩺",
+    feature: "Expert discussions",
+    scenario: "For expert guidance without the research overwhelm",
   },
   {
-    icon: "🩺",
-    title: "Expert guidance",
-    description:
-      "Monthly expert-led discussions covering your first year — from newborn feeding and physical recovery to relationships, identity, and returning to work.",
+    icon: "🤝",
+    feature: "1:1 parent match",
+    scenario: "For when you want a friend, not just a community",
   },
   {
     icon: "☕️",
-    title: "Local socials",
-    description:
-      "Planned meetups at curated, baby-friendly spots around Amsterdam. We handle the logistics; you just show up with your baby.",
+    feature: "Group socials",
+    scenario: "For discovering the baby-friendly side of Amsterdam — alongside other families",
   },
   {
     icon: "💬",
-    title: "Moderated community",
-    description:
-      "A private, psychotherapist-moderated WhatsApp group with a close-knit cohort of local parents — available when you need it.",
+    feature: "Moderated community",
+    scenario: "For when you need reassurance from a small group of local parents, not AI",
   },
 ];
 
@@ -66,6 +102,155 @@ const SectionHeader = ({ header, subtitle }: SectionHeaderProps) => {
     </>
   );
 };
+
+function ExpectingCard({ familyType, isSingleParent }: { familyType: FamilyType; isSingleParent: boolean }) {
+  const isMulti = familyType === "multi";
+
+  return (
+    <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col">
+      <div className="bg-brand-charcoal px-6 py-4">
+        <p className="text-sm font-black text-white">Waiting for baby</p>
+      </div>
+      <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
+        <p className="text-sm text-brand-charcoal dark:text-brand-white/80 mb-4">
+          Still expecting? Reserve now and immediately get:
+        </p>
+        <ul className="flex-1 space-y-2 mb-3">
+          {["Peer matching", "Private WhatsApp group access", "Understanding the Village guide"].map((item) => (
+            <li key={item} className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80">
+              <svg className="w-4 h-4 text-brand-soft-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+              {item}
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 mb-5">
+          This is for your whole family: {isSingleParent ? "you and your child(ren)" : "you, your partner, and your child(ren)"}.
+        </p>
+        <div className="flex flex-col gap-3">
+          <CheckoutButton
+            flow="expecting_monthly"
+            familyType={familyType}
+            className="block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
+            umamiEvent="First Year Program: Save spot monthly"
+          >
+            Reserve your spot — €25
+          </CheckoutButton>
+          <CheckoutButton
+            flow="expecting_bundle"
+            familyType={familyType}
+            className="block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
+            umamiEvent="First Year Program: Save spot 6 month"
+          >
+            6-month bundle — {isMulti ? "€383" : "€305"} (save €25)
+          </CheckoutButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BabyCard({ familyType, isSingleParent }: { familyType: FamilyType; isSingleParent: boolean }) {
+  const isMulti = familyType === "multi";
+
+  return (
+    <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col">
+      <div className="bg-brand-charcoal px-6 py-4">
+        <p className="text-sm font-black text-white">Baby&apos;s here</p>
+      </div>
+      <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
+        <p className="text-sm text-brand-charcoal dark:text-brand-white/80 mb-4">
+          Join anytime while your baby is under 12 months and immediately get:
+        </p>
+        <ul className="flex-1 space-y-2 mb-3">
+          {["Peer matching", "Private WhatsApp group access", "All 6 resource guides", "Invites to this month's events"].map((item) => (
+            <li key={item} className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80">
+              <svg className="w-4 h-4 text-brand-goldenrod shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+              {item}
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 mb-5">
+          This is for your whole family: {isSingleParent ? "you and your child(ren)" : "you, your partner, and your child(ren)"}.
+        </p>
+        <div className="flex flex-col gap-3">
+          <CheckoutButton
+            flow="baby_monthly"
+            familyType={familyType}
+            className="block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
+            umamiEvent="First Year Program: Join with baby monthly"
+          >
+            Join now — {isMulti ? "€68" : "€55"}/mo
+          </CheckoutButton>
+          <CheckoutButton
+            flow="baby_bundle"
+            familyType={familyType}
+            className="block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
+            umamiEvent="First Year Program: Join with baby 6 month"
+          >
+            6-month bundle — {isMulti ? "€383" : "€305"} (save €25)
+          </CheckoutButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function JoinSection() {
+  const [isSingleParent, setIsSingleParent] = useState(false);
+  const familyType: FamilyType = isSingleParent ? "single" : "multi";
+
+  return (
+    <section
+      id="join"
+      className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 dark:bg-brand-soft-charcoal border border-brand-sand/10 py-10 px-4 md:px-8 rounded-lg w-full"
+    >
+      <SectionHeader
+        header="Join the program"
+        subtitle="Open to families from pregnancy through your baby's first year, starting in September 2026."
+      />
+
+      {/* Single parent slide toggle */}
+      <div className="flex flex-col items-center gap-2 mt-4 mb-8">
+        <label className="flex items-center gap-3 cursor-pointer select-none">
+          <span className="text-sm text-brand-charcoal dark:text-brand-white/80">I am a single parent</span>
+          <button
+            role="switch"
+            aria-checked={isSingleParent}
+            onClick={() => setIsSingleParent((v) => !v)}
+            className={`cursor-pointer relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
+              isSingleParent ? "bg-brand-soft-green" : "bg-brand-sand/60 dark:bg-brand-soft-charcoal/60"
+            }`}
+          >
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition-transform duration-200 ${
+                isSingleParent ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
+        </label>
+        <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 text-center max-w-sm">
+          We offer a discount to ensure everyone can access support, regardless of family structure.
+        </p>
+      </div>
+
+      <div className="max-w-2xl mx-auto w-full px-2 md:px-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ExpectingCard familyType={familyType} isSingleParent={isSingleParent} />
+        <BabyCard familyType={familyType} isSingleParent={isSingleParent} />
+      </div>
+
+      <p className="text-center text-xs text-brand-charcoal/50 dark:text-brand-white/50 mt-8 max-w-md mx-auto leading-normal">
+        Questions or need financial support?{" "}
+        <a
+          href="mailto:hello@amsterdamparentproject.nl"
+          className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white/80"
+        >
+          Email us
+        </a>{" "}
+        — we&apos;re here to help!
+      </p>
+    </section>
+  );
+}
 
 export default function FirstYearProgramClient() {
   return (
@@ -103,26 +288,33 @@ export default function FirstYearProgramClient() {
 
         <div className="max-w-xl">
           <p className="mb-6 mx-4">
-            The First Year Program cuts through the noise of overwhelming, conflicting advice to focus on what matters: a healthy, calm, and confident transition from pregnancy to newborn parenthood for your whole family.
-          </p>
-          <p className="mb-6 mx-4">
-            <b>
-              When support from your kraamzorg and midwife ends, we step in to bridge the gap
-            </b>{" "}
-             between professional expertise and peer support — because "best practices" come from both science and shared experience. Join anytime from pregnancy through your baby's first year.
+            When support from your kraamzorg and midwife ends, we step in to bridge the gap between professional expertise and peer support: because &lsquo;best practices&rsquo; come from both science and shared experience. The program is a <b>community labor of love from local postpartum experts</b> — psychologists, lactation consultants, parental return-to-work specialists, and more — <b>and the founders of APP</b>, who stood up this whole organization because they felt the support gap firsthand.
           </p>
         </div>
 
         {/* Highlights */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 mb-12 px-4 max-w-3xl w-full">
-          {highlights.map((item, index) => (
-            <ProgramHighlightBox
-              key={index}
-              icon={item.icon}
-              title={item.title}
-              description={item.description}
-            />
-          ))}
+        <div className="mt-6 mb-12 px-4 w-full max-w-xl">
+          <h2 className="text-center text-3xl font-bold text-brand-charcoal dark:text-brand-goldenrod mb-6 md:mb-12">
+            The four support pillars we believe in
+          </h2>
+          <div className="flex flex-col gap-2">
+            {highlights.map((item, index) => (
+              <div key={index} className="flex flex-col md:grid items-start md:items-center gap-1 md:gap-4 py-2" style={{ gridTemplateColumns: "1fr auto 1fr" }}>
+                <div className="flex items-center gap-3 md:contents">
+                  <span className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-brand-goldenrod text-base font-bold text-brand-charcoal whitespace-nowrap">
+                    {item.icon} {item.feature}
+                  </span>
+                  <MoveRight className="text-brand-soft-green dark:text-brand-goldenrod shrink-0" size={20} strokeWidth={2.5} />
+                </div>
+                <span className="text-sm text-brand-charcoal/70 dark:text-brand-white/60 italic md:hidden ml-4 mt-1">
+                  {item.scenario}
+                </span>
+                <span className="hidden md:block text-sm text-brand-charcoal/70 dark:text-brand-white/60 italic">
+                  {item.scenario}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Journey */}
@@ -173,98 +365,7 @@ export default function FirstYearProgramClient() {
 
         {/* Join */}
         <div className="w-full max-w-full overflow-x-clip">
-          <section
-            id="join"
-            className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 dark:bg-brand-soft-charcoal border border-brand-sand/10 py-10 px-4 md:px-8 rounded-lg w-full"
-          >
-            <SectionHeader
-              header="Join the program"
-              subtitle="Open to families from pregnancy through your baby's first year, stbuarting in September 2026."
-            />
-
-            <div className="max-w-2xl mx-auto mt-8 w-full px-2 md:px-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Waiting for baby */}
-              <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col">
-                <div className="bg-brand-charcoal px-6 py-4">
-                  <p className="text-sm font-black text-white">Waiting for baby</p>
-                </div>
-                <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
-                <p className="text-sm text-brand-charcoal dark:text-brand-white/80 mb-4">Still expecting? Reserve now and immediately get:</p>
-                <ul className="flex-1 space-y-2 mb-2">
-                  {["Peer matching", "Private WhatsApp group access", "Understanding the Village guide"].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80">
-                      <svg className="w-4 h-4 text-brand-soft-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 my-2">Includes access for your whole family: you and your partner.</p>
-                <div className="mt-6 flex flex-col gap-3">
-                  <a
-                    href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
-                    className="block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
-                    data-umami-event="First Year Program: Save spot monthly"
-                  >
-                    Reserve your spot — €25
-                  </a>
-                  <a
-                    href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
-                    className="block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
-                    data-umami-event="First Year Program: Save spot 6 month"
-                  >
-                    6-month bundle — Save €25
-                  </a>
-                </div>
-                </div>
-              </div>
-
-              {/* Baby's here */}
-              <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col">
-                <div className="bg-brand-charcoal px-6 py-4">
-                  <p className="text-sm font-black text-white">Baby's here</p>
-                </div>
-                <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
-                <p className="text-sm text-brand-charcoal dark:text-brand-white/80 mb-4">Join anytime while your baby is under 12 months and immediately get:</p>
-                <ul className="flex-1 space-y-2 mb-2">
-                  {["Peer matching", "Private WhatsApp group access", "All 6 resource guides", "Invites to this month's events"].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80">
-                      <svg className="w-4 h-4 text-brand-goldenrod shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 my-2">Includes access for your whole family: you and your partner.</p>                
-                <div className="mt-6 flex flex-col gap-3">
-                  <a
-                    href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
-                    className="block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
-                    data-umami-event="First Year Program: Join with baby monthly"
-                  >
-                    Join now — €55–68/mo
-                  </a>
-                  <a
-                    href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
-                    className="block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
-                    data-umami-event="First Year Program: Join with baby 6 month"
-                  >
-                    6-month bundle — Save €25
-                  </a>
-                </div>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-center text-xs text-brand-charcoal/50 dark:text-brand-white/50 mt-8 max-w-md mx-auto leading-normal">
-              Questions?{" "}
-              <a
-                href="mailto:hello@amsterdamparentproject.nl"
-                className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white/80"
-              >
-                Email us
-              </a>{" "}
-              — we're here to help!
-            </p>
-          </section>
+          <JoinSection />
         </div>
       </div>
 
