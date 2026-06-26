@@ -8,8 +8,8 @@ interface Session {
 
 const firstYearProgramData: Session[] = [
   {
-    title: "Building the Village",
-    subtitle: "Creating your support system in the Netherlands",
+    title: "Understanding the Village",
+    subtitle: "Dutch postpartum care and building your support network",
     description: `
       We've all heard the phrase "It takes a village." For new parents — especially expats becoming parents abroad — the village doesn't come without effort.
       But where to start? We cover local Dutch postpartum care and end with an exercise on finding and filling gaps in support, so you're not starting from scratch when you need it most.
@@ -22,8 +22,8 @@ const firstYearProgramData: Session[] = [
     ],
   },
   {
-    title: "Newborn Feeding",
-    subtitle: "A whole-family approach from newborn through first foods",
+    title: "Newborn Feeding Strategies",
+    subtitle: "A whole-family approach to feeding",
     description: `
       Feeding is one of the most consuming parts of new parenthood — and it evolves constantly through the first year.
       We cover the full arc from newborn feeding to introducing solids, with a whole-family lens that keeps both parents in the picture and reduces the mental load on one person.
@@ -37,8 +37,8 @@ const firstYearProgramData: Session[] = [
     ],
   },
   {
-    title: "Physical & Emotional Transformation",
-    subtitle: "How becoming a parent changes you — permanently",
+    title: "Postpartum Transformation",
+    subtitle: "How becoming a parent changes you — physically, emotionally, permanently",
     description: `
       Birth and the first year reshape both parents' bodies and minds in ways that go far beyond "bouncing back."
       We explore the permanent physical changes after birth alongside the emotional and identity shifts of new parenthood — including matrescence and patrescence — and offer practical ways to navigate your evolving self with compassion.
@@ -52,8 +52,8 @@ const firstYearProgramData: Session[] = [
     ],
   },
   {
-    title: "Postpartum Relationships: Culture",
-    subtitle: "Raising a baby across cultures",
+    title: "Cross-Cultural Parenting",
+    subtitle: "Raising a child in a multicultural family",
     description: `
       When two people with different backgrounds become parents together, their childhoods show up — often unexpectedly.
       From food and sleep to discipline and family roles, cultural differences surface in the day-to-day of new parenthood. We help you identify where they come from and how to build a shared parenting culture that works for your family.
@@ -67,7 +67,7 @@ const firstYearProgramData: Session[] = [
     ],
   },
   {
-    title: "Postpartum Relationships: Partner",
+    title: "Partners in Postpartum",
     subtitle: "Staying connected when everything has changed",
     description: `
       No relationship is unchanged by a baby. Intimacy, communication, equal parenting, and emotional connection all shift — and often in ways that feel surprising or isolating.

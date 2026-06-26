@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface HighlightProps {
   icon: string;
   title: string;
-  description: string;
+  description: ReactNode;
 }
 
 const ProgramHighlightBox = ({ icon, title, description }: HighlightProps) => {

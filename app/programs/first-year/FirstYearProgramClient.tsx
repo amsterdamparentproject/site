@@ -1,9 +1,7 @@
 "use client";
 
 import ShowcaseButton from "@/components/ShowcaseButton";
-import FYPCohorts from "@/data/first-year-program/cohorts";
 import SessionsAccordion from "@/components/first-year-program/SessionsAccordion";
-import CohortsAccordion from "@/components/fourth-trimester-program/CohortsAccordion";
 import CostsBreakdown from "@/components/first-year-program/CostsBreakdown";
 import ProgramHighlightBox from "@/components/fourth-trimester-program/ProgramHighlightBox";
 import ProgramFAQ from "@/components/first-year-program/ProgramFAQ";
@@ -15,14 +13,21 @@ const highlights = [
   {
     icon: "🤝",
     title: "1:1 peer match",
-    description:
-      "Get matched with another parent via Postpartum Post — someone who gets where you are or where you're headed, for personal support beyond the group.",
+    description: (
+      <>
+        Get matched with another parent via{" "}
+        <a href="https://postpartumpost.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-soft-green">
+          Postpartum Post
+        </a>{" "}
+        — someone who gets where you are or where you're headed, for personal support beyond the group.
+      </>
+    ),
   },
   {
     icon: "🩺",
     title: "Expert guidance",
     description:
-      "Monthly expert-led discussions covering the full arc of your first year — from newborn feeding and physical recovery to relationships, identity, and returning to work.",
+      "Monthly expert-led discussions covering your first year — from newborn feeding and physical recovery to relationships, identity, and returning to work.",
   },
   {
     icon: "☕️",
@@ -34,7 +39,7 @@ const highlights = [
     icon: "💬",
     title: "Moderated community",
     description:
-      "A private, psychotherapist-moderated WhatsApp group with a close-knit cohort of local parents — available 24/7 when you need it most.",
+      "A private, psychotherapist-moderated WhatsApp group with a close-knit cohort of local parents — available when you need it.",
   },
 ];
 
@@ -78,20 +83,19 @@ export default function FirstYearProgramClient() {
             First Year Program
           </h1>
           <p className="mt-4 max-w-xl">
-            Your{" "}
+            A{" "}
             <b className="dark:text-brand-goldenrod text-brand-soft-green">
-              nonprofit support system through your baby's entire first year
+              local, nonprofit, whole family support system built for your baby's first year
             </b>
             . Expert-led discussions, curated socials, 1:1 peer matching, and a
-            moderated community — starting in pregnancy, lasting through the
-            milestones that matter.
+            moderated community — all you need to transition with confidence into newborn parenthood.
           </p>
         </div>
 
         <div className="mt-6 mb-8">
           <ShowcaseButton
-            href="#find-your-cohort"
-            title="Reserve your spot"
+            href="#join"
+            title="Find your place"
             fill={true}
             umamiName="First Year Program: Join program"
           />
@@ -99,20 +103,13 @@ export default function FirstYearProgramClient() {
 
         <div className="max-w-xl">
           <p className="mb-6 mx-4">
-            The first year of parenthood is the most researched, most discussed,
-            and least supported period in modern family life. Most of the world
-            has always understood it as a communal responsibility — we're
-            building that village for families in Amsterdam who don't have one
-            yet.
+            The First Year Program cuts through the noise of overwhelming, conflicting advice to focus on what matters: a healthy, calm, and confident transition from pregnancy to newborn parenthood for your whole family.
           </p>
           <p className="mb-6 mx-4">
             <b>
-              Join in pregnancy or with a newborn, and pay nothing until your
-              baby arrives.
+              When support from your kraamzorg and midwife ends, we step in to bridge the gap
             </b>{" "}
-            Monthly billing means you're never locked in — but the community,
-            the expert sessions, and your 1:1 peer match are there every month
-            when you need them.
+             between professional expertise and peer support — because "best practices" come from both science and shared experience. Join anytime from pregnancy through your baby's first year.
           </p>
         </div>
 
@@ -130,7 +127,10 @@ export default function FirstYearProgramClient() {
 
         {/* Journey */}
         <section className="py-8 px-4 max-w-4xl mx-auto flex items-center flex-col justify-center">
-          <SectionHeader header="How it works" />
+          <SectionHeader
+            header="How it works"
+            subtitle="Join in pregnancy with a €25 deposit and the whole family gets immediate access to support — free until your baby arrives. Already have a baby under 12 months? Jump straight in. Support is there for you when and where you need it, for as long as you need."
+          />
           <ProgramJourney />
         </section>
 
@@ -156,7 +156,7 @@ export default function FirstYearProgramClient() {
             header="Program fees"
             subtitle={
               <>
-                As a nonprofit, we strive to balance access with fair pay. If
+                As a nonprofit, we strive to balance access with fair pay for our experts and facilitators. If
                 price is a barrier, please{" "}
                 <Link
                   href="mailto:hello@amsterdamparentproject.nl"
@@ -171,37 +171,99 @@ export default function FirstYearProgramClient() {
           <CostsBreakdown />
         </section>
 
-        {/* Cohorts */}
+        {/* Join */}
         <div className="w-full max-w-full overflow-x-clip">
           <section
-            id="find-your-cohort"
+            id="join"
             className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 dark:bg-brand-soft-charcoal border border-brand-sand/10 py-10 px-4 md:px-8 rounded-lg w-full"
           >
             <SectionHeader
-              header="Find your cohort"
-              subtitle="Reserve your spot at any stage — during pregnancy or with a newborn. No payment until after your due date."
+              header="Join the program"
+              subtitle="Open to families from pregnancy through your baby's first year, stbuarting in September 2026."
             />
 
-            <div className="max-w-3xl mx-auto mt-8 w-full px-2 md:px-4">
-              <div className="space-y-4">
-                {FYPCohorts.filter((c) => !c.draft || c.groupStatus === "Open").map(
-                  (cohort, index) => (
-                    <CohortsAccordion key={index} cohort={cohort} />
-                  )
-                )}
+            <div className="max-w-2xl mx-auto mt-8 w-full px-2 md:px-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Waiting for baby */}
+              <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col">
+                <div className="bg-brand-charcoal px-6 py-4">
+                  <p className="text-sm font-black text-white">Waiting for baby</p>
+                </div>
+                <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
+                <p className="text-sm text-brand-charcoal dark:text-brand-white/80 mb-4">Still expecting? Reserve now and immediately get:</p>
+                <ul className="flex-1 space-y-2 mb-2">
+                  {["Peer matching", "Private WhatsApp group access", "Understanding the Village guide"].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80">
+                      <svg className="w-4 h-4 text-brand-soft-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 my-2">Includes access for your whole family: you and your partner.</p>
+                <div className="mt-6 flex flex-col gap-3">
+                  <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
+                    className="block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
+                    data-umami-event="First Year Program: Save spot monthly"
+                  >
+                    Reserve your spot — €25
+                  </a>
+                  <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
+                    className="block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
+                    data-umami-event="First Year Program: Save spot 6 month"
+                  >
+                    6-month bundle — Save €25
+                  </a>
+                </div>
+                </div>
               </div>
 
-              <p className="text-center text-xs text-brand-charcoal dark:text-brand-white/80 mt-8 max-w-md mx-auto leading-normal">
-                Don't see your cohort?{" "}
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
-                  className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white/80"
-                >
-                  Join the interest list
-                </a>{" "}
-                to hear about new cohorts first.
-              </p>
+              {/* Baby's here */}
+              <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col">
+                <div className="bg-brand-charcoal px-6 py-4">
+                  <p className="text-sm font-black text-white">Baby's here</p>
+                </div>
+                <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
+                <p className="text-sm text-brand-charcoal dark:text-brand-white/80 mb-4">Join anytime while your baby is under 12 months and immediately get:</p>
+                <ul className="flex-1 space-y-2 mb-2">
+                  {["Peer matching", "Private WhatsApp group access", "All 6 resource guides", "Invites to this month's events"].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80">
+                      <svg className="w-4 h-4 text-brand-goldenrod shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 my-2">Includes access for your whole family: you and your partner.</p>                
+                <div className="mt-6 flex flex-col gap-3">
+                  <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
+                    className="block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
+                    data-umami-event="First Year Program: Join with baby monthly"
+                  >
+                    Join now — €55–68/mo
+                  </a>
+                  <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSebsrV_7wH9pawo3DBFJXGLTIP0jIXPgfqtctK4SmSk89tEJQ/viewform?usp=dialog"
+                    className="block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
+                    data-umami-event="First Year Program: Join with baby 6 month"
+                  >
+                    6-month bundle — Save €25
+                  </a>
+                </div>
+                </div>
+              </div>
             </div>
+
+            <p className="text-center text-xs text-brand-charcoal/50 dark:text-brand-white/50 mt-8 max-w-md mx-auto leading-normal">
+              Questions?{" "}
+              <a
+                href="mailto:hello@amsterdamparentproject.nl"
+                className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white/80"
+              >
+                Email us
+              </a>{" "}
+              — we're here to help!
+            </p>
           </section>
         </div>
       </div>

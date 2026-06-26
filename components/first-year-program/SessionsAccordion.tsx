@@ -28,12 +28,12 @@ export default function SessionsAccordion() {
               className={`border ${openIndex === index ? "border-brand-soft-green" : "border-brand-sand/60"} rounded-2xl overflow-hidden bg-brand-white dark:bg-brand-charcoal transition-all hover:shadow-sm hover:border-brand-soft-green`}
             >
               <button
-                className="w-full text-left px-6 py-5 flex items-center justify-between gap-4"
+                className="cursor-pointer w-full text-left px-6 py-5 flex items-center justify-between gap-4 group/header hover:bg-brand-soft-green/5 transition-all"
                 onClick={() =>
                   setOpenIndex(openIndex === index ? null : index)
                 }
               >
-                <div>
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-1">
                     <span className="text-xs font-bold text-brand-goldenrod uppercase tracking-widest">
                       Month {index + 1}
@@ -46,23 +46,42 @@ export default function SessionsAccordion() {
                     {session.subtitle}
                   </p>
                 </div>
-                <span
-                  className={`shrink-0 transition-transform duration-300 text-brand-soft-green ${openIndex === index ? "rotate-45" : ""}`}
-                >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                <div className="flex items-center gap-3 shrink-0">
+                  <div className="flex -space-x-3 overflow-hidden">
+                    {sessionAuthors.map((expert, i) => (
+                      <div
+                        key={expert?.slug}
+                        className="relative inline-block rounded-full ring-1 ring-brand-white dark:ring-brand-charcoal bg-brand-white dark:bg-brand-charcoal"
+                        style={{ zIndex: sessionAuthors.length - i }}
+                      >
+                        <Image
+                          src={expert?.avatar || "/static/images/logo/light.png"}
+                          width={40}
+                          height={40}
+                          alt={`${expert?.name} headshot`}
+                          className="h-9 w-9 rounded-full object-cover grayscale-[20%] group-hover/header:grayscale-0 transition-all"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <span
+                    className={`shrink-0 transition-transform duration-300 ${openIndex === index ? "text-brand-soft-green rotate-180" : "text-brand-sand"}`}
                   >
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </span>
+                </div>
               </button>
 
               <div
