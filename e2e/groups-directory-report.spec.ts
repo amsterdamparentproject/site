@@ -32,5 +32,4 @@ test.describe("ReportIssueForm (directory)", () => {
     await page.click('button:has-text("Send report")');
     await waitForSuccess(page);
   });
-
 });

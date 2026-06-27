@@ -37,7 +37,8 @@ const firstYearProgramData: Session[] = [
   },
   {
     title: "Postpartum Transformation",
-    subtitle: "How becoming a parent changes you — physically, emotionally, permanently",
+    subtitle:
+      "How becoming a parent changes you — physically, emotionally, permanently",
     description: `
       Birth and the first year reshape both parents' bodies and minds in ways that go far beyond "bouncing back."
       We explore the permanent physical changes after birth alongside the emotional and identity shifts of new parenthood — including matrescence and patrescence — and offer practical ways to navigate your evolving self with compassion.

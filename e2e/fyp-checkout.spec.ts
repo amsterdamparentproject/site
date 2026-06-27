@@ -23,7 +23,11 @@
  */
 
 import { test, expect, type Page } from "@playwright/test";
-import { cleanupAccountByEmail, getAccountByEmail, type FYPAccount } from "./helpers/fyp-db";
+import {
+  cleanupAccountByEmail,
+  getAccountByEmail,
+  type FYPAccount,
+} from "./helpers/fyp-db";
 
 // ---------------------------------------------------------------------------
 // Shared helpers
@@ -40,7 +44,7 @@ import { cleanupAccountByEmail, getAccountByEmail, type FYPAccount } from "./hel
  */
 async function completeStripeCheckout(
   checkoutPage: Page,
-  opts: { month: string; year: string; email?: string; name?: string }
+  opts: { month: string; year: string; email?: string; name?: string },
 ) {
   // Wait for Stripe's form to render — networkidle never fires due to
   // Stripe's continuous background requests; domcontentloaded is sufficient.
@@ -73,7 +77,9 @@ async function completeStripeCheckout(
 
   if (!isCardSelected) {
     const cardRowCenter = await checkoutPage.evaluate(() => {
-      const radio = document.getElementById("payment-method-accordion-item-title-card");
+      const radio = document.getElementById(
+        "payment-method-accordion-item-title-card",
+      );
       if (!radio) return null;
       const rect = radio.getBoundingClientRect();
       return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
@@ -86,8 +92,12 @@ async function completeStripeCheckout(
 
   // Card inputs are in Shadow DOM — accessible via Playwright's locator engine
   // with getByPlaceholder, even though document.querySelectorAll misses them.
-  await checkoutPage.getByPlaceholder("1234 1234 1234 1234").waitFor({ timeout: 10_000 });
-  await checkoutPage.getByPlaceholder("1234 1234 1234 1234").pressSequentially("4242424242424242");
+  await checkoutPage
+    .getByPlaceholder("1234 1234 1234 1234")
+    .waitFor({ timeout: 10_000 });
+  await checkoutPage
+    .getByPlaceholder("1234 1234 1234 1234")
+    .pressSequentially("4242424242424242");
   await checkoutPage.getByPlaceholder("MM / YY").pressSequentially("1226");
   await checkoutPage.getByPlaceholder("CVC").pressSequentially("123");
 
@@ -107,10 +117,15 @@ async function completeStripeCheckout(
  * Click a checkout button on the FYP page and return the new Stripe tab.
  * Waits for the button to be visible first to handle Next.js compilation delay.
  */
-async function clickAndGetCheckoutTab(page: Page, buttonLabel: RegExp | string) {
+async function clickAndGetCheckoutTab(
+  page: Page,
+  buttonLabel: RegExp | string,
+) {
   // Ensure button is present before wiring up the page event — handles the
   // cold-start compilation delay when the dev server first compiles a route.
-  await page.getByRole("button", { name: buttonLabel }).waitFor({ state: "visible", timeout: 45_000 });
+  await page
+    .getByRole("button", { name: buttonLabel })
+    .waitFor({ state: "visible", timeout: 45_000 });
 
   const [checkoutPage] = await Promise.all([
     page.context().waitForEvent("page", { timeout: 45_000 }),
@@ -125,7 +140,10 @@ async function clickAndGetCheckoutTab(page: Page, buttonLabel: RegExp | string) 
  * Webhook delivery can take several seconds; polling is more reliable than a
  * fixed sleep, especially when multiple checkouts complete in quick succession.
  */
-async function waitForAccount(email: string, timeoutMs = 20_000): Promise<FYPAccount | null> {
+async function waitForAccount(
+  email: string,
+  timeoutMs = 20_000,
+): Promise<FYPAccount | null> {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     const account = await getAccountByEmail(email);
@@ -144,11 +162,11 @@ const YEAR = "2026";
 const BASE_EMAIL = `e2e-fyp-${Date.now()}`;
 
 const EMAILS = {
-  expecting_monthly:        `${BASE_EMAIL}-exp-monthly@example.com`,
+  expecting_monthly: `${BASE_EMAIL}-exp-monthly@example.com`,
   expecting_monthly_single: `${BASE_EMAIL}-exp-monthly-single@example.com`,
-  expecting_bundle:         `${BASE_EMAIL}-exp-bundle@example.com`,
-  baby_monthly:             `${BASE_EMAIL}-baby-monthly@example.com`,
-  baby_bundle:              `${BASE_EMAIL}-baby-bundle@example.com`,
+  expecting_bundle: `${BASE_EMAIL}-exp-bundle@example.com`,
+  baby_monthly: `${BASE_EMAIL}-baby-monthly@example.com`,
+  baby_bundle: `${BASE_EMAIL}-baby-bundle@example.com`,
 };
 
 const BASE_URL = "http://localhost:3001";
@@ -202,19 +220,27 @@ test.afterAll(async () => {
 // expecting_monthly
 // ---------------------------------------------------------------------------
 
-test("expecting_monthly (multi): deposit → deferred subscription created", async ({ page }) => {
+test("expecting_monthly (multi): deposit → deferred subscription created", async ({
+  page,
+}) => {
   await page.goto("/programs/first-year#join");
 
   const checkoutPage = await clickAndGetCheckoutTab(page, /reserve your spot/i);
 
-  await completeStripeCheckout(checkoutPage, { month: MONTH, year: YEAR, email: EMAILS.expecting_monthly });
+  await completeStripeCheckout(checkoutPage, {
+    month: MONTH,
+    year: YEAR,
+    email: EMAILS.expecting_monthly,
+  });
 
   await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
   await checkoutPage.waitForLoadState("domcontentloaded");
   // Generous timeout: survives a first-time cold compile of the route in dev
   // even if beforeAll warm-up was skipped. toBeVisible re-queries across the
   // dev reload loop, so it resolves as soon as the page finishes compiling.
-  await expect(checkoutPage.getByRole("heading", { name: /first year program/i })).toBeVisible({ timeout: 45_000 });
+  await expect(
+    checkoutPage.getByRole("heading", { name: /first year program/i }),
+  ).toBeVisible({ timeout: 45_000 });
 
   const account = await waitForAccount(EMAILS.expecting_monthly);
   expect(account).not.toBeNull();
@@ -230,7 +256,9 @@ test("expecting_monthly (multi): deposit → deferred subscription created", asy
 // expecting_monthly (single parent)
 // ---------------------------------------------------------------------------
 
-test("expecting_monthly (single): deposit → deferred subscription created", async ({ page }) => {
+test("expecting_monthly (single): deposit → deferred subscription created", async ({
+  page,
+}) => {
   await page.goto("/programs/first-year#join");
 
   // Toggle to single parent and wait for the price to update
@@ -238,11 +266,17 @@ test("expecting_monthly (single): deposit → deferred subscription created", as
   // Wait for React re-render: the bundle button switches from €383 to €305.
   // Both the expecting and baby cards show a €305 bundle button when single
   // parent is selected, so scope to the expecting card (the first one).
-  await expect(page.getByRole("button", { name: /€305/i }).first()).toBeVisible({ timeout: 5_000 });
+  await expect(page.getByRole("button", { name: /€305/i }).first()).toBeVisible(
+    { timeout: 5_000 },
+  );
 
   const checkoutPage = await clickAndGetCheckoutTab(page, /reserve your spot/i);
 
-  await completeStripeCheckout(checkoutPage, { month: MONTH, year: YEAR, email: EMAILS.expecting_monthly_single });
+  await completeStripeCheckout(checkoutPage, {
+    month: MONTH,
+    year: YEAR,
+    email: EMAILS.expecting_monthly_single,
+  });
 
   await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
   await checkoutPage.waitForLoadState("domcontentloaded");
@@ -256,18 +290,30 @@ test("expecting_monthly (single): deposit → deferred subscription created", as
 // expecting_bundle
 // ---------------------------------------------------------------------------
 
-test("expecting_bundle (multi): upfront payment → account created with bundle_expires_at", async ({ page }) => {
+test("expecting_bundle (multi): upfront payment → account created with bundle_expires_at", async ({
+  page,
+}) => {
   await page.goto("/programs/first-year#join");
 
   // Both expecting and baby cards have a "6-month bundle" button — use .first()
-  await page.getByRole("button", { name: /6-month bundle/i }).first().waitFor({ state: "visible", timeout: 45_000 });
+  await page
+    .getByRole("button", { name: /6-month bundle/i })
+    .first()
+    .waitFor({ state: "visible", timeout: 45_000 });
   const [checkoutPage] = await Promise.all([
     page.context().waitForEvent("page", { timeout: 45_000 }),
-    page.getByRole("button", { name: /6-month bundle/i }).first().click(),
+    page
+      .getByRole("button", { name: /6-month bundle/i })
+      .first()
+      .click(),
   ]);
   await checkoutPage.waitForURL(/checkout\.stripe\.com/, { timeout: 15_000 });
 
-  await completeStripeCheckout(checkoutPage, { month: MONTH, year: YEAR, email: EMAILS.expecting_bundle });
+  await completeStripeCheckout(checkoutPage, {
+    month: MONTH,
+    year: YEAR,
+    email: EMAILS.expecting_bundle,
+  });
 
   await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
   await checkoutPage.waitForLoadState("domcontentloaded");
@@ -284,12 +330,18 @@ test("expecting_bundle (multi): upfront payment → account created with bundle_
 // baby_monthly
 // ---------------------------------------------------------------------------
 
-test("baby_monthly (multi): immediate subscription created", async ({ page }) => {
+test("baby_monthly (multi): immediate subscription created", async ({
+  page,
+}) => {
   await page.goto("/programs/first-year#join");
 
   const checkoutPage = await clickAndGetCheckoutTab(page, /join now/i);
 
-  await completeStripeCheckout(checkoutPage, { month: MONTH, year: YEAR, email: EMAILS.baby_monthly });
+  await completeStripeCheckout(checkoutPage, {
+    month: MONTH,
+    year: YEAR,
+    email: EMAILS.baby_monthly,
+  });
 
   await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
   await checkoutPage.waitForLoadState("domcontentloaded");
@@ -305,18 +357,30 @@ test("baby_monthly (multi): immediate subscription created", async ({ page }) =>
 // baby_bundle
 // ---------------------------------------------------------------------------
 
-test("baby_bundle (multi): upfront payment → account with bundle_expires_at 6mo from today", async ({ page }) => {
+test("baby_bundle (multi): upfront payment → account with bundle_expires_at 6mo from today", async ({
+  page,
+}) => {
   await page.goto("/programs/first-year#join");
 
   // Baby bundle — click the last "6-month bundle" button (baby card)
-  await page.getByRole("button", { name: /6-month bundle/i }).last().waitFor({ state: "visible", timeout: 45_000 });
+  await page
+    .getByRole("button", { name: /6-month bundle/i })
+    .last()
+    .waitFor({ state: "visible", timeout: 45_000 });
   const [checkoutPage] = await Promise.all([
     page.context().waitForEvent("page", { timeout: 45_000 }),
-    page.getByRole("button", { name: /6-month bundle/i }).last().click(),
+    page
+      .getByRole("button", { name: /6-month bundle/i })
+      .last()
+      .click(),
   ]);
   await checkoutPage.waitForURL(/checkout\.stripe\.com/, { timeout: 15_000 });
 
-  await completeStripeCheckout(checkoutPage, { month: MONTH, year: YEAR, email: EMAILS.baby_bundle });
+  await completeStripeCheckout(checkoutPage, {
+    month: MONTH,
+    year: YEAR,
+    email: EMAILS.baby_bundle,
+  });
 
   await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
   await checkoutPage.waitForLoadState("domcontentloaded");
@@ -334,7 +398,9 @@ test("baby_bundle (multi): upfront payment → account with bundle_expires_at 6m
 
 test("welcome page renders with PDF download", async ({ page }) => {
   await page.goto("/programs/first-year/welcome");
-  await expect(page.getByRole("heading", { name: /first year program/i })).toBeVisible({ timeout: 15_000 });
+  await expect(
+    page.getByRole("heading", { name: /first year program/i }),
+  ).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("link", { name: /download/i })).toHaveAttribute(
     "href",
     /understanding-the-village\.pdf/,

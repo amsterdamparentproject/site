@@ -26,7 +26,9 @@ function withCookie(publicId: string) {
 /**
  * Cookie path: .from("users").select("id, email").eq("public_id", uid).single()
  */
-function mockUserLookupByPublicId(result: { id: string; email: string } | null) {
+function mockUserLookupByPublicId(
+  result: { id: string; email: string } | null,
+) {
   const single = vi.fn().mockResolvedValue({ data: result, error: null });
   const client = {
     from: vi.fn().mockReturnValue({
@@ -54,7 +56,9 @@ function mockUserLookupByEmail(
     error: insertError,
   });
   const fromResult = {
-    select: vi.fn().mockReturnValue({ eq: vi.fn().mockReturnValue({ single }) }),
+    select: vi
+      .fn()
+      .mockReturnValue({ eq: vi.fn().mockReturnValue({ single }) }),
     insert: vi.fn().mockReturnValue({
       select: vi.fn().mockReturnValue({ single: insertSingle }),
     }),
@@ -70,9 +74,14 @@ describe("postManageDirectory — email + userId + publicId resolution", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: true, status: 200, text: async () => "{}" }),
+      vi
+        .fn()
+        .mockResolvedValue({ ok: true, status: 200, text: async () => "{}" }),
     );
-    vi.stubEnv("N8N_MANAGE_DIRECTORY_WEBHOOK_URL", "https://test-webhook.example.com");
+    vi.stubEnv(
+      "N8N_MANAGE_DIRECTORY_WEBHOOK_URL",
+      "https://test-webhook.example.com",
+    );
     vi.stubEnv("N8N_WEBHOOK_SECRET", "test-secret");
   });
 
@@ -87,7 +96,10 @@ describe("postManageDirectory — email + userId + publicId resolution", () => {
   describe("cookie path — email absent from FormData", () => {
     it("sets email, userId (user.id), and publicId (app_uid) from cookie lookup", async () => {
       withCookie("public-token-abc");
-      mockUserLookupByPublicId({ id: "uuid-internal-123", email: "user@example.com" });
+      mockUserLookupByPublicId({
+        id: "uuid-internal-123",
+        email: "user@example.com",
+      });
 
       const formData = new FormData();
       formData.append("email", "");
@@ -101,25 +113,34 @@ describe("postManageDirectory — email + userId + publicId resolution", () => {
 
     it("looks up user by public_id using the cookie value", async () => {
       withCookie("public-token-xyz");
-      const { client } = mockUserLookupByPublicId({ id: "uuid-7", email: "u@example.com" });
+      const { client } = mockUserLookupByPublicId({
+        id: "uuid-7",
+        email: "u@example.com",
+      });
 
       const formData = new FormData();
       formData.append("email", "");
       await postManageDirectory(formData, "add");
 
-      const eqMock = client.from.mock.results[0].value.select.mock.results[0].value.eq;
+      const eqMock =
+        client.from.mock.results[0].value.select.mock.results[0].value.eq;
       expect(eqMock).toHaveBeenCalledWith("public_id", "public-token-xyz");
     });
 
     it("selects id and email from the users table", async () => {
       withCookie("tok");
-      const { client } = mockUserLookupByPublicId({ id: "uuid-1", email: "u@example.com" });
+      const { client } = mockUserLookupByPublicId({
+        id: "uuid-1",
+        email: "u@example.com",
+      });
 
       const formData = new FormData();
       formData.append("email", "");
       await postManageDirectory(formData, "add");
 
-      expect(client.from.mock.results[0].value.select).toHaveBeenCalledWith("id, email");
+      expect(client.from.mock.results[0].value.select).toHaveBeenCalledWith(
+        "id, email",
+      );
     });
 
     it("leaves fields unset when no cookie is present", async () => {
@@ -205,7 +226,12 @@ describe("postManageDirectory — email + userId + publicId resolution", () => {
       await postManageDirectory(formData1, "add");
 
       vi.clearAllMocks();
-      vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, status: 200, text: async () => "{}" }));
+      vi.stubGlobal(
+        "fetch",
+        vi
+          .fn()
+          .mockResolvedValue({ ok: true, status: 200, text: async () => "{}" }),
+      );
       mockUserLookupByEmail(null, { id: "uuid-2" });
       const formData2 = new FormData();
       formData2.append("email", "b@example.com");
@@ -228,13 +254,18 @@ describe("postManageDirectory — email + userId + publicId resolution", () => {
     });
 
     it("selects id and public_id when looking up by email", async () => {
-      const { client } = mockUserLookupByEmail({ id: "uuid-5", public_id: "tok" });
+      const { client } = mockUserLookupByEmail({
+        id: "uuid-5",
+        public_id: "tok",
+      });
 
       const formData = new FormData();
       formData.append("email", "lookup@example.com");
       await postManageDirectory(formData, "add");
 
-      expect(client.from.mock.results[0].value.select).toHaveBeenCalledWith("id, public_id");
+      expect(client.from.mock.results[0].value.select).toHaveBeenCalledWith(
+        "id, public_id",
+      );
     });
   });
 });

@@ -360,14 +360,14 @@ export default function FirstYearProgramClient() {
         <div className="max-w-xl">
           <p className="mb-6 mx-4">
             When support from your kraamzorg and midwife ends, we step in to
-            bridge the gap between expert and peer guidance:
-            because best parenting practices come from both science and
-            shared experience. The program is a{" "}
+            bridge the gap between expert and peer guidance: because best
+            parenting practices come from both science and shared experience.
+            The program is a{" "}
             <b>community labor of love from local postpartum experts</b> —
-            psychologists, lactation consultants, return-to-work
-            specialists, postpartum coaches, and more — and the founders of APP,
-            who stood up this whole organization because they felt the support
-            gap firsthand with their babies.
+            psychologists, lactation consultants, return-to-work specialists,
+            postpartum coaches, and more — and the founders of APP, who stood up
+            this whole organization because they felt the support gap firsthand
+            with their babies.
           </p>
         </div>
 
@@ -408,7 +408,7 @@ export default function FirstYearProgramClient() {
         <section className="py-8 px-4 max-w-4xl mx-auto flex items-center flex-col justify-center">
           <SectionHeader
             header="How it works"
-            subtitle="Join in pregnancy with a €25 deposit and the whole family gets immediate csupport — free until your baby arrives. Already have a baby under 12 months? Jump straight in. Support is there for you when and where you need it, for as long as you need."
+            subtitle="Join in pregnancy and the whole family gets immediate support — free (and refundable) until your baby arrives. Already have a baby? Jump right in. Support is there for you when and where you need it, for as long as you need."
           />
           <ProgramJourney />
         </section>

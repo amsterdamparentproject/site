@@ -27,5 +27,4 @@ test.describe("ChangeGroupForm (directory)", () => {
     await page.click('button:has-text("Request changes")');
     await waitForSuccess(page, "Success!");
   });
-
 });

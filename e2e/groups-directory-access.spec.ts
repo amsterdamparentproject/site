@@ -2,7 +2,9 @@ import { test, expect } from "@playwright/test";
 import { waitForSuccess } from "./helpers";
 
 test.describe("no-UID redirect journey", () => {
-  test("redirects to /access and submits the request form", async ({ page }) => {
+  test("redirects to /access and submits the request form", async ({
+    page,
+  }) => {
     // Navigate to the directory with no app_uid cookie — server redirects to /access
     await page.goto("/groups-directory");
     await expect(page).toHaveURL(/\/groups-directory\/access/);

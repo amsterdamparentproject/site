@@ -22,9 +22,11 @@ export async function waitForSuccess(
 export async function seedUid(page: Page) {
   const uid = process.env.TEST_APP_UID;
   if (!uid) throw new Error("TEST_APP_UID is not set in .env.test.local");
-  await page.context().addCookies([
-    { name: "app_uid", value: uid, domain: "localhost", path: "/" },
-  ]);
+  await page
+    .context()
+    .addCookies([
+      { name: "app_uid", value: uid, domain: "localhost", path: "/" },
+    ]);
   // Also seed localStorage so client components that read app_uid from
   // localStorage (e.g. UpdateClient email field visibility) behave correctly.
   await page.goto("/");

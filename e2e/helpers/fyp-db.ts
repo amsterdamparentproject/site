@@ -15,7 +15,10 @@ import Stripe from "stripe";
 function supabase() {
   const url = process.env.NEXT_PUBLIC_TEST_SUPABASE_URL;
   const key = process.env.TEST_SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error("Missing NEXT_PUBLIC_TEST_SUPABASE_URL / TEST_SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !key)
+    throw new Error(
+      "Missing NEXT_PUBLIC_TEST_SUPABASE_URL / TEST_SUPABASE_SERVICE_ROLE_KEY",
+    );
   return createClient(url, key, { db: { schema: "firstyear" } });
 }
 
@@ -45,7 +48,9 @@ export interface FYPAccount {
   status: string;
 }
 
-export async function getAccountByEmail(email: string): Promise<FYPAccount | null> {
+export async function getAccountByEmail(
+  email: string,
+): Promise<FYPAccount | null> {
   const { data } = await supabase()
     .from("accounts")
     .select("*")
@@ -54,7 +59,9 @@ export async function getAccountByEmail(email: string): Promise<FYPAccount | nul
   return data ?? null;
 }
 
-export async function getAccountStatusByEmail(email: string): Promise<string | null> {
+export async function getAccountStatusByEmail(
+  email: string,
+): Promise<string | null> {
   const account = await getAccountByEmail(email);
   return account?.status ?? null;
 }
