@@ -24,18 +24,18 @@ export default function HighlightSection() {
       {/* Newborn support — 1st on mobile, 2nd on desktop */}
       <div className="order-1 md:order-2 bg-brand-soft-green/15 dark:bg-brand-violet/10 rounded-3xl p-8 flex flex-col items-center text-center">
         <h2 className="text-2xl font-bold text-brand-charcoal dark:text-brand-white mb-4">
-          Newborn family support
+          First Year Program
         </h2>
         <p className="text-brand-charcoal dark:text-brand-white mb-6">
-          Your nonprofit, neighborhood support system in the first months
-          postpartum
+          The whole family support system built for pregnancy through your
+          baby's first year
         </p>
         <Link
-          href="/programs/fourth-trimester"
+          href="/programs/first-year"
           className="font-semibold text-brand-soft-green dark:text-brand-goldenrod hover:text-brand-goldenrod dark:hover:text-brand-violet font-medium transition-colors"
-          data-umami-event="Highlight: Fourth Trimester Program"
+          data-umami-event="Highlight: First Year Program"
         >
-          Join the next cohort
+          Join the program
         </Link>
       </div>
 

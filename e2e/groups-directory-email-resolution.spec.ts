@@ -24,7 +24,9 @@ test.describe("email resolution — anonymous user", () => {
     await expect(page.locator('input[id="email"]')).toBeVisible();
   });
 
-  test("/add submits successfully with user-provided email", async ({ page }) => {
+  test("/add submits successfully with user-provided email", async ({
+    page,
+  }) => {
     await page.goto("/groups-directory/add");
     await page.fill('input[name="groupName"]', "Test Parent Group");
     await page.fill(

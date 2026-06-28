@@ -147,10 +147,10 @@ export default function Home({
             />
             <ResourceRow
               icon={<HeartHandshake className="w-5 h-5" />}
-              href="/programs/fourth-trimester"
-              title="Fourth Trimester Program"
-              subtitle="Your neighborhood support system in the first months postpartum"
-              umamiEvent="Home: Fourth Trimester Program"
+              href="/programs/first-year"
+              title="First Year Program"
+              subtitle="The whole family support system built for your baby's first year"
+              umamiEvent="Home: First Year Program"
             />
             <ResourceRow
               icon={<Mailbox className="w-5 h-5" />}

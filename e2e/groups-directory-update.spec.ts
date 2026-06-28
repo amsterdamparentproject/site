@@ -69,5 +69,4 @@ test.describe("/groups-directory/update (public)", () => {
       page.locator('button:has-text("Submit update")'),
     ).toBeDisabled();
   });
-
 });

@@ -65,7 +65,6 @@ const computedFields: ComputedFields = {
   toc: { type: "json", resolve: (doc) => extractTocHeadings(doc.body.raw) },
 };
 
-
 export const Blog = defineDocumentType(() => ({
   name: "Blog",
   filePathPattern: "{advice,stories}/**/*.mdx",

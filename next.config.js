@@ -66,6 +66,10 @@ module.exports = () => {
   return plugins.reduce((acc, next) => next(acc), {
     output,
     basePath,
+    // Allow an isolated build directory (e.g. for Playwright's dev server) so
+    // two Next servers never write to the same .next dir concurrently, which
+    // corrupts the webpack manifest ("Cannot find module './1331.js'").
+    distDir: process.env.NEXT_DIST_DIR || ".next",
     reactStrictMode: true,
     experimental: {
       serverActions: {
@@ -145,8 +149,8 @@ module.exports = () => {
           permanent: true,
         },
         {
-          source: '/programs/burnout/apply',
-          destination: 'https://docs.google.com/forms/d/e/1FAIpQLSf5buxK4oEJxUOChHbbBVie5P7gUXJ2qsoR-xxweiixWCcjQw/viewform?usp=dialog',
+          source: '/programs/fourth-trimester',
+          destination: '/programs/first-year?from=fourth-trimester',
           permanent: true,
         },
         {
@@ -197,11 +201,6 @@ module.exports = () => {
         {
           source: '/community-calendar',
           destination: '/calendar',
-          permanent: true,
-        },
-        {
-          source: '/programs/fourth-trimester/jan-2026',
-          destination: '/programs/fourth-trimester/join?cohort=jan-2026',
           permanent: true,
         },
         {

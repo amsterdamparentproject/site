@@ -20,7 +20,6 @@ async function getTestUserName(): Promise<string> {
   return data.name;
 }
 
-
 test.describe("Groups directory auth routing", () => {
   test("shows the directory when app_uid cookie is present", async ({
     page,
@@ -46,10 +45,10 @@ test.describe("Groups directory auth routing", () => {
     // numbers come from the server's DB, so we match the pattern rather than
     // hard-coding counts that vary between test and live environments.
     await expect(
-      page.locator('button', { hasText: /^Recommended \(\d+\)$/ }),
+      page.locator("button", { hasText: /^Recommended \(\d+\)$/ }),
     ).toBeVisible();
     await expect(
-      page.locator('button', { hasText: /^Browse all \(\d+\)$/ }),
+      page.locator("button", { hasText: /^Browse all \(\d+\)$/ }),
     ).toBeVisible();
   });
 
@@ -67,7 +66,9 @@ test.describe("Groups directory auth routing", () => {
     await page.goto("/groups-directory?uid=invalid-uid");
 
     await expect(page).toHaveURL("/groups-directory/access?badUid=true");
-    await expect(page.locator('h3:has-text("Invalid directory link")')).toBeVisible();
+    await expect(
+      page.locator('h3:has-text("Invalid directory link")'),
+    ).toBeVisible();
   });
 
   test("strips ?uid= param, shows the directory, and stores app_uid in localStorage", async ({

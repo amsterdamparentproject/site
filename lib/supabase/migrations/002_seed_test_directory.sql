@@ -77,7 +77,7 @@ CREATE TABLE directory.users (
   categories  text[] DEFAULT '{}'
 );
 
--- Seed one test user — public_id must match TEST_APP_UID in .env.test.local
+-- Seed one test user — public_id must match TEST_APP_UID in .env.test
 -- Replace 'YOUR_TEST_APP_UID' with the actual value
 INSERT INTO directory.users (public_id, name, email, categories) VALUES
   (

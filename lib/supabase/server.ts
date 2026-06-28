@@ -46,3 +46,15 @@ export const createServiceClient = (
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { db: { schema } },
   );
+
+// First Year Program — scoped to the firstyear schema
+// Uses TEST Supabase creds locally so dev writes don't hit production.
+// In production (no TEST_ vars), falls back to the main Supabase project.
+export const createFirstYearClient = () =>
+  createSupabaseClient(
+    process.env.NEXT_PUBLIC_TEST_SUPABASE_URL ??
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.TEST_SUPABASE_SERVICE_ROLE_KEY ??
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { db: { schema: "firstyear" } },
+  );
