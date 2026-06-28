@@ -5,10 +5,10 @@ const highlightStyle =
 const headerNavLinks = [
   { href: "/", title: "Home", style: defaultStyle },
   {
-    href: "/programs/fourth-trimester",
+    href: "/programs/first-year",
     title: "Newborn support",
     style: defaultStyle,
-    umamiEvent: "Header: Fourth Trimester Program",
+    umamiEvent: "Header: First Year Program",
   },
   {
     href: "/newsletter",
