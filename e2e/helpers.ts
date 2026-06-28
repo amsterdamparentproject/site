@@ -16,12 +16,12 @@ export async function waitForSuccess(
 
 /**
  * Seeds the app_uid cookie so pages behind directory auth load correctly.
- * Uses TEST_APP_UID env var — set this in .env.test.local to a valid UID
+ * Uses TEST_APP_UID env var — set this in .env.test to a valid UID
  * in your test Supabase project.
  */
 export async function seedUid(page: Page) {
   const uid = process.env.TEST_APP_UID;
-  if (!uid) throw new Error("TEST_APP_UID is not set in .env.test.local");
+  if (!uid) throw new Error("TEST_APP_UID is not set in .env.test");
   await page
     .context()
     .addCookies([

@@ -20,7 +20,7 @@
  *   - `stripe listen --forward-to localhost:3001/api/webhooks/stripe/fyp` running
  *   - Stripe test mode prices fyp_monthly_single + fyp_monthly_multi must exist
  *   - Coupon STRIPE_FYP_DEPOSIT_COUPON_ID must exist in test mode
- *   - NEXT_PUBLIC_TEST_SUPABASE_URL + TEST_SUPABASE_SERVICE_ROLE_KEY in .env.test.local
+ *   - NEXT_PUBLIC_TEST_SUPABASE_URL + TEST_SUPABASE_SERVICE_ROLE_KEY in .env.test
  */
 
 import { test, expect, type Page } from "@playwright/test";
@@ -82,11 +82,8 @@ async function selectPlanAndCheckout(
     await joinSection.getByRole("button", { name: planCardName }).click();
   }
 
-  // Match the submit button specifically — the arrow (→) distinguishes it from
-  // plan card buttons whose accessible names may include "Reserve your spot" in
-  // their billing text.
   const submitButton = joinSection.getByRole("button", {
-    name: /reserve your spot →|sign up →/i,
+    name: /sign up →/i,
   });
   await submitButton.waitFor({ state: "visible", timeout: 10_000 });
 

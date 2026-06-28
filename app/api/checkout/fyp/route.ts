@@ -1,10 +1,6 @@
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
-import {
-  PROGRAM_START,
-  PROGRAM_START_UNIX,
-  getBillingStartDate,
-} from "@/lib/fyp/program";
+import { getBillingStartDate } from "@/lib/fyp/program";
 import { NextResponse } from "next/server";
 
 // FYP checkout flows:
@@ -38,9 +34,6 @@ type Flow =
   | "baby_monthly"
   | "baby_bundle";
 type FamilyType = "single" | "multi";
-
-// Re-export for consumers and tests
-export { PROGRAM_START, PROGRAM_START_UNIX, getBillingStartDate };
 
 const DOMAIN =
   process.env.NEXT_PUBLIC_DOMAIN ?? "https://amsterdamparentproject.nl";
@@ -104,6 +97,7 @@ export async function POST(req: Request) {
     };
 
     const billingStartDate = getBillingStartDate();
+    const customerEmail = members?.[0]?.email?.toLowerCase();
 
     let session: Awaited<
       ReturnType<typeof stripe.checkout.sessions.create>
@@ -116,6 +110,7 @@ export async function POST(req: Request) {
         automatic_tax: { enabled: true },
         allow_promotion_codes: true,
         customer_creation: "always",
+        ...(customerEmail ? { customer_email: customerEmail } : {}),
         mode: "payment",
         line_items: [
           {
@@ -145,6 +140,7 @@ export async function POST(req: Request) {
         automatic_tax: { enabled: true },
         allow_promotion_codes: true,
         customer_creation: "always",
+        ...(customerEmail ? { customer_email: customerEmail } : {}),
         mode: "payment",
         line_items: [
           {
@@ -176,6 +172,7 @@ export async function POST(req: Request) {
         automatic_tax: { enabled: true },
         allow_promotion_codes: true,
         customer_creation: "always",
+        ...(customerEmail ? { customer_email: customerEmail } : {}),
         mode: "payment",
         line_items: [
           {
@@ -213,6 +210,7 @@ export async function POST(req: Request) {
         payment_method_types: ["ideal", "card"],
         automatic_tax: { enabled: true },
         allow_promotion_codes: true,
+        ...(customerEmail ? { customer_email: customerEmail } : {}),
         mode: "subscription",
         line_items: [{ price: price.id, quantity: 1 }],
         metadata: { product: "fyp_monthly_baby", ...sharedMetadata },
@@ -228,6 +226,7 @@ export async function POST(req: Request) {
         automatic_tax: { enabled: true },
         allow_promotion_codes: true,
         customer_creation: "always",
+        ...(customerEmail ? { customer_email: customerEmail } : {}),
         mode: "payment",
         line_items: [
           {

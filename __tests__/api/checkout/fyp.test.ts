@@ -94,6 +94,7 @@ describe("POST /api/checkout/fyp", () => {
   let POST: (req: Request) => Promise<unknown>;
 
   beforeEach(async () => {
+    vi.clearAllMocks();
     vi.resetModules();
     ({ POST } = await import("@/app/api/checkout/fyp/route"));
   });

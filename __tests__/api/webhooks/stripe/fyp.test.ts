@@ -78,6 +78,7 @@ describe("fyp webhook — expecting_monthly trial_end", () => {
   let POST: (req: any) => Promise<unknown>;
 
   beforeEach(async () => {
+    vi.clearAllMocks();
     vi.resetModules();
     ({ POST } = await import("@/app/api/webhooks/stripe/fyp/route"));
     mockSupabase();
@@ -258,6 +259,7 @@ describe("fyp webhook — baby_deposit", () => {
   let POST: (req: any) => Promise<unknown>;
 
   beforeEach(async () => {
+    vi.clearAllMocks();
     vi.resetModules();
     ({ POST } = await import("@/app/api/webhooks/stripe/fyp/route"));
     mockSupabase();

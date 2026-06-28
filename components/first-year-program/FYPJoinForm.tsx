@@ -290,12 +290,7 @@ export default function FYPJoinForm() {
       : "the month after your due date";
   })();
 
-  const submitLabel = (() => {
-    if (submitting) return "Redirecting…";
-    if (selectedFlow === "baby_deposit" || selectedFlow === "expecting_monthly")
-      return "Reserve your spot →";
-    return "Sign up →";
-  })();
+  const submitLabel = submitting ? "Redirecting…" : "Sign up →";
 
   const [validationError, setValidationError] = useState<string | null>(null);
 
@@ -544,7 +539,7 @@ export default function FYPJoinForm() {
                         : "€25 deposit, then €55/month"
                     }
                     billing={
-                      expectingSessionsStart === "in September 2026"
+                      expectingSessionsStart === "September 2026"
                         ? "Reserve your spot · Monthly billing starts September 2026"
                         : "Billing begins after your due date"
                     }
