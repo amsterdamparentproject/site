@@ -170,6 +170,7 @@ const EMAILS = {
 };
 
 const BASE_URL = "http://localhost:3001";
+const SKIP_CLEANUP = process.env.E2E_SKIP_CLEANUP === "1";
 
 /**
  * Pre-compile a route in the dev server so the first *real* request doesn't pay
@@ -201,7 +202,9 @@ test.beforeAll(async () => {
 
   // Clean up any stale accounts from previous interrupted runs that share
   // the same email patterns, so .maybeSingle() never gets multiple rows.
-  await Promise.all(Object.values(EMAILS).map(cleanupAccountByEmail));
+  if (!SKIP_CLEANUP) {
+    await Promise.all(Object.values(EMAILS).map(cleanupAccountByEmail));
+  }
 
   // Warm the two routes the checkout flow depends on:
   //  - the welcome page, which the Stripe redirect lands on
@@ -213,6 +216,7 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
+  if (SKIP_CLEANUP) return;
   await Promise.all(Object.values(EMAILS).map(cleanupAccountByEmail));
 });
 
@@ -350,6 +354,9 @@ test("baby_monthly (multi): immediate subscription created", async ({
   expect(account?.flow).toBe("baby_monthly");
   expect(account?.plan_type).toBe("monthly");
   expect(account?.stripe_subscription_id).toBeTruthy();
+  expect(account?.billing_start_date).toBe(
+    new Date().toISOString().slice(0, 10),
+  );
   expect(account?.bundle_expires_at).toBeNull();
 });
 
@@ -388,7 +395,13 @@ test("baby_bundle (multi): upfront payment → account with bundle_expires_at 6m
   const account = await waitForAccount(EMAILS.baby_bundle);
   expect(account?.flow).toBe("baby_bundle");
   expect(account?.plan_type).toBe("bundle");
-  expect(account?.bundle_expires_at).toBeTruthy();
+  const expectedExpiry = (() => {
+    const d = new Date();
+    d.setUTCMonth(d.getUTCMonth() + 6);
+    d.setUTCDate(1);
+    return d.toISOString().slice(0, 10);
+  })();
+  expect(account?.bundle_expires_at).toBe(expectedExpiry);
   expect(account?.stripe_subscription_id).toBeNull();
 });
 

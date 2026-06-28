@@ -61,10 +61,11 @@ function toDateString(ts: number): string {
   return new Date(ts * 1000).toISOString().slice(0, 10);
 }
 
-/** Adds 6 months to a YYYY-MM-DD string */
+/** Returns the 1st of the month that is 6 months after the given YYYY-MM-DD date */
 function addSixMonths(date: string): string {
   const d = new Date(date);
   d.setUTCMonth(d.getUTCMonth() + 6);
+  d.setUTCDate(1);
   return d.toISOString().slice(0, 10);
 }
 
@@ -76,10 +77,12 @@ function getCustomField(
 }
 
 export async function POST(req: NextRequest) {
+  console.log("[fyp webhook] POST received");
   const body = await req.text();
   const signature = req.headers.get("stripe-signature");
 
   if (!signature) {
+    console.error("[fyp webhook] missing stripe-signature header");
     return NextResponse.json({ error: "Missing signature" }, { status: 400 });
   }
 
@@ -90,7 +93,8 @@ export async function POST(req: NextRequest) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET_FYP!,
     );
-  } catch {
+  } catch (err) {
+    console.error("[fyp webhook] signature verification failed:", String(err));
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
@@ -228,12 +232,12 @@ export async function POST(req: NextRequest) {
       const subscriptionId = session.subscription as string | null;
 
       console.log("[fyp webhook] inserting baby_monthly account", {
-        email,
         customerId,
         subscriptionId,
         dueOrBirthMonth,
         dueOrBirthYear,
       });
+      const today = new Date().toISOString().slice(0, 10);
       const { data: insertData, error: insertError } = await supabase
         .from("accounts")
         .insert({
@@ -246,6 +250,7 @@ export async function POST(req: NextRequest) {
           family_type: familyType,
           due_or_birth_month: dueOrBirthMonth,
           due_or_birth_year: dueOrBirthYear,
+          billing_start_date: today,
         })
         .select();
       if (insertError)
@@ -254,7 +259,9 @@ export async function POST(req: NextRequest) {
           JSON.stringify(insertError),
         );
       else
-        console.log("[fyp webhook] insert success (baby_monthly):", insertData);
+        console.log("[fyp webhook] insert success (baby_monthly)", {
+          id: insertData?.[0]?.id,
+        });
     }
 
     // ── baby_bundle ────────────────────────────────────────────────────────────
