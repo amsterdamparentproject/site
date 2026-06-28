@@ -82,6 +82,7 @@ describe("postManageDirectory — email + userId + publicId resolution", () => {
       "N8N_MANAGE_DIRECTORY_WEBHOOK_URL",
       "https://test-webhook.example.com",
     );
+    vi.stubEnv("TEST_N8N_MANAGE_DIRECTORY_WEBHOOK_URL", "https://test-webhook.example.com");
     vi.stubEnv("N8N_WEBHOOK_SECRET", "test-secret");
   });
 
