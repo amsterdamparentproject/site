@@ -133,15 +133,21 @@ export default function FirstYearProgramClient() {
 
           <div className="max-w-xl">
             <p className="mb-6 mx-4">
-              When support from your kraamzorg and midwife ends, we step in to
-              bridge the gap between expert and peer guidance: because best
-              parenting practices come from both science and shared experience.
+              When support from your kraamzorg and midwife ends, we step in to{" "}
+              <b>bridge the gap between expert and peer guidance</b>: because
+              best parenting practices come from both science and shared
+              experience.
+            </p>
+            <p className="mb-6 mx-4">
               The program is a{" "}
-              <b>community labor of love from local postpartum experts</b> —
-              psychologists, lactation consultants, return-to-work specialists,
-              postpartum coaches, and more — and the founders of APP, who stood
-              up this whole organization because they felt the support gap
-              firsthand with their babies.
+              <b>
+                community labor of love from local parents and postpartum
+                experts
+              </b>
+              . It's built by psychologists, lactation consultants,
+              return-to-work specialists, postpartum coaches, and more, plus the
+              founders of APP — who stood up this whole organization because
+              they felt the support gap firsthand with their babies.
             </p>
           </div>
 

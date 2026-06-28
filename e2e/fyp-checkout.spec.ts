@@ -51,6 +51,10 @@ async function fillJoinForm(
 ) {
   const joinSection = page.locator("#join");
 
+  // Wait for the form to fully settle — Next.js streaming can transiently
+  // duplicate elements before hydration completes.
+  await expect(joinSection.locator("form")).toHaveCount(1, { timeout: 10_000 });
+
   await joinSection.locator("#first-name").fill(details.firstName);
   await joinSection.locator("#last-name").fill(details.lastName);
   await joinSection.locator("#email").fill(details.email);
@@ -109,10 +113,12 @@ async function completeStripeCheckout(
   await checkoutPage.waitForLoadState("domcontentloaded", { timeout: 20_000 });
 
   // ── Email ──────────────────────────────────────────────────────────────
+  // Stripe hides #email when customer_email is pre-set on the session.
   if (opts.email) {
     const emailInput = checkoutPage.locator("#email");
-    await emailInput.waitFor({ timeout: 10_000 });
-    await emailInput.fill(opts.email);
+    if (await emailInput.isVisible()) {
+      await emailInput.fill(opts.email);
+    }
   }
 
   // ── Payment card ───────────────────────────────────────────────────────
@@ -222,6 +228,7 @@ test.beforeAll(async () => {
     await Promise.all(Object.values(EMAILS).map(cleanupAccountByEmail));
   }
 
+  await warmRoute("/programs/first-year");
   await warmRoute("/programs/first-year/welcome");
   await warmRoute("/api/webhooks/stripe/fyp");
 });
@@ -248,7 +255,7 @@ test("expecting_monthly (multi): deposit → deferred subscription created", asy
     year: EXPECTING_YEAR,
   });
   // Default selected flow is expecting_bundle; switch to monthly
-  const checkoutPage = await selectPlanAndCheckout(page, /monthly plan/i);
+  const checkoutPage = await selectPlanAndCheckout(page, /monthly/i);
 
   await completeStripeCheckout(checkoutPage, {
     email: EMAILS.expecting_monthly,
@@ -300,7 +307,7 @@ test("expecting_monthly (single): deposit → deferred subscription created", as
     .getByRole("button", { name: /single parent/i })
     .click();
 
-  const checkoutPage = await selectPlanAndCheckout(page, /monthly plan/i);
+  const checkoutPage = await selectPlanAndCheckout(page, /monthly/i);
 
   await completeStripeCheckout(checkoutPage, {
     email: EMAILS.expecting_monthly_single,
@@ -379,7 +386,7 @@ test("baby_deposit (multi): deposit → subscription deferred to Sep 2026", asyn
     year: BABY_YEAR,
   });
   // Default for baby_here is baby_bundle; switch to monthly (baby_deposit)
-  const checkoutPage = await selectPlanAndCheckout(page, /monthly plan/i);
+  const checkoutPage = await selectPlanAndCheckout(page, /monthly/i);
 
   await completeStripeCheckout(checkoutPage, {
     email: EMAILS.baby_deposit,

@@ -133,7 +133,6 @@ function PlanCard({
   name,
   price,
   billing,
-  description,
   badge,
   selected,
   onSelect,
@@ -144,7 +143,6 @@ function PlanCard({
   name: string;
   price: string;
   billing: string;
-  description?: string;
   badge?: string;
   selected: boolean;
   onSelect: (flow: Flow) => void;
@@ -181,11 +179,6 @@ function PlanCard({
       <span className="block text-xs text-brand-charcoal/50 dark:text-brand-white/40">
         {billing}
       </span>
-      {description && (
-        <span className="block text-sm text-brand-charcoal/60 dark:text-brand-white/50 leading-relaxed mt-2">
-          {description}
-        </span>
-      )}
     </button>
   );
 }
@@ -239,13 +232,6 @@ export default function FYPJoinForm() {
   const familyType: FamilyType = isSingleParent ? "single" : "multi";
   const isMulti = familyType === "multi";
 
-  const allMembersFilled = members.every(
-    (m) =>
-      m.firstName.trim() &&
-      m.lastName.trim() &&
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m.email),
-  );
-
   const hasDate = month !== "" && year !== "";
 
   const dateTooOld =
@@ -259,8 +245,6 @@ export default function FYPJoinForm() {
       );
       return selectedDate < oneYearAgo;
     })();
-
-  const canCheckout = hasDate && !dateTooOld && allMembersFilled;
 
   // Before program start everyone gets immediate features only (full guides unlock on billing_start_date).
   // After program start, baby families get full access immediately; expecting families still unlock on due date.
@@ -294,19 +278,8 @@ export default function FYPJoinForm() {
 
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  async function handleSubmit() {
-    if (!allMembersFilled) {
-      setValidationError(
-        "Please fill in your name and email before continuing.",
-      );
-      return;
-    }
-    if (!hasDate) {
-      setValidationError(
-        "Please enter your due date or baby's birthday before continuing.",
-      );
-      return;
-    }
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), 1);
     const selectedDate = new Date(
       parseInt(year),
@@ -328,7 +301,10 @@ export default function FYPJoinForm() {
   return (
     <section id="join" className="scroll-mt-20 md:scroll-mt-32 w-full">
       <div className="max-w-xl mx-auto">
-        <div className="bg-white dark:bg-brand-soft-charcoal rounded-2xl border border-brand-sand/60 shadow-sm p-8 space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white dark:bg-brand-soft-charcoal rounded-2xl border border-brand-sand/60 shadow-sm p-8 space-y-6"
+        >
           {/* Logo + header inside the white card */}
           <div className="flex flex-col items-center pb-2">
             <Logo size="52" style="mb-3" />
@@ -354,6 +330,7 @@ export default function FYPJoinForm() {
                   id="first-name"
                   type="text"
                   autoComplete="given-name"
+                  required
                   value={members[0].firstName}
                   onChange={(e) => updateMember(0, "firstName", e.target.value)}
                   className={inputClass}
@@ -367,6 +344,7 @@ export default function FYPJoinForm() {
                   id="last-name"
                   type="text"
                   autoComplete="family-name"
+                  required
                   value={members[0].lastName}
                   onChange={(e) => updateMember(0, "lastName", e.target.value)}
                   className={inputClass}
@@ -381,6 +359,7 @@ export default function FYPJoinForm() {
                 id="email"
                 type="email"
                 autoComplete="email"
+                required
                 value={members[0].email}
                 onChange={(e) => updateMember(0, "email", e.target.value)}
                 className={inputClass}
@@ -453,6 +432,7 @@ export default function FYPJoinForm() {
                     onSituationChange(isFuture ? "expecting" : "baby_here");
                   }
                 }}
+                required
                 className={selectClass}
               >
                 <option value="">Month</option>
@@ -477,6 +457,7 @@ export default function FYPJoinForm() {
                     onSituationChange(isFuture ? "expecting" : "baby_here");
                   }
                 }}
+                required
                 className={selectClass}
               >
                 <option value="">Year</option>
@@ -506,33 +487,13 @@ export default function FYPJoinForm() {
           {/* ── Plan cards — always shown, disabled until form is complete ── */}
           <div>
             <p className={labelClass}>Choose your plan</p>
-            <div className="space-y-3 mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
               {situation === "expecting" ? (
                 <>
                   <PlanCard
-                    flow="expecting_bundle"
-                    icon="📦"
-                    name="6-month bundle"
-                    price={isMulti ? "€383" : "€305"}
-                    billing={
-                      isBeforeProgramStart
-                        ? "Billed today"
-                        : "Billed today · save €25"
-                    }
-                    description={
-                      isBeforeProgramStart
-                        ? `The program begins ${expectingSessionsStart}. Fully refundable during pregnancy or before September 1.`
-                        : "Access begins after your due date. Fully refundable during pregnancy or before September 1."
-                    }
-                    badge="Save €25"
-                    selected={selectedFlow === "expecting_bundle"}
-                    onSelect={setSelectedFlow}
-                    disabled={false}
-                  />
-                  <PlanCard
                     flow="expecting_monthly"
                     icon="📅"
-                    name="Monthly plan"
+                    name="Monthly"
                     price={
                       isMulti
                         ? "€25 deposit, then €68/month"
@@ -540,49 +501,38 @@ export default function FYPJoinForm() {
                     }
                     billing={
                       expectingSessionsStart === "September 2026"
-                        ? "Reserve your spot · Monthly billing starts September 2026"
-                        : "Billing begins after your due date"
+                        ? "Monthly billing begins September 2026"
+                        : "Monthly billing begins after your due date"
                     }
-                    description="Deposit is credited to your first month. Fully refundable during pregnancy or before September 1."
                     selected={selectedFlow === "expecting_monthly"}
+                    onSelect={setSelectedFlow}
+                    disabled={false}
+                  />
+                  <PlanCard
+                    flow="expecting_bundle"
+                    icon="📦"
+                    name="6-month bundle"
+                    price={isMulti ? "€383" : "€305"}
+                    billing="Billed today · Save €25"
+                    badge="Best value"
+                    selected={selectedFlow === "expecting_bundle"}
                     onSelect={setSelectedFlow}
                     disabled={false}
                   />
                 </>
               ) : (
                 <>
-                  <PlanCard
-                    flow="baby_bundle"
-                    icon="📦"
-                    name="6-month bundle"
-                    price={isMulti ? "€383" : "€305"}
-                    billing={
-                      isBeforeProgramStart
-                        ? "Billed today"
-                        : "Billed today · save €25"
-                    }
-                    description={
-                      isBeforeProgramStart
-                        ? "The program begins September 2026. Fully refundable during pregnancy or before September 1."
-                        : undefined
-                    }
-                    badge="Save €25"
-                    selected={selectedFlow === "baby_bundle"}
-                    onSelect={setSelectedFlow}
-                    disabled={false}
-                  />
                   {isBeforeProgramStart ? (
                     <PlanCard
                       flow="baby_deposit"
                       icon="📅"
-                      name="Monthly plan"
+                      name="Monthly"
                       price={
                         isMulti
                           ? "€25 deposit, then €68/month"
                           : "€25 deposit, then €55/month"
                       }
-                      billing="Reserve your spot · Monthly billing starts September 2026"
-                      description="Deposit is credited to your first invoice. Fully refundable during pregnancy or before September 1."
+                      billing="Monthly billing starts September 2026"
                       selected={selectedFlow === "baby_deposit"}
                       onSelect={setSelectedFlow}
                       disabled={false}
@@ -591,30 +541,33 @@ export default function FYPJoinForm() {
                     <PlanCard
                       flow="baby_monthly"
                       icon="📅"
-                      name="Monthly plan"
+                      name="Monthly"
                       price={isMulti ? "€68/month" : "€55/month"}
-                      billing="Billed monthly · cancel anytime"
+                      billing="Billed monthly · Cancel anytime"
                       selected={selectedFlow === "baby_monthly"}
                       onSelect={setSelectedFlow}
                       disabled={false}
                     />
                   )}
+                  <PlanCard
+                    flow="baby_bundle"
+                    icon="📦"
+                    name="6-month bundle"
+                    price={isMulti ? "€383" : "€305"}
+                    billing="Billed today · Save €25"
+                    badge="Best value"
+                    selected={selectedFlow === "baby_bundle"}
+                    onSelect={setSelectedFlow}
+                    disabled={false}
+                  />
                 </>
               )}
             </div>
 
-            {/* Validation error */}
-            {validationError && (
-              <p className="mt-3 text-sm text-red-500 dark:text-red-400">
-                {validationError}
-              </p>
-            )}
-
             {/* Submit button */}
             <button
-              type="button"
-              disabled={submitting || !canCheckout}
-              onClick={handleSubmit}
+              type="submit"
+              disabled={submitting}
               data-umami-event={
                 selectedFlow?.includes("bundle")
                   ? `First Year Program: Join ${situation === "expecting" ? "expecting" : "baby"} bundle`
@@ -625,15 +578,25 @@ export default function FYPJoinForm() {
               {submitLabel}
             </button>
 
-            {!canCheckout && !submitting && (
-              <p className="mt-2 text-xs italic text-red-500 dark:text-red-400 text-center">
-                Please fill out all required fields
+            {selectedFlow !== "baby_monthly" && (
+              <p className="mt-2 text-xs text-brand-charcoal/50 dark:text-brand-white/40 text-center">
+                {selectedFlow === "expecting_monthly" ||
+                selectedFlow === "baby_deposit"
+                  ? "Deposit credited to your first monthly invoice · "
+                  : ""}
+                Fully refundable during pregnancy or before September 1.
+              </p>
+            )}
+
+            {validationError && (
+              <p className="mt-3 text-sm text-red-500 dark:text-red-400">
+                {validationError}
               </p>
             )}
 
             {/* Feature list */}
             <p className="mt-5 text-sm font-medium text-brand-charcoal dark:text-brand-white/80">
-              This is what you immediately get after signing up:
+              Immediately after signing up, you get:
             </p>
             <ul className="mt-2 space-y-2">
               {features.map((item) => (
@@ -647,7 +610,7 @@ export default function FYPJoinForm() {
               ))}
             </ul>
           </div>
-        </div>
+        </form>
 
         <p className="text-center text-xs text-brand-charcoal/50 dark:text-brand-white/50 mt-6 max-w-md mx-auto leading-normal">
           Questions or need financial support?{" "}
