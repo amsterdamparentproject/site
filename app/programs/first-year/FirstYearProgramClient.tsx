@@ -5,61 +5,14 @@ import SessionsAccordion from "@/components/first-year-program/SessionsAccordion
 import CostsBreakdown from "@/components/first-year-program/CostsBreakdown";
 import ProgramFAQ from "@/components/first-year-program/ProgramFAQ";
 import ProgramJourney from "@/components/first-year-program/ProgramJourney";
-import { ReactNode, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "@/components/Link";
 import { MoveRight } from "lucide-react";
+import FYPJoinForm from "./FYPJoinForm";
 
-type Flow =
-  | "expecting_monthly"
-  | "expecting_bundle"
-  | "baby_monthly"
-  | "baby_bundle";
-type FamilyType = "single" | "multi";
-
-async function startCheckout(flow: Flow, familyType: FamilyType) {
-  const res = await fetch("/api/checkout/fyp", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ flow, familyType }),
-  });
-  const data = await res.json();
-  if (data.url) {
-    window.open(data.url, "_blank");
-  } else {
-    console.error("Checkout error:", data.error);
-  }
-}
-
-function CheckoutButton({
-  flow,
-  familyType,
-  className,
-  children,
-  umamiEvent,
-}: {
-  flow: Flow;
-  familyType: FamilyType;
-  className: string;
-  children: ReactNode;
-  umamiEvent?: string;
-}) {
-  const [loading, setLoading] = useState(false);
-  return (
-    <button
-      className={`cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
-      data-umami-event={umamiEvent}
-      disabled={loading}
-      onClick={async () => {
-        setLoading(true);
-        await startCheckout(flow, familyType);
-        setLoading(false);
-      }}
-    >
-      {loading ? "Redirecting…" : children}
-    </button>
-  );
-}
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
 const highlights = [
   {
@@ -86,14 +39,17 @@ const highlights = [
   },
 ];
 
+// ---------------------------------------------------------------------------
+// SectionHeader
+// ---------------------------------------------------------------------------
+
 interface SectionHeaderProps {
   header: string;
-  subtitle?: ReactNode;
+  subtitle?: React.ReactNode;
 }
 
 const SectionHeader = ({ header, subtitle }: SectionHeaderProps) => {
   const headerMargin = subtitle ? "mb-4" : "mb-12";
-
   return (
     <>
       <h2
@@ -110,217 +66,9 @@ const SectionHeader = ({ header, subtitle }: SectionHeaderProps) => {
   );
 };
 
-function ExpectingCard({
-  familyType,
-  isSingleParent,
-}: {
-  familyType: FamilyType;
-  isSingleParent: boolean;
-}) {
-  const isMulti = familyType === "multi";
-
-  return (
-    <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col">
-      <div className="bg-brand-charcoal px-6 py-4">
-        <p className="text-sm font-black text-white">Waiting for baby</p>
-      </div>
-      <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
-        <p className="text-sm text-brand-charcoal dark:text-brand-white/80 mb-4">
-          Still expecting? Reserve now and immediately get:
-        </p>
-        <ul className="flex-1 space-y-2 mb-3">
-          {[
-            "Peer matching",
-            "Private WhatsApp group access",
-            "Understanding the Village guide",
-          ].map((item) => (
-            <li
-              key={item}
-              className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80"
-            >
-              <svg
-                className="w-4 h-4 text-brand-soft-green dark:text-brand-goldenrod shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="3"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              {item}
-            </li>
-          ))}
-        </ul>
-        <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 mb-5">
-          This is for your whole family:{" "}
-          {isSingleParent
-            ? "you and your child(ren)"
-            : "you, your partner, and your child(ren)"}
-          .
-        </p>
-        <div className="flex flex-col gap-3">
-          <CheckoutButton
-            flow="expecting_monthly"
-            familyType={familyType}
-            className="block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
-            umamiEvent="First Year Program: Save spot monthly"
-          >
-            Reserve your spot — €25
-          </CheckoutButton>
-          <CheckoutButton
-            flow="expecting_bundle"
-            familyType={familyType}
-            className="block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
-            umamiEvent="First Year Program: Save spot 6 month"
-          >
-            6-month bundle — {isMulti ? "€383" : "€305"} (save €25)
-          </CheckoutButton>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function BabyCard({
-  familyType,
-  isSingleParent,
-}: {
-  familyType: FamilyType;
-  isSingleParent: boolean;
-}) {
-  const isMulti = familyType === "multi";
-
-  return (
-    <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col">
-      <div className="bg-brand-charcoal px-6 py-4">
-        <p className="text-sm font-black text-white">Baby&apos;s here</p>
-      </div>
-      <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
-        <p className="text-sm text-brand-charcoal dark:text-brand-white/80 mb-4">
-          Join anytime while your baby is under 12 months and immediately get:
-        </p>
-        <ul className="flex-1 space-y-2 mb-3">
-          {[
-            "Peer matching",
-            "Private WhatsApp group access",
-            "All 7 resource guides",
-            "Invites to this month's events",
-          ].map((item) => (
-            <li
-              key={item}
-              className="flex items-center gap-2 text-sm text-brand-charcoal dark:text-brand-white/80"
-            >
-              <svg
-                className="w-4 h-4 text-brand-goldenrod shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="3"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              {item}
-            </li>
-          ))}
-        </ul>
-        <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 mb-5">
-          This is for your whole family:{" "}
-          {isSingleParent
-            ? "you and your child(ren)"
-            : "you, your partner, and your child(ren)"}
-          .
-        </p>
-        <div className="flex flex-col gap-3">
-          <CheckoutButton
-            flow="baby_monthly"
-            familyType={familyType}
-            className="block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
-            umamiEvent="First Year Program: Join with baby monthly"
-          >
-            Join now — {isMulti ? "€68" : "€55"}/mo
-          </CheckoutButton>
-          <CheckoutButton
-            flow="baby_bundle"
-            familyType={familyType}
-            className="block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
-            umamiEvent="First Year Program: Join with baby 6 month"
-          >
-            6-month bundle — {isMulti ? "€383" : "€305"} (save €25)
-          </CheckoutButton>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function JoinSection() {
-  const [isSingleParent, setIsSingleParent] = useState(false);
-  const familyType: FamilyType = isSingleParent ? "single" : "multi";
-
-  return (
-    <section
-      id="join"
-      className="scroll-mt-20 md:scroll-mt-32 bg-brand-sand/20 dark:bg-brand-soft-charcoal/40 py-10 px-4 md:px-8 rounded-lg w-full"
-    >
-      <SectionHeader
-        header="Join the program"
-        subtitle="Open to families from pregnancy through your baby's first year, starting in September 2026."
-      />
-
-      {/* Single parent slide toggle */}
-      <div className="flex flex-col items-center gap-2 mt-4 mb-8">
-        <div className="flex items-center gap-3 cursor-pointer select-none">
-          <span
-            id="single-parent-toggle-label"
-            className="text-sm text-brand-charcoal dark:text-brand-white/80"
-          >
-            I am a single parent
-          </span>
-          <button
-            role="switch"
-            aria-checked={isSingleParent}
-            aria-labelledby="single-parent-toggle-label"
-            onClick={() => setIsSingleParent((v) => !v)}
-            className={`cursor-pointer relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
-              isSingleParent
-                ? "bg-brand-soft-green"
-                : "bg-brand-sand/60 dark:bg-brand-white/20"
-            }`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition-transform duration-200 ${
-                isSingleParent ? "translate-x-5" : "translate-x-0"
-              }`}
-            />
-          </button>
-        </div>
-        <p className="text-xs italic text-brand-charcoal/50 dark:text-brand-white/40 text-center max-w-sm">
-          We offer a discount to ensure everyone can access support, regardless
-          of family structure.
-        </p>
-      </div>
-
-      <div className="max-w-2xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ExpectingCard
-          familyType={familyType}
-          isSingleParent={isSingleParent}
-        />
-        <BabyCard familyType={familyType} isSingleParent={isSingleParent} />
-      </div>
-
-      <p className="text-center text-xs text-brand-charcoal/50 dark:text-brand-white/50 mt-8 max-w-md mx-auto leading-normal">
-        Questions or need financial support?{" "}
-        <a
-          href="mailto:hello@amsterdamparentproject.nl"
-          className="text-brand-soft-green hover:text-brand-goldenrod dark:text-brand-goldenrod dark:hover:text-brand-white/80"
-        >
-          Email us
-        </a>{" "}
-        — we&apos;re here to help!
-      </p>
-    </section>
-  );
-}
+// ---------------------------------------------------------------------------
+// FTPBanner
+// ---------------------------------------------------------------------------
 
 function FTPBanner() {
   const params = useSearchParams();
@@ -340,6 +88,10 @@ function FTPBanner() {
     </div>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
 
 export default function FirstYearProgramClient() {
   return (
@@ -362,7 +114,7 @@ export default function FirstYearProgramClient() {
               A{" "}
               <b className="dark:text-brand-goldenrod text-brand-soft-green">
                 local, nonprofit, whole family support system built for your
-                baby's first year
+                baby&apos;s first year
               </b>
               . Expert-led discussions, curated socials, 1:1 peer matching, and
               a moderated community — all you need to transition with confidence
@@ -465,7 +217,7 @@ export default function FirstYearProgramClient() {
                   >
                     contact us
                   </Link>{" "}
-                  — we're happy to accommodate your needs.
+                  — we&apos;re happy to accommodate your needs.
                 </>
               }
             />
@@ -473,9 +225,7 @@ export default function FirstYearProgramClient() {
           </section>
 
           {/* Join */}
-          <div className="w-full max-w-full overflow-x-clip">
-            <JoinSection />
-          </div>
+          <FYPJoinForm />
         </div>
 
         {/* FAQ */}

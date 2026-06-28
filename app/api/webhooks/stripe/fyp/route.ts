@@ -1,5 +1,6 @@
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
+import { PROGRAM_START_UNIX } from "@/lib/fyp/program";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -9,13 +10,10 @@ import Stripe from "stripe";
 //   Events: checkout.session.completed
 //
 // On every completed checkout this webhook:
-//   1. Inserts a row into firstyear.accounts
+//   1. Updates the pending firstyear.accounts row (created by /api/checkout/fyp)
+//      with Stripe customer/subscription IDs, billing dates, and status → active.
 //   2. For expecting_monthly: creates a deferred subscription (trial_end = 1st of month
-//      after due date) with the APP_FYP_DEPOSIT coupon applied to the first invoice
-//
-// TODO: also create a Postpartum Post subscription and seed their Post profile
-//   with due_or_birth_month, due_or_birth_year, language from checkout metadata.
-//   Post profile is the source of truth for profile data (zip, bio, etc.).
+//      after due date) with the APP_FYP_DEPOSIT coupon applied to the first invoice.
 
 const MONTH_INDEX: Record<string, number> = {
   jan: 0,
@@ -69,13 +67,6 @@ function addSixMonths(date: string): string {
   return d.toISOString().slice(0, 10);
 }
 
-function getCustomField(
-  fields: Stripe.Checkout.Session.CustomField[],
-  key: string,
-): string | undefined {
-  return fields.find((f) => f.key === key)?.dropdown?.value ?? undefined;
-}
-
 export async function POST(req: NextRequest) {
   console.log("[fyp webhook] POST received");
   const body = await req.text();
@@ -102,14 +93,15 @@ export async function POST(req: NextRequest) {
     const session = event.data.object as Stripe.Checkout.Session;
     const product = session.metadata?.product;
     const familyType = session.metadata?.family_type ?? "multi";
-    const customFields = session.custom_fields ?? [];
-    const email = session.customer_details?.email ?? "";
+    // Month/year come from session metadata (collected on-page)
+    const dueOrBirthMonth = session.metadata?.due_or_birth_month;
     const customerId = session.customer as string | null;
 
     console.log("[fyp webhook] checkout.session.completed", {
       sessionId: session.id.slice(-8),
       product,
       familyType,
+      dueOrBirthMonth,
       subscription: session.subscription,
       supabaseUrl:
         process.env.NEXT_PUBLIC_TEST_SUPABASE_URL ??
@@ -118,18 +110,26 @@ export async function POST(req: NextRequest) {
 
     const supabase = createFirstYearClient();
 
+    /**
+     * Activates the members belonging to an account.
+     * Members already have their emails from the pending record created at checkout time.
+     */
+    async function activateMembers(accountId: string) {
+      const { error } = await supabase
+        .from("members")
+        .update({ status: "active" })
+        .eq("account_id", accountId);
+      if (error)
+        console.error(
+          "[fyp webhook] failed to activate members:",
+          JSON.stringify(error),
+        );
+    }
+
     // ── expecting_monthly ──────────────────────────────────────────────────────
     // 1. Create deferred subscription with APP_FYP_DEPOSIT coupon
-    // 2. Insert member row
+    // 2. Activate pending account + members
     if (product === "fyp_deposit") {
-      const dueOrBirthMonth = getCustomField(
-        customFields,
-        "due_or_birth_month",
-      );
-      const dueOrBirthYear = getCustomField(customFields, "due_or_birth_year");
-      // language and zip collected via Post profile, not checkout
-      const language = getCustomField(customFields, "language");
-
       let subscriptionId: string | null = null;
       let billingStartDate: string | null = null;
 
@@ -137,11 +137,14 @@ export async function POST(req: NextRequest) {
         console.error("[fyp webhook] no customer on fyp_deposit session");
       } else if (!dueOrBirthMonth) {
         console.error(
-          "[fyp webhook] missing due_or_birth_month in custom_fields",
+          "[fyp webhook] missing due_or_birth_month in session metadata",
         );
       } else {
         try {
-          const trialEnd = billingStartTimestamp(dueOrBirthMonth);
+          const trialEnd = Math.max(
+            billingStartTimestamp(dueOrBirthMonth),
+            PROGRAM_START_UNIX,
+          );
           billingStartDate = toDateString(trialEnd);
 
           const lookupKey =
@@ -168,33 +171,27 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      const { error: insertError } = await supabase.from("accounts").insert({
-        email,
-        stripe_customer_id: customerId,
-        stripe_session_id: session.id,
-        stripe_subscription_id: subscriptionId,
-        flow: "expecting_monthly",
-        plan_type: "monthly",
-        family_type: familyType,
-        due_or_birth_month: dueOrBirthMonth,
-        due_or_birth_year: dueOrBirthYear,
-        billing_start_date: billingStartDate,
-      });
-      if (insertError)
+      const { data: accountData, error } = await supabase
+        .from("accounts")
+        .update({
+          stripe_customer_id: customerId,
+          stripe_subscription_id: subscriptionId,
+          billing_start_date: billingStartDate,
+          status: "active",
+        })
+        .eq("stripe_session_id", session.id)
+        .select("id")
+        .single();
+      if (error)
         console.error(
-          "[fyp webhook] insert error (expecting_monthly):",
-          insertError,
+          "[fyp webhook] update error (expecting_monthly):",
+          JSON.stringify(error),
         );
+      else if (accountData) await activateMembers(accountData.id);
     }
 
     // ── expecting_bundle ───────────────────────────────────────────────────────
     if (product === "fyp_bundle_expecting") {
-      const dueOrBirthMonth = getCustomField(
-        customFields,
-        "due_or_birth_month",
-      );
-      const dueOrBirthYear = getCustomField(customFields, "due_or_birth_year");
-
       let billingStartDate: string | null = null;
       let bundleExpiresAt: string | null = null;
 
@@ -203,90 +200,135 @@ export async function POST(req: NextRequest) {
         bundleExpiresAt = addSixMonths(billingStartDate);
       }
 
-      const { error: insertError } = await supabase.from("accounts").insert({
-        email,
-        stripe_customer_id: customerId,
-        stripe_session_id: session.id,
-        flow: "expecting_bundle",
-        plan_type: "bundle",
-        family_type: familyType,
-        due_or_birth_month: dueOrBirthMonth,
-        due_or_birth_year: dueOrBirthYear,
-        billing_start_date: billingStartDate,
-        bundle_expires_at: bundleExpiresAt,
-      });
-      if (insertError)
+      const { data: accountData, error } = await supabase
+        .from("accounts")
+        .update({
+          stripe_customer_id: customerId,
+          billing_start_date: billingStartDate,
+          bundle_expires_at: bundleExpiresAt,
+          status: "active",
+        })
+        .eq("stripe_session_id", session.id)
+        .select("id")
+        .single();
+      if (error)
         console.error(
-          "[fyp webhook] insert error (expecting_bundle):",
-          insertError,
+          "[fyp webhook] update error (expecting_bundle):",
+          JSON.stringify(error),
         );
+      else if (accountData) await activateMembers(accountData.id);
+    }
+
+    // ── baby_deposit ───────────────────────────────────────────────────────────
+    // Baby families joining before PROGRAM_START. Identical to expecting_monthly
+    // except trial_end is fixed at PROGRAM_START rather than computed from due date.
+    if (product === "fyp_baby_deposit") {
+      let subscriptionId: string | null = null;
+      const billingStartDate = "2026-09-01";
+
+      if (!customerId) {
+        console.error("[fyp webhook] no customer on fyp_baby_deposit session");
+      } else {
+        try {
+          const lookupKey =
+            familyType === "multi" ? "fyp_monthly_multi" : "fyp_monthly_single";
+          const prices = await stripe.prices.list({ lookup_keys: [lookupKey] });
+          const price = prices.data[0];
+          if (!price) throw new Error(`Price not found: ${lookupKey}`);
+
+          const subscription = await stripe.subscriptions.create({
+            customer: customerId,
+            items: [{ price: price.id }],
+            trial_end: PROGRAM_START_UNIX,
+            discounts: [{ coupon: process.env.STRIPE_FYP_DEPOSIT_COUPON_ID! }],
+          });
+          subscriptionId = subscription.id;
+          console.log(
+            `[fyp webhook] baby_deposit subscription ${subscriptionId} deferred to ${billingStartDate}`,
+          );
+        } catch (err) {
+          console.error(
+            "[fyp webhook] failed to create deferred subscription (baby_deposit):",
+            err,
+          );
+        }
+      }
+
+      const { data: accountData, error } = await supabase
+        .from("accounts")
+        .update({
+          stripe_customer_id: customerId,
+          stripe_subscription_id: subscriptionId,
+          billing_start_date: billingStartDate,
+          status: "active",
+        })
+        .eq("stripe_session_id", session.id)
+        .select("id")
+        .single();
+      if (error)
+        console.error(
+          "[fyp webhook] update error (baby_deposit):",
+          JSON.stringify(error),
+        );
+      else if (accountData) await activateMembers(accountData.id);
     }
 
     // ── baby_monthly ───────────────────────────────────────────────────────────
     if (product === "fyp_monthly_baby") {
-      const dueOrBirthMonth = getCustomField(
-        customFields,
-        "due_or_birth_month",
-      );
-      const dueOrBirthYear = getCustomField(customFields, "due_or_birth_year");
       const subscriptionId = session.subscription as string | null;
+      const today = new Date().toISOString().slice(0, 10);
 
-      console.log("[fyp webhook] inserting baby_monthly account", {
+      console.log("[fyp webhook] activating baby_monthly account", {
         customerId,
         subscriptionId,
-        dueOrBirthMonth,
-        dueOrBirthYear,
       });
-      const today = new Date().toISOString().slice(0, 10);
-      const { data: insertData, error: insertError } = await supabase
+
+      const { data: accountData, error } = await supabase
         .from("accounts")
-        .insert({
-          email,
+        .update({
           stripe_customer_id: customerId,
-          stripe_session_id: session.id,
           stripe_subscription_id: subscriptionId,
-          flow: "baby_monthly",
-          plan_type: "monthly",
-          family_type: familyType,
-          due_or_birth_month: dueOrBirthMonth,
-          due_or_birth_year: dueOrBirthYear,
           billing_start_date: today,
+          status: "active",
         })
-        .select();
-      if (insertError)
+        .eq("stripe_session_id", session.id)
+        .select("id")
+        .single();
+
+      if (error)
         console.error(
-          "[fyp webhook] insert error (baby_monthly):",
-          JSON.stringify(insertError),
+          "[fyp webhook] update error (baby_monthly):",
+          JSON.stringify(error),
         );
-      else
-        console.log("[fyp webhook] insert success (baby_monthly)", {
-          id: insertData?.[0]?.id,
+      else if (accountData) {
+        console.log("[fyp webhook] activated (baby_monthly)", {
+          id: accountData.id,
         });
+        await activateMembers(accountData.id);
+      }
     }
 
     // ── baby_bundle ────────────────────────────────────────────────────────────
     if (product === "fyp_bundle_baby") {
-      const dueOrBirthMonth = getCustomField(
-        customFields,
-        "due_or_birth_month",
-      );
-      const dueOrBirthYear = getCustomField(customFields, "due_or_birth_year");
       const today = new Date().toISOString().slice(0, 10);
 
-      const { error: insertError } = await supabase.from("accounts").insert({
-        email,
-        stripe_customer_id: customerId,
-        stripe_session_id: session.id,
-        flow: "baby_bundle",
-        plan_type: "bundle",
-        family_type: familyType,
-        due_or_birth_month: dueOrBirthMonth,
-        due_or_birth_year: dueOrBirthYear,
-        billing_start_date: today,
-        bundle_expires_at: addSixMonths(today),
-      });
-      if (insertError)
-        console.error("[fyp webhook] insert error (baby_bundle):", insertError);
+      const { data: accountData, error } = await supabase
+        .from("accounts")
+        .update({
+          stripe_customer_id: customerId,
+          billing_start_date: today,
+          bundle_expires_at: addSixMonths(today),
+          status: "active",
+        })
+        .eq("stripe_session_id", session.id)
+        .select("id")
+        .single();
+      if (error)
+        console.error(
+          "[fyp webhook] update error (baby_bundle):",
+          JSON.stringify(error),
+        );
+      else if (accountData) await activateMembers(accountData.id);
     }
   }
 
