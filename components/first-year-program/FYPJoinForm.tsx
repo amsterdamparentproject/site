@@ -315,7 +315,7 @@ export default function FYPJoinForm() {
             </h2>
             <p className="text-sm text-brand-soft-charcoal/70 dark:text-brand-white/60 italic text-center mt-1 max-w-sm">
               Open to families from pregnancy through your baby&apos;s first
-              year. Live sessions start September 2026.
+              year. Program starts September 2026.
             </p>
           </div>
 
@@ -482,7 +482,7 @@ export default function FYPJoinForm() {
                     price={isMulti ? "€383" : "€305"}
                     billing={
                       isBeforeProgramStart
-                        ? "Billed today · Starts September 2026"
+                        ? "Billed today"
                         : "Billed today · save €25"
                     }
                     description={
@@ -524,7 +524,7 @@ export default function FYPJoinForm() {
                     price={isMulti ? "€383" : "€305"}
                     billing={
                       isBeforeProgramStart
-                        ? "Billed today · Starts September 2026"
+                        ? "Billed today"
                         : "Billed today · save €25"
                     }
                     description={

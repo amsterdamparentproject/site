@@ -8,7 +8,7 @@ import ProgramJourney from "@/components/first-year-program/ProgramJourney";
 import { useSearchParams } from "next/navigation";
 import Link from "@/components/Link";
 import { MoveRight } from "lucide-react";
-import FYPJoinForm from "./FYPJoinForm";
+import FYPJoinForm from "@/components/first-year-program/FYPJoinForm";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -225,7 +225,9 @@ export default function FirstYearProgramClient() {
           </section>
 
           {/* Join */}
-          <FYPJoinForm />
+          <section id="#join">
+            <FYPJoinForm />
+          </section>
         </div>
 
         {/* FAQ */}

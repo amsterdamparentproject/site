@@ -311,13 +311,16 @@ export async function POST(req: NextRequest) {
     // ── baby_bundle ────────────────────────────────────────────────────────────
     if (product === "fyp_bundle_baby") {
       const today = new Date().toISOString().slice(0, 10);
+      // Before PROGRAM_START the checkout session embeds billing_start_date:"2026-09-01"
+      // in metadata so access doesn't begin before the program launches.
+      const billingStartDate = session.metadata?.billing_start_date ?? today;
 
       const { data: accountData, error } = await supabase
         .from("accounts")
         .update({
           stripe_customer_id: customerId,
-          billing_start_date: today,
-          bundle_expires_at: addSixMonths(today),
+          billing_start_date: billingStartDate,
+          bundle_expires_at: addSixMonths(billingStartDate),
           status: "active",
         })
         .eq("stripe_session_id", session.id)

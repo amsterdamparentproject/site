@@ -3,6 +3,9 @@
  *
  * Talks directly to the test Supabase project (firstyear schema) and Stripe
  * to verify state after checkout and clean up after test runs.
+ *
+ * Since migration 006, email is stored on firstyear.members (not accounts).
+ * Account lookups go through the members table.
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -29,12 +32,11 @@ function stripe() {
 }
 
 // ---------------------------------------------------------------------------
-// Read helpers
+// Types
 // ---------------------------------------------------------------------------
 
 export interface FYPAccount {
   id: string;
-  email: string;
   stripe_customer_id: string | null;
   stripe_session_id: string;
   stripe_subscription_id: string | null;
@@ -48,15 +50,52 @@ export interface FYPAccount {
   status: string;
 }
 
+export interface FYPMember {
+  id: string;
+  account_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  status: string;
+}
+
+// ---------------------------------------------------------------------------
+// Read helpers
+// ---------------------------------------------------------------------------
+
+/** Return all member rows for a given account. */
+export async function getMembersByAccountId(
+  accountId: string,
+): Promise<FYPMember[]> {
+  const db = supabase();
+  const { data } = await db
+    .from("members")
+    .select("*")
+    .eq("account_id", accountId);
+  return data ?? [];
+}
+
+/** Find a member row by email, then return the associated account. */
 export async function getAccountByEmail(
   email: string,
 ): Promise<FYPAccount | null> {
-  const { data } = await supabase()
-    .from("accounts")
-    .select("*")
+  const db = supabase();
+
+  const { data: member } = await db
+    .from("members")
+    .select("account_id")
     .eq("email", email.toLowerCase())
     .maybeSingle();
-  return data ?? null;
+
+  if (!member) return null;
+
+  const { data: account } = await db
+    .from("accounts")
+    .select("*")
+    .eq("id", member.account_id)
+    .maybeSingle();
+
+  return account ?? null;
 }
 
 export async function getAccountStatusByEmail(
@@ -72,7 +111,21 @@ export async function getAccountStatusByEmail(
 
 export async function cleanupAccountByEmail(email: string): Promise<void> {
   const db = supabase();
-  const account = await getAccountByEmail(email);
+
+  const { data: member } = await db
+    .from("members")
+    .select("account_id")
+    .eq("email", email.toLowerCase())
+    .maybeSingle();
+
+  if (!member) return;
+
+  const { data: account } = await db
+    .from("accounts")
+    .select("id, stripe_subscription_id, stripe_customer_id")
+    .eq("id", member.account_id)
+    .maybeSingle();
+
   if (!account) return;
 
   // Cancel the Stripe subscription if one exists
@@ -93,6 +146,7 @@ export async function cleanupAccountByEmail(email: string): Promise<void> {
     }
   }
 
+  // Delete account — members cascade via ON DELETE CASCADE
   await db.from("accounts").delete().eq("id", account.id);
 }
 
@@ -102,11 +156,11 @@ export async function cleanupAccountByEmail(email: string): Promise<void> {
  */
 export async function purgeTestAccounts(emailPattern: string): Promise<number> {
   const db = supabase();
-  const { data: accounts } = await db
-    .from("accounts")
+  const { data: members } = await db
+    .from("members")
     .select("email")
     .like("email", emailPattern);
-  if (!accounts?.length) return 0;
-  await Promise.all(accounts.map((a) => cleanupAccountByEmail(a.email)));
-  return accounts.length;
+  if (!members?.length) return 0;
+  await Promise.all(members.map((m) => cleanupAccountByEmail(m.email)));
+  return members.length;
 }

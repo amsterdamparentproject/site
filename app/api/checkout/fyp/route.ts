@@ -103,6 +103,8 @@ export async function POST(req: Request) {
       ...(dueOrBirthYear ? { due_or_birth_year: dueOrBirthYear } : {}),
     };
 
+    const billingStartDate = getBillingStartDate();
+
     let session: Awaited<
       ReturnType<typeof stripe.checkout.sessions.create>
     > | null = null;
