@@ -99,6 +99,7 @@ const MonthlyCard = () => (
       <a
         href="#join"
         className="mt-6 block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
+        data-umami-event="First Year Program: Costs: Monthly"
       >
         Join or reserve your spot
       </a>
@@ -147,6 +148,7 @@ const BundleCard = () => (
       <a
         href="#join"
         className="mt-6 block w-full text-center text-sm font-bold text-white bg-brand-goldenrod hover:bg-brand-goldenrod/90 transition-colors rounded-xl py-3"
+        data-umami-event="First Year Program: Costs: Bundle"
       >
         Get the 6-month bundle
       </a>

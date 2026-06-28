@@ -82,8 +82,11 @@ async function selectPlanAndCheckout(
     await joinSection.getByRole("button", { name: planCardName }).click();
   }
 
+  // Match the submit button specifically — the arrow (→) distinguishes it from
+  // plan card buttons whose accessible names may include "Reserve your spot" in
+  // their billing text.
   const submitButton = joinSection.getByRole("button", {
-    name: /reserve your spot|sign up/i,
+    name: /reserve your spot →|sign up →/i,
   });
   await submitButton.waitFor({ state: "visible", timeout: 10_000 });
 

@@ -195,20 +195,23 @@ function PlanCard({
 // ---------------------------------------------------------------------------
 
 export default function FYPJoinForm() {
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonthValue = MONTHS[now.getMonth()].value;
+
+  const [month, setMonth] = useState(currentMonthValue);
+  const [year, setYear] = useState(String(currentYear));
   const [members, setMembers] = useState<Member[]>([
     { firstName: "", lastName: "", email: "" },
   ]);
   const [isSingleParent, setIsSingleParent] = useState(false);
-  const [selectedFlow, setSelectedFlow] = useState<Flow>("expecting_bundle");
+  const [selectedFlow, setSelectedFlow] = useState<Flow>("baby_bundle");
   const [submitting, setSubmitting] = useState(false);
 
   function setFamilyStructure(single: boolean) {
     setIsSingleParent(single);
   }
 
-  const currentYear = new Date().getFullYear();
   const years = [
     String(currentYear - 1),
     String(currentYear),
@@ -245,7 +248,19 @@ export default function FYPJoinForm() {
 
   const hasDate = month !== "" && year !== "";
 
-  const canCheckout = hasDate && allMembersFilled;
+  const dateTooOld =
+    hasDate &&
+    (() => {
+      const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), 1);
+      const selectedDate = new Date(
+        parseInt(year),
+        MONTHS.findIndex((m) => m.value === month),
+        1,
+      );
+      return selectedDate < oneYearAgo;
+    })();
+
+  const canCheckout = hasDate && !dateTooOld && allMembersFilled;
 
   // Before program start everyone gets immediate features only (full guides unlock on billing_start_date).
   // After program start, baby families get full access immediately; expecting families still unlock on due date.
@@ -294,6 +309,18 @@ export default function FYPJoinForm() {
     if (!hasDate) {
       setValidationError(
         "Please enter your due date or baby's birthday before continuing.",
+      );
+      return;
+    }
+    const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), 1);
+    const selectedDate = new Date(
+      parseInt(year),
+      MONTHS.findIndex((m) => m.value === month),
+      1,
+    );
+    if (selectedDate < oneYearAgo) {
+      setValidationError(
+        "Our program is for families with babies born in the last year. Contact us if your baby is older.",
       );
       return;
     }
@@ -465,6 +492,18 @@ export default function FYPJoinForm() {
                 ))}
               </select>
             </div>
+            {dateTooOld && (
+              <p className="mt-2 italic text-xs text-red-500 dark:text-red-400">
+                Our program is for families with babies born in the last year.{" "}
+                <a
+                  href="mailto:hello@amsterdamparentproject.nl"
+                  className="underline"
+                >
+                  Contact us
+                </a>{" "}
+                if your baby is older.
+              </p>
+            )}
           </div>
 
           <hr />
@@ -579,17 +618,23 @@ export default function FYPJoinForm() {
             {/* Submit button */}
             <button
               type="button"
-              disabled={submitting}
+              disabled={submitting || !canCheckout}
               onClick={handleSubmit}
               data-umami-event={
                 selectedFlow?.includes("bundle")
-                  ? `First Year Program: Enroll ${situation === "expecting" ? "expecting" : "baby"} bundle`
-                  : `First Year Program: Enroll ${situation === "expecting" ? "expecting" : "baby"} monthly`
+                  ? `First Year Program: Join ${situation === "expecting" ? "expecting" : "baby"} bundle`
+                  : `First Year Program: Join ${situation === "expecting" ? "expecting" : "baby"} monthly`
               }
-              className="mt-4 w-full py-3 rounded-lg font-semibold text-sm text-white bg-brand-soft-green hover:bg-brand-soft-green/90 dark:bg-brand-goldenrod dark:hover:bg-brand-goldenrod/90 dark:text-brand-charcoal transition-colors focus:outline-none focus:ring-2 focus:ring-brand-soft-green/40 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              className="mt-4 w-full py-3 rounded-lg font-semibold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 dark:bg-brand-goldenrod dark:hover:bg-brand-goldenrod/90 dark:text-brand-charcoal transition-colors focus:outline-none focus:ring-2 focus:ring-brand-soft-green/40 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
               {submitLabel}
             </button>
+
+            {!canCheckout && !submitting && (
+              <p className="mt-2 text-xs italic text-red-500 dark:text-red-400 text-center">
+                Please fill out all required fields
+              </p>
+            )}
 
             {/* Feature list */}
             <p className="mt-5 text-sm font-medium text-brand-charcoal dark:text-brand-white/80">
