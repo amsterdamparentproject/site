@@ -31,8 +31,7 @@ const firstYearProgramData: Session[] = [
     components: [
       "Actionable feeding strategies focused on health and wellness for the whole family",
       "Evidence-based insight into common newborn feeding scenarios",
-      "Introduction to starting solids: timing, approach, and what to expect",
-      "Short, impactful exercises for you and your partner",
+      "Exercises to improve the mental and physical load for you and your partner",
     ],
   },
   {
@@ -48,7 +47,7 @@ const firstYearProgramData: Session[] = [
       "Overview of permanent physical changes that can happen after birth",
       "Matrescence and patrescence: understanding your new identity as a parent",
       "How to navigate your new body and mind — for both partners",
-      "Resources to help within the English-speaking Dutch system",
+      "Resources for postpartum mental health and physical recovery in Amsterdam",
     ],
   },
   {
@@ -56,14 +55,15 @@ const firstYearProgramData: Session[] = [
     subtitle: "Raising a child in a multicultural family",
     description: `
       When two people with different backgrounds become parents together, their childhoods show up — often unexpectedly.
-      From food and sleep to discipline and family roles, cultural differences surface in the day-to-day of new parenthood. We help you identify where they come from and how to build a shared parenting culture that works for your family.
+      From language and sleep to discipline and family roles, cultural differences surface in the day-to-day of new parenthood. 
+      We help you identify where they come from and how to build a shared parenting culture that works for your new family.
     `,
-    experts: ["angelaVitiello", "naomiGibson"],
+    experts: ["angelaVitiello", "alexSiega"],
     components: [
       "How cultural backgrounds shape parenting instincts and expectations",
-      "Common friction points for multicultural families with young babies",
+      "Common friction points for multicultural families: values, language, and more",
+      "Help with the in-laws: Navigating extended family expectations across cultures",
       "Exercises to help partners align on values and build a shared approach",
-      "Navigating extended family expectations across cultures",
     ],
   },
   {
@@ -76,23 +76,22 @@ const firstYearProgramData: Session[] = [
     experts: ["naomiGibson", "irenaDomachowska"],
     components: [
       "Common postpartum partner relationship challenges: communication, intimacy, emotional connection",
-      "Equal parenting: identifying imbalance and addressing it constructively",
       "Nonviolent communication techniques for new parents",
-      "Expert exercises to help you and your partner get on the same page",
+      "Expert exercises to help you and your partner get on the same page in your new role as parents",
     ],
   },
   {
     title: "Return to Work & Life",
     subtitle: "Transitioning from parental leave to working parenthood",
     description: `
-      The return to work is one of the most emotionally complex moments of the first year — and it's rarely talked about honestly.
-      We cover the mental load, boundary-setting, re-entry emotions, and what it actually takes to feel capable and confident as a working parent, without burning out.
+      Let's talk about what happens when the newborn bubble pops. We cover the transition back to work and life post-newborn: joys, challenges, and techniques to manage mental load and reduce parental/professional burnout — so you can feel confident and capable growing as a parent alongside your growing baby. 
     `,
     experts: ["karlaCalinawan", "alexSiega"],
     components: [
       "Mental load: what it is, why it matters, and how to reduce it",
       "Setting workplace boundaries as a new parent",
       "Navigating re-entry emotions: perfectionism, comparison, and guilt",
+      "Equal parenting: identifying imbalance and addressing it constructively",
       "Early signs of burnout and where to find support in Amsterdam",
     ],
   },
