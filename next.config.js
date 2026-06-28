@@ -149,8 +149,8 @@ module.exports = () => {
           permanent: true,
         },
         {
-          source: '/programs/burnout/apply',
-          destination: 'https://docs.google.com/forms/d/e/1FAIpQLSf5buxK4oEJxUOChHbbBVie5P7gUXJ2qsoR-xxweiixWCcjQw/viewform?usp=dialog',
+          source: '/programs/fourth-trimester',
+          destination: '/programs/first-year?from=fourth-trimester',
           permanent: true,
         },
         {
@@ -201,11 +201,6 @@ module.exports = () => {
         {
           source: '/community-calendar',
           destination: '/calendar',
-          permanent: true,
-        },
-        {
-          source: '/programs/fourth-trimester/jan-2026',
-          destination: '/programs/fourth-trimester/join?cohort=jan-2026',
           permanent: true,
         },
         {

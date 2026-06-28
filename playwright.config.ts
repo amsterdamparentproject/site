@@ -34,10 +34,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // NEXT_DIST_DIR isolates the test server's build output from a manual
-    // `yarn dev` (which uses .next), so the two never corrupt each other's
-    // webpack manifest when running at the same time.
-    command: "NODE_ENV=test NEXT_DIST_DIR=.next-e2e yarn dev --port 3001",
+    command: "NODE_ENV=test yarn dev --port 3001",
     url: "http://localhost:3001",
     reuseExistingServer: false,
     timeout: 120_000,

@@ -14,7 +14,6 @@
 
 # next.js
 /.next/
-/.next-e2e/
 /out/
 public/sitemap.xml
 .vercel
@@ -40,8 +39,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env.production
 .env.local
-.env.test.local
+.env.test
 
 # Contentlayer
 .contentlayer

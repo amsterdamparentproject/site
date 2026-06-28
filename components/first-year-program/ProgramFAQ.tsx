@@ -1,8 +1,11 @@
-import { ReactNode } from "react";
+"use client";
+
+import { ReactNode, useEffect } from "react";
 
 interface FAQ {
   question: string;
   answer: ReactNode;
+  id?: string;
 }
 
 const PP = () => (
@@ -83,12 +86,34 @@ export default function ProgramFAQ() {
       answer:
         "Because we've been there. As parents in Amsterdam ourselves, we struggled to find the right support in English. Most of the world understands the first year as a communal responsibility — we're building that village for families here who don't have one yet.",
     },
+    {
+      id: "ftp-comparison",
+      question:
+        "What's the difference between the Fourth Trimester and First Year Programs?",
+      answer:
+        "In 2025-2026, we ran two cohorts of the Fourth Trimester Program with a similar base: expert discussions, socials, and moderated chat. We took learnings and feedback from the early cohorts and evolved it into the First Year Program you see today. The new program is longer, has more social touchpoints (both group and 1:1), gets rid of the strict birth month requirements — before, your baby had to be born in the 2 months preceding the cohort start — and extends support for all families expecting and with babies under 1 year old.",
+    },
   ];
+
+  useEffect(() => {
+    function openHash() {
+      const hash = window.location.hash.slice(1);
+      if (!hash) return;
+      const el = document.getElementById(hash);
+      if (el instanceof HTMLDetailsElement) {
+        el.open = true;
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+    openHash();
+    window.addEventListener("hashchange", openHash);
+    return () => window.removeEventListener("hashchange", openHash);
+  }, []);
 
   return (
     <div className="w-full max-w-full divide-y divide-brand-sand/30 dark:divide-brand-soft-charcoal/30 px-4 overflow-x-hidden">
       {faqs.map((faq, index) => (
-        <details key={index} className="group py-6 w-full block">
+        <details key={index} id={faq.id} className="group py-6 w-full block">
           <summary
             className="flex flex-nowrap items-start justify-between cursor-pointer list-none gap-4 w-full"
             style={{ cursor: "pointer" }}

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { genPageMetadata } from "app/seo";
 import FirstYearProgramClient from "./FirstYearProgramClient";
 
@@ -15,7 +16,9 @@ export const metadata = genPageMetadata({
 export default function Page() {
   return (
     <main>
-      <FirstYearProgramClient />
+      <Suspense>
+        <FirstYearProgramClient />
+      </Suspense>
     </main>
   );
 }
