@@ -72,10 +72,14 @@ async function getAccountBySessionId(sessionId: string) {
   return data;
 }
 
+/**
+ * Query via member_details view so the derived `status` (from accounts) is included.
+ * members table itself has no status column.
+ */
 async function getMembersByAccountId(accountId: string) {
   const db = testDb();
   const { data } = await db
-    .from("members")
+    .from("member_details")
     .select("*")
     .eq("account_id", accountId);
   return data ?? [];
@@ -162,11 +166,15 @@ describe("FYP pending → active state transition", () => {
       expect(pendingAccount.stripe_subscription_id).toBeNull();
       expect(pendingAccount.billing_start_date).toBeNull();
 
+      // members table has no status column — status is derived from the account.
+      // Verify the member row exists with correct name/email; status is confirmed
+      // via pendingAccount.status above.
       const pendingMembers = await getMembersByAccountId(pendingAccount.id);
       expect(pendingMembers).toHaveLength(1);
       expect(pendingMembers[0].first_name).toBe("Test");
       expect(pendingMembers[0].last_name).toBe("Expecting");
       expect(pendingMembers[0].email).toBe(EMAIL);
+      // member_details view derives status from the account
       expect(pendingMembers[0].status).toBe("pending");
 
       // ── Step 2: webhook fires (Stripe payment complete) ───────────────────

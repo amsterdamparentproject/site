@@ -110,25 +110,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = createFirstYearClient();
 
-    /**
-     * Activates the members belonging to an account.
-     * Members already have their emails from the pending record created at checkout time.
-     */
-    async function activateMembers(accountId: string) {
-      const { error } = await supabase
-        .from("members")
-        .update({ status: "active" })
-        .eq("account_id", accountId);
-      if (error)
-        console.error(
-          "[fyp webhook] failed to activate members:",
-          JSON.stringify(error),
-        );
-    }
-
     // ── expecting_monthly ──────────────────────────────────────────────────────
-    // 1. Create deferred subscription with APP_FYP_DEPOSIT coupon
-    // 2. Activate pending account + members
     if (product === "fyp_deposit") {
       let subscriptionId: string | null = null;
       let billingStartDate: string | null = null;
@@ -171,7 +153,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      const { data: accountData, error } = await supabase
+      const { error } = await supabase
         .from("accounts")
         .update({
           stripe_customer_id: customerId,
@@ -179,15 +161,12 @@ export async function POST(req: NextRequest) {
           billing_start_date: billingStartDate,
           status: "active",
         })
-        .eq("stripe_session_id", session.id)
-        .select("id")
-        .single();
+        .eq("stripe_session_id", session.id);
       if (error)
         console.error(
           "[fyp webhook] update error (expecting_monthly):",
           JSON.stringify(error),
         );
-      else if (accountData) await activateMembers(accountData.id);
     }
 
     // ── expecting_bundle ───────────────────────────────────────────────────────
@@ -200,7 +179,7 @@ export async function POST(req: NextRequest) {
         bundleExpiresAt = addSixMonths(billingStartDate);
       }
 
-      const { data: accountData, error } = await supabase
+      const { error } = await supabase
         .from("accounts")
         .update({
           stripe_customer_id: customerId,
@@ -208,15 +187,12 @@ export async function POST(req: NextRequest) {
           bundle_expires_at: bundleExpiresAt,
           status: "active",
         })
-        .eq("stripe_session_id", session.id)
-        .select("id")
-        .single();
+        .eq("stripe_session_id", session.id);
       if (error)
         console.error(
           "[fyp webhook] update error (expecting_bundle):",
           JSON.stringify(error),
         );
-      else if (accountData) await activateMembers(accountData.id);
     }
 
     // ── baby_deposit ───────────────────────────────────────────────────────────
@@ -254,7 +230,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      const { data: accountData, error } = await supabase
+      const { error } = await supabase
         .from("accounts")
         .update({
           stripe_customer_id: customerId,
@@ -262,15 +238,12 @@ export async function POST(req: NextRequest) {
           billing_start_date: billingStartDate,
           status: "active",
         })
-        .eq("stripe_session_id", session.id)
-        .select("id")
-        .single();
+        .eq("stripe_session_id", session.id);
       if (error)
         console.error(
           "[fyp webhook] update error (baby_deposit):",
           JSON.stringify(error),
         );
-      else if (accountData) await activateMembers(accountData.id);
     }
 
     // ── baby_monthly ───────────────────────────────────────────────────────────
@@ -278,12 +251,7 @@ export async function POST(req: NextRequest) {
       const subscriptionId = session.subscription as string | null;
       const today = new Date().toISOString().slice(0, 10);
 
-      console.log("[fyp webhook] activating baby_monthly account", {
-        customerId,
-        subscriptionId,
-      });
-
-      const { data: accountData, error } = await supabase
+      const { error } = await supabase
         .from("accounts")
         .update({
           stripe_customer_id: customerId,
@@ -291,21 +259,12 @@ export async function POST(req: NextRequest) {
           billing_start_date: today,
           status: "active",
         })
-        .eq("stripe_session_id", session.id)
-        .select("id")
-        .single();
-
+        .eq("stripe_session_id", session.id);
       if (error)
         console.error(
           "[fyp webhook] update error (baby_monthly):",
           JSON.stringify(error),
         );
-      else if (accountData) {
-        console.log("[fyp webhook] activated (baby_monthly)", {
-          id: accountData.id,
-        });
-        await activateMembers(accountData.id);
-      }
     }
 
     // ── baby_bundle ────────────────────────────────────────────────────────────
@@ -315,7 +274,7 @@ export async function POST(req: NextRequest) {
       // in metadata so access doesn't begin before the program launches.
       const billingStartDate = session.metadata?.billing_start_date ?? today;
 
-      const { data: accountData, error } = await supabase
+      const { error } = await supabase
         .from("accounts")
         .update({
           stripe_customer_id: customerId,
@@ -323,15 +282,12 @@ export async function POST(req: NextRequest) {
           bundle_expires_at: addSixMonths(billingStartDate),
           status: "active",
         })
-        .eq("stripe_session_id", session.id)
-        .select("id")
-        .single();
+        .eq("stripe_session_id", session.id);
       if (error)
         console.error(
           "[fyp webhook] update error (baby_bundle):",
           JSON.stringify(error),
         );
-      else if (accountData) await activateMembers(accountData.id);
     }
   }
 

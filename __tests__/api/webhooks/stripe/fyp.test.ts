@@ -49,34 +49,13 @@ function makeRequest(body = "{}", signature = "sig") {
 }
 
 function mockSupabase() {
-  const single = vi
-    .fn()
-    .mockResolvedValue({ data: { id: "acc-1" }, error: null });
   const client = {
     from: vi.fn(() => ({
       update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          select: vi.fn().mockReturnValue({ single }),
-        }),
+        eq: vi.fn().mockResolvedValue({ error: null }),
       }),
-      // for activateMembers
-      eq: vi.fn().mockReturnValue({ error: null }),
     })),
   };
-  // Make members update work too
-  const membersUpdate = vi.fn().mockReturnValue({
-    eq: vi.fn().mockResolvedValue({ error: null }),
-  });
-  client.from = vi.fn((table: string) => {
-    if (table === "members") return { update: membersUpdate } as any;
-    return {
-      update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          select: vi.fn().mockReturnValue({ single }),
-        }),
-      }),
-    };
-  });
   vi.mocked(createFirstYearClient).mockReturnValue(client as any);
   return client;
 }
@@ -210,22 +189,11 @@ describe("fyp webhook — expecting_monthly trial_end", () => {
  * can inspect the args passed to accounts.update().
  */
 function mockSupabaseWithAccountCapture() {
-  const single = vi
-    .fn()
-    .mockResolvedValue({ data: { id: "acc-1" }, error: null });
   const accountUpdate = vi.fn().mockReturnValue({
-    eq: vi.fn().mockReturnValue({
-      select: vi.fn().mockReturnValue({ single }),
-    }),
-  });
-  const membersUpdate = vi.fn().mockReturnValue({
     eq: vi.fn().mockResolvedValue({ error: null }),
   });
   const client = {
-    from: vi.fn((table: string) => {
-      if (table === "members") return { update: membersUpdate } as any;
-      return { update: accountUpdate };
-    }),
+    from: vi.fn(() => ({ update: accountUpdate })),
   };
   vi.mocked(createFirstYearClient).mockReturnValue(client as any);
   return accountUpdate;

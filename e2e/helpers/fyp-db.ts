@@ -63,13 +63,16 @@ export interface FYPMember {
 // Read helpers
 // ---------------------------------------------------------------------------
 
-/** Return all member rows for a given account. */
+/**
+ * Return members for a given account, with status derived from the account
+ * via the member_details view (status lives on accounts, not members).
+ */
 export async function getMembersByAccountId(
   accountId: string,
 ): Promise<FYPMember[]> {
   const db = supabase();
   const { data } = await db
-    .from("members")
+    .from("member_details")
     .select("*")
     .eq("account_id", accountId);
   return data ?? [];

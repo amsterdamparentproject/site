@@ -290,7 +290,6 @@ export async function POST(req: Request) {
           first_name: m.firstName,
           last_name: m.lastName,
           email: m.email.toLowerCase(),
-          status: "pending",
         })),
       );
       if (memberError) {
