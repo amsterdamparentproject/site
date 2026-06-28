@@ -102,6 +102,16 @@ export async function POST(req: NextRequest) {
     const email = session.customer_details?.email ?? "";
     const customerId = session.customer as string | null;
 
+    console.log("[fyp webhook] checkout.session.completed", {
+      sessionId: session.id.slice(-8),
+      product,
+      familyType,
+      subscription: session.subscription,
+      supabaseUrl:
+        process.env.NEXT_PUBLIC_TEST_SUPABASE_URL ??
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+    });
+
     const supabase = createFirstYearClient();
 
     // ── expecting_monthly ──────────────────────────────────────────────────────
@@ -217,22 +227,34 @@ export async function POST(req: NextRequest) {
       const dueOrBirthYear = getCustomField(customFields, "due_or_birth_year");
       const subscriptionId = session.subscription as string | null;
 
-      const { error: insertError } = await supabase.from("accounts").insert({
+      console.log("[fyp webhook] inserting baby_monthly account", {
         email,
-        stripe_customer_id: customerId,
-        stripe_session_id: session.id,
-        stripe_subscription_id: subscriptionId,
-        flow: "baby_monthly",
-        plan_type: "monthly",
-        family_type: familyType,
-        due_or_birth_month: dueOrBirthMonth,
-        due_or_birth_year: dueOrBirthYear,
+        customerId,
+        subscriptionId,
+        dueOrBirthMonth,
+        dueOrBirthYear,
       });
+      const { data: insertData, error: insertError } = await supabase
+        .from("accounts")
+        .insert({
+          email,
+          stripe_customer_id: customerId,
+          stripe_session_id: session.id,
+          stripe_subscription_id: subscriptionId,
+          flow: "baby_monthly",
+          plan_type: "monthly",
+          family_type: familyType,
+          due_or_birth_month: dueOrBirthMonth,
+          due_or_birth_year: dueOrBirthYear,
+        })
+        .select();
       if (insertError)
         console.error(
           "[fyp webhook] insert error (baby_monthly):",
-          insertError,
+          JSON.stringify(insertError),
         );
+      else
+        console.log("[fyp webhook] insert success (baby_monthly):", insertData);
     }
 
     // ── baby_bundle ────────────────────────────────────────────────────────────

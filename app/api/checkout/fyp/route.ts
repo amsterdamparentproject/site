@@ -30,6 +30,10 @@ type FamilyType = "single" | "multi";
 const DOMAIN =
   process.env.NEXT_PUBLIC_DOMAIN ?? "https://amsterdamparentproject.nl";
 
+const PRODUCT_IMAGES = [
+  "https://amsterdamparentproject.nl/static/images/logo/square.png",
+];
+
 // Bundle prices in cents
 const BUNDLE_AMOUNT: Record<FamilyType, number> = {
   single: 30500, // €305
@@ -100,6 +104,7 @@ export async function POST(req: Request) {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["ideal", "card"],
         automatic_tax: { enabled: true },
+        allow_promotion_codes: true,
         customer_creation: "always",
         mode: "payment",
         line_items: [
@@ -108,6 +113,7 @@ export async function POST(req: Request) {
               currency: "eur",
               product_data: {
                 name: "First Year Program — Deposit",
+                images: PRODUCT_IMAGES,
                 description:
                   "Reserve your spot in the First Year Program. The deposit is credited toward your first month of billing after your due date. Fully refundable if you cancel during pregnancy.",
               },
@@ -130,6 +136,7 @@ export async function POST(req: Request) {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["ideal", "card"],
         automatic_tax: { enabled: true },
+        allow_promotion_codes: true,
         customer_creation: "always",
         mode: "payment",
         line_items: [
@@ -138,6 +145,7 @@ export async function POST(req: Request) {
               currency: "eur",
               product_data: {
                 name: `First Year Program — 6-month bundle (${familyType === "multi" ? "2+ parent family" : "single parent family"})`,
+                images: PRODUCT_IMAGES,
                 description:
                   "6 months of the First Year Program, paid upfront. Program begins after your due date. Fully refundable if you cancel during pregnancy.",
               },
@@ -169,6 +177,7 @@ export async function POST(req: Request) {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["ideal", "card"],
         automatic_tax: { enabled: true },
+        allow_promotion_codes: true,
         mode: "subscription",
         line_items: [{ price: price.id, quantity: 1 }],
         custom_fields: BABY_CUSTOM_FIELDS,
@@ -185,6 +194,7 @@ export async function POST(req: Request) {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["ideal", "card"],
         automatic_tax: { enabled: true },
+        allow_promotion_codes: true,
         customer_creation: "always",
         mode: "payment",
         line_items: [
@@ -193,6 +203,7 @@ export async function POST(req: Request) {
               currency: "eur",
               product_data: {
                 name: `First Year Program — 6-month bundle (${familyType === "multi" ? "2+ parent family" : "single parent family"})`,
+                images: PRODUCT_IMAGES,
                 description:
                   "6 months of the First Year Program, paid upfront. Program begins immediately.",
               },
