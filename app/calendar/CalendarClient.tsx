@@ -137,7 +137,7 @@ export default function Events({ events }: { events: CalendarEvent[] }) {
     });
 
     return { current: currentList, past: pastList, groupedPast: groups };
-  }, []);
+  }, [events]);
 
   return (
     <>
