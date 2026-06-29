@@ -108,7 +108,6 @@ export default function UpdateClient({ groups, initialGroupName }: Props) {
       (g) => g.name.toLowerCase() === initialGroupName.toLowerCase(),
     );
     if (match) confirmSelection(match);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialGroupName, groups]);
 
   const handleInputBlur = () => {
@@ -228,8 +227,10 @@ export default function UpdateClient({ groups, initialGroupName }: Props) {
             onFocus={() => setShowDropdown(true)}
             onBlur={handleInputBlur}
             onKeyDown={handleKeyDown}
+            role="combobox"
             aria-autocomplete="list"
             aria-expanded={showDropdown && suggestions.length > 0}
+            aria-controls="group-listbox"
           />
           {groupFieldInvalid && (
             <p className="mt-1 text-xs text-red-500">
@@ -239,6 +240,7 @@ export default function UpdateClient({ groups, initialGroupName }: Props) {
 
           {showDropdown && suggestions.length > 0 && (
             <ul
+              id="group-listbox"
               role="listbox"
               className="absolute z-50 left-3 right-3 mt-1 bg-white border border-brand-sand rounded shadow-lg max-h-56 overflow-y-auto"
             >

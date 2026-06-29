@@ -48,8 +48,10 @@ import { createClient } from "@supabase/supabase-js";
 
 // ─── Test DB client ───────────────────────────────────────────────────────────
 
-/** Direct Supabase client for the test firstyear schema. */
+/** Singleton Supabase client for the test firstyear schema. */
+let _db: ReturnType<typeof createClient> | null = null;
 function testDb() {
+  if (_db) return _db;
   const url = process.env.NEXT_PUBLIC_TEST_SUPABASE_URL;
   const key = process.env.TEST_SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key)
@@ -57,7 +59,8 @@ function testDb() {
       "Missing NEXT_PUBLIC_TEST_SUPABASE_URL or TEST_SUPABASE_SERVICE_ROLE_KEY — " +
         "check .env.test",
     );
-  return createClient(url, key, { db: { schema: "firstyear" } });
+  _db = createClient(url, key, { db: { schema: "firstyear" } });
+  return _db;
 }
 
 // ─── DB helpers ───────────────────────────────────────────────────────────────
@@ -122,11 +125,17 @@ describe("FYP pending → active state transition", () => {
   const SUBSCRIPTION_ID = "sub_int_test_001";
 
   beforeEach(async () => {
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
     vi.resetModules();
     [{ POST: POST_checkout }, { POST: POST_webhook }] = await Promise.all([
       import("@/app/api/checkout/fyp/route") as Promise<any>,
       import("@/app/api/webhooks/stripe/fyp/route") as Promise<any>,
     ]);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   // ── expecting_monthly ───────────────────────────────────────────────────────

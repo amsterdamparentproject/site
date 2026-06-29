@@ -90,6 +90,31 @@ function FTPBanner() {
 }
 
 // ---------------------------------------------------------------------------
+// DepositConfirmedBanner
+// ---------------------------------------------------------------------------
+
+function DepositConfirmedBanner() {
+  const params = useSearchParams();
+  const action = params.get("deposit");
+  if (!action) return null;
+
+  const message =
+    action === "transfer_fyp"
+      ? "Thanks for transferring your deposit to the First Year Program. We can't wait to welcome you in September! ❤️"
+      : action === "refund"
+        ? "We've received your request for a refund. It will be processed within 7 business days."
+        : null;
+
+  if (!message) return null;
+
+  return (
+    <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-brand-soft-green px-4 py-3 text-center text-sm text-white">
+      {message}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
@@ -97,6 +122,7 @@ export default function FirstYearProgramClient() {
   return (
     <>
       <FTPBanner />
+      <DepositConfirmedBanner />
       <div className="flex-col justify-center px-2 items-center w-full max-w-full">
         <div
           className="pb-6 flex flex-col items-center w-full"
