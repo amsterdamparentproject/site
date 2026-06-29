@@ -13,7 +13,9 @@
 --
 -- Run in Supabase SQL editor (production and test environments separately).
 
-CREATE TABLE IF NOT EXISTS firstyear.ftp_legacy (
+DROP TABLE IF EXISTS firstyear.ftp_legacy;
+
+CREATE TABLE firstyear.ftp_legacy (
   id               uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   name             text        NOT NULL,
   email            text        NOT NULL,
@@ -24,6 +26,8 @@ CREATE TABLE IF NOT EXISTS firstyear.ftp_legacy (
   status           text        NOT NULL DEFAULT 'pending',  -- pending | credit | refund | paid
   apply_url        text,
   refund_url       text,
+  apply_url_test   text,
+  refund_url_test  text,
   responded_at     timestamptz,
   expires_at       timestamptz NOT NULL DEFAULT (now() + interval '30 days'),
   created_at       timestamptz NOT NULL DEFAULT now(),
@@ -45,8 +49,10 @@ ALTER TABLE firstyear.ftp_legacy ENABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION firstyear.set_ftp_legacy_urls()
 RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
-  NEW.apply_url  := 'https://amsterdamparentproject.nl/api/fyp/deposit-response?token=' || NEW.id || '&action=credit';
-  NEW.refund_url := 'https://amsterdamparentproject.nl/api/fyp/deposit-response?token=' || NEW.id || '&action=refund';
+  NEW.apply_url       := 'https://amsterdamparentproject.nl/api/fyp/deposit-response?token=' || NEW.id || '&action=credit';
+  NEW.refund_url      := 'https://amsterdamparentproject.nl/api/fyp/deposit-response?token=' || NEW.id || '&action=refund';
+  NEW.apply_url_test  := 'https://feature-ftp-deposit-emails--amsterdamparentproject.netlify.app/api/fyp/deposit-response?token=' || NEW.id || '&action=credit';
+  NEW.refund_url_test := 'https://feature-ftp-deposit-emails--amsterdamparentproject.netlify.app/api/fyp/deposit-response?token=' || NEW.id || '&action=refund';
   RETURN NEW;
 END;
 $$;
