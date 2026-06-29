@@ -72,10 +72,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const redirectDomain =
-    action === "refund" ? "https://amsterdamparentproject.nl" : DOMAIN;
-
   return NextResponse.redirect(
-    `${redirectDomain}/programs/first-year?deposit=${action}`,
+    `${DOMAIN}/programs/first-year?deposit=${action}`,
   );
 }
