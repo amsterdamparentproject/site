@@ -9,7 +9,7 @@
 -- after rows are created, so n8n can read them directly as template variables.
 --
 -- cohort:  the cohort the participant signed up for (e.g. 'july-2026')
--- status:  tracks deposit outcome — 'pending' | 'deposit' | 'credit' | 'refund' | 'paid'
+-- status:  tracks deposit outcome — 'pending' | 'deposit' | 'transfer_fyp' | 'refund' | 'paid'
 --
 -- Run in Supabase SQL editor (production and test environments separately).
 
@@ -23,7 +23,7 @@ CREATE TABLE firstyear.ftp_legacy (
   neighborhood     text,
   referral_source  text,
   cohort           text,
-  status           text        NOT NULL DEFAULT 'pending',  -- pending | credit | refund | paid
+  status           text        NOT NULL DEFAULT 'pending',  -- pending | transfer_fyp | refund | paid
   apply_url        text,
   refund_url       text,
   apply_url_test   text,
@@ -49,9 +49,9 @@ ALTER TABLE firstyear.ftp_legacy ENABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION firstyear.set_ftp_legacy_urls()
 RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
-  NEW.apply_url       := 'https://amsterdamparentproject.nl/api/fyp/deposit-response?token=' || NEW.id || '&action=credit';
+  NEW.apply_url       := 'https://amsterdamparentproject.nl/api/fyp/deposit-response?token=' || NEW.id || '&action=transfer_fyp';
   NEW.refund_url      := 'https://amsterdamparentproject.nl/api/fyp/deposit-response?token=' || NEW.id || '&action=refund';
-  NEW.apply_url_test  := 'https://feature-ftp-deposit-emails--amsterdamparentproject.netlify.app/api/fyp/deposit-response?token=' || NEW.id || '&action=credit';
+  NEW.apply_url_test  := 'https://feature-ftp-deposit-emails--amsterdamparentproject.netlify.app/api/fyp/deposit-response?token=' || NEW.id || '&action=transfer_fyp';
   NEW.refund_url_test := 'https://feature-ftp-deposit-emails--amsterdamparentproject.netlify.app/api/fyp/deposit-response?token=' || NEW.id || '&action=refund';
   RETURN NEW;
 END;

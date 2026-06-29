@@ -8,10 +8,8 @@ export async function GET(req: NextRequest) {
   const action = searchParams.get("action");
 
   // Validate inputs
-  if (!token || !action || !["credit", "refund"].includes(action)) {
-    return NextResponse.redirect(
-      `${DOMAIN}/programs/first-year/deposit-confirmed?error=invalid`,
-    );
+  if (!token || !action || !["transfer_fyp", "refund"].includes(action)) {
+    return NextResponse.redirect(`${DOMAIN}/programs/first-year?error=invalid`);
   }
 
   const supabase = createFirstYearClient();
@@ -25,23 +23,19 @@ export async function GET(req: NextRequest) {
 
   if (error || !row) {
     console.error("[deposit-response] token not found:", token);
-    return NextResponse.redirect(
-      `${DOMAIN}/programs/first-year/deposit-confirmed?error=invalid`,
-    );
+    return NextResponse.redirect(`${DOMAIN}/programs/first-year?error=invalid`);
   }
 
   // Check expiry
   if (new Date(row.expires_at) < new Date()) {
     console.warn("[deposit-response] token expired:", token);
-    return NextResponse.redirect(
-      `${DOMAIN}/programs/first-year/deposit-confirmed?error=expired`,
-    );
+    return NextResponse.redirect(`${DOMAIN}/programs/first-year?error=expired`);
   }
 
   // Check not already responded
-  if (row.status !== "pending") {
+  if (row.status !== "deposit") {
     return NextResponse.redirect(
-      `${DOMAIN}/programs/first-year/deposit-confirmed?action=${row.status}&already=true`,
+      `${DOMAIN}/programs/first-year?deposit=${row.status}&already=true`,
     );
   }
 
@@ -56,9 +50,7 @@ export async function GET(req: NextRequest) {
       "[deposit-response] update error:",
       JSON.stringify(updateError),
     );
-    return NextResponse.redirect(
-      `${DOMAIN}/programs/first-year/deposit-confirmed?error=server`,
-    );
+    return NextResponse.redirect(`${DOMAIN}/programs/first-year?error=server`);
   }
 
   // Notify Alex via n8n (fire and forget — non-fatal if not configured)
@@ -80,7 +72,10 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  const redirectDomain =
+    action === "refund" ? "https://amsterdamparentproject.nl" : DOMAIN;
+
   return NextResponse.redirect(
-    `${DOMAIN}/programs/first-year/deposit-confirmed?action=${action}`,
+    `${redirectDomain}/programs/first-year?deposit=${action}`,
   );
 }
