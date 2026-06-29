@@ -490,8 +490,25 @@ export default function PostListClient({
 
   const isSearching = searchQuery.trim().length > 0;
 
+  const voteValue = searchParams.get("vote");
+  const archiveLabel =
+    primary === "stories"
+      ? "story"
+      : primary === "advice"
+        ? "advice"
+        : "content";
+
   return (
     <div>
+      {/* Vote banner */}
+      {voteValue && (
+        <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-brand-soft-green px-4 py-3 text-center text-sm text-white">
+          Thanks for voting on <strong>{voteValue}</strong> for a future
+          article! We&apos;re on it ✍🏼 In the meantime, check out the rest of
+          the {archiveLabel} archive.
+        </div>
+      )}
+
       {/* Header */}
       <div className="pt-6 pb-6 flex flex-col items-center">
         <h1 className="text-brand-charcoal dark:text-brand-white text-4xl leading-9 font-extrabold tracking-tight md:text-6xl md:leading-14">
