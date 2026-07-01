@@ -13,7 +13,6 @@
       content="telephone=no, date=no, address=no, email=no"
     />
     <meta name="x-apple-disable-message-reformatting" />
-    <meta name="keywords" content="DAHEC8tOq4k, BAGbaTcKoRw" />
   </head>
   <body
     style="
@@ -144,6 +143,8 @@
                                     </table>
                                   </td>
                                 </tr>
+
+                                <!-- Greeting -->
                                 <tr>
                                   <td
                                     style="font-size: 0; height: 16px"
@@ -159,15 +160,15 @@
                                       color: #222222;
                                       font-size: 16px;
                                       font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
                                       line-height: 1.5;
-                                      text-align: center;
                                       padding: 0px 20px;
                                     "
                                   >
-                                    Hi {{ $json.body.adminName }},<br />
+                                    Hi {{ $json.name.split(' ')[0] }},
                                   </td>
                                 </tr>
+
+                                <!-- Para 1 -->
                                 <tr>
                                   <td
                                     style="font-size: 0; height: 16px"
@@ -183,29 +184,198 @@
                                       color: #222222;
                                       font-size: 16px;
                                       font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
                                       line-height: 1.5;
-                                      text-align: center;
                                       padding: 0px 20px;
                                     "
                                   >
-                                    Thanks for your submission to the Amsterdam
-                                    Parent Groups Directory. We wanted to let
-                                    you know that your submission of
+                                    I'm Alex, and I run the Fourth Trimester
+                                    Program here at Amsterdam Parent Project —
+                                    thanks so much for putting down a deposit.
+                                    Unfortunately,
+                                    <strong>the July cohort won't be
+                                    running this summer</strong>. Probably not ideal news
+                                    when you're planning on the support, and I'm
+                                    sorry for the disruption.
+                                  </td>
+                                </tr>
+
+                                <!-- Para 2 -->
+                                <tr>
+                                  <td
+                                    style="font-size: 0; height: 16px"
+                                    height="16"
+                                  >
+                                    &nbsp;
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td
+                                    dir="ltr"
+                                    style="
+                                      color: #222222;
+                                      font-size: 16px;
+                                      font-family: Helvetica, Arial, sans-serif;
+                                      line-height: 1.5;
+                                      padding: 0px 20px;
+                                    "
+                                  >
+                                    The good news is that the program is
+                                    evolving. We've been running the Fourth
+                                    Trimester Program since last Fall — with
+                                    expert discussions, socials, and a moderated
+                                    chat — and we've taken learnings and
+                                    feedback from our previous cohorts to build
+                                    something better: the
                                     <a
-                                      href="{{ $json.body.inviteLink }}"
+                                      href="https://amsterdamparentproject.nl/programs/first-year?from=fourth-trimester"
                                       target="_blank"
-                                      >{{ $json.body.groupName }}</a
+                                      style="
+                                        color: #3f6455;
+                                        text-decoration: underline;
+                                      "
+                                      ><strong>First Year Program</strong></a
+                                    ><strong>, launching in September</strong>.
+                                  </td>
+                                </tr>
+
+                                <!-- Para 3 -->
+                                <tr>
+                                  <td
+                                    style="font-size: 0; height: 16px"
+                                    height="16"
+                                  >
+                                    &nbsp;
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td
+                                    dir="ltr"
+                                    style="
+                                      color: #222222;
+                                      font-size: 16px;
+                                      font-family: Helvetica, Arial, sans-serif;
+                                      line-height: 1.5;
+                                      padding: 0px 20px;
+                                    "
+                                  >
+                                    The new program is longer, has more social
+                                    touchpoints (both group and 1:1), and drops
+                                    the strict birth month requirement — it's
+                                    now <strong>open to all families who are expecting
+                                    or have a baby under 1 year old</strong>. Our
+                                    participants wanted the same expert content,
+                                    more socials, and more space to process the
+                                    transition, and this was our answer ☺️
+                                  </td>
+                                </tr>
+
+                                <!-- Para 4 -->
+                                <tr>
+                                  <td
+                                    style="font-size: 0; height: 16px"
+                                    height="16"
+                                  >
+                                    &nbsp;
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td
+                                    dir="ltr"
+                                    style="
+                                      color: #222222;
+                                      font-size: 16px;
+                                      font-family: Helvetica, Arial, sans-serif;
+                                      line-height: 1.5;
+                                      padding: 0px 20px;
+                                    "
+                                  >
+                                    Your deposit is fully transferable to the
+                                    First Year Program, and I'd love to carry it
+                                    over on your behalf — no extra steps needed
+                                    on your end. Otherwise, if September doesn't
+                                    work for you, I'm happy to issue you a full
+                                    refund.
+                                  </td>
+                                </tr>
+
+                                <!-- Buttons -->
+                                <tr>
+                                  <td
+                                    style="font-size: 0; height: 24px"
+                                    height="24"
+                                  >
+                                    &nbsp;
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td align="center" style="padding: 0px 20px">
+                                    <table
+                                      border="0"
+                                      cellspacing="0"
+                                      cellpadding="0"
                                     >
-                                    has been declined and will not be added to
-                                    our directory.
+                                      <tr>
+                                        <td
+                                          align="center"
+                                          style="
+                                            border-radius: 6px;
+                                            padding-right: 8px;
+                                          "
+                                          bgcolor="#3f6455"
+                                        >
+                                          <a
+                                            href="{{ $json.apply_url_test }}"
+                                            target="_blank"
+                                            style="
+                                              font-size: 16px;
+                                              font-family:
+                                                Helvetica, Arial, sans-serif;
+                                              color: #ffffff;
+                                              text-decoration: none;
+                                              border-radius: 6px;
+                                              padding: 12px 24px;
+                                              border: 1px solid #3f6455;
+                                              display: inline-block;
+                                              font-weight: bold;
+                                            "
+                                            >Transfer my deposit to September</a
+                                          >
+                                        </td>
+                                        <td style="width: 12px">&nbsp;</td>
+                                        <td
+                                          align="center"
+                                          style="
+                                            border-radius: 6px;
+                                            border: 1px solid #3f6455;
+                                          "
+                                        >
+                                          <a
+                                            href="{{ $json.refund_url_test }}"
+                                            target="_blank"
+                                            style="
+                                              font-size: 16px;
+                                              font-family:
+                                                Helvetica, Arial, sans-serif;
+                                              color: #3f6455;
+                                              text-decoration: none;
+                                              border-radius: 6px;
+                                              padding: 12px 24px;
+                                              display: inline-block;
+                                              font-weight: bold;
+                                            "
+                                            >Request a refund</a
+                                          >
+                                        </td>
+                                      </tr>
+                                    </table>
                                   </td>
                                 </tr>
 
+                                <!-- Luma hang -->
                                 <tr>
                                   <td
-                                    style="font-size: 0; height: 16px"
-                                    height="16"
+                                    style="font-size: 0; height: 24px"
+                                    height="24"
                                   >
                                     &nbsp;
                                   </td>
@@ -214,30 +384,36 @@
                                   <td
                                     dir="ltr"
                                     style="
+                                      color: #222222;
                                       font-size: 16px;
                                       font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
                                       line-height: 1.5;
-                                      text-align: center;
                                       padding: 0px 20px;
                                     "
                                   >
-                                    As a reminder, the Groups Directory
-                                    requirements are
+                                    In the meantime, I'm hosting a free hang for
+                                    Fourth Trimester folks — you're very welcome
+                                    to join:
                                     <a
-                                      href="https://amsterdamparentproject.nl/groups-directory"
+                                      href="https://luma.com/cxmc8own"
                                       target="_blank"
-                                      >here</a
-                                    >. You're also welcome to reach out to us by
-                                    replying to this email for more information
-                                    regarding your submission.
+                                      style="
+                                        color: #3f6455;
+                                        text-decoration: underline;
+                                      "
+                                      >https://luma.com/cxmc8own</a
+                                    >. We'll have previous program participants
+                                    and organizers there. It's a great place to
+                                    meet us, ask questions, and form community
+                                    ❤️
                                   </td>
                                 </tr>
 
+                                <!-- Sign-off -->
                                 <tr>
                                   <td
-                                    style="font-size: 0; height: 16px"
-                                    height="16"
+                                    style="font-size: 0; height: 24px"
+                                    height="24"
                                   >
                                     &nbsp;
                                   </td>
@@ -246,18 +422,16 @@
                                   <td
                                     dir="ltr"
                                     style="
+                                      color: #222222;
                                       font-size: 16px;
                                       font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
                                       line-height: 1.5;
-                                      text-align: center;
                                       padding: 0px 20px;
                                     "
                                   >
-                                    Thanks,<br />
+                                    Warm wishes,
                                   </td>
                                 </tr>
-
                                 <tr>
                                   <td
                                     dir="ltr"
@@ -265,19 +439,19 @@
                                       font-size: 16px;
                                       font-style: italic;
                                       font-family: Helvetica, Arial, sans-serif;
-                                      white-space: pre-wrap;
                                       line-height: 1.5;
-                                      text-align: center;
                                       padding: 0px 20px;
                                     "
                                   >
-                                    Alex from Amsterdam Parent Project<br />
+                                    Alex from Amsterdam Parent Project
                                   </td>
                                 </tr>
+
+                                <!-- Divider -->
                                 <tr>
                                   <td
-                                    style="font-size: 0; height: 16px"
-                                    height="16"
+                                    style="font-size: 0; height: 24px"
+                                    height="24"
                                   >
                                     &nbsp;
                                   </td>
@@ -325,6 +499,8 @@
                                     </table>
                                   </td>
                                 </tr>
+
+                                <!-- Footer -->
                                 <tr>
                                   <td
                                     style="font-size: 0; height: 16px"
@@ -337,14 +513,14 @@
                                   <td
                                     dir="ltr"
                                     style="
+                                      text-align: center;
                                       font-size: 16px;
                                       font-family: Helvetica, Arial, sans-serif;
-                                      text-align: center;
                                       padding: 0px 20px;
                                     "
                                   >
                                     <a
-                                      href="http://amsterdamparentproject.nl"
+                                      href="https://amsterdamparentproject.nl"
                                       target="_blank"
                                       rel="noopener nofollow"
                                       style="
@@ -359,8 +535,8 @@
                                           white-space: pre-wrap;
                                         "
                                         >amsterdamparentproject.nl</span
-                                      > </a
-                                    ><br />
+                                      >
+                                    </a>
                                   </td>
                                 </tr>
                                 <tr>
@@ -375,14 +551,14 @@
                                   <td
                                     dir="ltr"
                                     style="
+                                      text-align: center;
                                       font-size: 16px;
                                       font-family: Helvetica, Arial, sans-serif;
-                                      text-align: center;
                                       padding: 0px 20px;
                                     "
                                   >
                                     <a
-                                      href="http://amsterdamparentproject.nl"
+                                      href="https://amsterdamparentproject.nl"
                                       target="_blank"
                                       rel="noopener nofollow"
                                       style="
@@ -399,11 +575,9 @@
                                         >Homepage</span
                                       >
                                     </a>
-                                    <span style="white-space: pre-wrap">
-                                      -
-                                    </span>
+                                    <span> - </span>
                                     <a
-                                      href="http://amsterdamparentproject.nl/subscribe"
+                                      href="https://amsterdamparentproject.nl/subscribe"
                                       target="_blank"
                                       rel="noopener nofollow"
                                       style="
@@ -418,8 +592,8 @@
                                           white-space: pre-wrap;
                                         "
                                         >Subscribe</span
-                                      > </a
-                                    ><br />
+                                      >
+                                    </a>
                                   </td>
                                 </tr>
                                 <tr>
