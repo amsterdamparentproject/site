@@ -22,7 +22,11 @@ const postToWebhook = async (webhookURL, data) => {
 
   try {
     if (!webhookURL || !authSecret) {
-      console.error("postToWebhook error: Missing environment variables");
+      console.error("postToWebhook error: Missing environment variables", {
+        hasWebhookURL: !!webhookURL,
+        hasAuthSecret: !!authSecret,
+        NODE_ENV: process.env.NODE_ENV,
+      });
       return { success: false, error: "Configuration error" };
     }
 
@@ -87,6 +91,13 @@ export const postRequestDirectory = async (data) => {
 };
 
 export const postManageDirectory = async (data, action = "add") => {
+  console.log("[postManageDirectory] called", {
+    action,
+    isLocal,
+    NODE_ENV: process.env.NODE_ENV,
+    hasURL: !!process.env.TEST_N8N_MANAGE_DIRECTORY_WEBHOOK_URL,
+    hasSecret: !!process.env.N8N_WEBHOOK_SECRET,
+  });
   const allowedActions = ["add", "report", "update"];
 
   if (!allowedActions.includes(action)) {

@@ -137,15 +137,10 @@ export default function FirstYearProgramClient() {
             <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
               First Year Program
             </h1>
-            <p className="mt-4 max-w-xl">
-              A{" "}
-              <b className="dark:text-brand-goldenrod text-brand-soft-green">
-                local, nonprofit, whole family support system built for your
-                baby&apos;s first year
-              </b>
-              . Expert-led discussions, curated socials, 1:1 peer matching, and
-              a moderated community — all you need to transition with confidence
-              into newborn parenthood.
+            <p className="mt-4 mb-2 text-lg max-w-xl">
+              Amsterdam's <b>postpartum experts and parents, together</b>. A
+              support system for your whole family through your baby's first
+              year.
             </p>
           </div>
 
@@ -160,10 +155,12 @@ export default function FirstYearProgramClient() {
 
           <div className="max-w-xl">
             <p className="mb-6 mx-4">
-              When support from your kraamzorg and midwife ends, we step in to{" "}
-              <b>bridge the gap between expert and peer guidance</b>: because
-              best parenting practices come from both science and shared
-              experience.
+              When your kraamzorg and midwife move on, we step in to bridge the
+              gap between expert and peer guidance through early parenthood.{" "}
+              <b>
+                We built the support so you don't have to — all you have to do
+                is show up.
+              </b>
             </p>
             <p className="mb-6 mx-4">
               The program is a{" "}
@@ -173,8 +170,9 @@ export default function FirstYearProgramClient() {
               </b>
               . It's built by psychologists, lactation consultants,
               return-to-work specialists, postpartum coaches, and more, plus the
-              founders of APP — who stood up this whole organization because
-              they felt the support gap firsthand with their babies.
+              founders of APP — who stood up this whole organization in the
+              first place because they felt this support gap firsthand with
+              their babies.
             </p>
           </div>
 

@@ -10,7 +10,7 @@ export interface Social {
   title: string;
   subtitle: string;
   description: string;
-  facilitator?: string;
+  facilitators?: string[];
   location?: string;
   logistics?: string;
   note?: string;
@@ -41,10 +41,10 @@ const firstYearCurriculum: CurriculumMonth[] = [
       ],
     },
     social: {
-      title: "Vondelpark Coffee Walk",
-      subtitle: "A group gathering outside in the park that has it all",
+      title: "Vondel Wandel",
+      subtitle: "A whole family gathering outside in the park that has it all",
       description:
-        "We'll walk the paths of Vondelpark with babies in tow, then settle in at Groot Melkhuis for coffee and conversation — a low-key way to get outside and get to know the group.",
+        "We'll walk around Vondelpark with babies in tow, then settle in at Groot Melkhuis for coffee and conversation — a low-key way to get outside and get to know the group.",
       logistics:
         "We'll initially meet at Groot Melkhuis, and leave for the walk at 10:15! If you need to arrive later, refer to the WhatsApp group for our live location.",
     },
@@ -70,7 +70,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
         "Safely put your baby down in a play area designed just for them",
       description:
         "Papote Café's back room is built for exactly this: soft mats, toys, and space to let your baby explore, while we talk through developmentally appropriate play for this stage.",
-      facilitator: "alexSiega",
+      facilitators: ["sophiaDeRosnay", "alexSiega"],
       logistics:
         "Food and drinks are available for all ages — babies and adults alike — in the play area.",
     },
@@ -127,7 +127,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
     },
   },
   {
-    theme: "Relationships",
+    theme: "Focus on you",
     session: {
       title: "Partners in Postpartum",
       subtitle: "Staying connected when everything has changed",
@@ -147,7 +147,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
       subtitle: "A baby-friendly tour of the Gallery of Honor",
       description:
         "We've designed a newborn-friendly, parent-enriching tour of the Rijksmuseum's Gallery of Honor for the program! The tour is flexible to meet your family's needs, allowing you to step out to feed or change your baby. After the tour, we'll head to the cafe for a chat.",
-      facilitator: "paolaBucciol",
+      facilitators: ["paolaBucciol"],
       note: "Museum entrance must be paid separately via Museumkaart or a purchased ticket. If you need assistance, reach out to Alex!",
     },
   },
@@ -184,7 +184,7 @@ export const reserveSocials: Social[] = [
     subtitle: "A newborn-friendly tour of the Stedelijk Museum",
     description:
       "We've designed a newborn-friendly, parent-enriching tour of the Stedelijk Museum for the program! The tour is flexible to meet your family's needs, allowing you to step out to feed or change your baby. After the tour, we'll head to the cafe for a chat.",
-    facilitator: "paolaBucciol",
+    facilitators: ["paolaBucciol"],
     logistics:
       "We'll gather at the info desk in the lobby starting at 9:30 and leave at 10:00 sharp. If you miss us, head directly up to the gallery. You're also welcome to join us for the cafe only, around 11:00.",
     note: "Museum entrance must be paid separately via Museumkaart or a purchased ticket. If you need assistance, reach out to Alex!",
