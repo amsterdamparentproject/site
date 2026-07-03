@@ -24,7 +24,7 @@ export default function ProgramFAQ() {
     {
       question: "When can I join?",
       answer:
-        "The program is open to families from pregnancy through baby's 12th month — join whenever you're ready. If you're pregnant, reserve with a €25 monthly deposit or pay for 6 months upfront (save €25); either way you get immediate access to your WhatsApp community, peer match, and the Understanding the Village guide free until your due date. If your baby is already here (up to 12 months), there's no deposit — your subscription starts right away. We recommend joining as early as possible to get the most out of the full year.",
+        "The program is open to families from pregnancy through baby's 12th month — join whenever you're ready. If you're pregnant, reserve with a €25 monthly deposit or pay for 6 months upfront (save €25); either way you get immediate access to your WhatsApp community, peer match, and the Building the Village guide free until your due date. If your baby is already here (up to 12 months), there's no deposit — your subscription starts right away. We recommend joining as early as possible to get the most out of the full year.",
     },
     {
       question: "How does billing work?",

@@ -1,4 +1,5 @@
 interface Session {
+  theme: string;
   title: string;
   subtitle: string;
   description: string;
@@ -8,7 +9,8 @@ interface Session {
 
 const firstYearProgramData: Session[] = [
   {
-    title: "Understanding the Village",
+    theme: "Local parenting",
+    title: "Building the Village",
     subtitle: "Dutch postpartum care and building your support network",
     description: `
       We've all heard the phrase "It takes a village." For new parents — especially expats becoming parents abroad — the village doesn't come without effort.
@@ -22,6 +24,7 @@ const firstYearProgramData: Session[] = [
     ],
   },
   {
+    theme: "Baby basics",
     title: "Newborn Feeding Strategies",
     subtitle: "A whole-family approach to feeding",
     description: `
@@ -35,6 +38,7 @@ const firstYearProgramData: Session[] = [
     ],
   },
   {
+    theme: "Matrescence & patrescence",
     title: "Postpartum Transformation",
     subtitle:
       "How becoming a parent changes you — physically, emotionally, permanently",
@@ -51,6 +55,7 @@ const firstYearProgramData: Session[] = [
     ],
   },
   {
+    theme: "Third culture parenting",
     title: "Cross-Cultural Parenting",
     subtitle: "Raising a child in a multicultural family",
     description: `
@@ -67,6 +72,7 @@ const firstYearProgramData: Session[] = [
     ],
   },
   {
+    theme: "Relationships",
     title: "Partners in Postpartum",
     subtitle: "Staying connected when everything has changed",
     description: `
@@ -81,6 +87,7 @@ const firstYearProgramData: Session[] = [
     ],
   },
   {
+    theme: "Shifting back",
     title: "Return to Work & Life",
     subtitle: "Transitioning from parental leave to working parenthood",
     description: `

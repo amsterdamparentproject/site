@@ -47,7 +47,7 @@ const MONTHS = [
 // Immediate access for all plans on signup
 const IMMEDIATE_FEATURES = [
   "Access to our parent matching platform",
-  "Understanding the Village guide",
+  "Building the Village guide",
 ];
 
 // Full access from billing_start_date (September 2026 or month after due date)

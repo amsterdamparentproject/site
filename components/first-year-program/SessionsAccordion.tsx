@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import SessionsData from "@/data/first-year-program/sessions";
+import CurriculumData from "@/data/first-year-program/curriculum";
 import Image from "@/components/Image";
 import { coreContent } from "pliny/utils/contentlayer.js";
 import { allAuthors, Authors } from "@/.contentlayer/generated";
@@ -12,7 +12,7 @@ export default function SessionsAccordion() {
   return (
     <div className="max-w-3xl mx-auto my-6 px-4">
       <div className="space-y-4">
-        {SessionsData.map((session, index) => {
+        {CurriculumData.map(({ session }, index) => {
           const sessionAuthors = session.experts
             .map((slug) => {
               const authorResults = allAuthors.find((p) => p.slug === slug);

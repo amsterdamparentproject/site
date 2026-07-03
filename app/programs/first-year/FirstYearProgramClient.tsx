@@ -2,6 +2,7 @@
 
 import ShowcaseButton from "@/components/ShowcaseButton";
 import SessionsAccordion from "@/components/first-year-program/SessionsAccordion";
+import MonthlyJourneyGrid from "@/components/first-year-program/MonthlyJourneyGrid";
 import CostsBreakdown from "@/components/first-year-program/CostsBreakdown";
 import ProgramFAQ from "@/components/first-year-program/ProgramFAQ";
 import ProgramJourney from "@/components/first-year-program/ProgramJourney";
@@ -222,17 +223,19 @@ export default function FirstYearProgramClient() {
           {/* Curriculum */}
           <section className="mt-10 mb-8">
             <SectionHeader
-              header="Expert curriculum"
+              header="Expert & social curriculum"
               subtitle={
                 <>
                   Evidence-based, expert-led discussions and resource guides
                   covering every major transition in your first year — from
                   newborn basics to returning to work. Topics rotate every 6
-                  months so the conversation deepens as your family grows.
+                  months so the conversation deepens as your family grows. Each
+                  month also pairs with a themed social, so you can meet other
+                  families in person around Amsterdam.
                 </>
               }
             />
-            <SessionsAccordion />
+            <MonthlyJourneyGrid />
           </section>
 
           {/* Costs */}

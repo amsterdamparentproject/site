@@ -465,6 +465,6 @@ test("welcome page renders with PDF download", async ({ page }) => {
   ).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("link", { name: /download/i })).toHaveAttribute(
     "href",
-    /understanding-the-village\.pdf/,
+    /building-the-village\.pdf/,
   );
 });

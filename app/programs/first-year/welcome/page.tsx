@@ -1,6 +1,6 @@
 import { genPageMetadata } from "app/seo";
 import FTPSessionCard from "@/components/FTPSessionCard";
-import sessionData from "@/data/first-year-program/sessions";
+import curriculumData from "@/data/first-year-program/curriculum";
 
 export const metadata = genPageMetadata({
   title: "Welcome to the First Year Program",
@@ -11,9 +11,9 @@ export const metadata = genPageMetadata({
 });
 
 export default function FirstYearWelcomePage() {
-  const session = sessionData.find(
-    (s) => s.title === "Understanding the Village",
-  );
+  const session = curriculumData.find(
+    (m) => m.session.title === "Building the Village",
+  )?.session;
 
   return (
     <div className="flex-column justify-center mx-2">
@@ -52,7 +52,7 @@ export default function FirstYearWelcomePage() {
                   subtitle={session.subtitle}
                   experts={session.experts}
                   components={session.components}
-                  downloadFile="/guides/first-year-program/understanding-the-village.pdf"
+                  downloadFile="/guides/first-year-program/building-the-village.pdf"
                 />
               </div>
             </div>
