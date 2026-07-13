@@ -1,7 +1,6 @@
 "use client";
 
 import ShowcaseButton from "@/components/ShowcaseButton";
-import SessionsAccordion from "@/components/first-year-program/SessionsAccordion";
 import MonthlyJourneyGrid from "@/components/first-year-program/MonthlyJourneyGrid";
 import CostsBreakdown from "@/components/first-year-program/CostsBreakdown";
 import ProgramFAQ from "@/components/first-year-program/ProgramFAQ";

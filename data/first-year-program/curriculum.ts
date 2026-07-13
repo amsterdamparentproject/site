@@ -41,7 +41,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
       ],
     },
     social: {
-      title: "Vondel Wandel",
+      title: "Wandel Vondel",
       subtitle: "A whole family gathering outside in the park that has it all",
       description:
         "We'll walk around Vondelpark with babies in tow, then settle in at Groot Melkhuis for coffee and conversation — a low-key way to get outside and get to know the group.",
@@ -169,10 +169,12 @@ const firstYearCurriculum: CurriculumMonth[] = [
       ],
     },
     social: {
-      title: "The Sleep Social",
-      subtitle: "Details coming soon",
-      description: "",
-      placeholder: true,
+      title: "Sleep Social",
+      subtitle:
+        "Share soothing techniques plus a Q&A with a certified sleep coach",
+      description:
+        "We'll swap what works to get your baby to sleep — your favorite lullaby, white-noise track, or shushing trick that works magic on them — while a certified sleep coach takes your bedtime routine and infant sleep questions.",
+      facilitators: ["petraCubretovic", "alexSiega"],
     },
   },
 ];
