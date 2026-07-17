@@ -45,8 +45,18 @@ export const updateSession = async (request: NextRequest) => {
     },
   );
 
-  // This refreshes a user's session in the background
-  await supabase.auth.getUser();
+  // This refreshes a user's session in the background.
+  // Swallow errors here: a transient Supabase/auth failure should never crash
+  // the edge function and take down the whole page. Worst case, the session
+  // just doesn't get refreshed on this request.
+  try {
+    await supabase.auth.getUser();
+  } catch (error) {
+    console.error(
+      "Groups Directory middleware: failed to refresh session:",
+      error,
+    );
+  }
 
   return response;
 };
