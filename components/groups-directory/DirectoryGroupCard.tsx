@@ -3,6 +3,7 @@
 import { CustomSocialIcon, components } from "@/components/social-icons";
 
 interface Group {
+  id: string;
   name: string;
   categories: string[];
   recommended: boolean;
@@ -69,8 +70,9 @@ export default function DirectoryGroupCard({
             target="_blank"
             rel="noopener noreferrer"
             className="cursor-pointer bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center"
-            data-umami-event="Join group"
+            data-umami-event="Groups Directory: Join group"
             data-umami-event-uid={uid}
+            data-umami-event-group-id={group.id}
           >
             Join
           </a>
@@ -79,12 +81,21 @@ export default function DirectoryGroupCard({
           <button
             onClick={() => onEdit(group)}
             className="cursor-pointer text-brand-soft-green hover:underline dark:text-brand-goldenrod"
+            data-umami-event="Groups Directory: Claim admin"
+            data-umami-event-group-id={group.id}
           >
             Admin
           </button>
           <button
             onClick={() => onReport(group)}
             className="cursor-pointer text-red-800 hover:underline dark:text-red-400"
+            data-umami-event={
+              group.reported
+                ? "Groups Directory: Fix link"
+                : "Groups Directory: Report issue"
+            }
+            data-umami-event-group-id={group.id}
+            data-umami-event-uid={uid}
           >
             {group.reported ? "Fix link" : "Report issue"}
           </button>

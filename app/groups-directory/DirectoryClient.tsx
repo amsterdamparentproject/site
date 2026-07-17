@@ -10,6 +10,7 @@ import Modal from "@/components/Modal";
 
 // --- Types ---
 interface Group {
+  id: string;
   name: string;
   categories: string[];
   recommended: boolean;
