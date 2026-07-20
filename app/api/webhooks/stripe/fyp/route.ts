@@ -7,13 +7,19 @@ import Stripe from "stripe";
 // Webhook endpoint for First Year Program Stripe events.
 // Register in Stripe dashboard → Webhooks:
 //   URL: https://amsterdamparentproject.nl/api/webhooks/stripe/fyp
-//   Events: checkout.session.completed
+//   Events: checkout.session.completed, customer.subscription.deleted
 //
 // On every completed checkout this webhook:
 //   1. Updates the pending firstyear.accounts row (created by /api/checkout/fyp)
 //      with Stripe customer/subscription IDs, billing dates, and status → active.
 //   2. For expecting_monthly: creates a deferred subscription (trial_end = 1st of month
 //      after due date) with the APP_FYP_DEPOSIT coupon applied to the first invoice.
+//
+// On customer.subscription.deleted (the billing period actually ends, not the
+// moment someone requests cancellation — see /api/fyp/cancel for that):
+//   Flips the matching firstyear.accounts row's status → canceled. Mirrors
+//   Postpartum Post's webhook handling one-for-one (no separate
+//   customer.subscription.updated handler — PP doesn't use one either).
 
 const MONTH_INDEX: Record<string, number> = {
   jan: 0,
@@ -288,6 +294,27 @@ export async function POST(req: NextRequest) {
           "[fyp webhook] update error (baby_bundle):",
           JSON.stringify(error),
         );
+    }
+  }
+
+  if (event.type === "customer.subscription.deleted") {
+    const subscription = event.data.object as Stripe.Subscription;
+    const supabase = createFirstYearClient();
+
+    const { error } = await supabase
+      .from("accounts")
+      .update({ status: "canceled" })
+      .eq("stripe_subscription_id", subscription.id);
+
+    if (error) {
+      console.error(
+        "[fyp webhook] update error (subscription.deleted):",
+        JSON.stringify(error),
+      );
+    } else {
+      console.log(
+        `[fyp webhook] subscription ${subscription.id} deleted — account marked canceled`,
+      );
     }
   }
 

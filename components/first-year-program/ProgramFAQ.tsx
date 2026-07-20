@@ -29,7 +29,7 @@ export default function ProgramFAQ() {
     {
       question: "How does billing work?",
       answer:
-        "If you joined in pregnancy on the monthly plan, your first invoice is charged the calendar month after your due date — with your €25 deposit credited, so you pay €30 (1-parent families) or €43 (2+ parent families) for month 1, then full price from month 2. If you chose the 6-month bundle, you've already paid upfront and the full program begins after your due date. If you joined with a baby already, monthly billing starts immediately. You can cancel at any time, and your subscription will continue until the end of the month.",
+        "If you joined in pregnancy on the monthly plan, your first invoice is charged the calendar month after your due date — with your €25 deposit credited, so you pay €30 (1-parent families) or €43 (2+ parent families) for month 1, then full price from month 2. If you chose the 6-month bundle, you've already paid upfront and the full program begins after your due date. If you joined with a baby already, monthly billing starts immediately. You can cancel at any time, and your subscription will continue until the end of the month — email hello@amsterdamparentproject.nl to cancel.",
     },
     {
       question: "What is the 6-month bundle?",
