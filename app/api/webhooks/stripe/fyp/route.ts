@@ -181,7 +181,9 @@ export async function POST(req: NextRequest) {
       let bundleExpiresAt: string | null = null;
 
       if (dueOrBirthMonth) {
-        billingStartDate = toDateString(billingStartTimestamp(dueOrBirthMonth));
+        billingStartDate = toDateString(
+          Math.max(billingStartTimestamp(dueOrBirthMonth), PROGRAM_START_UNIX),
+        );
         bundleExpiresAt = addSixMonths(billingStartDate);
       }
 

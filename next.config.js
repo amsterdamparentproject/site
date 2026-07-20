@@ -154,6 +154,11 @@ module.exports = () => {
           permanent: true,
         },
         {
+          source: '/fyp',
+          destination: '/programs/first-year',
+          permanent: true,
+        },
+        {
           source: '/advice/submit',
           destination: 'https://docs.google.com/forms/d/e/1FAIpQLSdsywfv8a0KxpVM1yIYg4TJmm1mr3NtMB6i1ogESG0idDYZyg/viewform?usp=sf_link',
           permanent: true,

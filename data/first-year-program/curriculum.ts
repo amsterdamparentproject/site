@@ -41,7 +41,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
       ],
     },
     social: {
-      title: "Wandel Vondel",
+      title: "Vondelpark Stroll",
       subtitle: "A whole family gathering outside in the park that has it all",
       description:
         "We'll walk around Vondelpark with babies in tow, then settle in at Groot Melkhuis for coffee and conversation — a low-key way to get outside and get to know the group.",
@@ -94,9 +94,10 @@ const firstYearCurriculum: CurriculumMonth[] = [
       ],
     },
     social: {
-      title: "Parent & Baby Movement",
+      title: "Singing Mamas & Papas",
       subtitle: "Details coming soon",
       description: "",
+      facilitators: ["danielleBensky"],
       placeholder: true,
     },
   },
