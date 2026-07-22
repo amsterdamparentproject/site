@@ -60,6 +60,79 @@ export interface FYPMember {
 }
 
 // ---------------------------------------------------------------------------
+// Seed helpers
+// ---------------------------------------------------------------------------
+
+export interface SeededFYPMember {
+  memberId: string;
+  accountId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+/**
+ * Insert an firstyear.accounts + firstyear.members row directly, bypassing
+ * Stripe checkout entirely — for tests (e.g. hub-auth.spec.ts) that only
+ * need a signed-in Hub member and don't care how the account originated.
+ * Defaults to an active monthly account; pass `status` to seed a
+ * lapsed/canceling account instead.
+ */
+export async function seedActiveAccountWithMember(
+  overrides: {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    status?: string;
+  } = {},
+): Promise<SeededFYPMember> {
+  const db = supabase();
+  const id = crypto.randomUUID();
+  const email = overrides.email ?? `e2e-hub-${id.slice(0, 8)}@example.com`;
+  const firstName = overrides.firstName ?? "Test";
+  const lastName = overrides.lastName ?? "Member";
+
+  const { data: account, error: accountError } = await db
+    .from("accounts")
+    .insert({
+      stripe_session_id: `test_e2e_hub_${id}`,
+      flow: "baby_monthly",
+      plan_type: "monthly",
+      family_type: "single",
+      status: overrides.status ?? "active",
+    })
+    .select("id")
+    .single();
+  if (accountError || !account)
+    throw new Error(
+      `seedActiveAccountWithMember account insert failed: ${accountError?.message}`,
+    );
+
+  const { data: member, error: memberError } = await db
+    .from("members")
+    .insert({
+      account_id: account.id,
+      first_name: firstName,
+      last_name: lastName,
+      email,
+    })
+    .select("id")
+    .single();
+  if (memberError || !member)
+    throw new Error(
+      `seedActiveAccountWithMember member insert failed: ${memberError?.message}`,
+    );
+
+  return {
+    memberId: member.id,
+    accountId: account.id,
+    email,
+    firstName,
+    lastName,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Read helpers
 // ---------------------------------------------------------------------------
 

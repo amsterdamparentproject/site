@@ -19,6 +19,7 @@
     "test:fyp": "yarn test:fyp:unit && yarn test:fyp:e2e",
     "test:fyp:unit": "vitest run --passWithNoTests fyp first-year",
     "test:fyp:e2e": "playwright test fyp",
+    "test:hub:e2e": "playwright test hub",
     "prepare": "husky"
   },
   "dependencies": {
