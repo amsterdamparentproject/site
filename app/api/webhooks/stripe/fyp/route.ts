@@ -1,6 +1,7 @@
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
 import { PROGRAM_START_UNIX } from "@/lib/fyp/program";
+import { deactivatePostpartumPost } from "@/lib/fyp/postpartum-post";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -20,6 +21,9 @@ import Stripe from "stripe";
 //   Flips the matching firstyear.accounts row's status → canceled. Mirrors
 //   Postpartum Post's webhook handling one-for-one (no separate
 //   customer.subscription.updated handler — PP doesn't use one either).
+//   Also deactivates any linked Postpartum Post comp for members on that
+//   account (monthly plans only — see lib/fyp/postpartum-post.ts and
+//   __claude__/fyp-improvements-plan.md § 2a).
 
 const MONTH_INDEX: Record<string, number> = {
   jan: 0,
@@ -303,20 +307,55 @@ export async function POST(req: NextRequest) {
     const subscription = event.data.object as Stripe.Subscription;
     const supabase = createFirstYearClient();
 
-    const { error } = await supabase
+    const { data: account, error: fetchError } = await supabase
       .from("accounts")
-      .update({ status: "canceled" })
-      .eq("stripe_subscription_id", subscription.id);
+      .select("id")
+      .eq("stripe_subscription_id", subscription.id)
+      .maybeSingle();
 
-    if (error) {
+    if (fetchError || !account) {
       console.error(
-        "[fyp webhook] update error (subscription.deleted):",
-        JSON.stringify(error),
+        "[fyp webhook] no account found for subscription (subscription.deleted):",
+        subscription.id,
+        JSON.stringify(fetchError),
       );
     } else {
-      console.log(
-        `[fyp webhook] subscription ${subscription.id} deleted — account marked canceled`,
-      );
+      const { error } = await supabase
+        .from("accounts")
+        .update({ status: "canceled" })
+        .eq("id", account.id);
+
+      if (error) {
+        console.error(
+          "[fyp webhook] update error (subscription.deleted):",
+          JSON.stringify(error),
+        );
+      } else {
+        console.log(
+          `[fyp webhook] subscription ${subscription.id} deleted — account marked canceled`,
+        );
+      }
+
+      // Monthly-plan Postpartum Post comp: strip the discount now that FYP
+      // access has actually ended. Bundle comps self-expire against
+      // bundle_expires_at and never need this call — see
+      // __claude__/fyp-improvements-plan.md § 2a.
+      const { data: linkedMembers } = await supabase
+        .from("members")
+        .select("id")
+        .eq("account_id", account.id)
+        .not("postpartumpost_member_id", "is", null);
+
+      for (const member of linkedMembers ?? []) {
+        try {
+          await deactivatePostpartumPost(member.id);
+        } catch (err) {
+          console.error(
+            `[fyp webhook] failed to deactivate Postpartum Post for member ${member.id}:`,
+            err,
+          );
+        }
+      }
     }
   }
 
