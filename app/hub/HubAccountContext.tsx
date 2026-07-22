@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { createAuthBrowserClient } from "@/lib/supabase/client";
 import { getFypMemberProfile, type HubMemberProfile } from "@/app/hub/actions";
 
@@ -13,12 +19,18 @@ type HubAccountContextValue = {
   loading: boolean;
   email: string | null;
   member: HubMemberProfile | null;
+  // Re-runs the profile lookup for the current session's email and updates
+  // `member` in place — for pages that mutate server state (e.g. /hub/account
+  // activating Postpartum Post or canceling a subscription) and need the
+  // updated fields reflected without a full sign-out/sign-in cycle.
+  refetch: () => Promise<void>;
 };
 
 const HubAccountContext = createContext<HubAccountContextValue>({
   loading: true,
   email: null,
   member: null,
+  refetch: async () => {},
 });
 
 export function useHubAccount() {
@@ -111,8 +123,18 @@ export function HubAccountProvider({
     };
   }, [email]);
 
+  const refetch = useCallback(async () => {
+    if (!email) return;
+    try {
+      const profile = await getFypMemberProfile(email);
+      setMember(profile);
+    } catch (err) {
+      console.error("[HubAccountContext] refetch error:", err);
+    }
+  }, [email]);
+
   return (
-    <HubAccountContext.Provider value={{ loading, email, member }}>
+    <HubAccountContext.Provider value={{ loading, email, member, refetch }}>
       {children}
     </HubAccountContext.Provider>
   );

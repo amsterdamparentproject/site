@@ -1,6 +1,6 @@
+import { Suspense } from "react";
 import { genPageMetadata } from "app/seo";
-import FTPSessionCard from "@/components/FTPSessionCard";
-import curriculumData from "@/data/first-year-program/curriculum";
+import GoToHubButton from "./GoToHubButton";
 
 export const metadata = genPageMetadata({
   title: "Welcome to the First Year Program",
@@ -11,10 +11,6 @@ export const metadata = genPageMetadata({
 });
 
 export default function FirstYearWelcomePage() {
-  const session = curriculumData.find(
-    (m) => m.session.title === "Building the Village",
-  )?.session;
-
   return (
     <div className="flex-column justify-center mx-2">
       <div
@@ -37,26 +33,22 @@ export default function FirstYearWelcomePage() {
           </p>
           <p className="max-w-xl">
             We'll be in touch over email with next steps. While you get settled
-            in, here's our guide on building the village to support your growing
-            family. It covers both formal and informal support systems here in
-            Amsterdam. Feel free to ask us any questions about it in the
-            WhatsApp group!
+            in, head on over to your First Year Hub to add and update the family
+            members joining us and access program resources.
           </p>
-          {session && (
-            <div className="flex justify-center w-full">
-              <div className="text-left">
-                <FTPSessionCard
-                  key={session.title}
-                  title={session.title}
-                  description={session.description}
-                  subtitle={session.subtitle}
-                  experts={session.experts}
-                  components={session.components}
-                  downloadFile="/guides/first-year-program/building-the-village.pdf"
-                />
-              </div>
-            </div>
-          )}
+          <Suspense fallback={null}>
+            <GoToHubButton />
+          </Suspense>
+          <p className="max-w-xl">
+            Have questions? Happy to answer them at{" "}
+            <a
+              href="mailto:hello@amsterdamparentproject.nl"
+              className="text-brand-soft-green dark:text-brand-goldenrod font-medium underline"
+            >
+              hello@amsterdamparentproject.nl
+            </a>
+            .
+          </p>
         </div>
       </div>
     </div>

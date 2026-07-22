@@ -16,6 +16,17 @@
  *   5. Lands on /programs/first-year/welcome
  *   6. Verifies the account record in firstyear.accounts
  *
+ * The first test (expecting_monthly, multi) additionally continues the
+ * journey one step further: clicking "Go to your First Year Hub" on the
+ * welcome page and landing authenticated on /hub/account. This is the one
+ * place that proves a `stripe_session_id` written by a *real* checkout
+ * webhook — not a directly-seeded one — actually resolves through
+ * getWelcomeHubSignInLink (see hub-welcome-signin.spec.ts, which covers the
+ * same button's fallback paths via seeded accounts instead). Not repeated
+ * across the other four variants — the sign-in step doesn't vary by plan
+ * type, so one full round trip is enough; duplicating it five times would
+ * only add runtime, not coverage.
+ *
  * Prerequisites:
  *   - `stripe listen --forward-to localhost:3001/api/webhooks/stripe/fyp` running
  *   - Stripe test mode prices fyp_monthly_single + fyp_monthly_multi must exist
@@ -282,6 +293,14 @@ test("expecting_monthly (multi): deposit → deferred subscription created", asy
   expect(members[0].last_name).toBe("Parent");
   expect(members[0].email).toBe(EMAILS.expecting_monthly);
   expect(members[0].status).toBe("active");
+
+  // ── Continue the journey: welcome page → Hub, signed in, no email step ──
+  await checkoutPage
+    .getByRole("button", { name: /go to your first year hub/i })
+    .click();
+  await expect(checkoutPage).toHaveURL(/\/hub\/account/, { timeout: 20_000 });
+  await expect(checkoutPage.getByText("Test Parent")).toBeVisible();
+  await expect(checkoutPage.getByText(EMAILS.expecting_monthly)).toBeVisible();
 });
 
 // ---------------------------------------------------------------------------
@@ -458,13 +477,19 @@ test("baby_bundle (multi): upfront payment → account with billing_start_date S
 // Welcome page
 // ---------------------------------------------------------------------------
 
-test("welcome page renders with PDF download", async ({ page }) => {
+test("welcome page renders with the Hub CTA", async ({ page }) => {
+  // The "Building the Village" resource-guide download block was removed
+  // from this page — the welcome page now points straight at the Hub
+  // instead. See GoToHubButton / fyp-checkout's first test above for the
+  // button's actual sign-in behavior; this just checks the static page shell.
   await page.goto("/programs/first-year/welcome");
   await expect(
     page.getByRole("heading", { name: /first year program/i }),
   ).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByRole("link", { name: /download/i })).toHaveAttribute(
-    "href",
-    /building-the-village\.pdf/,
-  );
+  await expect(
+    page.getByRole("button", { name: /go to your first year hub/i }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: /hello@amsterdamparentproject\.nl/i }),
+  ).toHaveAttribute("href", "mailto:hello@amsterdamparentproject.nl");
 });

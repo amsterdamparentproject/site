@@ -69,14 +69,21 @@ export interface SeededFYPMember {
   email: string;
   firstName: string;
   lastName: string;
+  // The stripe_session_id set on the seeded account — exposed so tests of
+  // the welcome page's direct-sign-in link (which looks accounts up by
+  // this value) can build a matching `?session_id=` URL without needing to
+  // separately query the DB for it.
+  stripeSessionId: string;
 }
 
 /**
  * Insert an firstyear.accounts + firstyear.members row directly, bypassing
  * Stripe checkout entirely — for tests (e.g. hub-auth.spec.ts) that only
  * need a signed-in Hub member and don't care how the account originated.
- * Defaults to an active monthly account; pass `status` to seed a
- * lapsed/canceling account instead.
+ * Defaults to an active monthly, single-family account; pass `status` to
+ * seed a lapsed/canceling account, or `familyType: "multi"` for tests of
+ * the Account tab's "Your family" roster/add-member UI (only rendered for
+ * multi-family accounts — see app/hub/(account)/account/page.tsx).
  */
 export async function seedActiveAccountWithMember(
   overrides: {
@@ -84,6 +91,7 @@ export async function seedActiveAccountWithMember(
     firstName?: string;
     lastName?: string;
     status?: string;
+    familyType?: "single" | "multi";
   } = {},
 ): Promise<SeededFYPMember> {
   const db = supabase();
@@ -91,14 +99,15 @@ export async function seedActiveAccountWithMember(
   const email = overrides.email ?? `e2e-hub-${id.slice(0, 8)}@example.com`;
   const firstName = overrides.firstName ?? "Test";
   const lastName = overrides.lastName ?? "Member";
+  const stripeSessionId = `test_e2e_hub_${id}`;
 
   const { data: account, error: accountError } = await db
     .from("accounts")
     .insert({
-      stripe_session_id: `test_e2e_hub_${id}`,
+      stripe_session_id: stripeSessionId,
       flow: "baby_monthly",
       plan_type: "monthly",
-      family_type: "single",
+      family_type: overrides.familyType ?? "single",
       status: overrides.status ?? "active",
     })
     .select("id")
@@ -129,6 +138,7 @@ export async function seedActiveAccountWithMember(
     email,
     firstName,
     lastName,
+    stripeSessionId,
   };
 }
 

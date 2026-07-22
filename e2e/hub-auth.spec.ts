@@ -50,9 +50,12 @@ test("hub sign-in: request magic link → follow link → land on /hub", async (
     // Follow it (bypassing the inbox)
     await signInToHubAs(page, member.email);
 
-    // Lands on /hub, authenticated
-    await expect(page).toHaveURL(/\/hub/);
-    await expect(page.getByText(/welcome, jane/i)).toBeVisible();
+    // Lands on /hub/account (signed-in members are redirected there — see
+    // app/hub/page.tsx). MemberCard shows name/email as static text by
+    // default — they only become inputs once the pencil (edit) toggle is
+    // clicked, so getByText, not getByLabel/toHaveValue.
+    await expect(page).toHaveURL(/\/hub\/account/);
+    await expect(page.getByText("Jane Doe")).toBeVisible();
     await expect(page.getByText(member.email)).toBeVisible();
   } finally {
     await cleanupAccountByEmail(member.email);
