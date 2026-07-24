@@ -90,10 +90,23 @@ export async function getFypCustomerPortalUrl(
  * brand-new emails" issue (see e2e memory) doesn't apply here.
  */
 export async function getPostpartumPostSignInLink(
-  email: string,
+  accessToken: string,
 ): Promise<{ success: true; url: string } | { success: false; error: string }> {
   const supabase = createFirstYearClient();
-  const redirectTo = `${process.env.POSTPARTUM_POST_BASE_URL ?? "https://postpartumpost.com"}/auth/confirm`;
 
+  // SECURITY (audit S1): never trust a client-supplied email here — returning
+  // a working magic sign-in link for an arbitrary address is account takeover
+  // (Hub and PP share one Supabase Auth project). Verify the caller's session
+  // server-side and mint the link only for their OWN verified email. auth.getUser
+  // validates the JWT against the shared auth project; the firstyear schema
+  // scoping doesn't affect .auth.* calls (see this file's header docs).
+  const { data: userData, error: userError } =
+    await supabase.auth.getUser(accessToken);
+  const email = userData?.user?.email?.toLowerCase();
+  if (userError || !email) {
+    return { success: false, error: "Not signed in" };
+  }
+
+  const redirectTo = `${process.env.POSTPARTUM_POST_BASE_URL ?? "https://postpartumpost.com"}/auth/confirm`;
   return generateMagicLinkWithRetry(supabase, email, redirectTo);
 }

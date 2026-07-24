@@ -198,7 +198,17 @@ export default function MemberCard({
   function handleGoToPostpartumPost() {
     setPpLinkError(null);
     startPpLinkTransition(async () => {
-      const result = await getPostpartumPostSignInLink(member.email);
+      // Pass the caller's own access token; the server derives the email from
+      // it and mints the sign-in link only for this signed-in member (audit
+      // S1). This button is isSelf-only, so member.email === the caller's email.
+      const {
+        data: { session },
+      } = await createAuthBrowserClient().auth.getSession();
+      if (!session) {
+        setPpLinkError("Please sign in again.");
+        return;
+      }
+      const result = await getPostpartumPostSignInLink(session.access_token);
       if (!result.success) {
         setPpLinkError(result.error);
         return;
