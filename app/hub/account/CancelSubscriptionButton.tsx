@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { cancelFypSubscription } from "@/app/hub/account/actions";
+import { useHubAccount } from "@/app/hub/HubAccountContext";
 
 // RECONSTRUCTED (2026-07-22) — the original of this file was accidentally
 // deleted along with the rest of app/hub/account/ and, unlike its
@@ -21,14 +22,13 @@ import { cancelFypSubscription } from "@/app/hub/account/actions";
 // immediate cutoff.
 
 export default function CancelSubscriptionButton({
-  accountId,
   planType,
   onCanceled,
 }: {
-  accountId: string;
   planType: string;
   onCanceled: () => Promise<void>;
 }) {
+  const { accessToken } = useHubAccount();
   const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -36,7 +36,7 @@ export default function CancelSubscriptionButton({
   function handleConfirm() {
     setError(null);
     startTransition(async () => {
-      const result = await cancelFypSubscription(accountId);
+      const result = await cancelFypSubscription(accessToken ?? "");
       if (!result.success) {
         setError(result.error);
         return;

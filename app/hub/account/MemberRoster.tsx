@@ -13,6 +13,7 @@ import MemberCard, {
   CheckIcon,
   XIcon,
 } from "@/app/hub/account/MemberCard";
+import { useHubAccount } from "@/app/hub/HubAccountContext";
 
 // "Other members" + add-member form for the Account tab — the self-serve
 // counterpart to FYPJoinForm's checkout-time promise ("After sign up, you
@@ -70,6 +71,7 @@ export default function MemberRoster({
   accessible: boolean;
   onRosterChange: () => Promise<void>;
 }) {
+  const { accessToken } = useHubAccount();
   const [members, setMembers] = useState<HubAccountMemberSummary[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -82,9 +84,12 @@ export default function MemberRoster({
   const [isAddPending, startAddTransition] = useTransition();
 
   const refetchRoster = useCallback(async () => {
-    const all = await getFypAccountMembers(selfMember.accountId);
+    // Account is always the caller's own, resolved server-side from the
+    // token (audit S2) — selfMember.accountId is only used to filter the
+    // signed-in member's own card out of the returned roster below.
+    const all = await getFypAccountMembers(accessToken ?? "");
     setMembers(all.filter((m) => m.id !== selfMember.id));
-  }, [selfMember.accountId, selfMember.id]);
+  }, [accessToken, selfMember.id]);
 
   useEffect(() => {
     setLoading(true);
@@ -119,7 +124,7 @@ export default function MemberRoster({
     setAddError(null);
     startAddTransition(async () => {
       const result = await addFypMember(
-        selfMember.accountId,
+        accessToken ?? "",
         firstName,
         lastName,
         email,

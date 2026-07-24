@@ -56,7 +56,7 @@ const BABY_COPY =
   "Your membership includes free access to Postpartum Post, live expert sessions and resource guides, in-person socials, and our program's moderated WhatsApp group.";
 
 export default function HubAccountBillingPage() {
-  const { member, refetch } = useHubAccount();
+  const { member, refetch, accessToken } = useHubAccount();
   const [isPortalPending, startPortalTransition] = useTransition();
 
   if (!member) return null;
@@ -75,7 +75,7 @@ export default function HubAccountBillingPage() {
   function handleManageBilling() {
     if (!member?.stripeCustomerId) return;
     startPortalTransition(async () => {
-      const url = await getFypCustomerPortalUrl(member.stripeCustomerId!);
+      const url = await getFypCustomerPortalUrl(accessToken ?? "");
       window.location.href = url;
     });
   }
@@ -161,7 +161,6 @@ export default function HubAccountBillingPage() {
         {member.accountStatus === "active" && (
           <div className="text-center">
             <CancelSubscriptionButton
-              accountId={member.accountId}
               planType={member.planType}
               onCanceled={refetch}
             />

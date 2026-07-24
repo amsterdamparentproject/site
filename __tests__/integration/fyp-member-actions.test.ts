@@ -1,5 +1,5 @@
 /**
- * Integration tests: member-roster server actions (app/hub/actions.ts)
+ * Integration tests: member-roster DB operations (lib/fyp/members.ts)
  *
  * addFypMember, updateFypMemberProfile, deleteFypMember, and
  * getFypAccountMembers — the "Your family" section's add/edit/remove
@@ -9,6 +9,12 @@
  * /api/fyp/deactivate route is mocked via global fetch, same pattern as
  * fyp-activate-pp.test.ts — see that file's docs for why the mock has to
  * be scoped to PP's base URL rather than a blanket fetch mock.
+ *
+ * These exercise the id-taking lib functions directly rather than the
+ * app/hub/actions.ts Server Action wrappers, which additionally require a
+ * verified Supabase Auth access token (audit S2) — not something these
+ * tests mint. The wrappers are thin (requireHubMember + account-scope
+ * check) and covered by e2e instead.
  *
  * Prerequisites:
  *   NEXT_PUBLIC_TEST_SUPABASE_URL + TEST_SUPABASE_SERVICE_ROLE_KEY must be set
@@ -24,7 +30,7 @@ import {
   updateFypMemberProfile,
   deleteFypMember,
   getFypAccountMembers,
-} from "@/app/hub/actions";
+} from "@/lib/fyp/members";
 
 // ─── Test DB client ───────────────────────────────────────────────────────────
 

@@ -18,6 +18,9 @@ import { getFypMemberProfile, type HubMemberProfile } from "@/app/hub/actions";
 type HubAccountContextValue = {
   loading: boolean;
   email: string | null;
+  /** Current session access token — pass to Hub server actions so they verify
+   *  identity server-side rather than trusting a client-supplied id. */
+  accessToken: string | null;
   member: HubMemberProfile | null;
   // Re-runs the profile lookup for the current session's email and updates
   // `member` in place — for pages that mutate server state (e.g. /hub/account
@@ -29,6 +32,7 @@ type HubAccountContextValue = {
 const HubAccountContext = createContext<HubAccountContextValue>({
   loading: true,
   email: null,
+  accessToken: null,
   member: null,
   refetch: async () => {},
 });
@@ -44,6 +48,7 @@ export function HubAccountProvider({
 }) {
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [member, setMember] = useState<HubMemberProfile | null>(null);
 
   // Registers the auth listener. Deliberately does nothing but read the
@@ -77,6 +82,9 @@ export function HubAccountProvider({
     } = supabase.auth.onAuthStateChange((_event, session) => {
       const sessionEmail = session?.user?.email ?? null;
       setEmail(sessionEmail);
+      // access_token is available synchronously on the session — safe to read
+      // here (no awaited Supabase call, so no onAuthStateChange deadlock).
+      setAccessToken(session?.access_token ?? null);
       if (!sessionEmail) {
         setMember(null);
         setLoading(false);
@@ -88,17 +96,18 @@ export function HubAccountProvider({
     return () => subscription.unsubscribe();
   }, []);
 
-  // Looks up the Hub member for the current session's email, and signs out
-  // if none is found — safely outside onAuthStateChange's callback (see
-  // above). Re-runs whenever `email` changes.
+  // Looks up the Hub member for the current session, and signs out if none
+  // is found — safely outside onAuthStateChange's callback (see above).
+  // Re-runs whenever `email`/`accessToken` changes (both are set together
+  // by the same onAuthStateChange callback, so this waits for both).
   useEffect(() => {
-    if (!email) return;
+    if (!email || !accessToken) return;
 
     let cancelled = false;
 
     (async () => {
       try {
-        const profile = await getFypMemberProfile(email);
+        const profile = await getFypMemberProfile(accessToken);
         if (cancelled) return;
         if (!profile) {
           // Authenticated in Supabase but no matching firstyear.members
@@ -121,20 +130,22 @@ export function HubAccountProvider({
     return () => {
       cancelled = true;
     };
-  }, [email]);
+  }, [email, accessToken]);
 
   const refetch = useCallback(async () => {
-    if (!email) return;
+    if (!accessToken) return;
     try {
-      const profile = await getFypMemberProfile(email);
+      const profile = await getFypMemberProfile(accessToken);
       setMember(profile);
     } catch (err) {
       console.error("[HubAccountContext] refetch error:", err);
     }
-  }, [email]);
+  }, [accessToken]);
 
   return (
-    <HubAccountContext.Provider value={{ loading, email, member, refetch }}>
+    <HubAccountContext.Provider
+      value={{ loading, email, accessToken, member, refetch }}
+    >
       {children}
     </HubAccountContext.Provider>
   );

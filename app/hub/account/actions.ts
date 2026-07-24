@@ -2,14 +2,15 @@
 
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
+import { requireHubMember } from "@/lib/require-hub-member";
 import { generateMagicLinkWithRetry } from "@/lib/supabase/generate-magic-link";
 import { activatePostpartumPost } from "@/lib/fyp/postpartum-post";
 import { cancelFypAccount } from "@/lib/fyp/subscription";
 
-// /hub/account mutations. Same trust model as app/hub/actions.ts: no
-// server-side session (see HubAccountContext), so these trust the
-// memberId/accountId argument on the assumption the caller only ever passes
-// one it already resolved from a live, signed-in session's profile lookup.
+// /hub/account mutations. Each derives identity from the caller's verified
+// Supabase access token via requireHubMember (audit S2/S3) — never trusting a
+// client-supplied member/account/customer id. Account-scoped actions verify
+// the target belongs to the caller's own account before acting.
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -18,10 +19,25 @@ type ActionResult = { success: true } | { success: false; error: string };
  * member. Idempotent — see activatePostpartumPost()'s own docs.
  */
 export async function activateMemberPostpartumPost(
-  memberId: string,
+  accessToken: string,
+  targetMemberId: string,
 ): Promise<ActionResult> {
+  const authed = await requireHubMember(accessToken);
+  if (!authed) return { success: false, error: "Not signed in" };
+
+  // Only act on a member of the caller's own account (audit S2).
+  const supabase = createFirstYearClient();
+  const { data: target } = await supabase
+    .from("members")
+    .select("id")
+    .eq("id", targetMemberId)
+    .eq("account_id", authed.accountId)
+    .maybeSingle();
+  if (!target)
+    return { success: false, error: "Member not found on your account" };
+
   try {
-    await activatePostpartumPost(memberId);
+    await activatePostpartumPost(targetMemberId);
     return { success: true };
   } catch (err) {
     return {
@@ -36,10 +52,13 @@ export async function activateMemberPostpartumPost(
  * DB-only "canceling" for bundles) — see cancelFypAccount()'s own docs.
  */
 export async function cancelFypSubscription(
-  accountId: string,
+  accessToken: string,
 ): Promise<ActionResult> {
+  const authed = await requireHubMember(accessToken);
+  if (!authed) return { success: false, error: "Not signed in" };
+
   try {
-    await cancelFypAccount(accountId);
+    await cancelFypAccount(authed.accountId);
     return { success: true };
   } catch (err) {
     return {
@@ -58,10 +77,23 @@ export async function cancelFypSubscription(
  * portal session (invoice history) even without a subscription to manage.
  */
 export async function getFypCustomerPortalUrl(
-  stripeCustomerId: string,
+  accessToken: string,
 ): Promise<string> {
+  const authed = await requireHubMember(accessToken);
+  if (!authed) throw new Error("Not signed in");
+
+  // Resolve the Stripe customer from the caller's own account — never trust a
+  // client-supplied customer id (audit S3).
+  const supabase = createFirstYearClient();
+  const { data: account } = await supabase
+    .from("accounts")
+    .select("stripe_customer_id")
+    .eq("id", authed.accountId)
+    .single();
+  if (!account?.stripe_customer_id) throw new Error("No billing account found");
+
   const session = await stripe.billingPortal.sessions.create({
-    customer: stripeCustomerId,
+    customer: account.stripe_customer_id,
     return_url: `${process.env.NEXT_PUBLIC_DOMAIN ?? "https://amsterdamparentproject.nl"}/hub/billing`,
   });
   return session.url;

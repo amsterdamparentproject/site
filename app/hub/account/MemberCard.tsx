@@ -12,6 +12,7 @@ import {
   getPostpartumPostSignInLink,
 } from "@/app/hub/account/actions";
 import { getPostpartumPostBannerState } from "@/app/hub/account/postpartum-post-banner";
+import { useHubAccount } from "@/app/hub/HubAccountContext";
 
 // Mirrors postpartum-post/app/(account)/matches/page.tsx's MatchedCard
 // visual language (card shell, top-right square icon buttons, full-width
@@ -108,6 +109,7 @@ export default function MemberCard({
   isSelf?: boolean;
 }) {
   const [editing, setEditing] = useState(false);
+  const { accessToken } = useHubAccount();
   const [firstName, setFirstName] = useState(member.firstName);
   const [lastName, setLastName] = useState(member.lastName);
   const [whatsapp, setWhatsapp] = useState(member.whatsapp ?? "");
@@ -149,6 +151,7 @@ export default function MemberCard({
     setSaveError(null);
     startSaveTransition(async () => {
       const result = await updateFypMemberProfile(
+        accessToken ?? "",
         member.id,
         firstName,
         lastName,
@@ -166,7 +169,7 @@ export default function MemberCard({
   function handleConfirmDelete() {
     setDeleteError(null);
     startDeleteTransition(async () => {
-      const result = await deleteFypMember(member.id);
+      const result = await deleteFypMember(accessToken ?? "", member.id);
       if (!result.success) {
         setDeleteError(result.error);
         return;
@@ -186,7 +189,10 @@ export default function MemberCard({
   function handleActivatePostpartumPost() {
     setActivateError(null);
     startActivateTransition(async () => {
-      const result = await activateMemberPostpartumPost(member.id);
+      const result = await activateMemberPostpartumPost(
+        accessToken ?? "",
+        member.id,
+      );
       if (!result.success) {
         setActivateError(result.error);
         return;
