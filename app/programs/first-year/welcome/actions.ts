@@ -1,6 +1,7 @@
 "use server";
 
 import { createFirstYearClient } from "@/lib/supabase/server";
+import { generateMagicLinkWithRetry } from "@/lib/supabase/generate-magic-link";
 
 // Drops a brand-new FYP signup straight into an authenticated /hub session
 // from the welcome page, instead of sending them back through
@@ -21,8 +22,15 @@ import { createFirstYearClient } from "@/lib/supabase/server";
 // access_token in the URL hash via onAuthStateChange), and falls back to
 // showing the normal HubLoginForm if neither resolves — so a failure here
 // just means a new member ends up doing the ordinary sign-in flow instead
-// of a broken dead end. Worth a manual test with a fresh signup once
-// deployed, since it wasn't exercised against a brand-new address before.
+// of a broken dead end.
+//
+// Diagnosed 2026-07-24: that same brand-new-address code path is also
+// where generateLink() intermittently mints a JWT with no `kid` header,
+// which this project's single ECC signing key then fails to verify
+// ("unrecognized JWT kid <nil>") — see generateMagicLinkWithRetry()'s own
+// docs. This is the one real production call site most likely to hit it
+// (welcome-page visitors are almost always brand new), which is why it's
+// wrapped in that retry rather than a single direct call.
 export async function getWelcomeHubSignInLink(
   stripeSessionId: string,
 ): Promise<{ success: true; url: string } | { success: false }> {
@@ -66,16 +74,20 @@ export async function getWelcomeHubSignInLink(
 
   const redirectTo = `${process.env.NEXT_PUBLIC_DOMAIN ?? "https://amsterdamparentproject.nl"}/hub/auth/confirm`;
 
-  const { data, error } = await supabase.auth.admin.generateLink({
-    type: "magiclink",
-    email: member.email,
-    options: { redirectTo },
-  });
+  const result = await generateMagicLinkWithRetry(
+    supabase,
+    member.email,
+    redirectTo,
+  );
 
-  if (error || !data.properties?.action_link) {
-    console.error("[welcome] generateLink failed for", member.email, error);
+  if (!result.success) {
+    console.error(
+      "[welcome] generateLink failed for",
+      member.email,
+      result.error,
+    );
     return { success: false };
   }
 
-  return { success: true, url: data.properties.action_link };
+  return { success: true, url: result.url };
 }

@@ -7,19 +7,18 @@
  * removing a sibling. Only rendered when familyType === "multi" — see
  * app/hub/(account)/account/page.tsx.
  *
- * Not executed in the build sandbox (no root to install Playwright's OS
- * deps, same limitation noted in hub-auth.spec.ts) — unverified by a real
- * run as of this writing. Selectors are scoped defensively (title
- * attributes, locator().filter({hasText}) on the card wrapper) since both
- * the signed-in member's own card and each sibling card render via the
- * same MemberCard component and would otherwise collide on shared text
- * like "Edit member" / "Delete member".
+ * Selectors are scoped defensively (title attributes,
+ * locator().filter({hasText}) on the card wrapper) since both the
+ * signed-in member's own card and each sibling card render via the same
+ * MemberCard component and would otherwise collide on shared text like
+ * "Edit member" / "Delete member".
  */
 
 import { test, expect } from "@playwright/test";
 import {
   seedActiveAccountWithMember,
   cleanupAccountByEmail,
+  e2eTestEmail,
 } from "./helpers/fyp-db";
 import { signInToHubAs } from "./helpers/hub-auth";
 
@@ -39,7 +38,9 @@ test("add, edit, and remove a family member from the Account tab", async ({
     // Single-member account so far: family section shows just the
     // add-member link, no sibling cards, no "Delete member" on the self
     // card (that all requires memberCount > 1).
-    await expect(page.getByText("Your family")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Your family" }),
+    ).toBeVisible();
     await expect(page.getByText("+ Add member")).toBeVisible();
 
     // ── Validation: Add member with empty fields shows an error, doesn't
@@ -51,7 +52,7 @@ test("add, edit, and remove a family member from the Account tab", async ({
     ).toBeVisible();
 
     // ── Happy path: fill in and save a new member ──
-    const partnerEmail = `${member.email.split("@")[0]}+partner@example.com`;
+    const partnerEmail = e2eTestEmail(`e2e-partner-${Date.now()}`);
     await page.getByLabel(/first name/i).fill("Partner");
     await page.getByLabel(/last name/i).fill("Parent");
     await page.getByLabel(/^email/i).fill(partnerEmail);

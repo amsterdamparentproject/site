@@ -33,24 +33,47 @@ function adminClient() {
  * Generate a Supabase magic link for the given email, redirecting to the
  * Hub's confirm page. Returns the action_link URL — navigate to it in
  * Playwright to sign in.
+ *
+ * Retries a couple of times on failure: diagnosed 2026-07-24, this project's
+ * admin.generateLink() intermittently fails with "unrecognized JWT kid
+ * <nil> for algorithm ES256" — a token with no `kid` header failing to
+ * match the project's single active ECC signing key. Not caused by our
+ * @example.com-domain bug (fixed separately, see e2eTestEmail() in
+ * fyp-db.ts) — this recurs even with a real, deliverable email — and not a
+ * mid-rotation propagation gap either (key's been stable for 2 months, only
+ * one key active). Looks like a Supabase-side quirk specific to this one
+ * Admin API endpoint rather than anything fixable here, so this retries
+ * around it rather than papering over it silently: a genuine, persistent
+ * failure (bad project config, wrong keys, etc.) will still exhaust the
+ * retries and throw.
  */
 export async function generateHubMagicLink(email: string): Promise<string> {
   const supabase = adminClient();
   const redirectTo = `${process.env.NEXT_PUBLIC_DOMAIN ?? "http://localhost:3001"}/hub/auth/confirm`;
 
-  const { data, error } = await supabase.auth.admin.generateLink({
-    type: "magiclink",
-    email,
-    options: { redirectTo },
-  });
+  const maxAttempts = 3;
+  let lastError: string | undefined;
 
-  if (error || !data.properties?.action_link) {
-    throw new Error(
-      `generateHubMagicLink failed: ${error?.message ?? "no action_link returned"}`,
-    );
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const { data, error } = await supabase.auth.admin.generateLink({
+      type: "magiclink",
+      email,
+      options: { redirectTo },
+    });
+
+    if (!error && data.properties?.action_link) {
+      return data.properties.action_link;
+    }
+
+    lastError = error?.message ?? "no action_link returned";
+    if (attempt < maxAttempts) {
+      await new Promise((r) => setTimeout(r, 500 * attempt));
+    }
   }
 
-  return data.properties.action_link;
+  throw new Error(
+    `generateHubMagicLink failed after ${maxAttempts} attempts: ${lastError}`,
+  );
 }
 
 /**

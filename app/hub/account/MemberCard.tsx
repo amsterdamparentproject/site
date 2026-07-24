@@ -11,6 +11,7 @@ import {
   activateMemberPostpartumPost,
   getPostpartumPostSignInLink,
 } from "@/app/hub/account/actions";
+import { getPostpartumPostBannerState } from "@/app/hub/account/postpartum-post-banner";
 
 // Mirrors postpartum-post/app/(account)/matches/page.tsx's MatchedCard
 // visual language (card shell, top-right square icon buttons, full-width
@@ -209,6 +210,12 @@ export default function MemberCard({
   }
 
   const isPpActive = !!member.postpartumpostMemberId;
+  const ppBanner = getPostpartumPostBannerState({
+    isPpActive,
+    isSelf,
+    isPending: isPpActive ? isPpLinkPending : isActivatePending,
+    firstName: member.firstName,
+  });
 
   return (
     <div className="bg-white dark:bg-brand-soft-charcoal rounded-2xl border border-brand-sand/60 shadow-sm relative">
@@ -406,27 +413,22 @@ export default function MemberCard({
         )}
       </div>
 
-      {accessible && isPpActive && (
+      {accessible && (
         <button
           type="button"
-          onClick={handleGoToPostpartumPost}
-          disabled={isPpLinkPending}
-          data-umami-event="Hub: Go to Postpartum Post"
+          onClick={
+            isSelf
+              ? isPpActive
+                ? handleGoToPostpartumPost
+                : handleActivatePostpartumPost
+              : undefined
+          }
+          disabled={ppBanner.disabled}
+          title={ppBanner.title}
+          data-umami-event={ppBanner.trackEvent}
           className="block w-full text-center text-sm font-medium bg-brand-soft-green dark:bg-brand-goldenrod text-white dark:text-brand-charcoal py-3 hover:opacity-90 transition-opacity border-t border-brand-sand/60 rounded-b-2xl disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
-          {isPpLinkPending ? "Signing you in…" : "Go to Postpartum Post"}
-        </button>
-      )}
-
-      {accessible && !isPpActive && (
-        <button
-          type="button"
-          onClick={handleActivatePostpartumPost}
-          disabled={isActivatePending}
-          data-umami-event="Hub: Activate Postpartum Post"
-          className="block w-full text-center text-sm font-medium bg-brand-soft-green dark:bg-brand-goldenrod text-white dark:text-brand-charcoal py-3 hover:opacity-90 transition-opacity border-t border-brand-sand/60 rounded-b-2xl disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-        >
-          {isActivatePending ? "Activating…" : "Activate Postpartum Post"}
+          {ppBanner.text}
         </button>
       )}
     </div>

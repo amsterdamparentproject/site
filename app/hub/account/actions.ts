@@ -2,6 +2,7 @@
 
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
+import { generateMagicLinkWithRetry } from "@/lib/supabase/generate-magic-link";
 import { activatePostpartumPost } from "@/lib/fyp/postpartum-post";
 import { cancelFypAccount } from "@/lib/fyp/subscription";
 
@@ -94,19 +95,5 @@ export async function getPostpartumPostSignInLink(
   const supabase = createFirstYearClient();
   const redirectTo = `${process.env.POSTPARTUM_POST_BASE_URL ?? "https://postpartumpost.com"}/auth/confirm`;
 
-  const { data, error } = await supabase.auth.admin.generateLink({
-    type: "magiclink",
-    email,
-    options: { redirectTo },
-  });
-
-  if (error || !data.properties?.action_link) {
-    return {
-      success: false,
-      error:
-        error?.message ?? "Failed to generate a Postpartum Post sign-in link",
-    };
-  }
-
-  return { success: true, url: data.properties.action_link };
+  return generateMagicLinkWithRetry(supabase, email, redirectTo);
 }

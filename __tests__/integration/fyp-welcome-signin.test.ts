@@ -17,6 +17,14 @@
  * through untouched — so the real link is still generated, just observed
  * along the way.
  *
+ * getWelcomeHubSignInLink() now retries generateLink() up to 3 times (see
+ * generateMagicLinkWithRetry(), lib/supabase/generate-magic-link.ts —
+ * diagnosed 2026-07-24, an intermittent "unrecognized JWT kid" failure on
+ * this project's admin API), so the "picks the oldest member" spy asserts
+ * every attempt targeted the right email rather than that there was
+ * exactly one attempt — a retry succeeding on its 2nd or 3rd try is now
+ * expected, correct behavior, not a bug.
+ *
  * Prerequisites:
  *   NEXT_PUBLIC_TEST_SUPABASE_URL + TEST_SUPABASE_SERVICE_ROLE_KEY must be set
  *   (loaded automatically from .env.test by Vitest via Vite's env handling).
@@ -172,7 +180,8 @@ describe("getWelcomeHubSignInLink", () => {
     try {
       const result = await getWelcomeHubSignInLink(sessionId);
       expect(result.success).toBe(true);
-      expect(spy.emails).toEqual([olderEmail]);
+      expect(spy.emails.length).toBeGreaterThanOrEqual(1);
+      expect(spy.emails.every((email) => email === olderEmail)).toBe(true);
     } finally {
       spy.restore();
       await cleanup(accountId);

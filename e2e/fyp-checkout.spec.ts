@@ -39,6 +39,7 @@ import {
   cleanupAccountByEmail,
   getAccountByEmail,
   getMembersByAccountId,
+  e2eTestEmail,
   type FYPAccount,
 } from "./helpers/fyp-db";
 
@@ -206,11 +207,11 @@ const BABY_YEAR = "2026";
 const BASE_EMAIL = `e2e-fyp-${Date.now()}`;
 
 const EMAILS = {
-  expecting_monthly: `${BASE_EMAIL}-exp-monthly@example.com`,
-  expecting_monthly_single: `${BASE_EMAIL}-exp-monthly-single@example.com`,
-  expecting_bundle: `${BASE_EMAIL}-exp-bundle@example.com`,
-  baby_deposit: `${BASE_EMAIL}-baby-deposit@example.com`,
-  baby_bundle: `${BASE_EMAIL}-baby-bundle@example.com`,
+  expecting_monthly: e2eTestEmail(`${BASE_EMAIL}-exp-monthly`),
+  expecting_monthly_single: e2eTestEmail(`${BASE_EMAIL}-exp-monthly-single`),
+  expecting_bundle: e2eTestEmail(`${BASE_EMAIL}-exp-bundle`),
+  baby_deposit: e2eTestEmail(`${BASE_EMAIL}-baby-deposit`),
+  baby_bundle: e2eTestEmail(`${BASE_EMAIL}-baby-bundle`),
 };
 
 const BASE_URL = "http://localhost:3001";
