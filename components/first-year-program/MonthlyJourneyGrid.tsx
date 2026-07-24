@@ -50,10 +50,16 @@ export default function MonthlyJourneyGrid() {
 
           const anyOpenThisMonth = isTopicOpen || isSocialOpen;
 
+          const socialNotes = social?.note
+            ? Array.isArray(social.note)
+              ? social.note
+              : [social.note]
+            : [];
+
           const socialGoodToKnow = [
             social?.location && `📍 ${social.location}`,
             social?.logistics,
-            social?.note && `📣 ${social.note}`,
+            ...socialNotes,
           ].filter(Boolean) as string[];
 
           // Body content only — title/subtitle are shown once in the header

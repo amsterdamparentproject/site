@@ -13,7 +13,7 @@ export interface Social {
   facilitators?: string[];
   location?: string;
   logistics?: string;
-  note?: string;
+  note?: string | string[];
   placeholder?: boolean;
 }
 
@@ -95,10 +95,15 @@ const firstYearCurriculum: CurriculumMonth[] = [
     },
     social: {
       title: "Singing Mamas & Papas",
-      subtitle: "Details coming soon",
-      description: "",
+      subtitle:
+        "A family circle of song — using shared voices to process parenthood",
+      description:
+        "A warm, singing circle for the whole family — a safe space to show up as you are and process parenthood together through shared harmonies. Little ones are free to crawl, play, nap, or simply take in the sound of the group singing around them.",
       facilitators: ["danielleBensky"],
-      placeholder: true,
+      note: [
+        "No sheet music, no lyrics to memorize, and no pressure to perform — all levels and singing abilities welcome!",
+        "There's no such thing as being late — feel free to change diapers, feed, or wander as needed throughout.",
+      ],
     },
   },
   {
