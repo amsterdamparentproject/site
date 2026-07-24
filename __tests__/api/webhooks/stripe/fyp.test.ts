@@ -9,6 +9,9 @@ vi.mock("@/lib/stripe-client", () => ({
   },
 }));
 vi.mock("@/lib/supabase/server", () => ({ createFirstYearClient: vi.fn() }));
+vi.mock("@/lib/fyp/postpartum-post", () => ({
+  deactivatePostpartumPost: vi.fn(),
+}));
 vi.mock("next/server", () => ({
   NextRequest: class {},
   NextResponse: {
@@ -21,6 +24,7 @@ vi.mock("next/server", () => ({
 
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
+import { deactivatePostpartumPost } from "@/lib/fyp/postpartum-post";
 import { PROGRAM_START_UNIX } from "@/lib/fyp/program";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -280,5 +284,136 @@ describe("fyp webhook — baby_deposit", () => {
     expect(sub).toHaveBeenCalledOnce();
     const args = sub.mock.calls[0][0] as any;
     expect(args.trial_end).toBe(PROGRAM_START_UNIX);
+  });
+});
+
+// ─── customer.subscription.deleted — cancellation + Postpartum Post deactivation ──
+
+function makeSubscriptionDeletedEvent(subscriptionId: string) {
+  return {
+    type: "customer.subscription.deleted",
+    data: { object: { id: subscriptionId } },
+  };
+}
+
+/**
+ * Mocked Supabase client for the subscription.deleted handler: supports the
+ * accounts lookup-by-subscription-id, the accounts status update, and the
+ * members lookup for linked Postpartum Post ids — each keyed off the table
+ * name so a single mock can serve all three calls the handler makes.
+ */
+function mockSupabaseForSubscriptionDeleted(opts: {
+  account: { id: string } | null;
+  linkedMembers: Array<{ id: string }>;
+}) {
+  const accountUpdateEq = vi.fn().mockResolvedValue({ error: null });
+  const client = {
+    from: vi.fn((table: string) => {
+      if (table === "accounts") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: async () => ({ data: opts.account, error: null }),
+            }),
+          }),
+          update: () => ({ eq: accountUpdateEq }),
+        };
+      }
+      if (table === "members") {
+        return {
+          select: () => ({
+            eq: () => ({
+              not: async () => ({ data: opts.linkedMembers, error: null }),
+            }),
+          }),
+        };
+      }
+      throw new Error(`Unexpected table in mock: ${table}`);
+    }),
+  };
+  vi.mocked(createFirstYearClient).mockReturnValue(client as any);
+  return { accountUpdateEq };
+}
+
+describe("fyp webhook — customer.subscription.deleted", () => {
+  let POST: (req: any) => Promise<unknown>;
+
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    vi.resetModules();
+    ({ POST } = await import("@/app/api/webhooks/stripe/fyp/route"));
+  });
+
+  it("marks the matching account canceled", async () => {
+    const { accountUpdateEq } = mockSupabaseForSubscriptionDeleted({
+      account: { id: "account_1" },
+      linkedMembers: [],
+    });
+    vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
+      makeSubscriptionDeletedEvent("sub_123") as any,
+    );
+
+    await POST(makeRequest());
+
+    expect(accountUpdateEq).toHaveBeenCalledWith("id", "account_1");
+  });
+
+  it("calls deactivatePostpartumPost for every linked member on the account", async () => {
+    mockSupabaseForSubscriptionDeleted({
+      account: { id: "account_1" },
+      linkedMembers: [{ id: "member_a" }, { id: "member_b" }],
+    });
+    vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
+      makeSubscriptionDeletedEvent("sub_123") as any,
+    );
+    vi.mocked(deactivatePostpartumPost).mockResolvedValue(undefined);
+
+    await POST(makeRequest());
+
+    expect(deactivatePostpartumPost).toHaveBeenCalledTimes(2);
+    expect(deactivatePostpartumPost).toHaveBeenCalledWith("member_a");
+    expect(deactivatePostpartumPost).toHaveBeenCalledWith("member_b");
+  });
+
+  it("does not call deactivatePostpartumPost when no members are linked", async () => {
+    mockSupabaseForSubscriptionDeleted({
+      account: { id: "account_1" },
+      linkedMembers: [],
+    });
+    vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
+      makeSubscriptionDeletedEvent("sub_123") as any,
+    );
+
+    await POST(makeRequest());
+
+    expect(deactivatePostpartumPost).not.toHaveBeenCalled();
+  });
+
+  it("one member's deactivate failure doesn't block the others", async () => {
+    mockSupabaseForSubscriptionDeleted({
+      account: { id: "account_1" },
+      linkedMembers: [{ id: "member_a" }, { id: "member_b" }],
+    });
+    vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
+      makeSubscriptionDeletedEvent("sub_123") as any,
+    );
+    vi.mocked(deactivatePostpartumPost)
+      .mockRejectedValueOnce(new Error("PP down"))
+      .mockResolvedValueOnce(undefined);
+
+    await POST(makeRequest());
+
+    expect(deactivatePostpartumPost).toHaveBeenCalledTimes(2);
+  });
+
+  it("does nothing (no deactivate calls) when no account matches the subscription", async () => {
+    mockSupabaseForSubscriptionDeleted({ account: null, linkedMembers: [] });
+    vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
+      makeSubscriptionDeletedEvent("sub_unknown") as any,
+    );
+
+    await POST(makeRequest());
+
+    expect(deactivatePostpartumPost).not.toHaveBeenCalled();
   });
 });

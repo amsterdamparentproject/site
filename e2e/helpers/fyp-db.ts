@@ -60,6 +60,164 @@ export interface FYPMember {
 }
 
 // ---------------------------------------------------------------------------
+// Test email addresses
+// ---------------------------------------------------------------------------
+
+/**
+ * Builds a synthetic-but-real test email via Gmail's `+` addressing — all
+ * mail still lands in the same real inbox (or nowhere, if unread), but the
+ * domain is genuinely deliverable.
+ *
+ * Diagnosed 2026-07-24: `@example.com` (RFC 2606's reserved example domain,
+ * previously used here) gets a hard SMTP 550 from Supabase's mail relay —
+ * "Invalid `to` field. Please use our testing email address instead of
+ * domains like `example.com`." This bites any test that reaches
+ * supabase.auth.admin.generateLink(): despite the whole point of using
+ * generateLink() being to grab the returned action_link without needing a
+ * real inbox, Supabase still attempts to send the magic-link email as a
+ * side effect — and that send failing turns into a 500 from the /otp
+ * endpoint, which the client then surfaces as a confusing, seemingly
+ * unrelated error (an "unrecognized JWT kid" signature-verification
+ * failure was one observed symptom — a red herring, not the real cause).
+ * Every FYP Hub sign-in path goes through generateLink() one way or another
+ * (HubLoginForm's OTP request, the welcome page's direct sign-in, PP's own
+ * sign-in link), so any synthetic email that might get signed in with needs
+ * a real domain, not just ones a human will actually read.
+ */
+export function e2eTestEmail(label: string): string {
+  return `amsterdamparentproject+${label}@gmail.com`;
+}
+
+// ---------------------------------------------------------------------------
+// Seed helpers
+// ---------------------------------------------------------------------------
+
+export interface SeededFYPMember {
+  memberId: string;
+  accountId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  // The stripe_session_id set on the seeded account — exposed so tests of
+  // the welcome page's direct-sign-in link (which looks accounts up by
+  // this value) can build a matching `?session_id=` URL without needing to
+  // separately query the DB for it.
+  stripeSessionId: string;
+}
+
+/**
+ * Insert an firstyear.accounts + firstyear.members row directly, bypassing
+ * Stripe checkout entirely — for tests (e.g. hub-auth.spec.ts) that only
+ * need a signed-in Hub member and don't care how the account originated.
+ * Defaults to an active monthly, single-family account; pass `status` to
+ * seed a lapsed/canceling account, or `familyType: "multi"` for tests of
+ * the Account tab's "Your family" roster/add-member UI (only rendered for
+ * multi-family accounts — see app/hub/(account)/account/page.tsx).
+ */
+export async function seedActiveAccountWithMember(
+  overrides: {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    status?: string;
+    familyType?: "single" | "multi";
+  } = {},
+): Promise<SeededFYPMember> {
+  const db = supabase();
+  const id = crypto.randomUUID();
+  const email = overrides.email ?? e2eTestEmail(`e2e-hub-${id.slice(0, 8)}`);
+  const firstName = overrides.firstName ?? "Test";
+  const lastName = overrides.lastName ?? "Member";
+  const stripeSessionId = `test_e2e_hub_${id}`;
+
+  const { data: account, error: accountError } = await db
+    .from("accounts")
+    .insert({
+      stripe_session_id: stripeSessionId,
+      flow: "baby_monthly",
+      plan_type: "monthly",
+      family_type: overrides.familyType ?? "single",
+      status: overrides.status ?? "active",
+    })
+    .select("id")
+    .single();
+  if (accountError || !account)
+    throw new Error(
+      `seedActiveAccountWithMember account insert failed: ${accountError?.message}`,
+    );
+
+  const { data: member, error: memberError } = await db
+    .from("members")
+    .insert({
+      account_id: account.id,
+      first_name: firstName,
+      last_name: lastName,
+      email,
+    })
+    .select("id")
+    .single();
+  if (memberError || !member)
+    throw new Error(
+      `seedActiveAccountWithMember member insert failed: ${memberError?.message}`,
+    );
+
+  return {
+    memberId: member.id,
+    accountId: account.id,
+    email,
+    firstName,
+    lastName,
+    stripeSessionId,
+  };
+}
+
+export interface SeededSiblingMember {
+  memberId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+/**
+ * Adds another member directly to an existing (multi-family) account —
+ * bypassing MemberRoster's own "Add member" form, for tests that need
+ * several members on one account without exercising that form themselves
+ * (it has its own dedicated coverage in hub-members.spec.ts). Used by
+ * hub-pp-activation.spec.ts's sibling-visibility regression test — NOT a
+ * way to run per-member scenarios (e.g. Postpartum Post activation) under
+ * one shared sign-in: MemberCard's PP actions are isSelf-only by design
+ * (see that file's docblock for why), so a sibling seeded here can only
+ * ever be used to assert what does *not* appear on their card, not to
+ * exercise their own activate/sign-in flow — that still needs its own
+ * account + sign-in, same as the signed-in member always would.
+ */
+export async function addSeededMember(
+  accountId: string,
+  overrides: { firstName?: string; lastName?: string } = {},
+): Promise<SeededSiblingMember> {
+  const db = supabase();
+  const id = crypto.randomUUID();
+  const email = e2eTestEmail(`e2e-hub-sibling-${id.slice(0, 8)}`);
+  const firstName = overrides.firstName ?? "Sibling";
+  const lastName = overrides.lastName ?? "Member";
+
+  const { data: member, error } = await db
+    .from("members")
+    .insert({
+      account_id: accountId,
+      first_name: firstName,
+      last_name: lastName,
+      email,
+    })
+    .select("id")
+    .single();
+  if (error || !member)
+    throw new Error(`addSeededMember insert failed: ${error?.message}`);
+
+  return { memberId: member.id, email, firstName, lastName };
+}
+
+// ---------------------------------------------------------------------------
 // Read helpers
 // ---------------------------------------------------------------------------
 
@@ -106,6 +264,39 @@ export async function getAccountStatusByEmail(
 ): Promise<string | null> {
   const account = await getAccountByEmail(email);
   return account?.status ?? null;
+}
+
+/** Seeds a member as already linked to a Postpartum Post member id — for
+ * tests of the "Go to Postpartum Post" button (only shown once a member is
+ * already active, per MemberCard's isPpActive gate), which don't want to
+ * exercise the activation flow itself first. */
+export async function linkMemberToPostpartumPost(
+  memberId: string,
+  postpartumpostMemberId: string,
+): Promise<void> {
+  const db = supabase();
+  const { error } = await db
+    .from("members")
+    .update({ postpartumpost_member_id: postpartumpostMemberId })
+    .eq("id", memberId);
+  if (error) {
+    throw new Error(`linkMemberToPostpartumPost failed: ${error.message}`);
+  }
+}
+
+/** Reads back the postpartumpost_member_id linked to a member row — used
+ * to verify the Hub's "Activate Postpartum Post" flow actually persisted
+ * the id returned by postpartum-post's /api/fyp/activate route. */
+export async function getMemberPostpartumPostId(
+  memberId: string,
+): Promise<string | null> {
+  const db = supabase();
+  const { data } = await db
+    .from("members")
+    .select("postpartumpost_member_id")
+    .eq("id", memberId)
+    .maybeSingle();
+  return data?.postpartumpost_member_id ?? null;
 }
 
 // ---------------------------------------------------------------------------

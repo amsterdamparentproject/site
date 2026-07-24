@@ -41,8 +41,8 @@ const firstYearCurriculum: CurriculumMonth[] = [
       ],
     },
     social: {
-      title: "Vondelpark Wandeling",
-      subtitle: "A whole family gathering in the park that has it all",
+      title: "Vondelpark Stroll",
+      subtitle: "A whole family gathering outside in the park that has it all",
       description:
         "We'll walk around Vondelpark with babies in tow, then settle in at Groot Melkhuis for coffee and conversation — a low-key way to get outside and get to know the group.",
       logistics:
