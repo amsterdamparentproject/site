@@ -14,7 +14,13 @@ import path from "path";
 // process.env manually applies the override regardless of dotenv version.
 function loadEnvFile(filePath: string) {
   if (!fs.existsSync(filePath)) return;
-  const parsed = dotenv.parse(fs.readFileSync(filePath));
+  // Explicit annotation: dotenv@8.6.0's package.json `exports` map has no
+  // `types` condition, so under moduleResolution "bundler" TS silently
+  // resolves this import as `any`, which makes Object.entries() below infer
+  // `unknown` values instead of `string`.
+  const parsed: Record<string, string> = dotenv.parse(
+    fs.readFileSync(filePath),
+  );
   for (const [key, value] of Object.entries(parsed)) {
     process.env[key] = value;
   }
