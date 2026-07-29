@@ -1,5 +1,6 @@
 "use server";
 
+import { randomInt } from "crypto";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
 
@@ -155,10 +156,12 @@ export const postManageDirectory = async (data, action = "add") => {
       formData.set("userId", user.id);
       formData.set("publicId", user.public_id);
     } else {
-      // Create user and assign public_id
+      // Create user and assign public_id. Crypto-secure (was Math.random —
+      // audit S4); same 20-char [a-z0-9] format, so existing links and lookups
+      // are unaffected — this only changes newly-minted ids.
       const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
       const newPublicId = Array.from({ length: 20 }, () =>
-        chars.charAt(Math.floor(Math.random() * chars.length)),
+        chars.charAt(randomInt(chars.length)),
       ).join("");
       const { data: newUser, error } = await supabase
         .from("users")

@@ -12692,15 +12692,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stripe@npm:^20.4.1":
-  version: 20.4.1
-  resolution: "stripe@npm:20.4.1"
+"stripe@npm:^22.1.1":
+  version: 22.3.2
+  resolution: "stripe@npm:22.3.2"
   peerDependencies:
-    "@types/node": ">=16"
+    "@types/node": ">=18"
   peerDependenciesMeta:
     "@types/node":
       optional: true
-  checksum: fc6f84fa6aba1a026205c26a68c8379e7b9389fce09393fe1bb1e9dcce68faabac78fa23feaea2ab1ebb6b48920e2faaefa9ecbeafa61c6e712c19a47ccdc627
+  checksum: ef41059a88a39e05ebfd4101e2c986910ea32d0a92ff42d869c782eb0eca115970be301109bef8694713cc0e67ef25fd28e8b2102f0dbdeda5fbe9df04a175b5
   languageName: node
   linkType: hard
 
@@ -12889,7 +12889,7 @@ __metadata:
     remark-gfm: ^4.0.0
     remark-github-blockquote-alert: ^1.2.1
     remark-math: ^6.0.0
-    stripe: ^20.4.1
+    stripe: ^22.1.1
     tailwindcss: ^4.0.5
     typescript: ^5.1.3
     unist-util-visit: ^5.0.0

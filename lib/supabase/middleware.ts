@@ -58,5 +58,10 @@ export const updateSession = async (request: NextRequest) => {
     );
   }
 
+  // Don't leak the ?uid= capability token via the Referer header when the
+  // Directory page links out to third parties (audit S4). Backwards-compatible:
+  // affects only outbound referrers, never the incoming ?uid= link itself.
+  response.headers.set("Referrer-Policy", "no-referrer");
+
   return response;
 };
