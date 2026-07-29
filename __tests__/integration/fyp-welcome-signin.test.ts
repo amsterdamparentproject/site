@@ -31,12 +31,12 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { getWelcomeHubSignInLink } from "@/app/programs/first-year/welcome/actions";
 
 // ─── Test DB client ───────────────────────────────────────────────────────────
 
-let _db: ReturnType<typeof createClient> | null = null;
+let _db: SupabaseClient<any, "firstyear"> | null = null;
 function testDb() {
   if (_db) return _db;
   const url = process.env.NEXT_PUBLIC_TEST_SUPABASE_URL;
@@ -45,7 +45,9 @@ function testDb() {
     throw new Error(
       "Missing NEXT_PUBLIC_TEST_SUPABASE_URL or TEST_SUPABASE_SERVICE_ROLE_KEY — check .env.test",
     );
-  _db = createClient(url, key, { db: { schema: "firstyear" } });
+  _db = createClient<any, "firstyear">(url, key, {
+    db: { schema: "firstyear" },
+  });
   return _db;
 }
 

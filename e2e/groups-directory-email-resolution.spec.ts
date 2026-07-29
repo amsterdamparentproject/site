@@ -1,8 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import { seedUid, waitForSuccess } from "./helpers";
 
 // Shared helper — selects the first group from the autocomplete on /update
-async function selectFirstGroup(page: Parameters<typeof test.extend>[0]) {
+async function selectFirstGroup(page: Page) {
   const groupInput = page.locator('input[id="groupName"]');
   await groupInput.click();
   const firstOption = page.locator('[role="listbox"] li').first();

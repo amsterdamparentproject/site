@@ -1,5 +1,7 @@
 // global.d.ts
 
+/// <reference types="vitest/globals" />
+
 interface StripeBuyButtonProps {
   "buy-button-id": string;
   "publishable-key": string;

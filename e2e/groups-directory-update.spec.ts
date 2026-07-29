@@ -1,8 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import { waitForSuccess } from "./helpers";
 
 test.describe("/groups-directory/update (public)", () => {
-  async function selectFirstGroup(page: ReturnType<typeof test.extend>) {
+  async function selectFirstGroup(page: Page) {
     const groupInput = page.locator('input[id="groupName"]');
     await groupInput.click();
     const firstOption = page.locator('[role="listbox"] li').first();
