@@ -58,3 +58,17 @@ export const createFirstYearClient = () =>
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { db: { schema: "firstyear" } },
   );
+
+// First Year Program — Storage only (no schema restriction; db.schema only
+// affects .from() table queries, not .storage, so this is otherwise
+// identical to createFirstYearClient). Same TEST-project fallback so local
+// dev against the FYP guides bucket doesn't touch production storage.
+// Service-role only — never expose to the client, since it can read a
+// private bucket without a signed URL.
+export const createFirstYearStorageClient = () =>
+  createSupabaseClient(
+    process.env.NEXT_PUBLIC_TEST_SUPABASE_URL ??
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.TEST_SUPABASE_SERVICE_ROLE_KEY ??
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  );

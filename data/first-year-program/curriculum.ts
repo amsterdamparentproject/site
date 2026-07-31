@@ -4,6 +4,7 @@ export interface Session {
   description: string;
   components?: string[];
   experts: string[];
+  guideFiles?: string[];
 }
 
 export interface Social {
@@ -34,6 +35,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
       But where to start? We cover local Dutch postpartum care and end with an exercise on finding and filling gaps in support, so you're not starting from scratch when you need it most.
     `,
       experts: ["alexSiega", "irenaDomachowska"],
+      guideFiles: ["Building the Village.pdf"],
       components: [
         "Overview of local Dutch systems: baby care, medical, and mental health",
         "How to navigate the English-speaking network in Amsterdam",
@@ -58,6 +60,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
        You've got the basics of breastfeeding and/or bottle-feeding down. Now you're wondering: "How can we possibly keep doing this for the next 6 months?" Learn our inclusive approach to feeding that grows with you and your baby — so that mom, dad/partner, and baby all get what they need in this special yet intense time.
     `,
       experts: ["heatherBerry", "irenaDomachowska"],
+      guideFiles: ["Newborn Feeding Strategies.pdf"],
       components: [
         "Actionable feeding strategies focused on health and wellness for the whole family",
         "Evidence-based insight into common newborn feeding scenarios",
@@ -86,6 +89,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
       We explore the permanent physical changes after birth alongside the emotional and identity shifts of new parenthood — including matrescence and patrescence — and offer practical ways to navigate your evolving self with compassion.
     `,
       experts: ["heatherBerry", "irenaDomachowska"],
+      guideFiles: ["Physical Postpartum.pdf", "Regulating After Baby.pdf"],
       components: [
         "Overview of permanent physical changes that can happen after birth",
         "Matrescence and patrescence: understanding your new identity as a parent",
@@ -117,6 +121,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
       We help you identify where they come from and how to build a shared parenting culture that works for your new family.
     `,
       experts: ["angelaVitiello", "alexSiega"],
+      guideFiles: ["Cross-Cultural Parenting.pdf"],
       components: [
         "How cultural backgrounds shape parenting instincts and expectations",
         "Common friction points for multicultural families: values, language, and more",
@@ -142,6 +147,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
       We identify what's normal, what's worth addressing, and how to build a stronger partnership through one of life's biggest transitions.
     `,
       experts: ["naomiGibson", "irenaDomachowska"],
+      guideFiles: ["Postpartum Partnerships.pdf"],
       components: [
         "Common postpartum partner relationship challenges: communication, intimacy, emotional connection",
         "Nonviolent communication techniques for new parents",
@@ -166,6 +172,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
       Let's talk about what happens when the newborn bubble pops. We cover the transition back to work and life post-newborn: joys, challenges, and techniques to manage mental load and reduce parental/professional burnout — so you can feel confident and capable growing as a parent alongside your growing baby.
     `,
       experts: ["karlaCalinawan", "alexSiega"],
+      guideFiles: ["Postpartum Return.pdf"],
       components: [
         "Mental load: what it is, why it matters, and how to reduce it",
         "Setting workplace boundaries as a new parent",

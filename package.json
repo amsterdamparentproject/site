@@ -20,6 +20,7 @@
     "test:fyp:unit": "vitest run --passWithNoTests fyp first-year",
     "test:fyp:e2e": "playwright test fyp",
     "test:hub:e2e": "playwright test hub",
+    "update-fyp-guides": "node scripts/update-fyp-guides.mjs",
     "prepare": "husky"
   },
   "dependencies": {

@@ -3,6 +3,7 @@
 import { createFirstYearClient } from "@/lib/supabase/server";
 import { requireHubMember } from "@/lib/require-hub-member";
 import * as fypMembers from "@/lib/fyp/members";
+import { getResourceDownloadUrl } from "@/lib/fyp/resources";
 
 export type {
   HubMemberProfile,
@@ -134,6 +135,24 @@ export async function addFypMember(
     email,
     whatsapp,
   );
+}
+
+/**
+ * Mints a short-lived signed download URL for a resource guide in the FYP
+ * guides Storage bucket — any signed-in Hub member or staff (facilitator/
+ * admin) can download any guide, no per-role restriction, since guides
+ * aren't account-scoped data. requireHubMember is still the gate: only a
+ * verified Hub session gets a URL at all, which is the whole point of
+ * moving guides off the old public static path.
+ */
+export async function getFypResourceDownloadUrl(
+  accessToken: string,
+  storagePath: string,
+): Promise<{ success: true; url: string } | { success: false; error: string }> {
+  const authed = await requireHubMember(accessToken);
+  if (!authed) return { success: false, error: "Not signed in" };
+
+  return getResourceDownloadUrl(storagePath);
 }
 
 /**
