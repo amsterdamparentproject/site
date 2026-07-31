@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "@/components/Link";
 import { useHubAccount } from "@/app/hub/HubAccountContext";
-import { hasHubAccess } from "@/lib/fyp/hub-access";
+import {
+  hasHubAccess,
+  isStaffRole,
+  isLimitedStaffRole,
+} from "@/lib/fyp/hub-access";
 import HubAccountTabNav from "@/app/hub/account/HubAccountTabNav";
 
 // Shared shell for /hub/account, /hub/billing, and /hub/resources — a
@@ -26,13 +30,30 @@ export default function HubAccountLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { loading, member } = useHubAccount();
+  const staff = !!member && isStaffRole(member.role);
+  const limitedStaff = !!member && isLimitedStaffRole(member.role);
 
   useEffect(() => {
     if (!loading && !member) {
       router.replace("/hub");
     }
   }, [loading, member, router]);
+
+  // Only the 'facilitator' role is limited to Home + Resources — no new
+  // functionality is built for them, just gating. Direct navigation to
+  // /hub/account or /hub/billing bounces to /hub/resources rather than
+  // rendering member-only content that doesn't apply to non-customers.
+  // 'admin' (staff but not limitedStaff) reaches every route normally.
+  useEffect(() => {
+    if (
+      limitedStaff &&
+      (pathname === "/hub/account" || pathname === "/hub/billing")
+    ) {
+      router.replace("/hub/resources");
+    }
+  }, [limitedStaff, pathname, router]);
 
   if (loading || !member) {
     return <p className="text-center text-sm py-16">Loading…</p>;
@@ -49,9 +70,9 @@ export default function HubAccountLayout({
         First Year Hub
       </h1>
 
-      <HubAccountTabNav />
+      <HubAccountTabNav role={member.role} />
 
-      {!accessible && (
+      {!staff && !accessible && (
         <div className="mb-8 rounded-2xl border border-brand-sand/60 bg-brand-white/60 dark:bg-brand-soft-charcoal p-4 text-sm text-brand-charcoal/80 dark:text-brand-white/70">
           Your membership isn&apos;t active, so some account features are
           limited.{" "}

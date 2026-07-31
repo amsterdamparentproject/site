@@ -18,6 +18,11 @@ export type HubMemberProfile = {
   lastName: string;
   email: string;
   whatsapp: string | null;
+  // 'member' (default, real paying families) | 'facilitator' | 'admin' —
+  // see migration 011. Non-'member' roles are staff, not customers: the Hub
+  // gates their view down to Resources + WhatsApp/Luma links only,
+  // regardless of accountStatus (see lib/fyp/hub-access.ts).
+  role: string;
   accountStatus: string;
   planType: string;
   flow: string;
@@ -77,7 +82,7 @@ export async function getFypMemberProfile(
   const { data: member, error: memberError } = await supabase
     .from("members")
     .select(
-      "id, account_id, first_name, last_name, email, whatsapp, postpartumpost_member_id",
+      "id, account_id, first_name, last_name, email, whatsapp, role, postpartumpost_member_id",
     )
     .eq("email", email.toLowerCase())
     .maybeSingle();
@@ -106,6 +111,7 @@ export async function getFypMemberProfile(
     lastName: member.last_name,
     email: member.email,
     whatsapp: member.whatsapp,
+    role: member.role,
     accountStatus: account.status,
     planType: account.plan_type,
     flow: account.flow,
