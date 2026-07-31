@@ -17,15 +17,16 @@
  *   6. Verifies the account record in firstyear.accounts
  *
  * The first test (expecting_monthly, multi) additionally continues the
- * journey one step further: clicking "Go to your First Year Hub" on the
- * welcome page and landing authenticated on /hub/account. This is the one
- * place that proves a `stripe_session_id` written by a *real* checkout
- * webhook — not a directly-seeded one — actually resolves through
- * getWelcomeHubSignInLink (see hub-welcome-signin.spec.ts, which covers the
- * same button's fallback paths via seeded accounts instead). Not repeated
- * across the other four variants — the sign-in step doesn't vary by plan
- * type, so one full round trip is enough; duplicating it five times would
- * only add runtime, not coverage.
+ * journey one step further: the welcome page auto-signs in (no click, see
+ * AutoHubRedirect — renamed from GoToHubButton 2026-07-31) and lands
+ * authenticated on /hub/home. This is the one place that proves a
+ * `stripe_session_id` written by a *real* checkout webhook — not a
+ * directly-seeded one — actually resolves through getWelcomeHubSignInLink
+ * (see hub-welcome-signin.spec.ts, which covers the same auto-redirect's
+ * fallback paths via seeded accounts instead). Not repeated across the
+ * other four variants — the sign-in step doesn't vary by plan type, so one
+ * full round trip is enough; duplicating it five times would only add
+ * runtime, not coverage.
  *
  * Prerequisites:
  *   - `stripe listen --forward-to localhost:3001/api/webhooks/stripe/fyp` running
@@ -273,11 +274,10 @@ test("expecting_monthly (multi): deposit → deferred subscription created", asy
     email: EMAILS.expecting_monthly,
   });
 
-  await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
-  await checkoutPage.waitForLoadState("domcontentloaded");
-  await expect(
-    checkoutPage.getByRole("heading", { name: /first year program/i }),
-  ).toBeVisible({ timeout: 45_000 });
+  // ── Continue the journey: welcome page auto-signs in, no click, no
+  // email step — lands on /hub/home, then Account tab proves it's the
+  // right member ──
+  await checkoutPage.waitForURL(/\/hub\/home/, { timeout: 45_000 });
 
   const account = await waitForAccount(EMAILS.expecting_monthly);
   expect(account).not.toBeNull();
@@ -295,10 +295,7 @@ test("expecting_monthly (multi): deposit → deferred subscription created", asy
   expect(members[0].email).toBe(EMAILS.expecting_monthly);
   expect(members[0].status).toBe("active");
 
-  // ── Continue the journey: welcome page → Hub, signed in, no email step ──
-  await checkoutPage
-    .getByRole("button", { name: /go to your first year hub/i })
-    .click();
+  await checkoutPage.getByRole("link", { name: "Account" }).click();
   await expect(checkoutPage).toHaveURL(/\/hub\/account/, { timeout: 20_000 });
   await expect(checkoutPage.getByText("Test Parent")).toBeVisible();
   await expect(checkoutPage.getByText(EMAILS.expecting_monthly)).toBeVisible();
@@ -478,19 +475,16 @@ test("baby_bundle (multi): upfront payment → account with billing_start_date S
 // Welcome page
 // ---------------------------------------------------------------------------
 
-test("welcome page renders with the Hub CTA", async ({ page }) => {
-  // The "Building the Village" resource-guide download block was removed
-  // from this page — the welcome page now points straight at the Hub
-  // instead. See GoToHubButton / fyp-checkout's first test above for the
-  // button's actual sign-in behavior; this just checks the static page shell.
+test("welcome page with no session_id auto-redirects to the plain sign-in gate", async ({
+  page,
+}) => {
+  // Simplified 2026-07-31 — this page no longer renders any marketing copy
+  // or a button to check (see AutoHubRedirect, renamed from GoToHubButton).
+  // Full happy-path coverage (real session_id → auto sign-in → /hub/home)
+  // is the first test above; the no-session_id fallback is covered more
+  // thoroughly in hub-welcome-signin.spec.ts — this is just a smoke check
+  // that this route doesn't error for a plain visit.
   await page.goto("/programs/first-year/welcome");
-  await expect(
-    page.getByRole("heading", { name: /first year program/i }),
-  ).toBeVisible({ timeout: 15_000 });
-  await expect(
-    page.getByRole("button", { name: /go to your first year hub/i }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: /hello@amsterdamparentproject\.nl/i }),
-  ).toHaveAttribute("href", "mailto:hello@amsterdamparentproject.nl");
+  await expect(page).toHaveURL(/\/hub$/, { timeout: 15_000 });
+  await expect(page.getByText(/sign in to the first year hub/i)).toBeVisible();
 });

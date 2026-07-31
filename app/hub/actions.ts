@@ -156,6 +156,28 @@ export async function getFypResourceDownloadUrl(
 }
 
 /**
+ * Returns the active FYP WhatsApp group's current invite link — Hub-only,
+ * never a NEXT_PUBLIC_* var (see FYP_WHATSAPP_URL's own comment in
+ * lib/fyp/resources.ts for why: rotation is the deciding factor, not just
+ * confidentiality). requireHubMember is the actual gate; this Hub has no
+ * server-side session/cookies (auth lives in browser localStorage only, see
+ * HubAccountContext), so — same as resource guide downloads — the caller
+ * must already hold a verified access token, which rules out a bare public
+ * redirect route that could check membership server-side on its own.
+ */
+export async function getFypWhatsAppUrl(
+  accessToken: string,
+): Promise<{ success: true; url: string } | { success: false; error: string }> {
+  const authed = await requireHubMember(accessToken);
+  if (!authed) return { success: false, error: "Not signed in" };
+
+  const url = process.env.FYP_WHATSAPP_URL;
+  if (!url) return { success: false, error: "WhatsApp link not configured" };
+
+  return { success: true, url };
+}
+
+/**
  * Removes a member from the caller's own FYP account — either the caller
  * themselves or a sibling member (same account-scoping as
  * updateFypMemberProfile; audit S2).

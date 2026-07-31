@@ -16,19 +16,26 @@ import { isLimitedStaffRole } from "@/lib/fyp/hub-access";
 // swaps to inline "Save changes"/"Discard changes" buttons in the card's
 // own header), not a page-wide save state surfaced in the nav.
 
+// Home added 2026-07-29 — quick links (WhatsApp/events/contact), same
+// content that used to live as a row atop the Resources tab, now its own
+// tab everyone lands on. All roles get it.
 const MEMBER_TABS = [
+  { href: "/hub/home", label: "Home" },
   { href: "/hub/account", label: "Account" },
   { href: "/hub/billing", label: "Billing" },
   { href: "/hub/resources", label: "Resources" },
 ];
 
-// Only 'facilitator' gets the reduced view (Resources only) — 'admin' sees
-// the full MEMBER_TABS (see isLimitedStaffRole's comment). No new
+// Only 'facilitator' gets the reduced view (Home + Resources) — 'admin'
+// sees the full MEMBER_TABS (see isLimitedStaffRole's comment). No new
 // functionality is built for facilitators — just fewer tabs, since
 // Account/Billing don't apply to non-customers. Enforced here (what's
 // rendered) and in the shared (account) layout (what's reachable by direct
 // URL).
-const FACILITATOR_TABS = [{ href: "/hub/resources", label: "Resources" }];
+const FACILITATOR_TABS = [
+  { href: "/hub/home", label: "Home" },
+  { href: "/hub/resources", label: "Resources" },
+];
 
 export default function HubAccountTabNav({ role }: { role: string }) {
   const pathname = usePathname();

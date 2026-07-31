@@ -1,12 +1,15 @@
 /**
  * FYP welcome page → direct Hub sign-in — E2E
  *
- * Covers GoToHubButton / getWelcomeHubSignInLink
- * (app/programs/first-year/welcome/{GoToHubButton.tsx,actions.ts}): landing
- * on the welcome page with a real ?session_id= that matches a seeded
- * account should sign the browser straight into an authenticated
- * /hub/account session, with no email/magic-link step in between. Falls
- * back to the plain /hub sign-in gate when there's no session_id at all.
+ * Covers AutoHubRedirect / getWelcomeHubSignInLink
+ * (app/programs/first-year/welcome/{AutoHubRedirect.tsx,actions.ts}):
+ * landing on the welcome page with a real ?session_id= that matches a
+ * seeded account should sign the browser straight into an authenticated
+ * /hub/home session, with no button click and no email/magic-link step in
+ * between (renamed from GoToHubButton 2026-07-31 — this used to be a
+ * button the family had to click; now it fires automatically on mount).
+ * Falls back to the plain /hub sign-in gate when there's no session_id at
+ * all.
  *
  * Not executed in the build sandbox (no root to install Playwright's OS
  * deps) — unverified by a real run as of this writing. Also worth flagging:
@@ -24,7 +27,7 @@ import {
   cleanupAccountByEmail,
 } from "./helpers/fyp-db";
 
-test("welcome page's Go to Hub button signs a matching account straight in", async ({
+test("welcome page auto-signs a matching account straight into the Hub", async ({
   page,
 }) => {
   const member = await seedActiveAccountWithMember({
@@ -36,14 +39,20 @@ test("welcome page's Go to Hub button signs a matching account straight in", asy
     await page.goto(
       `/programs/first-year/welcome?session_id=${member.stripeSessionId}`,
     );
-    await page
-      .getByRole("button", { name: /go to your first year hub/i })
-      .click();
 
-    // Same landing spot + assertions as the regular sign-in flow (see
-    // hub-auth.spec.ts) — this is just a different path into the same
-    // session.
-    await expect(page).toHaveURL(/\/hub\/account/, { timeout: 15_000 });
+    // No click required — AutoHubRedirect fires on mount. Lands on
+    // /hub/home?welcome=1 (see that page's WelcomeBanner), which then
+    // strips the query param itself.
+    await expect(page).toHaveURL(/\/hub\/home/, { timeout: 15_000 });
+    await expect(
+      page.getByText(/welcome to the first year program/i),
+    ).toBeVisible();
+
+    // Confirm this is a genuine per-member sign-in, not just a generic
+    // landing on the Home tab — /hub/home shows no member-specific info
+    // itself, so check the Account tab.
+    await page.getByRole("link", { name: "Account" }).click();
+    await expect(page).toHaveURL(/\/hub\/account/);
     await expect(page.getByText("Welcome Family")).toBeVisible();
     await expect(page.getByText(member.email)).toBeVisible();
   } finally {
@@ -55,11 +64,8 @@ test("welcome page falls back to the plain sign-in gate with no session_id", asy
   page,
 }) => {
   await page.goto("/programs/first-year/welcome");
-  await page
-    .getByRole("button", { name: /go to your first year hub/i })
-    .click();
 
-  await expect(page).toHaveURL(/\/hub$/);
+  await expect(page).toHaveURL(/\/hub$/, { timeout: 15_000 });
   await expect(page.getByText(/sign in to the first year hub/i)).toBeVisible();
 });
 
@@ -69,10 +75,7 @@ test("welcome page falls back to the plain sign-in gate for an unmatched session
   await page.goto(
     "/programs/first-year/welcome?session_id=cs_test_does_not_exist",
   );
-  await page
-    .getByRole("button", { name: /go to your first year hub/i })
-    .click();
 
-  await expect(page).toHaveURL(/\/hub$/);
+  await expect(page).toHaveURL(/\/hub$/, { timeout: 15_000 });
   await expect(page.getByText(/sign in to the first year hub/i)).toBeVisible();
 });

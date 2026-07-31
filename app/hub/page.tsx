@@ -6,18 +6,18 @@ import { useHubAccount } from "@/app/hub/HubAccountContext";
 import HubLoginForm from "@/app/hub/HubLoginForm";
 
 // /hub is just the sign-in gate now. Any signed-in member — active or
-// not — is redirected straight into /hub/account, which mirrors
-// Postpartum Post's tabbed account experience (Profile/Billing) and
-// handles the inactive-membership state itself (see
-// app/hub/account/layout.tsx). A real /hub "homepage" experience is
-// planned for later — see __claude__/fyp-hub-plan.md.
+// not, any role — is redirected straight into /hub/home, the Home tab
+// (quick links: WhatsApp/events/contact — see app/hub/(account)/home).
+// Home mirrors Postpartum Post's tabbed account experience's landing spot
+// and handles the inactive-membership state itself (see
+// app/hub/(account)/layout.tsx).
 export default function HubPage() {
   const router = useRouter();
   const { loading, member } = useHubAccount();
 
   useEffect(() => {
     if (!loading && member) {
-      router.replace("/hub/account");
+      router.replace("/hub/home");
     }
   }, [loading, member, router]);
 

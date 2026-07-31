@@ -72,7 +72,11 @@ export async function getWelcomeHubSignInLink(
     return { success: false };
   }
 
-  const redirectTo = `${process.env.NEXT_PUBLIC_DOMAIN ?? "https://amsterdamparentproject.nl"}/hub/auth/confirm`;
+  // next=/hub/home?welcome=1 (added 2026-07-31) — lands the family straight
+  // on the Home tab with its welcome banner (see that page's WelcomeBanner),
+  // instead of the confirm page's hardcoded default of plain "/hub". See
+  // app/hub/auth/confirm/page.tsx for the other half of this.
+  const redirectTo = `${process.env.NEXT_PUBLIC_DOMAIN ?? "https://amsterdamparentproject.nl"}/hub/auth/confirm?next=${encodeURIComponent("/hub/home?welcome=1")}`;
 
   const result = await generateMagicLinkWithRetry(
     supabase,

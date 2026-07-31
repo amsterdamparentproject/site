@@ -16,6 +16,15 @@ import HubLoginForm from "@/app/hub/HubLoginForm";
 // No server route handler / PKCE code-exchange — the session is
 // established entirely client-side, consistent with the rest of the Hub's
 // auth (see HubAccountContext.tsx).
+//
+// next (added 2026-07-31): an optional ?next= query param on THIS page's
+// own URL (not the hash fragment carrying auth tokens) overrides the
+// default "/hub" destination — used by the FYP welcome flow's
+// getWelcomeHubSignInLink to land straight on /hub/home?welcome=1 instead
+// of bouncing through plain /hub first. Supabase's generateLink()/verify
+// hop preserves this query param either way (it appends token_hash/type as
+// additional query params, or an access_token as a hash fragment — neither
+// touches an existing query param already on redirectTo).
 
 type Status = "loading" | "success" | "error" | "invalid";
 
@@ -31,7 +40,7 @@ function ConfirmHandler() {
   useEffect(() => {
     const tokenHash = searchParams.get("token_hash");
     const type = searchParams.get("type");
-    const next = "/hub";
+    const next = searchParams.get("next") || "/hub";
 
     if (tokenHash && type) {
       const supabase = createAuthBrowserClient();

@@ -2,7 +2,9 @@
  * Integration tests: getWelcomeHubSignInLink
  * (app/programs/first-year/welcome/actions.ts)
  *
- * The welcome page's direct-into-the-Hub sign-in link (GoToHubButton): looks
+ * The welcome page's direct-into-the-Hub sign-in link (AutoHubRedirect,
+ * renamed from GoToHubButton 2026-07-31 — now fires automatically on
+ * mount instead of behind a button click, same underlying action): looks
  * up the account by stripe_session_id, picks the account's oldest member,
  * and generates a Supabase magic link for them — no inbox round trip. Like
  * fyp-member-actions.test.ts, this hits the REAL firstyear schema in the
