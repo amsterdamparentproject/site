@@ -429,23 +429,30 @@ export default function MemberCard({
         )}
       </div>
 
-      {accessible && (
+      {accessible && isSelf && (
         <button
           type="button"
           onClick={
-            isSelf
-              ? isPpActive
-                ? handleGoToPostpartumPost
-                : handleActivatePostpartumPost
-              : undefined
+            isPpActive ? handleGoToPostpartumPost : handleActivatePostpartumPost
           }
           disabled={ppBanner.disabled}
-          title={ppBanner.title}
           data-umami-event={ppBanner.trackEvent}
           className="block w-full text-center text-sm font-medium bg-brand-soft-green dark:bg-brand-goldenrod text-white dark:text-brand-charcoal py-3 hover:opacity-90 transition-opacity border-t border-brand-sand/60 rounded-b-2xl disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
           {ppBanner.text}
         </button>
+      )}
+
+      {/* A sibling's card is purely informational — never clickable (see
+          getPostpartumPostBannerState's docs on why activating/signing in
+          on someone else's behalf isn't allowed). Plain brand-charcoal
+          status strip instead of a colored, button-shaped element, so it
+          doesn't read as an actionable control. */}
+      {accessible && !isSelf && (
+        <div className="block w-full text-center text-sm font-medium bg-brand-charcoal text-white py-3 border-t border-brand-sand/60 rounded-b-2xl">
+          <span className="sm:hidden">{ppBanner.shortStatus}</span>
+          <span className="hidden sm:inline">{ppBanner.title}</span>
+        </div>
       )}
     </div>
   );

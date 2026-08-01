@@ -1,15 +1,112 @@
 "use client";
 
-import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "@/components/Link";
+import Image from "@/components/Image";
 import { useHubAccount } from "@/app/hub/HubAccountContext";
+import { getFypWhatsAppUrl } from "@/app/hub/actions";
 import {
-  hasHubAccess,
-  isStaffRole,
-  isLimitedStaffRole,
-} from "@/lib/fyp/hub-access";
+  formatEventsStart,
+  getWelcomeBannerVariant,
+  hasEventsStarted,
+} from "@/app/hub/hub-banners";
+import { isStaffRole, isLimitedStaffRole } from "@/lib/fyp/hub-access";
 import HubAccountTabNav from "@/app/hub/account/HubAccountTabNav";
+import SignOutButton from "@/app/hub/SignOutButton";
+
+// Shown once, right after checkout — see AutoHubRedirect (checkout →
+// welcome page) and the FYP routine welcome email (lib/emails/fyp-welcome.ts)
+// for the two places that land here with ?welcome=1. Lives here (rather
+// than on the home page itself) so it renders above the inactive-membership
+// banner below — both banners can be visible together for a brand-new,
+// not-yet-active member landing on /hub/home right after checkout, and the
+// welcome should read first. Wrapped in its own Suspense boundary
+// (useSearchParams requirement) so it doesn't force the whole layout into a
+// loading state while this specific param is read. Strips the param via
+// router.replace once shown, so a refresh or a bookmarked/forwarded link
+// doesn't keep re-showing it.
+//
+// Copy branches on familyType rather than repeating the events-start banner
+// below — this is about the very next action to take, not membership
+// status, so multi-parent families are nudged to add their partner
+// (Account tab) and single-parent families are nudged toward the WhatsApp
+// group instead of a generic "take a look around."
+function WelcomeBanner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { member, accessToken } = useHubAccount();
+  // Captured once at mount, not re-derived from searchParams every render —
+  // the cleanup effect below strips ?welcome=1 from the URL right after
+  // mount, which would otherwise flip this back to false on the very next
+  // render and hide the banner instantly instead of leaving it up.
+  const [showBanner] = useState(() => searchParams.get("welcome") === "1");
+  const [whatsAppLoading, setWhatsAppLoading] = useState(false);
+
+  useEffect(() => {
+    if (showBanner) {
+      router.replace("/hub/home");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!showBanner || !member) return null;
+
+  const variant = getWelcomeBannerVariant(member.familyType);
+
+  async function handleJoinWhatsApp() {
+    if (!accessToken) return;
+    setWhatsAppLoading(true);
+    try {
+      const result = await getFypWhatsAppUrl(accessToken);
+      if (result.success) {
+        window.open(result.url, "_blank", "noopener,noreferrer");
+      } else {
+        console.error(
+          "[Hub welcome banner] WhatsApp link failed:",
+          result.error,
+        );
+      }
+    } finally {
+      setWhatsAppLoading(false);
+    }
+  }
+
+  return (
+    <div className="mb-8 rounded-2xl border border-brand-soft-green/40 bg-brand-soft-green/10 dark:bg-brand-soft-green/10 p-4 text-sm text-brand-charcoal dark:text-brand-white text-center">
+      {variant === "multi" ? (
+        <>
+          Welcome to the First Year Program! This is your <b>First Year Hub</b>,
+          where you&apos;ll find all of the program&apos;s resources and
+          subscription details. Our recommended first step: head on over to the{" "}
+          <Link
+            href="/hub/account"
+            className="text-brand-soft-green dark:text-brand-goldenrod font-medium underline"
+          >
+            Account
+          </Link>{" "}
+          tab to add your partner so they can start getting set up, too.
+        </>
+      ) : (
+        <>
+          Welcome to the First Year Program! This is your <b>First Year Hub</b>,
+          where you&apos;ll find all of the program&apos;s resources and
+          subscription details. Our recommended first step: join the{" "}
+          <button
+            type="button"
+            onClick={handleJoinWhatsApp}
+            disabled={whatsAppLoading}
+            data-umami-event="Hub: Welcome banner WhatsApp link"
+            className="text-brand-soft-green dark:text-brand-goldenrod font-medium underline disabled:opacity-60 disabled:cursor-wait cursor-pointer"
+          >
+            {whatsAppLoading ? "Loading…" : "WhatsApp group"}
+          </button>{" "}
+          to start meeting the other parents in the program.
+        </>
+      )}
+    </div>
+  );
+}
 
 // Shared shell for /hub/account, /hub/billing, and /hub/resources — a
 // (account) route group (mirrors postpartum-post/app/(account)/layout.tsx
@@ -59,33 +156,48 @@ export default function HubAccountLayout({
     return <p className="text-center text-sm py-16">Loading…</p>;
   }
 
-  const accessible = hasHubAccess(member.accountStatus);
+  const eventsStarted = hasEventsStarted(member.billingStartDate);
 
   return (
-    <div className="max-w-6xl mx-auto py-12 px-6">
-      <p className="mb-2 text-2xl font-extrabold text-brand-goldenrod text-center">
-        First Year Program
-      </p>
-      <h1 className="mb-8 text-3xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
-        First Year Hub
-      </h1>
+    <div className="max-w-6xl mx-auto pt-4 pb-12 px-6 md:pt-12">
+      <div className="mb-8 flex justify-center">
+        <Image
+          src="/email-images/fyp-logo.png"
+          alt="First Year Program"
+          width={680}
+          height={221}
+          className="h-24 w-auto md:h-28"
+          priority
+        />
+      </div>
 
       <HubAccountTabNav role={member.role} />
 
-      {!staff && !accessible && (
+      {pathname === "/hub/home" && (
+        <Suspense fallback={null}>
+          <WelcomeBanner />
+        </Suspense>
+      )}
+
+      {!staff && !eventsStarted && (
         <div className="mb-8 rounded-2xl border border-brand-sand/60 bg-brand-white/60 dark:bg-brand-soft-charcoal p-4 text-sm text-brand-charcoal/80 dark:text-brand-white/70">
-          Your membership isn&apos;t active, so some account features are
-          limited.{" "}
+          Live events start {formatEventsStart(member.billingStartDate)}. In the
+          meantime, you have full access to{" "}
           <Link
-            href="/programs/first-year"
+            href="/hub/account"
             className="text-brand-soft-green dark:text-brand-goldenrod font-medium underline"
           >
-            Visit the First Year Program →
+            1:1 matching via Postpartum Post
           </Link>
+          , expert guides, and our WhatsApp community. Take a look around!
         </div>
       )}
 
       {children}
+
+      <div className="mt-12 flex justify-center border-t border-brand-sand/60 pt-6">
+        <SignOutButton />
+      </div>
     </div>
   );
 }

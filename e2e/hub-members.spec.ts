@@ -33,6 +33,9 @@ test("add, edit, and remove a family member from the Account tab", async ({
 
   try {
     await signInToHubAs(page, member.email);
+    // Signing in lands on /hub/home (see app/hub/page.tsx) — follow the tab
+    // over to Account, where the family roster this test covers lives.
+    await page.getByRole("link", { name: "Account" }).click();
     await expect(page).toHaveURL(/\/hub\/account/);
 
     // Single-member account so far: family section shows just the

@@ -113,6 +113,13 @@ export interface SeededFYPMember {
  * seed a lapsed/canceling account, or `familyType: "multi"` for tests of
  * the Account tab's "Your family" roster/add-member UI (only rendered for
  * multi-family accounts — see app/hub/(account)/account/page.tsx).
+ *
+ * `billingStartDate` (added for the Hub banner e2e coverage,
+ * hub-banners.spec.ts) defaults to unset (null) — matching a real account
+ * before the webhook ever sets it — so tests of the "not started yet"
+ * banner/calendar states don't need to pass anything. Pass an ISO date
+ * string in the past/future to exercise the started/not-started split (see
+ * app/hub/hub-banners.ts's hasEventsStarted).
  */
 export async function seedActiveAccountWithMember(
   overrides: {
@@ -121,6 +128,7 @@ export async function seedActiveAccountWithMember(
     lastName?: string;
     status?: string;
     familyType?: "single" | "multi";
+    billingStartDate?: string;
   } = {},
 ): Promise<SeededFYPMember> {
   const db = supabase();
@@ -138,6 +146,9 @@ export async function seedActiveAccountWithMember(
       plan_type: "monthly",
       family_type: overrides.familyType ?? "single",
       status: overrides.status ?? "active",
+      ...(overrides.billingStartDate
+        ? { billing_start_date: overrides.billingStartDate }
+        : {}),
     })
     .select("id")
     .single();

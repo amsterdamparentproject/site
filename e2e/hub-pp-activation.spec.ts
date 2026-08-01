@@ -75,6 +75,9 @@ test("activates a brand-new Postpartum Post member", async ({ page }) => {
 
   try {
     await signInToHubAs(page, member.email);
+    // Signing in lands on /hub/home (see app/hub/page.tsx) — follow the
+    // tab over to Account, where the Postpartum Post banner this covers lives.
+    await page.getByRole("link", { name: "Account" }).click();
     await expect(page).toHaveURL(/\/hub\/account/);
 
     const activateButton = page.getByRole("button", {
@@ -115,6 +118,9 @@ test("links to an existing Postpartum Post member by email", async ({
 
   try {
     await signInToHubAs(page, member.email);
+    // Signing in lands on /hub/home (see app/hub/page.tsx) — follow the
+    // tab over to Account, where the Postpartum Post banner this covers lives.
+    await page.getByRole("link", { name: "Account" }).click();
     await expect(page).toHaveURL(/\/hub\/account/);
 
     await page
@@ -145,6 +151,9 @@ test("'Go to Postpartum Post' opens a real, working sign-in link for an already-
 
   try {
     await signInToHubAs(page, member.email);
+    // Signing in lands on /hub/home (see app/hub/page.tsx) — follow the
+    // tab over to Account, where the Postpartum Post banner this covers lives.
+    await page.getByRole("link", { name: "Account" }).click();
     await expect(page).toHaveURL(/\/hub\/account/);
 
     // isPpActive is true from the start (already linked), so "Go to
@@ -199,35 +208,36 @@ test("shows another family member's Postpartum Post banner as informational only
 
   try {
     await signInToHubAs(page, self.email);
+    // Signing in lands on /hub/home (see app/hub/page.tsx) — follow the
+    // tab over to Account, where the Postpartum Post banner this covers lives.
+    await page.getByRole("link", { name: "Account" }).click();
     await expect(page).toHaveURL(/\/hub\/account/);
 
+    // Sibling banners render as a plain status strip (a <div>, not a
+    // <button>) — see MemberCard's !isSelf branch. Confirmed two ways: the
+    // full name-bearing text (title equivalent, visible at this viewport's
+    // sm+ width) is shown, and there's no button role at all to click.
     const activeCard = page
       .locator("div.rounded-2xl")
       .filter({ hasText: "Active Sibling" })
       .first();
-    const activeBanner = activeCard.getByRole("button", {
-      name: "Go to Postpartum Post",
-    });
-    await expect(activeBanner).toBeVisible();
-    await expect(activeBanner).toBeDisabled();
-    await expect(activeBanner).toHaveAttribute(
-      "title",
-      "Active has activated Postpartum Post",
-    );
+    await expect(
+      activeCard.getByText("Active has activated Postpartum Post"),
+    ).toBeVisible();
+    await expect(
+      activeCard.getByRole("button", { name: /postpartum post/i }),
+    ).toHaveCount(0);
 
     const inactiveCard = page
       .locator("div.rounded-2xl")
       .filter({ hasText: "Inactive Sibling" })
       .first();
-    const inactiveBanner = inactiveCard.getByRole("button", {
-      name: "Activate Postpartum Post",
-    });
-    await expect(inactiveBanner).toBeVisible();
-    await expect(inactiveBanner).toBeDisabled();
-    await expect(inactiveBanner).toHaveAttribute(
-      "title",
-      "Inactive hasn't activated Postpartum Post yet",
-    );
+    await expect(
+      inactiveCard.getByText("Inactive hasn't activated Postpartum Post yet"),
+    ).toBeVisible();
+    await expect(
+      inactiveCard.getByRole("button", { name: /postpartum post/i }),
+    ).toHaveCount(0);
   } finally {
     await cleanupAccountByEmail(self.email);
   }

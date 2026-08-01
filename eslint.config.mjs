@@ -14,7 +14,14 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ["next.config.js", "next-env.d.ts"],
+    // scripts/*.mts: standalone dev scripts run directly via tsx, not part
+    // of the app's build/typecheck graph — tsconfig.json's `include` has no
+    // `.mts` entry (adding one pulls them into the app's tsc run, which
+    // then fails on top-level await / .ts-extension imports these scripts
+    // rely on, since target/module there are tuned for the Next app, not
+    // tsx's own transpilation). typed linting requires the file's tsconfig
+    // to include it, so without that, lint has nothing to check it against.
+    ignores: ["next.config.js", "next-env.d.ts", "scripts/*.mts"],
   },
   js.configs.recommended,
   ...compat.extends(

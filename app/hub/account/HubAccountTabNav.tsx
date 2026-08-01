@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import SignOutButton from "@/app/hub/SignOutButton";
 import { isLimitedStaffRole } from "@/lib/fyp/hub-access";
 
 // Structurally mirrors postpartum-post/components/AccountTabNav.tsx — real
@@ -21,9 +20,9 @@ import { isLimitedStaffRole } from "@/lib/fyp/hub-access";
 // tab everyone lands on. All roles get it.
 const MEMBER_TABS = [
   { href: "/hub/home", label: "Home" },
+  { href: "/hub/resources", label: "Resources" },
   { href: "/hub/account", label: "Account" },
   { href: "/hub/billing", label: "Billing" },
-  { href: "/hub/resources", label: "Resources" },
 ];
 
 // Only 'facilitator' gets the reduced view (Home + Resources) — 'admin'
@@ -59,9 +58,6 @@ export default function HubAccountTabNav({ role }: { role: string }) {
           </Link>
         );
       })}
-      <div className="ml-auto">
-        <SignOutButton />
-      </div>
     </nav>
   );
 }

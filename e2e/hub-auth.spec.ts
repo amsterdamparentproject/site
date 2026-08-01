@@ -7,11 +7,13 @@
  * 4. App shows "check your inbox"
  * 5. User follows the magic link
  *    (generated directly via Supabase admin — no inbox required)
- * 6. Lands on /hub as an authenticated member
+ * 6. Lands on /hub/home as an authenticated member (every signed-in
+ *    member is redirected there regardless of role/status — see
+ *    app/hub/page.tsx)
  *
- * Also covers: unauthenticated visit, unknown email, and an
- * inactive-account session (still signs in, but shows the "membership
- * isn't active" state instead of the welcome state).
+ * Also covers: unauthenticated visit, unknown email, and a lapsed-account
+ * session (still signs in, but shows the "Live events start..." banner
+ * instead of the welcome state).
  *
  * Prerequisite: NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY in
  * .env.test must point at the same Supabase project as
@@ -50,10 +52,14 @@ test("hub sign-in: request magic link → follow link → land on /hub", async (
     // Follow it (bypassing the inbox)
     await signInToHubAs(page, member.email);
 
-    // Lands on /hub/account (signed-in members are redirected there — see
-    // app/hub/page.tsx). MemberCard shows name/email as static text by
-    // default — they only become inputs once the pencil (edit) toggle is
-    // clicked, so getByText, not getByLabel/toHaveValue.
+    // Lands on /hub/home (signed-in members are redirected there
+    // regardless of role/status — see app/hub/page.tsx). MemberCard, which
+    // shows name/email as static text by default (only becomes inputs once
+    // the pencil/edit toggle is clicked), lives on the Account tab, not
+    // Home — follow the tab over to confirm the signed-in member actually
+    // resolved correctly, not just that /hub/home rendered.
+    await expect(page).toHaveURL(/\/hub\/home/);
+    await page.getByRole("link", { name: "Account" }).click();
     await expect(page).toHaveURL(/\/hub\/account/);
     await expect(page.getByText("Jane Doe")).toBeVisible();
     await expect(page.getByText(member.email)).toBeVisible();
@@ -93,7 +99,7 @@ test("signing in with a lapsed account shows the inactive-membership state", asy
 
   try {
     await signInToHubAs(page, member.email);
-    await expect(page.getByText(/your membership isn't active/i)).toBeVisible();
+    await expect(page.getByText(/live events start/i)).toBeVisible();
     await expect(page.getByText(/welcome, sam/i)).not.toBeVisible();
   } finally {
     await cleanupAccountByEmail(member.email);

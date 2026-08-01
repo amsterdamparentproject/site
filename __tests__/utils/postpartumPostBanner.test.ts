@@ -79,6 +79,7 @@ describe("getPostpartumPostBannerState", () => {
       expect(state.disabled).toBe(true);
       expect(state.title).toBe("Sam hasn't activated Postpartum Post yet");
       expect(state.trackEvent).toBeUndefined();
+      expect(state.shortStatus).toBe("Postpartum Post not yet activated");
     });
 
     it("shows 'Go to Postpartum Post' disabled, with an explanatory title, once they've linked", () => {
@@ -92,6 +93,7 @@ describe("getPostpartumPostBannerState", () => {
       expect(state.disabled).toBe(true);
       expect(state.title).toBe("Sam has activated Postpartum Post");
       expect(state.trackEvent).toBeUndefined();
+      expect(state.shortStatus).toBe("Postpartum Post activated");
     });
 
     it("stays disabled and shows the plain (non-pending) text regardless of isPending — a sibling's card never has a request in flight", () => {

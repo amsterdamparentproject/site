@@ -2,6 +2,7 @@ import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
 import { PROGRAM_START_UNIX } from "@/lib/fyp/program";
 import { deactivatePostpartumPost } from "@/lib/fyp/postpartum-post";
+import { sendFypWelcomeEmail } from "@/lib/emails/fyp-welcome";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -24,6 +25,17 @@ import Stripe from "stripe";
 //   Also deactivates any linked Postpartum Post comp for members on that
 //   account (monthly plans only — see lib/fyp/postpartum-post.ts and
 //   __claude__/fyp-improvements-plan.md § 2a).
+
+// Short plan labels for the welcome email copy ("...signed up for the
+// {label} plan..." — see lib/emails/fyp-welcome.ts) — keyed by the same
+// session.metadata.product values the branches below already switch on.
+const FYP_PLAN_LABELS: Record<string, string> = {
+  fyp_deposit: "Monthly",
+  fyp_bundle_expecting: "6-month bundle",
+  fyp_baby_deposit: "Monthly",
+  fyp_monthly_baby: "Monthly",
+  fyp_bundle_baby: "6-month bundle",
+};
 
 const MONTH_INDEX: Record<string, number> = {
   jan: 0,
@@ -300,6 +312,65 @@ export async function POST(req: NextRequest) {
           "[fyp webhook] update error (baby_bundle):",
           JSON.stringify(error),
         );
+    }
+
+    // ── Routine welcome email ───────────────────────────────────────────────────
+    // Added 2026-07-31 — mirrors postpartum-post's webhook one-for-one
+    // (non-fatal try/catch around the send, placed once after the account
+    // work rather than duplicated per product branch, since every branch
+    // above identifies the same account by session.id).
+    //
+    // Plain /hub link, not a magic link (changed 2026-08-01): this used to
+    // call generateMagicLinkWithRetry the same as AutoHubRedirect
+    // (app/programs/first-year/welcome/actions.ts's getWelcomeHubSignInLink)
+    // does for the same email, right around the same time — two independent
+    // admin.generateLink calls racing for the same user. Supabase only
+    // keeps one magic-link token live per user, so whichever call landed
+    // second silently invalidated the other, and the email's link could be
+    // dead before it was ever clicked. Reverted to a plain link (family
+    // signs in normally via HubLoginForm) to ship a working link now;
+    // reintroducing a magic link here should wait until that collision with
+    // AutoHubRedirect is actually resolved (see
+    // __claude__/fyp-improvements-plan.md).
+    if (product && FYP_PLAN_LABELS[product]) {
+      try {
+        const { data: account } = await supabase
+          .from("accounts")
+          .select("id")
+          .eq("stripe_session_id", session.id)
+          .maybeSingle();
+
+        const { data: member } = account
+          ? await supabase
+              .from("members")
+              .select("email, first_name")
+              .eq("account_id", account.id)
+              .order("created_at", { ascending: true })
+              .limit(1)
+              .maybeSingle()
+          : { data: null };
+
+        if (member?.email) {
+          const hubLink = `${process.env.NEXT_PUBLIC_DOMAIN ?? "https://amsterdamparentproject.nl"}/hub`;
+
+          await sendFypWelcomeEmail(
+            member.email,
+            member.first_name || "there",
+            hubLink,
+            FYP_PLAN_LABELS[product],
+          );
+          console.log("[fyp webhook] welcome email sent to", member.email);
+        } else {
+          console.error(
+            "[fyp webhook] no member found for welcome email, session:",
+            session.id,
+          );
+        }
+      } catch (err) {
+        // Non-fatal — the account/subscription work above already
+        // succeeded; email failure shouldn't block the webhook response.
+        console.error("[fyp webhook] welcome email failed (non-fatal):", err);
+      }
     }
   }
 

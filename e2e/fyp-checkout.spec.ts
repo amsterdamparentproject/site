@@ -295,7 +295,14 @@ test("expecting_monthly (multi): deposit → deferred subscription created", asy
   expect(members[0].email).toBe(EMAILS.expecting_monthly);
   expect(members[0].status).toBe("active");
 
-  await checkoutPage.getByRole("link", { name: "Account" }).click();
+  // Scoped to the tab nav specifically — the ?welcome=1 banner shown for
+  // multi-parent families (see the (account) layout's WelcomeBanner) has
+  // its own inline "Account" link nudging the same tab, so a bare
+  // getByRole("link", { name: "Account" }) matches two elements here.
+  await checkoutPage
+    .getByRole("navigation")
+    .getByRole("link", { name: "Account" })
+    .click();
   await expect(checkoutPage).toHaveURL(/\/hub\/account/, { timeout: 20_000 });
   await expect(checkoutPage.getByText("Test Parent")).toBeVisible();
   await expect(checkoutPage.getByText(EMAILS.expecting_monthly)).toBeVisible();

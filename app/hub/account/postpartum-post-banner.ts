@@ -3,6 +3,11 @@ export type PostpartumPostBannerState = {
   disabled: boolean;
   title: string | undefined;
   trackEvent: string | undefined;
+  // Generic, name-free status for a sibling's card (see MemberCard's
+  // !isSelf banner) — swapped in below sm on a narrow status strip where
+  // "<Name> has/hasn't activated Postpartum Post yet" wraps awkwardly.
+  // `title`'s fuller, name-bearing phrasing is still used at sm and up.
+  shortStatus: string;
 };
 
 /**
@@ -39,6 +44,7 @@ export function getPostpartumPostBannerState({
       disabled: !isSelf || isPending,
       title: isSelf ? undefined : `${firstName} has activated Postpartum Post`,
       trackEvent: isSelf ? "Hub: Go to Postpartum Post" : undefined,
+      shortStatus: "Postpartum Post activated",
     };
   }
 
@@ -49,5 +55,6 @@ export function getPostpartumPostBannerState({
       ? undefined
       : `${firstName} hasn't activated Postpartum Post yet`,
     trackEvent: isSelf ? "Hub: Activate Postpartum Post" : undefined,
+    shortStatus: "Postpartum Post not yet activated",
   };
 }
