@@ -1,6 +1,6 @@
 import {
   FROM,
-  FYP_LOGO,
+  FYP_LOGO_BANNER,
   getResend,
   bodySection,
   ctaButton,
@@ -31,8 +31,10 @@ import {
 // the "profile" tab' — the Hub's tab is actually labeled "Account" (see
 // app/hub/account/HubAccountTabNav.tsx), so that's used here instead.
 //
-// Header logo added 2026-07-31 (FYP_LOGO, public/email-images/fyp-logo.png)
-// — Alex's own FYP wordmark, cropped/resized from her source file.
+// Header logo added 2026-07-31 (FYP_LOGO_BANNER,
+// public/email-images/fyp-logo-banner.png) — Alex's own FYP wordmark,
+// composited onto a solid cream banner (see base.ts's dark-mode note) after
+// an earlier transparent-bg version disappeared into dark-mode backgrounds.
 
 export function welcomeHtml(
   firstName: string,
@@ -59,7 +61,7 @@ export function welcomeHtml(
       intro +
       ctaButton("Go to your First Year Hub", hubLink) +
       note,
-    `<link rel="preload" as="image" href="${FYP_LOGO}">`,
+    `<link rel="preload" as="image" href="${FYP_LOGO_BANNER}">`,
   );
 }
 

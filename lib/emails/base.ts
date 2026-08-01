@@ -13,10 +13,19 @@
  * postpartumpost.com/email-images/* rather than duplicated onto site's own
  * domain — same reuse call already made for the shared Hub/PP sign-in
  * template (see project-fyp-hub-auth memory's "Branding conflict" entry).
- * Header banner (2026-07-31) is the actual FYP logo (see FYP_LOGO,
- * public/email-images/fyp-logo.png) — PP's own banner is a "postpartum
- * post" wordmark PNG, wrong brand for FYP mail, so this is a distinct
- * asset rather than a reuse of PP's.
+ * Header banner (2026-07-31) is the actual FYP logo (see FYP_LOGO_BANNER,
+ * public/email-images/fyp-logo-banner.png) — PP's own banner is a
+ * "postpartum post" wordmark PNG, wrong brand for FYP mail, so this is a
+ * distinct asset rather than a reuse of PP's, but it uses the exact same
+ * technique PP's TEXT_BANNER relies on: the cream (#F7EEE6) field is baked
+ * into the PNG's own pixels rather than left to the <td>'s CSS
+ * background-color. Dark-mode email clients (Gmail, Outlook) routinely
+ * strip/override CSS background-color but can't touch image pixels — an
+ * earlier version of this header used a transparent-bg logo over a CSS
+ * background-color cream <td>, and Alex caught it going invisible in dark
+ * mode (the same failure mode PP's own file doc already flags for
+ * TEXT_BANNER). Fixed by compositing the logo onto a solid cream canvas
+ * once, ahead of time, instead of at render time.
  */
 
 import { getResend } from "@/lib/resend";
@@ -34,10 +43,12 @@ export const EMAIL_ICON = `${ASSETS_URL}/email-images/email.png`;
 // production, deliberately NOT built from SITE_URL: SITE_URL follows
 // NEXT_PUBLIC_DOMAIN, which is localhost:3000 in .env.local, and localhost
 // image URLs are unreachable by real email clients (same reasoning as PP's
-// ASSETS_URL comment). fyp-logo.png cropped/resized to a 2x-ready 680x221
-// PNG (transparent bg) from Alex's source logo, 2026-07-31.
+// ASSETS_URL comment). fyp-logo-banner.png: Alex's source logo, cropped to
+// its content bbox and composited onto a solid cream (#F7EEE6) 1200x320
+// (2x) canvas — see file doc's dark-mode note for why the background is
+// baked in rather than CSS.
 export const SITE_ASSETS_URL = "https://amsterdamparentproject.nl";
-export const FYP_LOGO = `${SITE_ASSETS_URL}/email-images/fyp-logo.png`;
+export const FYP_LOGO_BANNER = `${SITE_ASSETS_URL}/email-images/fyp-logo-banner.png`;
 
 // Hex equivalents of the brand tokens in css/tailwind.css's source comment
 // (goldenrod #E1AD37, charcoal #303633, soft-green #3F6455, sand #D7C3AC,
@@ -107,10 +118,14 @@ export function emailHead(extraPreloads = ""): string {
 }
 
 /**
- * Brand header — FYP logo image (see FYP_LOGO) on a cream field, same
- * bulletproof single-image row PP uses for its own header banner/welcome
- * illustration (MSO table-width fallback + intrinsic width/height +
- * display:block so it can't be treated as a link-preview thumbnail).
+ * Brand header — full-width FYP logo banner (see FYP_LOGO_BANNER), same
+ * technique as PP's emailHeader(): a single full-bleed image with its own
+ * background baked in (immune to dark-mode clients stripping/overriding
+ * CSS background-color — see FYP_LOGO_BANNER's doc), plus an MSO text
+ * fallback for Outlook clients that block external images by default. The
+ * `<td>`'s own background-color is kept too, purely as a same-color
+ * light-mode fallback for the rare client that renders neither the image
+ * nor the MSO branch — it is NOT what protects against dark mode.
  * Not auto-inserted by baseEmail() — each email composes it into `content`
  * explicitly (mirrors PP's own emails, e.g. auto-pause.ts's
  * `emailHeader() + bodySection(...) + ctaButton(...)`), so a future
@@ -119,20 +134,21 @@ export function emailHead(extraPreloads = ""): string {
 export function emailHeader(): string {
   return `
                   <!-- Brand header -->
-                  <tr><td style="background-color:${BRAND.cream};padding:24px 24px">
-                    <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tbody><tr>
-                      <td align="center">
-                        <!--[if mso]><table cellpadding="0" cellspacing="0" border="0" width="340" style="width:340px"><tbody><tr><td><![endif]-->
-                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:340px"><tbody><tr>
-                          <td style="width:100%">
-                            <img src="${FYP_LOGO}" width="340" height="111"
-                              alt="First Year Program"
-                              style="display:block;width:100%;height:auto;max-width:100%">
-                          </td>
-                        </tr></tbody></table>
-                        <!--[if mso]></td></tr></tbody></table><![endif]-->
-                      </td>
-                    </tr></tbody></table>
+                  <tr><td style="padding:0 0 16px">
+                    <table border="0" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed">
+                      <tbody><tr>
+                        <td style="background-color:${BRAND.cream};padding:0;text-align:center;font-size:0;line-height:0">
+                          <!--[if mso]><table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto"><tbody><tr><td style="padding:20px 36px">
+                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:800;color:${BRAND.softGreen};letter-spacing:-0.3px;text-align:center">First Year Program</p>
+                          </td></tr></tbody></table><![endif]-->
+                          <!--[if !mso]><!-->
+                          <img src="${FYP_LOGO_BANNER}" width="600" height="160"
+                            alt="First Year Program"
+                            style="display:block;width:100%;height:auto;max-width:600px;border:0;margin:0 auto">
+                          <!--<![endif]-->
+                        </td>
+                      </tr></tbody>
+                    </table>
                   </td></tr>`;
 }
 
