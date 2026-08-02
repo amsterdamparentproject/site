@@ -44,19 +44,18 @@ const MONTHS = [
   { label: "December", value: "dec" },
 ];
 
-// Immediate access for all plans on signup
+// Immediate access for all plans on signup — everything except live event
+// invites. Confirmed with Alex 2026-08-02: the 2026-07-29 access-model
+// simplification (see fyp-plan-access.md) made all 7 resource guides and
+// WhatsApp immediate for every plan too, not gated to billing_start_date —
+// live events are the only thing still gated.
 const IMMEDIATE_FEATURES = [
-  "Access to our parent matching platform",
-  "Building the Village guide",
+  "A free subscription to our 1:1 parent matching platform",
+  "Access to our moderated First Year Program WhatsApp group",
+  "A personalized First Year Hub with all 7 program resource guides and account management (to add other family members!)",
 ];
 
-// Full access from billing_start_date (September 2026 or month after due date)
-const FULL_FEATURES = [
-  "Access to our parent matching platform",
-  "Private WhatsApp community access",
-  "All 7 resource guides",
-  "Invites to this month's events",
-];
+const EVENTS_FEATURE = "Invites to this month's events";
 
 // ---------------------------------------------------------------------------
 // Shared styles
@@ -307,11 +306,13 @@ export default function FYPJoinForm({
       return selectedDate < oneYearAgo;
     })();
 
-  // Before program start everyone gets immediate features only (full guides unlock on billing_start_date).
-  // After program start, baby families get full access immediately; expecting families still unlock on due date.
+  // Everyone gets IMMEDIATE_FEATURES on signup regardless of timing — the
+  // only thing that's actually gated is event invites, which only apply
+  // once the program has started for baby-here families (expecting
+  // families still wait for their due date, same as before).
   const features =
     !isBeforeProgramStart && situation === "baby_here"
-      ? FULL_FEATURES
+      ? [...IMMEDIATE_FEATURES, EVENTS_FEATURE]
       : IMMEDIATE_FEATURES;
 
   // Reset selected flow to the bundle when situation changes

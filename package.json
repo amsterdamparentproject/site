@@ -22,8 +22,8 @@
     "test:hub:e2e": "playwright test hub",
     "update-fyp-guides": "node scripts/update-fyp-guides.mjs",
     "emails:preview": "tsx --env-file=.env.local scripts/send-preview-emails.mts",
-    "ftp-legacy-transition:test": "tsx --env-file=.env.local scripts/send-ftp-legacy-transition.mts",
-    "ftp-legacy-transition:prod": "tsx --env-file=.env.production scripts/send-ftp-legacy-transition.mts",
+    "ftp-legacy-transition:test": "tsx scripts/send-ftp-legacy-transition.mts test",
+    "ftp-legacy-transition:prod": "tsx scripts/send-ftp-legacy-transition.mts prod",
     "prepare": "husky"
   },
   "dependencies": {

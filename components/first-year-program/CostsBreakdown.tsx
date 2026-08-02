@@ -216,7 +216,7 @@ function PriceCards() {
 export default function CostsBreakdown() {
   const inclusions: { bold: string; rest: ReactNode }[] = [
     {
-      bold: "1:1 peer match",
+      bold: "Monthly match",
       rest: (
         <>
           via{" "}

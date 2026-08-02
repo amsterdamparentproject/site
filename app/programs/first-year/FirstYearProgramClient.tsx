@@ -350,8 +350,8 @@ export default function FirstYearProgramClient({
                   />
                 </button>
                 <figcaption className="text-center text-xs text-brand-soft-charcoal/60 dark:text-brand-white/50 italic mt-2">
-                  Expert discussions happen live online, so you never have to
-                  leave the house.
+                  Expert discussions happen live online, so you can get support
+                  regardless of what your morning looked like.
                 </figcaption>
               </figure>
             </div>
