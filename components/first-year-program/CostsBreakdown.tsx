@@ -259,7 +259,7 @@ export default function CostsBreakdown() {
       {/* What the program includes */}
       <div className="w-full max-w-xl bg-brand-sand/20 dark:bg-brand-soft-charcoal/30 rounded-2xl p-6 mb-12 border border-brand-sand/40 dark:border-brand-soft-charcoal/60">
         <h4 className="text-sm italic text-brand-soft-green dark:text-brand-goldenrod font-medium mb-4 text-center">
-          Your monthly subscription includes:
+          The full program includes:
         </h4>
         <ul className="grid grid-cols-1 gap-y-3 text-left">
           {inclusions.map((item, i) => (

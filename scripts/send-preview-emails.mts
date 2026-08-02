@@ -10,6 +10,7 @@
  */
 
 import { sendFypWelcomeEmail } from "../lib/emails/fyp-welcome.ts";
+import { sendFtpLegacyTransitionEmail } from "../lib/emails/fyp-legacy-transition.ts";
 
 const args = process.argv.slice(2);
 const isEmail = (s: string) => s.includes("@");
@@ -43,8 +44,21 @@ await send("fyp-welcome", () =>
   ),
 );
 
+// Two variants of the same template — one with a promo code (families
+// crediting a deposit), one without (full-price). Separate names so a
+// preview run only ever sends one email, not both — each real send counts
+// against Resend's daily test-account limit.
+await send("fyp-legacy-transition-promo", () =>
+  sendFtpLegacyTransitionEmail(TO, "Alex", "APPWELCOME25"),
+);
+await send("fyp-legacy-transition-full-price", () =>
+  sendFtpLegacyTransitionEmail(TO, "Alex", undefined),
+);
+
 if (results.length === 0 && filter) {
-  console.error(`Unknown email name: "${filter}". Valid names: fyp-welcome`);
+  console.error(
+    `Unknown email name: "${filter}". Valid names: fyp-welcome, fyp-legacy-transition-promo, fyp-legacy-transition-full-price`,
+  );
   process.exit(1);
 }
 

@@ -5,10 +5,55 @@ import MonthlyJourneyGrid from "@/components/first-year-program/MonthlyJourneyGr
 import CostsBreakdown from "@/components/first-year-program/CostsBreakdown";
 import ProgramFAQ from "@/components/first-year-program/ProgramFAQ";
 import ProgramJourney from "@/components/first-year-program/ProgramJourney";
+import PhotoGallery from "@/components/first-year-program/PhotoGallery";
+import PhotoLightbox, {
+  PhotoLightboxImage,
+} from "@/components/first-year-program/PhotoLightbox";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import Link from "@/components/Link";
 import { MoveRight } from "lucide-react";
 import FYPJoinForm from "@/components/first-year-program/FYPJoinForm";
+import Image from "@/components/Image";
+
+// ---------------------------------------------------------------------------
+// Photo gallery data
+// ---------------------------------------------------------------------------
+
+const communityPhotos = [
+  {
+    src: "/static/images/programs/first-year-program/gallery/cafe-de-hallen.webp",
+    alt: "Parents chatting and holding babies at a De Hallen café meetup",
+  },
+  {
+    src: "/static/images/programs/first-year-program/gallery/museum-group.webp",
+    alt: "A group of parents and babies posing together at the Rijksmuseum",
+  },
+  {
+    src: "/static/images/programs/first-year-program/gallery/park-walk.webp",
+    alt: "Parents walking together with a stroller along a tree-lined park path",
+  },
+  {
+    src: "/static/images/programs/first-year-program/gallery/cafe-table.webp",
+    alt: "A group of parents gathered around a café table for a social meetup",
+  },
+];
+
+const programMomentPhotos = [
+  {
+    src: "/static/images/programs/first-year-program/gallery/tummy-time-reading.webp",
+    alt: "Two babies on their tummies reading a picture book together",
+  },
+  {
+    src: "/static/images/programs/first-year-program/gallery/playroom.webp",
+    alt: "Parents and babies playing together in a soft playroom",
+  },
+];
+
+const expertSessionPhoto = {
+  src: "/static/images/programs/first-year-program/gallery/zoom-intro-call.webp",
+  alt: "A live virtual expert discussion during the First Year Program",
+};
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -119,6 +164,10 @@ function DepositConfirmedBanner() {
 // ---------------------------------------------------------------------------
 
 export default function FirstYearProgramClient() {
+  const [lightboxImage, setLightboxImage] = useState<PhotoLightboxImage | null>(
+    null,
+  );
+
   return (
     <>
       <FTPBanner />
@@ -208,6 +257,15 @@ export default function FirstYearProgramClient() {
             </div>
           </div>
 
+          {/* Community gallery */}
+          <section className="py-8 max-w-5xl mx-auto w-full">
+            <SectionHeader
+              header="What it looks like in practice"
+              subtitle="Café meetups, museum outings, and park walks — real families in the program, meeting up around Amsterdam."
+            />
+            <PhotoGallery items={communityPhotos} />
+          </section>
+
           {/* Journey */}
           <section className="py-8 px-4 max-w-4xl mx-auto flex items-center flex-col justify-center">
             <SectionHeader
@@ -232,6 +290,45 @@ export default function FirstYearProgramClient() {
                 </>
               }
             />
+
+            <div className="max-w-4xl mx-auto mb-10 grid grid-cols-2 md:grid-cols-3 gap-4 px-4">
+              {programMomentPhotos.map((photo) => (
+                <button
+                  key={photo.src}
+                  type="button"
+                  onClick={() => setLightboxImage(photo)}
+                  className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-brand-sand/60 cursor-zoom-in"
+                >
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    sizes="(max-width: 768px) 45vw, 30vw"
+                    className="object-cover"
+                  />
+                </button>
+              ))}
+              <figure className="col-span-2 md:col-span-1">
+                <button
+                  type="button"
+                  onClick={() => setLightboxImage(expertSessionPhoto)}
+                  className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden border border-brand-sand/60 cursor-zoom-in"
+                >
+                  <Image
+                    src={expertSessionPhoto.src}
+                    alt={expertSessionPhoto.alt}
+                    fill
+                    sizes="(max-width: 768px) 90vw, 30vw"
+                    className="object-cover"
+                  />
+                </button>
+                <figcaption className="text-center text-xs text-brand-soft-charcoal/60 dark:text-brand-white/50 italic mt-2">
+                  Expert discussions happen live online, so you never have to
+                  leave the house.
+                </figcaption>
+              </figure>
+            </div>
+
             <MonthlyJourneyGrid />
           </section>
 
@@ -282,6 +379,11 @@ export default function FirstYearProgramClient() {
           <ProgramFAQ />
         </div>
       </div>
+
+      <PhotoLightbox
+        image={lightboxImage}
+        onClose={() => setLightboxImage(null)}
+      />
     </>
   );
 }
