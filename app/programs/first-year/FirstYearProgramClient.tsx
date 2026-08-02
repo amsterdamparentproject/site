@@ -163,7 +163,34 @@ function DepositConfirmedBanner() {
 // Page
 // ---------------------------------------------------------------------------
 
-export default function FirstYearProgramClient() {
+interface FirstYearProgramClientProps {
+  // Prefill for FYPJoinForm — resolved server-side by
+  // app/programs/first-year/page.tsx from a ?legacyId= URL param (the
+  // legacy-transition email's personalized "Register" link, see
+  // lib/emails/fyp-legacy-transition.ts's buildJoinUrl) and passed down as
+  // plain props.
+  //
+  // IMPORTANT: this component does NOT read these off useSearchParams()
+  // itself, on purpose. An earlier version did exactly that — reading
+  // firstName/lastName/email straight from the client-visible URL — which
+  // Alex flagged as a real privacy problem (PII in browser history,
+  // server/CDN logs, analytics tools, Referer headers). The URL only ever
+  // carries the opaque legacyId now; see page.tsx's resolveLegacyPrefill
+  // for where the actual lookup happens.
+  initialFirstName?: string;
+  initialLastName?: string;
+  initialEmail?: string;
+  initialMonth?: string;
+  initialYear?: string;
+}
+
+export default function FirstYearProgramClient({
+  initialFirstName,
+  initialLastName,
+  initialEmail,
+  initialMonth,
+  initialYear,
+}: FirstYearProgramClientProps) {
   const [lightboxImage, setLightboxImage] = useState<PhotoLightboxImage | null>(
     null,
   );
@@ -355,7 +382,13 @@ export default function FirstYearProgramClient() {
 
           {/* Join */}
           <section id="#join">
-            <FYPJoinForm />
+            <FYPJoinForm
+              initialFirstName={initialFirstName}
+              initialLastName={initialLastName}
+              initialEmail={initialEmail}
+              initialMonth={initialMonth}
+              initialYear={initialYear}
+            />
           </section>
         </div>
 

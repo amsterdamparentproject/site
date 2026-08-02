@@ -49,6 +49,7 @@
 import { stripe } from "../lib/stripe-client.js";
 import { createFirstYearClient } from "../lib/supabase/server.ts";
 import { sendFtpLegacyTransitionEmail } from "../lib/emails/fyp-legacy-transition.ts";
+import { splitName } from "../lib/fyp/split-name.ts";
 
 const STATUSES_WITH_PROMO = ["deposit", "transfer_fyp"];
 
@@ -102,15 +103,21 @@ async function main() {
 
   console.log(`Found ${rows.length} row(s):`);
   for (const row of rows) {
+    const { firstName, lastName } = splitName(row.name);
     console.log(
-      `  - ${row.name} <${row.email}> (status: ${row.status}, cohort: ${row.cohort ?? "—"})`,
+      `  - firstName: ${firstName}, lastName: ${lastName}, email: ${row.email} (status: ${row.status}, cohort: ${row.cohort ?? "—"})`,
     );
   }
 
   const results: { email: string; ok: boolean; error?: string }[] = [];
 
   for (const row of rows) {
-    const firstName = row.name.split(" ")[0] || row.name;
+    // Only firstName is needed for the email's "Hi {firstName}," greeting
+    // — the Register link now carries just row.id (see buildJoinUrl's
+    // doc), not a split-out name, so lastName from here never reaches the
+    // URL/logs/analytics. splitName() is still used above for the
+    // listing print and here for firstName.
+    const { firstName } = splitName(row.name);
     const needsPromo = STATUSES_WITH_PROMO.includes(row.status);
 
     try {
@@ -141,7 +148,12 @@ async function main() {
       );
 
       if (confirm) {
-        await sendFtpLegacyTransitionEmail(row.email, firstName, promoCode);
+        await sendFtpLegacyTransitionEmail(
+          row.email,
+          firstName,
+          row.id,
+          promoCode,
+        );
       }
 
       results.push({ email: row.email, ok: true });

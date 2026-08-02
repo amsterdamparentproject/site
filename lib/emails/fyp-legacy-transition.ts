@@ -26,7 +26,31 @@ import {
 // copy below branches on its presence rather than taking two separate
 // template functions, since everything else about the email is identical.
 
-const JOIN_URL = "https://amsterdamparentproject.nl/programs/first-year#join";
+// Personalized per recipient (2026-08-01, per Alex) — links to
+// /programs/first-year with the ftp_legacy row's own id so
+// app/programs/first-year/page.tsx can look up name/email/due date
+// server-side and prefill FYPJoinForm.tsx, instead of the family retyping
+// what we already have on file. See that page's comment and
+// lib/fyp/legacy-prefill.ts's toLegacyPrefill for the read side.
+//
+// IMPORTANT — corrected 2026-08-01: this used to build the URL from
+// firstName/lastName/email directly (?firstName=&lastName=&email=), which
+// Alex flagged as a real privacy problem — that PII would sit in browser
+// history, server/CDN access logs, and analytics tools (this app already
+// tracks page views), and leak via the Referer header to any third-party
+// resource the page loads. The row's own uuid is the only thing in the
+// link now — same "opaque token, no PII in query strings" approach this
+// table's apply_url/refund_url already use (see migration
+// 007_ftp_legacy.sql's header comment and
+// app/api/fyp/deposit-response/route.ts).
+//
+// Exported (not just used internally) so it can be unit-tested directly —
+// see __tests__/utils/buildJoinUrl.test.ts — and so send-preview-emails.mts
+// can print the exact link a preview send will contain.
+export function buildJoinUrl(legacyId: string) {
+  const params = new URLSearchParams({ legacyId });
+  return `https://amsterdamparentproject.nl/programs/first-year?${params.toString()}#join`;
+}
 
 // Bulleted feature list — plain <ul>/<li> with every style spelled out
 // inline (margin/padding/list-style reset), since emailHead()'s global
@@ -59,8 +83,11 @@ const featureListMarkup = `
 
 export function legacyTransitionHtml(
   firstName: string,
+  legacyId: string,
   promoCode: string | undefined,
 ): string {
+  const joinUrl = buildJoinUrl(legacyId);
+
   // Everything through "Next steps" lives in one bodySection() call —
   // splitting the feature list or the next-steps line into their own
   // bodySection() calls stacked an extra 26px-per-side gap on top of the
@@ -75,7 +102,7 @@ export function legacyTransitionHtml(
 
   const noPromoNextSteps = `
                                     <tr><td dir="ltr" style="font-size:16px;text-align:left;padding:0 0 16px;line-height:1.4;mso-line-height-alt:22.4px">
-                                      <span>We'd love to have your family join for September! You can sign up for the monthly plan or the 6-month bundle whenever works best for you.</span>
+                                      <span>We'd love to have your family join! You can sign up for the monthly plan or the 6-month bundle whenever works best for you.</span>
                                     </td></tr>
                                     <tr><td dir="ltr" style="font-size:16px;text-align:left;line-height:1.4;mso-line-height-alt:22.4px">
                                       <span>❗️👉🏼 </span><span style="font-weight:700;text-decoration:underline">Next steps: Register by 5 August</span><span> via the button below to join this month's 1:1 parent match and start the live program in September.</span>
@@ -86,14 +113,14 @@ export function legacyTransitionHtml(
   // deposit" would be false for them).
   const cohortUpdate = promoCode
     ? `You put down a deposit for APP's Fourth Trimester Program September cohort, and we have an update — 8 families are already interested, enough to go ahead!`
-    : `You indicated interest in APP's Fourth Trimester Program September cohort, and we have an update — we have 7 other families also interested, enough to go ahead!`;
+    : `You indicated interest in APP's Fourth Trimester Program, and we have an update — we have 7 other families also interested, enough to go ahead!`;
 
   const opening = bodySection(`
                                     <tr><td dir="ltr" style="font-size:16px;text-align:left;padding:0 0 16px;line-height:1.4;mso-line-height-alt:22.4px">
                                       <span>Hi ${firstName},</span>
                                     </td></tr>
                                     <tr><td dir="ltr" style="font-size:16px;text-align:left;padding:0 0 16px;line-height:1.4;mso-line-height-alt:22.4px">
-                                      <span>${cohortUpdate} </span><span style="font-weight:700">We're excited to run our newborn family support program this September</span><span> with Miriam, Danielle, and myself as your facilitators.</span>
+                                      <span>${cohortUpdate} </span><span style="font-weight:700">We're excited to run our newborn family support program starting September</span><span> with Miriam, Danielle, and myself as your facilitators.</span>
                                     </td></tr>
                                     <tr><td dir="ltr" style="font-size:16px;text-align:left;padding:0 0 16px;line-height:1.4;mso-line-height-alt:22.4px">
                                       <span>Over the last few months, Fourth Trimester Program has evolved into the </span><span style="font-weight:700">First Year Program</span><span> 🌱 — and we couldn't be more proud of how we've worked with past cohorts to make the experience even better. Here's what changed (all additive!):</span>
@@ -158,7 +185,7 @@ export function legacyTransitionHtml(
   return baseEmail(
     emailHeader() +
       opening +
-      ctaButton("Register for First Year Program", JOIN_URL) +
+      ctaButton("Register for First Year Program", joinUrl) +
       promoBlock +
       bonusAndNote,
   );
@@ -167,6 +194,7 @@ export function legacyTransitionHtml(
 export async function sendFtpLegacyTransitionEmail(
   email: string,
   firstName: string,
+  legacyId: string,
   promoCode: string | undefined,
 ) {
   const resend = getResend();
@@ -174,7 +202,7 @@ export async function sendFtpLegacyTransitionEmail(
     from: FROM,
     to: email,
     subject: `${subjectPrefix()}It's time to register for the September cohort`,
-    html: legacyTransitionHtml(firstName, promoCode),
+    html: legacyTransitionHtml(firstName, legacyId, promoCode),
   });
   if (error) {
     console.error("[resend] sendFtpLegacyTransitionEmail error:", error);

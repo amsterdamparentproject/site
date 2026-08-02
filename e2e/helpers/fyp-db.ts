@@ -228,6 +228,58 @@ export async function addSeededMember(
   return { memberId: member.id, email, firstName, lastName };
 }
 
+export interface SeededFtpLegacyRow {
+  id: string;
+  email: string;
+}
+
+/**
+ * Insert a firstyear.ftp_legacy row — for e2e coverage of the
+ * legacy-transition email's personalized "Register" link
+ * (?legacyId=<row.id>#join → app/programs/first-year/page.tsx's
+ * server-side lookup → FYPJoinForm prefill). See
+ * e2e/fyp-join-form-prefill.spec.ts.
+ *
+ * `name` is a single field on this table (see migration
+ * 007_ftp_legacy.sql) — split into first/last by splitName() at read time,
+ * not here.
+ */
+export async function seedFtpLegacyRow(
+  overrides: {
+    name?: string;
+    email?: string;
+    dueBirthDate?: string; // "YYYY-MM-DD"
+    status?: string;
+    cohort?: string;
+  } = {},
+): Promise<SeededFtpLegacyRow> {
+  const db = supabase();
+  const id = crypto.randomUUID();
+  const email =
+    overrides.email ?? e2eTestEmail(`e2e-ftp-legacy-${id.slice(0, 8)}`);
+
+  const { data: row, error } = await db
+    .from("ftp_legacy")
+    .insert({
+      name: overrides.name ?? "Mary Jane Smith",
+      email,
+      due_birth_date: overrides.dueBirthDate ?? null,
+      status: overrides.status ?? "pending",
+      cohort: overrides.cohort ?? null,
+    })
+    .select("id")
+    .single();
+  if (error || !row)
+    throw new Error(`seedFtpLegacyRow insert failed: ${error?.message}`);
+
+  return { id: row.id, email };
+}
+
+export async function cleanupFtpLegacyRow(id: string): Promise<void> {
+  const db = supabase();
+  await db.from("ftp_legacy").delete().eq("id", id);
+}
+
 // ---------------------------------------------------------------------------
 // Read helpers
 // ---------------------------------------------------------------------------

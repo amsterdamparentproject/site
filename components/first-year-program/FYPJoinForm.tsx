@@ -187,29 +187,90 @@ function PlanCard({
 // FYPJoinForm
 // ---------------------------------------------------------------------------
 
-export default function FYPJoinForm() {
+interface FYPJoinFormProps {
+  // Prefills the sign-up form — used by the FTP→legacy-transition email's
+  // "Register" button. IMPORTANT: these come from a server-side lookup
+  // (app/programs/first-year/page.tsx resolves ?legacyId=<ftp_legacy row
+  // id> against the DB and passes the resolved fields down through
+  // FirstYearProgramClient.tsx as props) — NOT read directly off the URL.
+  // An earlier version of this feature put firstName/lastName/email/due
+  // date straight into the query string, which Alex correctly flagged as a
+  // privacy problem (PII sitting in browser history, server/CDN access
+  // logs, analytics tools, and Referer headers on outbound requests from
+  // the page). The URL now carries only an opaque uuid — see
+  // lib/emails/fyp-legacy-transition.ts's buildJoinUrl and
+  // lib/fyp/legacy-prefill.ts's toLegacyPrefill.
+  initialFirstName?: string;
+  initialLastName?: string;
+  initialEmail?: string;
+  // due_birth_date, split into the same "jan"/"2026"-shaped values MONTHS
+  // below and the due-date <select>s use — both validated against the
+  // form's own allowed values before use (see monthState/yearState below),
+  // since a legacy row's date could in principle fall outside the 3-year
+  // window this form's <select> offers.
+  initialMonth?: string;
+  initialYear?: string;
+}
+
+export default function FYPJoinForm({
+  initialFirstName = "",
+  initialLastName = "",
+  initialEmail = "",
+  initialMonth,
+  initialYear,
+}: FYPJoinFormProps = {}) {
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonthValue = MONTHS[now.getMonth()].value;
-
-  const [month, setMonth] = useState(currentMonthValue);
-  const [year, setYear] = useState(String(currentYear));
-  const [members, setMembers] = useState<Member[]>([
-    { firstName: "", lastName: "", email: "" },
-  ]);
-  const [isSingleParent, setIsSingleParent] = useState(false);
-  const [selectedFlow, setSelectedFlow] = useState<Flow>("baby_bundle");
-  const [submitting, setSubmitting] = useState(false);
-
-  function setFamilyStructure(single: boolean) {
-    setIsSingleParent(single);
-  }
 
   const years = [
     String(currentYear - 1),
     String(currentYear),
     String(currentYear + 1),
   ];
+
+  // Fall back to "today" whenever a prefilled value isn't one of this
+  // form's own valid options, rather than trusting it blindly — e.g. a
+  // legacy row's due date could sit outside the 3-year window `years`
+  // offers, which would otherwise desync the <select> from state.
+  const monthState =
+    initialMonth && MONTHS.some((m) => m.value === initialMonth)
+      ? initialMonth
+      : currentMonthValue;
+  const yearState =
+    initialYear && years.includes(initialYear)
+      ? initialYear
+      : String(currentYear);
+
+  const [month, setMonth] = useState(monthState);
+  const [year, setYear] = useState(yearState);
+  const [members, setMembers] = useState<Member[]>([
+    {
+      firstName: initialFirstName,
+      lastName: initialLastName,
+      email: initialEmail,
+    },
+  ]);
+  const [isSingleParent, setIsSingleParent] = useState(false);
+  // Mirrors onSituationChange()'s own expecting→bundle / baby_here→bundle
+  // default, computed once up front from the (possibly prefilled) date
+  // above — without this, a prefilled expecting date would render the
+  // "expecting" plan cards (situation, below, is derived from month/year)
+  // while selectedFlow was still stuck on "baby_bundle", leaving no card
+  // showing as selected.
+  const [selectedFlow, setSelectedFlow] = useState<Flow>(() => {
+    const yearNum = parseInt(yearState);
+    const monthIdx = MONTHS.findIndex((m) => m.value === monthState);
+    const isFuture =
+      yearNum > now.getFullYear() ||
+      (yearNum === now.getFullYear() && monthIdx > now.getMonth());
+    return isFuture ? "expecting_bundle" : "baby_bundle";
+  });
+  const [submitting, setSubmitting] = useState(false);
+
+  function setFamilyStructure(single: boolean) {
+    setIsSingleParent(single);
+  }
 
   // Derive situation from date. When no date selected, default to "expecting".
   const situation: Situation = (() => {
