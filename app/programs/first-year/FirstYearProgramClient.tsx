@@ -6,15 +6,10 @@ import CostsBreakdown from "@/components/first-year-program/CostsBreakdown";
 import ProgramFAQ from "@/components/first-year-program/ProgramFAQ";
 import ProgramJourney from "@/components/first-year-program/ProgramJourney";
 import PhotoGallery from "@/components/first-year-program/PhotoGallery";
-import PhotoLightbox, {
-  PhotoLightboxImage,
-} from "@/components/first-year-program/PhotoLightbox";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
 import Link from "@/components/Link";
 import { MoveRight } from "lucide-react";
 import FYPJoinForm from "@/components/first-year-program/FYPJoinForm";
-import Image from "@/components/Image";
 
 // ---------------------------------------------------------------------------
 // Photo gallery data
@@ -39,21 +34,22 @@ const communityPhotos = [
   },
 ];
 
-const programMomentPhotos = [
+const curriculumPhotos = [
   {
     src: "/static/images/programs/first-year-program/gallery/tummy-time-reading.webp",
     alt: "Two babies on their tummies reading a picture book together",
+  },
+  {
+    src: "/static/images/programs/first-year-program/gallery/zoom-intro-call.webp",
+    alt: "A live virtual expert discussion during the First Year Program",
+    caption:
+      "Expert discussions happen live online, so you can get support regardless of what your morning looked like.",
   },
   {
     src: "/static/images/programs/first-year-program/gallery/playroom.webp",
     alt: "Parents and babies playing together in a soft playroom",
   },
 ];
-
-const expertSessionPhoto = {
-  src: "/static/images/programs/first-year-program/gallery/zoom-intro-call.webp",
-  alt: "A live virtual expert discussion during the First Year Program",
-};
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -191,10 +187,6 @@ export default function FirstYearProgramClient({
   initialMonth,
   initialYear,
 }: FirstYearProgramClientProps) {
-  const [lightboxImage, setLightboxImage] = useState<PhotoLightboxImage | null>(
-    null,
-  );
-
   return (
     <>
       <FTPBanner />
@@ -318,42 +310,8 @@ export default function FirstYearProgramClient({
               }
             />
 
-            <div className="max-w-4xl mx-auto mb-10 grid grid-cols-2 md:grid-cols-3 gap-4 px-4">
-              {programMomentPhotos.map((photo) => (
-                <button
-                  key={photo.src}
-                  type="button"
-                  onClick={() => setLightboxImage(photo)}
-                  className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-brand-sand/60 cursor-zoom-in"
-                >
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    sizes="(max-width: 768px) 45vw, 30vw"
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-              <figure className="col-span-2 md:col-span-1">
-                <button
-                  type="button"
-                  onClick={() => setLightboxImage(expertSessionPhoto)}
-                  className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden border border-brand-sand/60 cursor-zoom-in"
-                >
-                  <Image
-                    src={expertSessionPhoto.src}
-                    alt={expertSessionPhoto.alt}
-                    fill
-                    sizes="(max-width: 768px) 90vw, 30vw"
-                    className="object-cover"
-                  />
-                </button>
-                <figcaption className="text-center text-xs text-brand-soft-charcoal/60 dark:text-brand-white/50 italic mt-2">
-                  Expert discussions happen live online, so you can get support
-                  regardless of what your morning looked like.
-                </figcaption>
-              </figure>
+            <div className="max-w-4xl mx-auto mb-10">
+              <PhotoGallery items={curriculumPhotos} />
             </div>
 
             <MonthlyJourneyGrid />
@@ -412,11 +370,6 @@ export default function FirstYearProgramClient({
           <ProgramFAQ />
         </div>
       </div>
-
-      <PhotoLightbox
-        image={lightboxImage}
-        onClose={() => setLightboxImage(null)}
-      />
     </>
   );
 }
