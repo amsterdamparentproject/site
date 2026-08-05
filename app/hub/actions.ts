@@ -178,6 +178,23 @@ export async function getFypWhatsAppUrl(
 }
 
 /**
+ * Returns the FYP Q&A form URL — Hub-only, never a NEXT_PUBLIC_* var (same
+ * reasoning as getFypWhatsAppUrl: kept out of the public JS bundle rather
+ * than just relying on obscurity). requireHubMember is the actual gate.
+ */
+export async function getFypQaFormUrl(
+  accessToken: string,
+): Promise<{ success: true; url: string } | { success: false; error: string }> {
+  const authed = await requireHubMember(accessToken);
+  if (!authed) return { success: false, error: "Not signed in" };
+
+  const url = process.env.FYP_QA_FORM_URL;
+  if (!url) return { success: false, error: "Q&A form not configured" };
+
+  return { success: true, url };
+}
+
+/**
  * Removes a member from the caller's own FYP account — either the caller
  * themselves or a sibling member (same account-scoping as
  * updateFypMemberProfile; audit S2).

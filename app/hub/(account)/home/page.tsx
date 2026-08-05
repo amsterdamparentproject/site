@@ -5,7 +5,7 @@ import Link from "@/components/Link";
 import Modal from "@/components/Modal";
 import SubscribeForm from "@/components/SubscribeForm";
 import { useHubAccount } from "@/app/hub/HubAccountContext";
-import { getFypWhatsAppUrl } from "@/app/hub/actions";
+import { getFypQaFormUrl, getFypWhatsAppUrl } from "@/app/hub/actions";
 import { formatStartMonth, hasEventsStarted } from "@/app/hub/hub-banners";
 
 // Home tab — landing spot for every signed-in Hub visitor (all roles, see
@@ -57,6 +57,7 @@ const LUMA_CALENDAR_URL = process.env.NEXT_PUBLIC_FYP_LUMA_CALENDAR_URL;
 
 export default function HubHomePage() {
   const [whatsAppLoading, setWhatsAppLoading] = useState(false);
+  const [qaFormLoading, setQaFormLoading] = useState(false);
   const [newsletterOpen, setNewsletterOpen] = useState(false);
   const { accessToken, member } = useHubAccount();
 
@@ -138,7 +139,43 @@ export default function HubHomePage() {
         <div className="bg-white dark:bg-brand-soft-charcoal rounded-2xl border border-brand-sand/60 shadow-sm flex flex-col">
           <div className="p-8 flex flex-col items-center text-center">
             <h2 className="text-2xl font-bold text-brand-charcoal dark:text-brand-white mb-4">
-              Questions?
+              Q&A form
+            </h2>
+            <p className="text-brand-charcoal dark:text-brand-white mb-2">
+              Submit your questions (anonymously) for our experts
+            </p>
+          </div>
+          <button
+            type="button"
+            disabled={qaFormLoading}
+            data-umami-event="Hub: Q&A form quick link"
+            className="block w-full text-center text-sm font-medium bg-brand-goldenrod dark:bg-brand-soft-green text-brand-charcoal dark:text-white py-3 hover:opacity-90 transition-opacity border-t border-brand-sand/60 rounded-b-2xl disabled:opacity-60 disabled:cursor-wait cursor-pointer"
+            onClick={async () => {
+              if (!accessToken) return;
+              setQaFormLoading(true);
+              try {
+                const result = await getFypQaFormUrl(accessToken);
+                if (result.success) {
+                  window.open(result.url, "_blank", "noopener,noreferrer");
+                } else {
+                  console.error(
+                    "[Hub home] Q&A form link failed:",
+                    result.error,
+                  );
+                }
+              } finally {
+                setQaFormLoading(false);
+              }
+            }}
+          >
+            {qaFormLoading ? "Loading…" : "Submit a question"}
+          </button>
+        </div>
+
+        <div className="bg-white dark:bg-brand-soft-charcoal rounded-2xl border border-brand-sand/60 shadow-sm flex flex-col">
+          <div className="p-8 flex flex-col items-center text-center">
+            <h2 className="text-2xl font-bold text-brand-charcoal dark:text-brand-white mb-4">
+              Contact us
             </h2>
             <p className="text-brand-charcoal dark:text-brand-white mb-2">
               Alex and Miriam are here to help with anything about the program
