@@ -38,9 +38,10 @@
  * switch to the TEST project, which doesn't match how the rest of this
  * codebase's one-off scripts work.)
  *
- * Pass --only=<email> to scope any of the above to a single row (handy for
- * confirming just one real family's content/eligibility before the full
- * batch).
+ * Pass --only=<email>[,<email>...] to scope any of the above to specific
+ * rows (handy for confirming one real family's content/eligibility before
+ * the full batch, or for re-running just the rows that failed partway
+ * through a batch without re-sending to ones that already succeeded).
  *
  * No row is marked as "sent" anywhere — ftp_legacy's status column tracks
  * deposit outcome, not email-send state, and adding a new column for an
@@ -63,7 +64,7 @@ const TEST_EMAIL = "amsterdamparentproject@gmail.com";
 const env = process.argv[2];
 if (env !== "test" && env !== "prod") {
   console.error(
-    "Usage: tsx scripts/send-ftp-legacy-transition.mts <test|prod> [--dry-run] [--only=<email>]",
+    "Usage: tsx scripts/send-ftp-legacy-transition.mts <test|prod> [--dry-run] [--only=<email>[,<email>...]]",
   );
   process.exit(1);
 }
@@ -71,7 +72,16 @@ if (env !== "test" && env !== "prod") {
 const args = process.argv.slice(3);
 const dryRun = args.includes("--dry-run");
 const onlyArg = args.find((a) => a.startsWith("--only="));
-const only = onlyArg ? onlyArg.slice("--only=".length).toLowerCase() : null;
+// Comma-separated so a partial-failure re-run (e.g. after fixing a Stripe
+// key permission mid-batch) can target exactly the rows still needing a
+// send without re-touching ones that already succeeded.
+const only = onlyArg
+  ? onlyArg
+      .slice("--only=".length)
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean)
+  : null;
 
 if (env === "test") {
   // .env.test doesn't define RESEND_API_KEY — load .env.local first to
@@ -156,7 +166,7 @@ async function main() {
       redirectSends
         ? `sends ONE email to ${TEST_EMAIL}, no real promo codes created`
         : "will create real promo codes and send to real families"
-    }${only ? ` (only: ${only})` : ""}`,
+    }${only ? ` (only: ${only.join(", ")})` : ""}`,
   );
 
   const supabase = createFirstYearClient();
@@ -172,9 +182,12 @@ async function main() {
 
   let rows = (data ?? []) as LegacyRow[];
   if (only) {
-    rows = rows.filter((r) => r.email.toLowerCase() === only);
-    if (rows.length === 0) {
-      console.error(`No ftp_legacy row found with email ${only}.`);
+    rows = rows.filter((r) => only.includes(r.email.toLowerCase()));
+    const missing = only.filter(
+      (e) => !rows.some((r) => r.email.toLowerCase() === e),
+    );
+    if (missing.length > 0) {
+      console.error(`No ftp_legacy row found for: ${missing.join(", ")}`);
       process.exit(1);
     }
   }
