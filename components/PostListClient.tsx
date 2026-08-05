@@ -39,7 +39,7 @@ export interface PostListClientProps {
 const SERIES_LABELS: Record<string, string> = {
   "expert-spotlight": "Expert Spotlight",
   "community-spotlight": "Community Spotlight",
-  "founder-notes": "Founder Notes",
+  "founder-notes": "Behind the Desk",
 };
 
 const STAGE_LABELS: Record<string, string> = {

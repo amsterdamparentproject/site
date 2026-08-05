@@ -166,3 +166,66 @@ html {
   /* This reserves the scrollbar space so the header/content never jump */
   scrollbar-gutter: stable;
 }
+
+/*
+  Behind the Desk-style callouts: `> [!NOTE]` markdown alerts (rendered by
+  remark-github-blockquote-alert as a <div>, never a <blockquote>) get their
+  own brand treatment here — independent of the pull-quote blockquote styling
+  in tailwind.config.js's typography.blockquote rule, so the two never fight
+  over the same element.
+
+  Every selector below is scoped under `.prose` and doubles up the
+  `.markdown-alert.markdown-alert-note` classes on purpose: the plugin's own
+  alert.css (imported in app/layout.tsx, after this file) uses that same
+  compound selector for border-color and the title's `display: flex`, and
+  Tailwind Typography's `p` color/margin rules — while low-specificity by
+  design — still target `<p>` directly, which beats a color merely inherited
+  from this block's own `color`. Matching or exceeding that specificity here
+  is what actually wins the cascade, since import order alone favors alert.css.
+*/
+.prose .markdown-alert.markdown-alert-note {
+  background-color: var(--color-brand-soft-green);
+  border-left-color: var(--color-brand-goldenrod);
+  padding-top: 1.25em;
+  padding-right: 1.5em;
+  padding-bottom: 1.75em;
+  padding-left: 2em;
+  font-size: 0.9em;
+}
+
+.prose .markdown-alert-note .markdown-alert-title {
+  display: none;
+}
+
+/*
+  Separating `[!NOTE]` from the first real paragraph with a blank `>` line
+  (so paragraphs get real spacing between them, not just <br> line breaks)
+  leaves the plugin's marker-stripping logic behind an empty <p></p> where
+  the marker used to be. Collapse it rather than fight the source structure.
+*/
+.prose .markdown-alert-note p:empty {
+  display: none;
+}
+
+.prose .markdown-alert-note p {
+  color: var(--color-brand-white);
+  margin-top: 0.625em;
+  margin-bottom: 0.625em;
+}
+
+/* Default: any regular emphasis in the body is bold and goldenrod, same
+   accent color as the title, just at normal text size. */
+.prose .markdown-alert-note strong,
+.prose .markdown-alert-note b {
+  color: var(--color-brand-goldenrod);
+  font-weight: 700;
+}
+
+/* Title only: the paragraph immediately after the empty `[!NOTE]` remnant
+   is the "Welcome to..." line — that's the one that should read as a
+   heading, not any other bold text in the body. */
+.prose .markdown-alert-note p:empty + p strong,
+.prose .markdown-alert-note p:empty + p b {
+  color: var(--color-brand-goldenrod);
+  font-size: 1.2em;
+}
