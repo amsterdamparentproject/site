@@ -1,32 +1,52 @@
 "use client";
 
+import { useState } from "react";
 import ShowcaseButton from "@/components/ShowcaseButton";
-import MonthlyJourneyGrid from "@/components/first-year-program/MonthlyJourneyGrid";
+import CurriculumOverview from "@/components/first-year-program/CurriculumOverview";
+import SituationSelector from "@/components/first-year-program/SituationSelector";
+import PricingPreview from "@/components/first-year-program/PricingPreview";
+import AccessToday from "@/components/first-year-program/AccessToday";
 import CostsBreakdown from "@/components/first-year-program/CostsBreakdown";
 import ProgramFAQ from "@/components/first-year-program/ProgramFAQ";
-import ProgramJourney from "@/components/first-year-program/ProgramJourney";
 import PhotoGallery from "@/components/first-year-program/PhotoGallery";
 import { useSearchParams } from "next/navigation";
 import Link from "@/components/Link";
 import { MoveRight } from "lucide-react";
 import FYPJoinForm from "@/components/first-year-program/FYPJoinForm";
+import { resolveInitialMonthYear, deriveSituation } from "@/lib/fyp/situation";
+import type { CalendarEvent } from "@/lib/calendar";
 
 // ---------------------------------------------------------------------------
 // Photo gallery data
 // ---------------------------------------------------------------------------
 
+// Testimonial quote cards (Alex's own designs) interspersed among the real
+// meetup photos below — no `caption` needed since the quote is baked into
+// the image itself.
 const communityPhotos = [
   {
     src: "/static/images/programs/first-year-program/gallery/cafe-de-hallen.webp",
     alt: "Parents chatting and holding babies at a De Hallen café meetup",
   },
   {
+    src: "/static/images/programs/first-year-program/gallery/testimonial-single-mom.webp",
+    alt: "Parent testimonial: “Loved getting to meet other parents in my same situation. Being a single mom is very lonely so it helped loads.”",
+  },
+  {
     src: "/static/images/programs/first-year-program/gallery/museum-group.webp",
     alt: "A group of parents and babies posing together at the Rijksmuseum",
   },
   {
+    src: "/static/images/programs/first-year-program/gallery/testimonial-in-person-meetups.webp",
+    alt: "Parent testimonial: “The in-person meet ups were of most value, chatting and exchanging stories and realizing your baby is 'normal' and not as wild as you thought!”",
+  },
+  {
     src: "/static/images/programs/first-year-program/gallery/park-walk.webp",
     alt: "Parents walking together with a stroller along a tree-lined park path",
+  },
+  {
+    src: "/static/images/programs/first-year-program/gallery/testimonial-stay-connected.webp",
+    alt: "Parent testimonial: “Even though the sessions are complete, I do feel like we'll stay connected.”",
   },
   {
     src: "/static/images/programs/first-year-program/gallery/cafe-table.webp",
@@ -178,6 +198,10 @@ interface FirstYearProgramClientProps {
   initialEmail?: string;
   initialMonth?: string;
   initialYear?: string;
+  // Server-fetched (page.tsx) — next few real, dated events whose title
+  // matches "First Year Program". MVP filter, see
+  // lib/supabase/queries/events.ts's getFirstYearProgramEvents().
+  initialUpcomingEvents?: CalendarEvent[];
 }
 
 export default function FirstYearProgramClient({
@@ -186,7 +210,30 @@ export default function FirstYearProgramClient({
   initialEmail,
   initialMonth,
   initialYear,
+  initialUpcomingEvents,
 }: FirstYearProgramClientProps) {
+  // Due/birth month+year — the single source of truth for "when is your
+  // baby due, or here already" across the whole page. Falls back to
+  // today's month/year whenever there's no (valid) legacy prefill, same
+  // rule FYPJoinForm used to apply on its own before this was lifted here.
+  // SituationSelector (top of section 2) and FYPJoinForm both read/write
+  // this same state, so picking a date once carries through to the
+  // access-today content, the personalized pricing, and the join form.
+  const [dueDate, setDueDate] = useState(() =>
+    resolveInitialMonthYear(initialMonth, initialYear),
+  );
+  const { month, year } = dueDate;
+  const situation = deriveSituation(month, year);
+
+  function handleMonthChange(newMonth: string) {
+    setDueDate((prev) => ({ ...prev, month: newMonth }));
+  }
+  function handleYearChange(newYear: string) {
+    setDueDate((prev) => ({ ...prev, year: newYear }));
+  }
+
+  const upcomingEvents = initialUpcomingEvents ?? [];
+
   return (
     <>
       <FTPBanner />
@@ -268,37 +315,58 @@ export default function FirstYearProgramClient({
           {/* Community gallery */}
           <section className="py-8 max-w-5xl mx-auto w-full">
             <SectionHeader
-              header="What it looks like in practice"
-              subtitle="Real families, real meetups, around Amsterdam."
+              header="Connecting real families"
+              subtitle="Not another giant group chat abyss. Real parents with newborns and babies in Amsterdam, eager to build the village with you."
             />
             <PhotoGallery items={communityPhotos} />
           </section>
 
-          {/* Journey */}
-          <section className="py-8 px-4 max-w-4xl mx-auto flex items-center flex-col justify-center">
+          {/* ── How you experience the program ───────────────────────────
+              Everything below is personalized to the situation picked in
+              SituationSelector: what you get access to today, and pricing. */}
+          <section className="mt-16 mb-8 w-full max-w-4xl mx-auto px-4">
             <SectionHeader
-              header="How it works"
-              subtitle="Join during pregnancy for free, refundable early access — or jump in any time during your baby's first year."
+              header="What happens when you join"
+              subtitle="Tell us where you are, and we'll show you the support that's here for you — starting immediately ❤️"
             />
-            <ProgramJourney />
+
+            <SituationSelector
+              month={month}
+              year={year}
+              situation={situation}
+              onMonthChange={handleMonthChange}
+              onYearChange={handleYearChange}
+            />
+
+            <PricingPreview situation={situation} />
+
+            <div className="mt-12">
+              <AccessToday situation={situation} events={upcomingEvents} />
+            </div>
           </section>
 
-          {/* Curriculum */}
-          <section className="mt-10 mb-8">
+          {/* Curriculum — condensed: themes + session titles only, no
+              accordion, no expert photos. The full monthly breakdown used
+              to live here (MonthlyJourneyGrid); see CurriculumOverview.tsx
+              for why it was simplified for this page. */}
+          <section className="mt-10 mb-8 w-full">
             <SectionHeader
-              header="Expert & social curriculum"
-              subtitle="Six expert-led topics, six matching socials — one new theme a month, repeating every 6 months as your baby (and you) grow."
+              header="Where experts & peers come together"
+              subtitle="Expert-led chats and local socials that repeat every 6 months as your baby (and you!) grow."
             />
 
-            <div className="max-w-4xl mx-auto mb-10">
+            <CurriculumOverview />
+
+            <div className="max-w-4xl mx-auto m-10">
               <PhotoGallery items={curriculumPhotos} />
             </div>
-
-            <MonthlyJourneyGrid />
           </section>
 
           {/* Costs */}
-          <section id="pricing" className="mb-10 text-center scroll-m-32">
+          <section
+            id="pricing"
+            className="mb-10 text-center scroll-m-32 w-full"
+          >
             <SectionHeader
               header="Program fees"
               subtitle={
@@ -315,7 +383,7 @@ export default function FirstYearProgramClient({
                 </>
               }
             />
-            <CostsBreakdown />
+            <CostsBreakdown situation={situation} />
           </section>
 
           {/* Join */}
@@ -324,8 +392,10 @@ export default function FirstYearProgramClient({
               initialFirstName={initialFirstName}
               initialLastName={initialLastName}
               initialEmail={initialEmail}
-              initialMonth={initialMonth}
-              initialYear={initialYear}
+              month={month}
+              year={year}
+              onMonthChange={handleMonthChange}
+              onYearChange={handleYearChange}
             />
           </section>
         </div>

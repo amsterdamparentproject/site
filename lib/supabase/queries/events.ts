@@ -43,3 +43,29 @@ export async function getCalendarEvents(): Promise<CalendarEvent[]> {
 
   return (data ?? []).map(toCalendarEvent);
 }
+
+// MVP-style filter: "counts" as a First Year Program event if the title
+// contains "First Year Program" (case-insensitive). No services/tags
+// column yet — see lib/fyp/program.ts area for the more durable version of
+// this once Desk grows a real FYP service flag. Deliberately narrow (title
+// only, next 5, upcoming only) since this is a quick test of whether
+// showing real dates actually helps the "what's happening now" problem
+// before investing further.
+export async function getFirstYearProgramEvents(): Promise<CalendarEvent[]> {
+  const supabase = createServiceClient("activities");
+  const today = new Date().toISOString().slice(0, 10);
+  const { data, error } = await supabase
+    .from("app_events")
+    .select(SELECT)
+    .ilike("title", "%First Year Program%")
+    .gte("start_date", today)
+    .order("start_date", { ascending: true })
+    .limit(5);
+
+  if (error) {
+    console.error("Failed to fetch First Year Program events:", error.message);
+    return [];
+  }
+
+  return (data ?? []).map(toCalendarEvent);
+}

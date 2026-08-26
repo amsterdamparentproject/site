@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { genPageMetadata } from "app/seo";
 import { createFirstYearClient } from "@/lib/supabase/server";
 import { toLegacyPrefill, type LegacyPrefill } from "@/lib/fyp/legacy-prefill";
+import { getFirstYearProgramEvents } from "@/lib/supabase/queries/events";
 import FirstYearProgramClient from "./FirstYearProgramClient";
 
 export const metadata = genPageMetadata({
@@ -72,7 +73,10 @@ async function resolveLegacyPrefill(
 
 export default async function Page({ searchParams }: PageProps) {
   const { legacyId } = await searchParams;
-  const prefill = await resolveLegacyPrefill(legacyId);
+  const [prefill, upcomingEvents] = await Promise.all([
+    resolveLegacyPrefill(legacyId),
+    getFirstYearProgramEvents(),
+  ]);
 
   return (
     <main>
@@ -83,6 +87,7 @@ export default async function Page({ searchParams }: PageProps) {
           initialEmail={prefill?.email}
           initialMonth={prefill?.month}
           initialYear={prefill?.year}
+          initialUpcomingEvents={upcomingEvents}
         />
       </Suspense>
     </main>

@@ -3,6 +3,21 @@
 import { useState } from "react";
 import Logo from "@/components/Logo";
 import { PROGRAM_START } from "@/lib/fyp/program";
+import {
+  DEPOSIT_EUR,
+  BUNDLE_MULTI_EUR,
+  BUNDLE_SINGLE_EUR,
+  MONTHLY_MULTI_EUR,
+  MONTHLY_SINGLE_EUR,
+} from "@/lib/fyp/pricing";
+import {
+  MONTHS,
+  deriveSituation,
+  isFutureMonthYear,
+  situationYears,
+  type Situation,
+} from "@/lib/fyp/situation";
+import FamilyTypeToggle from "@/components/first-year-program/FamilyTypeToggle";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -15,7 +30,6 @@ type Flow =
   | "baby_monthly"
   | "baby_bundle";
 type FamilyType = "single" | "multi";
-type Situation = "expecting" | "baby_here";
 
 const isBeforeProgramStart = new Date() < PROGRAM_START;
 
@@ -29,32 +43,16 @@ interface Member {
 // Constants
 // ---------------------------------------------------------------------------
 
-const MONTHS = [
-  { label: "January", value: "jan" },
-  { label: "February", value: "feb" },
-  { label: "March", value: "mar" },
-  { label: "April", value: "apr" },
-  { label: "May", value: "may" },
-  { label: "June", value: "jun" },
-  { label: "July", value: "jul" },
-  { label: "August", value: "aug" },
-  { label: "September", value: "sep" },
-  { label: "October", value: "oct" },
-  { label: "November", value: "nov" },
-  { label: "December", value: "dec" },
-];
-
 // Immediate access for all plans on signup — everything except live event
 // invites. Confirmed with Alex 2026-08-02: the 2026-07-29 access-model
 // simplification (see fyp-plan-access.md) made all 7 resource guides and
 // WhatsApp immediate for every plan too, not gated to billing_start_date —
-// live events are the only thing still gated.
-const IMMEDIATE_FEATURES = [
-  "A free subscription to our 1:1 parent matching platform",
-  "Access to our moderated First Year Program WhatsApp group",
-  "A personalized First Year Hub with all 7 program resource guides and account management (to add other family members!)",
-];
-
+// live events are the only thing still gated. The specific copy for these
+// (built inline in the component below, since the partner line and the
+// Postpartum Post link both need render-time state/JSX) used to live in a
+// standalone "The full program includes" box further down the page —
+// redundant with content shown earlier on the page, so Alex had it cut and
+// folded into this checklist instead, right before checkout.
 const EVENTS_FEATURE = "Invites to this month's events";
 
 // ---------------------------------------------------------------------------
@@ -187,62 +185,46 @@ function PlanCard({
 // ---------------------------------------------------------------------------
 
 interface FYPJoinFormProps {
-  // Prefills the sign-up form — used by the FTP→legacy-transition email's
-  // "Register" button. IMPORTANT: these come from a server-side lookup
-  // (app/programs/first-year/page.tsx resolves ?legacyId=<ftp_legacy row
-  // id> against the DB and passes the resolved fields down through
-  // FirstYearProgramClient.tsx as props) — NOT read directly off the URL.
-  // An earlier version of this feature put firstName/lastName/email/due
-  // date straight into the query string, which Alex correctly flagged as a
-  // privacy problem (PII sitting in browser history, server/CDN access
-  // logs, analytics tools, and Referer headers on outbound requests from
-  // the page). The URL now carries only an opaque uuid — see
-  // lib/emails/fyp-legacy-transition.ts's buildJoinUrl and
-  // lib/fyp/legacy-prefill.ts's toLegacyPrefill.
+  // Prefills the sign-up form's name/email — used by the
+  // FTP→legacy-transition email's "Register" button. IMPORTANT: these come
+  // from a server-side lookup (app/programs/first-year/page.tsx resolves
+  // ?legacyId=<ftp_legacy row id> against the DB and passes the resolved
+  // fields down through FirstYearProgramClient.tsx as props) — NOT read
+  // directly off the URL. An earlier version of this feature put
+  // firstName/lastName/email/due date straight into the query string,
+  // which Alex correctly flagged as a privacy problem (PII sitting in
+  // browser history, server/CDN access logs, analytics tools, and Referer
+  // headers on outbound requests from the page). The URL now carries only
+  // an opaque uuid — see lib/emails/fyp-legacy-transition.ts's
+  // buildJoinUrl and lib/fyp/legacy-prefill.ts's toLegacyPrefill.
   initialFirstName?: string;
   initialLastName?: string;
   initialEmail?: string;
-  // due_birth_date, split into the same "jan"/"2026"-shaped values MONTHS
-  // below and the due-date <select>s use — both validated against the
-  // form's own allowed values before use (see monthState/yearState below),
-  // since a legacy row's date could in principle fall outside the 3-year
-  // window this form's <select> offers.
-  initialMonth?: string;
-  initialYear?: string;
+  // Due/birth month+year — lifted up to FirstYearProgramClient so the new
+  // SituationSelector (top of "How you experience the program"), the
+  // access-today and pricing sections, and this form all read/write the
+  // same state instead of each asking separately. FirstYearProgramClient
+  // is also where the legacy-prefill due date and the "fall back to today
+  // if invalid" logic now live — see lib/fyp/situation.ts's
+  // resolveInitialMonthYear.
+  month: string;
+  year: string;
+  onMonthChange: (month: string) => void;
+  onYearChange: (year: string) => void;
 }
 
 export default function FYPJoinForm({
   initialFirstName = "",
   initialLastName = "",
   initialEmail = "",
-  initialMonth,
-  initialYear,
-}: FYPJoinFormProps = {}) {
+  month,
+  year,
+  onMonthChange,
+  onYearChange,
+}: FYPJoinFormProps) {
   const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonthValue = MONTHS[now.getMonth()].value;
+  const years = situationYears(now);
 
-  const years = [
-    String(currentYear - 1),
-    String(currentYear),
-    String(currentYear + 1),
-  ];
-
-  // Fall back to "today" whenever a prefilled value isn't one of this
-  // form's own valid options, rather than trusting it blindly — e.g. a
-  // legacy row's due date could sit outside the 3-year window `years`
-  // offers, which would otherwise desync the <select> from state.
-  const monthState =
-    initialMonth && MONTHS.some((m) => m.value === initialMonth)
-      ? initialMonth
-      : currentMonthValue;
-  const yearState =
-    initialYear && years.includes(initialYear)
-      ? initialYear
-      : String(currentYear);
-
-  const [month, setMonth] = useState(monthState);
-  const [year, setYear] = useState(yearState);
   const [members, setMembers] = useState<Member[]>([
     {
       firstName: initialFirstName,
@@ -250,6 +232,10 @@ export default function FYPJoinForm({
       email: initialEmail,
     },
   ]);
+  // Family type — local to this form now; the page-level toggle that used
+  // to sit above SituationSelector was removed (Alex simplified "How you
+  // experience the program" to drop it), so this is the only place a
+  // visitor picks it.
   const [isSingleParent, setIsSingleParent] = useState(false);
   // Mirrors onSituationChange()'s own expecting→bundle / baby_here→bundle
   // default, computed once up front from the (possibly prefilled) date
@@ -257,31 +243,13 @@ export default function FYPJoinForm({
   // "expecting" plan cards (situation, below, is derived from month/year)
   // while selectedFlow was still stuck on "baby_bundle", leaving no card
   // showing as selected.
-  const [selectedFlow, setSelectedFlow] = useState<Flow>(() => {
-    const yearNum = parseInt(yearState);
-    const monthIdx = MONTHS.findIndex((m) => m.value === monthState);
-    const isFuture =
-      yearNum > now.getFullYear() ||
-      (yearNum === now.getFullYear() && monthIdx > now.getMonth());
-    return isFuture ? "expecting_bundle" : "baby_bundle";
-  });
+  const [selectedFlow, setSelectedFlow] = useState<Flow>(() =>
+    isFutureMonthYear(month, year, now) ? "expecting_bundle" : "baby_bundle",
+  );
   const [submitting, setSubmitting] = useState(false);
 
-  function setFamilyStructure(single: boolean) {
-    setIsSingleParent(single);
-  }
-
   // Derive situation from date. When no date selected, default to "expecting".
-  const situation: Situation = (() => {
-    if (!month || !year) return "expecting";
-    const now = new Date();
-    const yearNum = parseInt(year);
-    const monthIdx = MONTHS.findIndex((m) => m.value === month);
-    const isFuture =
-      yearNum > now.getFullYear() ||
-      (yearNum === now.getFullYear() && monthIdx > now.getMonth());
-    return isFuture ? "expecting" : "baby_here";
-  })();
+  const situation: Situation = deriveSituation(month, year);
 
   function updateMember(idx: number, field: keyof Member, value: string) {
     setMembers((prev) =>
@@ -306,14 +274,35 @@ export default function FYPJoinForm({
       return selectedDate < oneYearAgo;
     })();
 
-  // Everyone gets IMMEDIATE_FEATURES on signup regardless of timing — the
-  // only thing that's actually gated is event invites, which only apply
-  // once the program has started for baby-here families (expecting
-  // families still wait for their due date, same as before).
+  // Everyone gets these on signup regardless of timing — the only thing
+  // that's actually gated is event invites, which only apply once the
+  // program has started for baby-here families (expecting families still
+  // wait for their due date, same as before). The partner-access line only
+  // makes sense for partnered families — a single parent isn't paying for
+  // a second adult's access.
+  const immediateFeatures: React.ReactNode[] = [
+    ...(isSingleParent
+      ? []
+      : ["All-inclusive access for you and your partner"]),
+    "A private WhatsApp group for local families, moderated by a psychotherapist",
+    <>
+      Monthly match via{" "}
+      <a
+        href="https://postpartumpost.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
+      >
+        Postpartum Post
+      </a>{" "}
+      with someone who gets where you are
+    </>,
+    "All 7 digital resource guides providing evidence-based context for every stage",
+  ];
   const features =
     !isBeforeProgramStart && situation === "baby_here"
-      ? [...IMMEDIATE_FEATURES, EVENTS_FEATURE]
-      : IMMEDIATE_FEATURES;
+      ? [...immediateFeatures, EVENTS_FEATURE]
+      : immediateFeatures;
 
   // Reset selected flow to the bundle when situation changes
   function onSituationChange(newSituation: Situation) {
@@ -429,42 +418,13 @@ export default function FYPJoinForm({
             </div>
 
             {/* Family structure toggle */}
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {(
-                [
-                  { label: "I have a partner", single: false },
-                  { label: "I am a single parent", single: true },
-                ] as const
-              ).map(({ label, single }) => {
-                const active = isSingleParent === single;
-                return (
-                  <button
-                    key={label}
-                    type="button"
-                    onClick={() => setFamilyStructure(single)}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-soft-green/40 ${
-                      active
-                        ? "border-brand-soft-green bg-brand-soft-green/10 text-brand-soft-green dark:text-brand-goldenrod dark:border-brand-goldenrod dark:bg-brand-goldenrod/10"
-                        : "border-brand-sand/60 text-brand-charcoal/60 dark:text-brand-white/40 hover:border-brand-charcoal/30 dark:hover:border-brand-white/30"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
+            <div className="mt-4">
+              <FamilyTypeToggle
+                isSingleParent={isSingleParent}
+                onChange={setIsSingleParent}
+                hint
+              />
             </div>
-
-            {isSingleParent ? (
-              <p className="mt-2 text-xs text-brand-charcoal/50 dark:text-brand-white/40">
-                We offer a discount to ensure everyone can access support,
-                regardless of family structure.
-              </p>
-            ) : (
-              <p className="mt-2 text-xs text-brand-charcoal/50 dark:text-brand-white/40">
-                After sign up, you can add your partner(s) to the subscription
-                from your profile.
-              </p>
-            )}
           </div>
 
           <hr />
@@ -480,18 +440,14 @@ export default function FYPJoinForm({
                 id="due-month"
                 value={month}
                 onChange={(e) => {
-                  setMonth(e.target.value);
-                  if (e.target.value && year) {
-                    const now = new Date();
-                    const yearNum = parseInt(year);
-                    const monthIdx = MONTHS.findIndex(
-                      (m) => m.value === e.target.value,
+                  const newMonth = e.target.value;
+                  onMonthChange(newMonth);
+                  if (newMonth && year) {
+                    onSituationChange(
+                      isFutureMonthYear(newMonth, year)
+                        ? "expecting"
+                        : "baby_here",
                     );
-                    const isFuture =
-                      yearNum > now.getFullYear() ||
-                      (yearNum === now.getFullYear() &&
-                        monthIdx > now.getMonth());
-                    onSituationChange(isFuture ? "expecting" : "baby_here");
                   }
                 }}
                 required
@@ -507,16 +463,14 @@ export default function FYPJoinForm({
               <select
                 value={year}
                 onChange={(e) => {
-                  setYear(e.target.value);
-                  if (month && e.target.value) {
-                    const now = new Date();
-                    const yearNum = parseInt(e.target.value);
-                    const monthIdx = MONTHS.findIndex((m) => m.value === month);
-                    const isFuture =
-                      yearNum > now.getFullYear() ||
-                      (yearNum === now.getFullYear() &&
-                        monthIdx > now.getMonth());
-                    onSituationChange(isFuture ? "expecting" : "baby_here");
+                  const newYear = e.target.value;
+                  onYearChange(newYear);
+                  if (month && newYear) {
+                    onSituationChange(
+                      isFutureMonthYear(month, newYear)
+                        ? "expecting"
+                        : "baby_here",
+                    );
                   }
                 }}
                 required
@@ -558,8 +512,8 @@ export default function FYPJoinForm({
                     name="Monthly"
                     price={
                       isMulti
-                        ? "€25 deposit, then €68/month"
-                        : "€25 deposit, then €55/month"
+                        ? `€${DEPOSIT_EUR} deposit, then €${MONTHLY_MULTI_EUR}/month`
+                        : `€${DEPOSIT_EUR} deposit, then €${MONTHLY_SINGLE_EUR}/month`
                     }
                     billing={
                       expectingSessionsStart === "September 2026"
@@ -574,8 +528,10 @@ export default function FYPJoinForm({
                     flow="expecting_bundle"
                     icon="📦"
                     name="6-month bundle"
-                    price={isMulti ? "€383" : "€305"}
-                    billing="Billed today · Save €25"
+                    price={
+                      isMulti ? `€${BUNDLE_MULTI_EUR}` : `€${BUNDLE_SINGLE_EUR}`
+                    }
+                    billing={`Billed today · Save €${DEPOSIT_EUR}`}
                     badge="Best value"
                     selected={selectedFlow === "expecting_bundle"}
                     onSelect={setSelectedFlow}
@@ -591,8 +547,8 @@ export default function FYPJoinForm({
                       name="Monthly"
                       price={
                         isMulti
-                          ? "€25 deposit, then €68/month"
-                          : "€25 deposit, then €55/month"
+                          ? `€${DEPOSIT_EUR} deposit, then €${MONTHLY_MULTI_EUR}/month`
+                          : `€${DEPOSIT_EUR} deposit, then €${MONTHLY_SINGLE_EUR}/month`
                       }
                       billing="Monthly billing starts September 2026"
                       selected={selectedFlow === "baby_deposit"}
@@ -604,7 +560,11 @@ export default function FYPJoinForm({
                       flow="baby_monthly"
                       icon="📅"
                       name="Monthly"
-                      price={isMulti ? "€68/month" : "€55/month"}
+                      price={
+                        isMulti
+                          ? `€${MONTHLY_MULTI_EUR}/month`
+                          : `€${MONTHLY_SINGLE_EUR}/month`
+                      }
                       billing="Billed monthly · Cancel anytime"
                       selected={selectedFlow === "baby_monthly"}
                       onSelect={setSelectedFlow}
@@ -615,8 +575,10 @@ export default function FYPJoinForm({
                     flow="baby_bundle"
                     icon="📦"
                     name="6-month bundle"
-                    price={isMulti ? "€383" : "€305"}
-                    billing="Billed today · Save €25"
+                    price={
+                      isMulti ? `€${BUNDLE_MULTI_EUR}` : `€${BUNDLE_SINGLE_EUR}`
+                    }
+                    billing={`Billed today · Save €${DEPOSIT_EUR}`}
                     badge="Best value"
                     selected={selectedFlow === "baby_bundle"}
                     onSelect={setSelectedFlow}
@@ -658,12 +620,12 @@ export default function FYPJoinForm({
 
             {/* Feature list */}
             <p className="mt-5 text-sm font-medium text-brand-charcoal dark:text-brand-white/80">
-              Immediately after signing up, you get:
+              You immediately get:
             </p>
             <ul className="mt-2 space-y-2">
-              {features.map((item) => (
+              {features.map((item, i) => (
                 <li
-                  key={item}
+                  key={i}
                   className="flex items-center gap-2 text-xs text-brand-charcoal dark:text-brand-white/70"
                 >
                   <Checkmark />

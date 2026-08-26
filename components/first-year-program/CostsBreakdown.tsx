@@ -1,6 +1,42 @@
 "use client";
 
-import React, { ReactNode, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import { PROGRAM_START } from "@/lib/fyp/program";
+import {
+  BUNDLE_MULTI_EUR,
+  BUNDLE_MULTI_FULL_EUR,
+  BUNDLE_SINGLE_EUR,
+  BUNDLE_SINGLE_FULL_EUR,
+  DEPOSIT_EUR,
+  MONTHLY_MULTI_EUR,
+  MONTHLY_SINGLE_EUR,
+} from "@/lib/fyp/pricing";
+import type { Situation } from "@/lib/fyp/situation";
+
+const isBeforeProgramStart = new Date() < PROGRAM_START;
+
+// Situation-aware billing notes shown on each plan card — mirrors the
+// (more precise, exact-due-date-aware) copy inside FYPJoinForm's own
+// PlanCard, but simplified here since this section previews pricing before
+// a due/birth date's exact billing consequences matter — the join form
+// below is the source of truth for the precise number.
+function monthlyNote(situation: Situation): string {
+  if (situation === "expecting") {
+    return `Reserve with a €${DEPOSIT_EUR} deposit — credited to your first invoice, refundable if you cancel during pregnancy.`;
+  }
+  return isBeforeProgramStart
+    ? `€${DEPOSIT_EUR} deposit for now — billing starts once live sessions launch September 1, 2026.`
+    : "Billed monthly, cancel anytime.";
+}
+
+function bundleNote(situation: Situation): string {
+  if (situation === "expecting") {
+    return `Pay upfront for the program, save €${DEPOSIT_EUR}. Fully refundable if you cancel during pregnancy.`;
+  }
+  return isBeforeProgramStart
+    ? `Pay upfront and save €${DEPOSIT_EUR} — the program starts September 1, 2026.`
+    : `Pay upfront for 6 months, save €${DEPOSIT_EUR}.`;
+}
 
 const StackedCostBar = () => {
   const segments = [
@@ -58,7 +94,7 @@ const StackedCostBar = () => {
   );
 };
 
-const MonthlyCard = () => (
+const MonthlyCard = ({ note }: { note: string }) => (
   <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col h-full">
     <div className="bg-brand-soft-green px-6 py-4">
       <p className="text-sm font-black text-white">Monthly</p>
@@ -71,7 +107,7 @@ const MonthlyCard = () => (
           </span>
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">
-              €55
+              €{MONTHLY_SINGLE_EUR}
             </span>
             <span className="text-xs text-brand-charcoal/40 dark:text-brand-white/40">
               /mo
@@ -84,7 +120,7 @@ const MonthlyCard = () => (
           </span>
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
-              €68
+              €{MONTHLY_MULTI_EUR}
             </span>
             <span className="text-xs text-brand-soft-green/50 dark:text-brand-goldenrod/50">
               /mo
@@ -92,8 +128,7 @@ const MonthlyCard = () => (
           </div>
         </div>
         <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
-          Pregnant? Reserve with a €25 deposit — credited to your first invoice,
-          refundable if you cancel during pregnancy.
+          {note}
         </p>
       </div>
       <a
@@ -107,7 +142,7 @@ const MonthlyCard = () => (
   </div>
 );
 
-const BundleCard = () => (
+const BundleCard = ({ note }: { note: string }) => (
   <div className="rounded-2xl border border-brand-goldenrod/40 overflow-hidden flex flex-col h-full">
     <div className="bg-brand-goldenrod px-6 py-4">
       <p className="text-sm font-black text-white">6-month bundle</p>
@@ -120,10 +155,10 @@ const BundleCard = () => (
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-xs line-through text-brand-charcoal/30">
-              €330
+              €{BUNDLE_SINGLE_FULL_EUR}
             </span>
             <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">
-              €305
+              €{BUNDLE_SINGLE_EUR}
             </span>
           </div>
         </div>
@@ -133,16 +168,15 @@ const BundleCard = () => (
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-xs line-through text-brand-charcoal/30">
-              €408
+              €{BUNDLE_MULTI_FULL_EUR}
             </span>
             <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
-              €383
+              €{BUNDLE_MULTI_EUR}
             </span>
           </div>
         </div>
         <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
-          Pay upfront for the program, save €25. Fully refundable if you cancel
-          during pregnancy.
+          {note}
         </p>
       </div>
       <a
@@ -156,10 +190,15 @@ const BundleCard = () => (
   </div>
 );
 
-function PriceCards() {
+function PriceCards({ situation }: { situation: Situation }) {
   const [activeCard, setActiveCard] = useState(0);
   const touchStartX = useRef<number | null>(null);
-  const cards = [<BundleCard key="bundle" />, <MonthlyCard key="monthly" />];
+  const monthlyNoteText = monthlyNote(situation);
+  const bundleNoteText = bundleNote(situation);
+  const cards = [
+    <BundleCard key="bundle" note={bundleNoteText} />,
+    <MonthlyCard key="monthly" note={monthlyNoteText} />,
+  ];
   const labels = ["6-month bundle", "Monthly"];
   const dotColors = ["bg-brand-goldenrod", "bg-brand-soft-green"];
 
@@ -206,97 +245,31 @@ function PriceCards() {
 
       {/* Desktop grid */}
       <div className="hidden md:grid grid-cols-2 gap-4">
-        <MonthlyCard />
-        <BundleCard />
+        <MonthlyCard note={monthlyNoteText} />
+        <BundleCard note={bundleNoteText} />
       </div>
     </div>
   );
 }
 
-export default function CostsBreakdown() {
-  const inclusions: { bold: string; rest: ReactNode }[] = [
-    {
-      bold: "Monthly match",
-      rest: (
-        <>
-          via{" "}
-          <a
-            href="https://postpartumpost.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline hover:text-brand-soft-green"
-          >
-            Postpartum Post
-          </a>{" "}
-          with someone who gets where you are
-        </>
-      ),
-    },
-    {
-      bold: "6 expert-led discussions",
-      rest: "covering your first year as a parent",
-    },
-    {
-      bold: "6 curated socials",
-      rest: "at baby-friendly Amsterdam spots, plus ad-hoc meetups",
-    },
-    {
-      bold: "7 digital resource guides",
-      rest: "providing evidence-based context for every stage",
-    },
-    {
-      bold: "A private WhatsApp group",
-      rest: "moderated by a psychotherapist",
-    },
-    {
-      bold: "All parents included",
-      rest: "because the transition affects the whole family",
-    },
-  ];
+interface CostsBreakdownProps {
+  situation: Situation;
+}
 
+export default function CostsBreakdown({ situation }: CostsBreakdownProps) {
   return (
     <section className="max-w-4xl mx-auto my-8 px-6 flex flex-col items-center">
-      {/* What the program includes */}
-      <div className="w-full max-w-xl bg-brand-sand/20 dark:bg-brand-soft-charcoal/30 rounded-2xl p-6 mb-12 border border-brand-sand/40 dark:border-brand-soft-charcoal/60">
-        <h4 className="text-sm italic text-brand-soft-green dark:text-brand-goldenrod font-medium mb-4 text-center">
-          The full program includes:
-        </h4>
-        <ul className="grid grid-cols-1 gap-y-3 text-left">
-          {inclusions.map((item, i) => (
-            <li
-              key={i}
-              className="flex items-start gap-3 text-sm text-brand-soft-charcoal leading-relaxed"
-            >
-              <svg
-                className="w-4 h-4 text-brand-goldenrod shrink-0 mt-0.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="3"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              <span className="text-brand-charcoal dark:text-brand-white/80">
-                <strong className="font-bold text-brand-charcoal dark:text-brand-white">
-                  {item.bold}
-                </strong>{" "}
-                {item.rest}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
       {/* Price summary */}
-      <PriceCards />
+      <PriceCards situation={situation} />
 
-      {/* Billing note */}
+      {/* Billing note — personalized to the situation picked above */}
       <div className="max-w-md text-center mb-8 px-4">
         <p className="text-[11px] text-brand-soft-charcoal dark:text-brand-white/80 leading-relaxed">
-          All prices include 21% BTW (VAT). Monthly billing starts the calendar
-          month after your due date. If your baby's already here, billing starts
-          once live sessions launch on September 1, 2026 — after that, it starts
-          immediately.
+          {situation === "expecting"
+            ? "All prices include 21% BTW (VAT). Monthly billing starts the calendar month after your due date."
+            : isBeforeProgramStart
+              ? "All prices include 21% BTW (VAT). Billing starts once live sessions launch on September 1, 2026."
+              : "All prices include 21% BTW (VAT). Billing starts immediately."}
         </p>
       </div>
 

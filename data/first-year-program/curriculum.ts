@@ -186,7 +186,7 @@ const firstYearCurriculum: CurriculumMonth[] = [
       subtitle:
         "Share soothing techniques plus a Q&A with a certified sleep coach",
       description:
-        "We'll swap what works to get your baby to sleep — your favorite lullaby, white-noise track, or shushing trick that works magic on them — while a certified sleep coach takes your bedtime routine and infant sleep questions.",
+        "We'll swap what works to get your baby to sleep — your favorite lullaby, white-noise track, or shushing trick that works magic on them — while a certified sleep coach takes your bedtime routine and infant sleep questions.",
       facilitators: ["petraCubretovic", "alexSiega"],
     },
   },
