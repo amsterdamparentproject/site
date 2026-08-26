@@ -51,7 +51,7 @@ interface SocialItem {
 }
 
 function buildSessions(): SessionItem[] {
-  const items = CurriculumData.map(({ session }, index) => ({
+  const items: SessionItem[] = CurriculumData.map(({ session }, index) => ({
     key: `session-${index}`,
     title: session.title,
     subtitle: session.subtitle,
