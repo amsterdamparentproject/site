@@ -123,8 +123,8 @@ describe("FYP pending → active state transition", () => {
   let POST_webhook: (req: any) => Promise<{ body: unknown; status: number }>;
 
   const SESSION_ID = `cs_int_${Date.now()}`;
-  const CUSTOMER_ID = "cus_int_test_001";
-  const SUBSCRIPTION_ID = "sub_int_test_001";
+  const CUSTOMER_ID = `cus_int_test_${Date.now()}`;
+  const SUBSCRIPTION_ID = `sub_int_test_${Date.now()}`;
 
   beforeEach(async () => {
     vi.spyOn(console, "log").mockImplementation(() => {});
