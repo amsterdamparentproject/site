@@ -9,23 +9,12 @@ interface FAQ {
   id?: string;
 }
 
-const PP = () => (
-  <a
-    href="https://postpartumpost.com"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="underline hover:text-brand-soft-green"
-  >
-    Postpartum Post
-  </a>
-);
-
 export default function ProgramFAQ() {
   const faqs: FAQ[] = [
     {
       question: "When can I join?",
       answer:
-        "The program is open to families from pregnancy through baby's 12th month — join whenever you're ready. If you're pregnant, reserve with a €25 monthly deposit or pay for 6 months upfront (save €25); either way you get immediate access to your WhatsApp community, peer match, and the Building the Village guide free until your due date. If your baby is already here (up to 12 months), there's no deposit — your subscription starts right away. We recommend joining as early as possible to get the most out of the full year.",
+        "The program is open to families from pregnancy through baby's 12th month — join whenever you're ready. If you're pregnant, reserve with a €25 monthly deposit or pay for 6 months upfront (save €25); either way you get immediate access to your WhatsApp community, peer match, and the guides free until your due date. If your baby is already here (up to 12 months), you'll still pay the €25 deposit for now — billing starts once live sessions launch on September 1, 2026. After that date, baby-already-here signups start billing immediately, no deposit needed. Joining mid-cycle is completely fine too — the 6-month curriculum repeats, so you'll catch any topic you missed. We recommend joining as early as possible to get the most out of the full year.",
     },
     {
       question: "How does billing work?",
@@ -60,39 +49,9 @@ export default function ProgramFAQ() {
         "Yes — the program is built for the whole family. Whether you are a birthing parent, non-birthing parent, or co-parent, you are an equal part of this transition. 2+ parent families join at one family price (€68/month), so all partners are included.",
     },
     {
-      question:
-        "What is Postpartum Post? Why is it part of my First Year subscription?",
-      answer: (
-        <>
-          <PP /> is a 1:1 peer support platform that matches you with another
-          parent based on your location, baby's age, and availability — also run
-          by APP. As part of the First Year Program, you're matched with someone
-          who gets where you are — or where you're headed. It's personal support
-          that goes beyond what a group can offer.
-        </>
-      ),
-    },
-    {
-      question: "What happens if I join mid-cohort?",
-      answer: (
-        <>
-          That's completely fine. The program is designed for rolling entry —
-          you join the cohort at whatever stage you're at, connect with your
-          WhatsApp group, get your <PP /> match, and join the next discussion
-          and social. The curriculum repeats every 6 months, so you'll catch any
-          topics you missed.
-        </>
-      ),
-    },
-    {
-      question: "Why do topics repeat every 6 months?",
-      answer:
-        "Because the same topic hits differently at different stages. A discussion about feeding when your baby is 2 weeks old is completely different from one at 5 months. Repetition isn't a limitation — it's a feature. New modules will also be added over time as the program grows.",
-    },
-    {
       question: "Why do I need structured support? Can't I find this myself?",
       answer:
-        "While information is everywhere, expert curation and a local village are not. Instead of vetting conflicting advice during 2 AM scrolling, we provide a soft landing by combining professional expertise and peer support in a structured format. You get direct access to specialists, a matched peer, and a curated community — without the mental load of building it yourself.",
+        "While information is everywhere, expert curation and a trusted local network are not. Instead of vetting conflicting advice during 2 AM scrolling, we provide a soft landing by combining professional expertise and peer support in a structured format. You get direct access to specialists, a matched peer, and a curated community — without the mental load of building it yourself.",
     },
     {
       question: "I'm not an expat. Can I still join?",
@@ -102,7 +61,7 @@ export default function ProgramFAQ() {
     {
       question: "Why is APP running this program?",
       answer:
-        "Because we've been there. As parents in Amsterdam ourselves, we struggled to find the right support in English. Most of the world understands the first year as a communal responsibility — we're building that village for families here who don't have one yet.",
+        "Because we've been there. As parents in Amsterdam ourselves, we struggled to find the right support in English. Most of the world treats the first year as a shared responsibility, not a solo one — we're building that support system for families here who don't have it yet.",
     },
     {
       id: "ftp-comparison",

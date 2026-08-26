@@ -43,12 +43,16 @@ const firstYearCurriculum: CurriculumMonth[] = [
       ],
     },
     social: {
-      title: "Vondelpark Stroll",
-      subtitle: "A whole family gathering outside in the park that has it all",
+      title: "Singing Mamas & Papas",
+      subtitle:
+        "A family circle of song — using shared voices to ground ourselves in parenthood",
       description:
-        "We'll walk around Vondelpark with babies in tow, then settle in at Groot Melkhuis for coffee and conversation — a low-key way to get outside and get to know the group.",
-      logistics:
-        "We'll initially meet at Groot Melkhuis, and leave for the walk at 10:15! If you need to arrive later, refer to the WhatsApp group for our live location.",
+        "A warm, singing circle for the whole family — a safe space to show up as you are and process parenthood together through shared harmonies. Little ones are free to crawl, play, nap, or simply take in the sound of the group singing around them.",
+      facilitators: ["danielleBensky"],
+      note: [
+        "No sheet music, no lyrics to memorize, and no pressure to perform — all levels and singing abilities welcome!",
+        "There's no such thing as being late — feel free to change diapers, feed, or wander as needed throughout.",
+      ],
     },
   },
   {
@@ -98,16 +102,12 @@ const firstYearCurriculum: CurriculumMonth[] = [
       ],
     },
     social: {
-      title: "Singing Mamas & Papas",
-      subtitle:
-        "A family circle of song — using shared voices to process parenthood",
+      title: "Vondelpark Stroll",
+      subtitle: "A whole family gathering outside in the park that has it all",
       description:
-        "A warm, singing circle for the whole family — a safe space to show up as you are and process parenthood together through shared harmonies. Little ones are free to crawl, play, nap, or simply take in the sound of the group singing around them.",
-      facilitators: ["danielleBensky"],
-      note: [
-        "No sheet music, no lyrics to memorize, and no pressure to perform — all levels and singing abilities welcome!",
-        "There's no such thing as being late — feel free to change diapers, feed, or wander as needed throughout.",
-      ],
+        "We'll walk around Vondelpark with babies in tow, then settle in at Groot Melkhuis for coffee and conversation — a low-key way to get outside and get to know the group.",
+      logistics:
+        "We'll initially meet at Groot Melkhuis, and leave for the walk at 10:15! If you need to arrive later, refer to the WhatsApp group for our live location.",
     },
   },
   {

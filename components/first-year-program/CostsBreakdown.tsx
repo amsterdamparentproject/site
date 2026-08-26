@@ -294,7 +294,9 @@ export default function CostsBreakdown() {
       <div className="max-w-md text-center mb-8 px-4">
         <p className="text-[11px] text-brand-soft-charcoal dark:text-brand-white/80 leading-relaxed">
           All prices include 21% BTW (VAT). Monthly billing starts the calendar
-          month after your due date, or immediately if you already have a baby.
+          month after your due date. If your baby's already here, billing starts
+          once live sessions launch on September 1, 2026 — after that, it starts
+          immediately.
         </p>
       </div>
 
@@ -303,9 +305,9 @@ export default function CostsBreakdown() {
         <StackedCostBar />
 
         <p className="text-xs text-brand-soft-charcoal/60 dark:text-brand-white/80 max-w-lg text-center mt-8 leading-relaxed italic">
-          One of our core values is transparency. Each cohort costs €1,347 to
-          run over 6 months. We first cover costs, then use the remainder to
-          support program development and other community initiatives.
+          Transparency is a core value: each 6-month cohort costs €1,347 to run.
+          Fees cover costs first; anything left funds program development and
+          community work.
         </p>
       </div>
     </section>

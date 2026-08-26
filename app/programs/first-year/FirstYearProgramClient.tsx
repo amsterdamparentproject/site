@@ -199,22 +199,25 @@ export default function FirstYearProgramClient({
           {/* Hero */}
           <div className="flex flex-col text-center items-center space-y-2 pt-6 md:space-y-5">
             <p className="text-2xl font-extrabold text-brand-goldenrod text-center">
-              From pregnancy through the first year
+              Pregnancy through your baby's first year
             </p>
             <h1 className="text-4xl leading-9 font-extrabold tracking-tight text-brand-charcoal md:px-6 md:text-6xl md:leading-14 dark:text-gray-100 text-center">
               First Year Program
             </h1>
             <p className="mt-4 mb-2 text-lg max-w-xl">
-              Amsterdam's <b>postpartum experts and parents, together</b>. A
-              support system for your whole family through your baby's first
-              year.
+              <b>
+                You don't have to figure out early parenthood in Amsterdam
+                alone.
+              </b>{" "}
+              Expert-led guidance, a matched local parent friend, and a
+              community of families who are exactly where you are.
             </p>
           </div>
 
           <div className="mt-6 mb-8">
             <ShowcaseButton
               href="#join"
-              title="Find your place"
+              title="Find your place with us"
               fill={true}
               umamiName="First Year Program: Join program"
             />
@@ -222,31 +225,17 @@ export default function FirstYearProgramClient({
 
           <div className="max-w-xl">
             <p className="mb-6 mx-4">
-              When your kraamzorg and midwife move on, we step in to bridge the
-              gap between expert and peer guidance through early parenthood.{" "}
-              <b>
-                We built the support so you don't have to — all you have to do
-                is show up.
-              </b>
-            </p>
-            <p className="mb-6 mx-4">
-              The program is a{" "}
-              <b>
-                community labor of love from local parents and postpartum
-                experts
-              </b>
-              . It's built by psychologists, lactation consultants,
-              return-to-work specialists, postpartum coaches, and more, plus the
-              founders of APP — who stood up this whole organization in the
-              first place because they felt this support gap firsthand with
-              their babies.
+              When your kraamzorg and midwife step back, we step in. Built by
+              psychologists, lactation consultants, and postpartum coaches —
+              including the parents who started APP because they felt this exact
+              gap.
             </p>
           </div>
 
           {/* Highlights */}
           <div className="mt-6 mb-12 px-4 w-full max-w-xl">
             <h2 className="text-center text-3xl font-bold text-brand-charcoal dark:text-brand-goldenrod mb-6 md:mb-12">
-              The four support pillars we believe in
+              How we support you
             </h2>
             <div className="flex flex-col gap-2">
               {highlights.map((item, index) => (
@@ -280,7 +269,7 @@ export default function FirstYearProgramClient({
           <section className="py-8 max-w-5xl mx-auto w-full">
             <SectionHeader
               header="What it looks like in practice"
-              subtitle="Café meetups, museum outings, and park walks — real families in the program, meeting up around Amsterdam."
+              subtitle="Real families, real meetups, around Amsterdam."
             />
             <PhotoGallery items={communityPhotos} />
           </section>
@@ -289,7 +278,7 @@ export default function FirstYearProgramClient({
           <section className="py-8 px-4 max-w-4xl mx-auto flex items-center flex-col justify-center">
             <SectionHeader
               header="How it works"
-              subtitle="Join in pregnancy and the whole family gets immediate support — free (and refundable) until your baby arrives. Already have a baby? Jump right in. Support is there for you when and where you need it, for as long as you need."
+              subtitle="Join during pregnancy for free, refundable early access — or jump in any time during your baby's first year."
             />
             <ProgramJourney />
           </section>
@@ -298,16 +287,7 @@ export default function FirstYearProgramClient({
           <section className="mt-10 mb-8">
             <SectionHeader
               header="Expert & social curriculum"
-              subtitle={
-                <>
-                  Evidence-based, expert-led discussions and resource guides
-                  covering every major transition in your first year — from
-                  newborn basics to returning to work. Topics rotate every 6
-                  months so the conversation deepens as your family grows. Each
-                  month also pairs with a themed social, so you can meet other
-                  families in person around Amsterdam.
-                </>
-              }
+              subtitle="Six expert-led topics, six matching socials — one new theme a month, repeating every 6 months as your baby (and you) grow."
             />
 
             <div className="max-w-4xl mx-auto mb-10">
@@ -318,20 +298,20 @@ export default function FirstYearProgramClient({
           </section>
 
           {/* Costs */}
-          <section className="mb-10 text-center">
+          <section id="pricing" className="mb-10 text-center scroll-m-32">
             <SectionHeader
               header="Program fees"
               subtitle={
                 <>
-                  As a nonprofit, we strive to balance access with fair pay for
-                  our experts and facilitators. If price is a barrier, please{" "}
+                  We're a nonprofit balancing fair pay for our experts with
+                  access for families. If price is a barrier,{" "}
                   <Link
                     href="mailto:hello@amsterdamparentproject.nl"
                     className="text-brand-goldenrod hover:text-brand-soft-green"
                   >
                     contact us
                   </Link>{" "}
-                  — we&apos;re happy to accommodate your needs.
+                  — we&apos;ll work with you.
                 </>
               }
             />
