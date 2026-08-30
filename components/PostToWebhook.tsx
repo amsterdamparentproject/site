@@ -196,6 +196,13 @@ export const postManageDirectory = async (data, action = "add") => {
   return { ...result, userCreated };
 };
 
+export const postSeasonGroupSignup = async (data) => {
+  const url = isLocal
+    ? process.env.TEST_N8N_SEASON_GROUP_SIGNUP_WEBHOOK_URL
+    : process.env.N8N_SEASON_GROUP_SIGNUP_WEBHOOK_URL;
+  return postToWebhook(url, data);
+};
+
 export const postSpotlight = async (data) => {
   // TODO: Create submission flow for Expert & Community Spotlights
   const url = process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
