@@ -92,7 +92,7 @@ export default function Page() {
       {/* Join */}
       <section id="join" className="scroll-m-32 py-10 w-full">
         <h2 className="text-center text-3xl font-bold text-brand-charcoal dark:text-brand-goldenrod mb-8">
-          Join your Season Group
+          Start your village
         </h2>
         <SeasonGroupSignupForm />
       </section>

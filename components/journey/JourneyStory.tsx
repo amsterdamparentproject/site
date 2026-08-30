@@ -24,7 +24,7 @@ const firstYearProgram = journeyPrograms.find(
 )!;
 const newsletter = journeyPrograms.find((p) => p.name === "Newsletter")!;
 const groupsDirectory = journeyPrograms.find(
-  (p) => p.name === "Amsterdam Parent Groups Directory",
+  (p) => p.name === "Groups Directory",
 )!;
 
 const proseStyle =
