@@ -3,9 +3,15 @@
 import { randomInt } from "crypto";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
+import { isEmailBlocked } from "@/lib/supabase/queries/blocklist";
 
 const isLocal =
   process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
+
+// Minimum time (ms) between the submit-event form rendering and being
+// submitted. Real people take longer than this to fill out four fields;
+// bots that fill and submit programmatically usually don't.
+const MIN_SUBMIT_MS = 2000;
 
 const postToWebhook = async (webhookURL, data) => {
   const authSecret = process.env.N8N_WEBHOOK_SECRET;
@@ -56,6 +62,27 @@ export const postEvent = async (data: FormData) => {
   const email = data.get("email") as string;
   const notes = data.get("notes") as string;
   const imageFile = data.get("image") as File | null;
+  const honeypot = data.get("hp_company") as string | null;
+  const renderedAt = Number(data.get("ts"));
+
+  // Bot check: honeypot field filled in, or submitted suspiciously fast
+  // after the form rendered. Blocklist check: known spam email/domain.
+  // Either way, fake a success response so spam senders see the same
+  // "Success!" screen and get no signal that they were blocked — this
+  // happens before the Storage upload and the n8n webhook call below, so a
+  // blocked submission costs nothing and never reaches review.
+  const isBot =
+    !!honeypot?.trim() ||
+    !renderedAt ||
+    Date.now() - renderedAt < MIN_SUBMIT_MS;
+
+  if (isBot || (await isEmailBlocked(email))) {
+    console.warn("postEvent: blocked spam submission", {
+      isBot,
+      email,
+    });
+    return { success: true, status: 200, response: "ok" };
+  }
 
   // Upload image to Supabase storage before sending to n8n so that the
   // webhook receives a public URL rather than raw binary data. This URL
