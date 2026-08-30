@@ -3,6 +3,9 @@ import { useState, useRef } from "react";
 import { postEvent } from "./PostToWebhook";
 
 const SubmitEventForm = () => {
+  const renderedAtRef = useRef(Date.now());
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
     title: "",
     url: "",
@@ -71,6 +74,8 @@ const SubmitEventForm = () => {
     data.append("url", formData.url);
     data.append("email", formData.email);
     data.append("notes", formData.notes);
+    data.append("hp_company", honeypotRef.current?.value ?? "");
+    data.append("ts", String(renderedAtRef.current));
 
     if (fileInputRef.current?.files?.[0]) {
       data.append("image", fileInputRef.current.files[0]);
@@ -135,6 +140,23 @@ const SubmitEventForm = () => {
 
   return (
     <form className="w-full" onSubmit={submitEvent}>
+      {/* Honeypot: hidden from real users, left for bots to fill in */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+        }}
+      />
+
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
           <label className={labelStyle} htmlFor="title">
