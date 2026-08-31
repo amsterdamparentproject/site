@@ -52,12 +52,9 @@ export interface JourneyProgram {
   // opposite contrast direction from accentText (which is this program's
   // color used as text on a neutral background).
   cardText: string;
-  // Prototype-only: borrowed from the First Year Program gallery
-  // (static/images/programs/first-year-program/gallery) since that's the
-  // only real community photography in the repo right now. Not actually
-  // photos of each specific program — picked for a loose thematic fit, to
-  // test whether photos on StageRecommender's cards help at all before
-  // commissioning/sourcing real per-program, per-stage photography.
+  // Each program has its own real photo (or, for Newsletter and Groups
+  // Directory — neither of which is a photographable place or event — a
+  // native 2:1 branded graphic instead of a staged lifestyle shot).
   photo: string;
   photoAlt: string;
 }
@@ -68,7 +65,7 @@ export interface JourneyProgram {
 // same order, so the story and the matrix read consistently.
 export const journeyPrograms: JourneyProgram[] = [
   {
-    name: "Season Group",
+    name: "Season Groups",
     href: "/season-groups",
     description:
       "A free WhatsApp community for expecting families due around the same time as you.",
@@ -81,9 +78,9 @@ export const journeyPrograms: JourneyProgram[] = [
     accentSoftBorder: "border-brand-charcoal/10 dark:border-brand-white/10",
     accentText: "text-brand-charcoal dark:text-brand-white",
     cardText: "text-brand-white dark:text-brand-charcoal",
-    photo: "/static/images/programs/first-year-program/gallery/park-walk.webp",
+    photo: "/static/images/programs/season-groups/cafe-table.webp",
     photoAlt:
-      "Parents walking together with a stroller along a tree-lined park path",
+      "A Season Group of parents chatting around a long café table, one holding a baby",
   },
   {
     name: "Postpartum Post",
@@ -99,9 +96,9 @@ export const journeyPrograms: JourneyProgram[] = [
     accentSoftBorder: "border-brand-violet/10",
     accentText: "text-brand-violet",
     cardText: "text-brand-charcoal",
-    photo:
-      "/static/images/programs/first-year-program/gallery/cafe-de-hallen.webp",
-    photoAlt: "Parents chatting and holding babies at a De Hallen café meetup",
+    photo: "/static/images/programs/postpartum-post/papote.png",
+    photoAlt:
+      "Two parents getting to know each other in a cozy play space, one holding her baby",
   },
   {
     name: "First Year Program",
@@ -117,8 +114,10 @@ export const journeyPrograms: JourneyProgram[] = [
     accentSoftBorder: "border-program-burnout-blue/10",
     accentText: "text-program-burnout-blue",
     cardText: "text-brand-charcoal",
-    photo: "/static/images/programs/first-year-program/gallery/playroom.webp",
-    photoAlt: "Parents and babies playing together in a soft playroom",
+    photo:
+      "/static/images/programs/first-year-program/gallery/museum-group.webp",
+    photoAlt:
+      "A group of parents and babies posing together at the Rijksmuseum",
   },
   {
     name: "Newsletter",
@@ -134,10 +133,9 @@ export const journeyPrograms: JourneyProgram[] = [
     accentSoftBorder: "border-brand-dark-sand/10",
     accentText: "text-brand-dark-sand",
     cardText: "text-brand-charcoal",
-    photo:
-      "/static/images/programs/first-year-program/gallery/museum-group.webp",
+    photo: "/static/images/programs/newsletter/logo.webp",
     photoAlt:
-      "A group of parents and babies posing together at the Rijksmuseum",
+      "Just a Phase — a biweekly newsletter for new parents in Amsterdam",
   },
   {
     name: "Groups Directory",
@@ -153,9 +151,8 @@ export const journeyPrograms: JourneyProgram[] = [
     accentSoftBorder: "border-brand-goldenrod/10",
     accentText: "text-brand-goldenrod",
     cardText: "text-brand-charcoal",
-    photo: "/static/images/programs/first-year-program/gallery/cafe-table.webp",
-    photoAlt:
-      "A group of parents gathered around a café table for a social meetup",
+    photo: "/static/images/programs/groups-directory/logo-2x1.webp",
+    photoAlt: "The Amsterdam Parent Project logo",
   },
 ];
 
@@ -172,10 +169,10 @@ export function programsForStage(stage: Stage): JourneyProgram[] {
 // homepage highlights (Postpartum Post, First Year Program, Groups
 // Directory) so nothing changes for a visitor who never touches the picker.
 const homepageRecommendationNames: Record<Stage, string[]> = {
-  pregnancy: ["Season Group", "Postpartum Post", "First Year Program"],
+  pregnancy: ["Season Groups", "Postpartum Post", "First Year Program"],
   newborn: ["Postpartum Post", "First Year Program", "Groups Directory"],
-  baby: ["Newsletter", "First Year Program", "Postpartum Post"],
-  toddler: ["Postpartum Post", "Groups Directory", "Newsletter"],
+  baby: ["Postpartum Post", "Newsletter", "First Year Program"],
+  toddler: ["Postpartum Post", "Newsletter", "Groups Directory"],
 };
 
 export function homepageRecommendationsForStage(

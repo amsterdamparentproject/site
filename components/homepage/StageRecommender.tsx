@@ -3,24 +3,20 @@
 import { useState } from "react";
 import Link from "@/components/Link";
 import Image from "@/components/Image";
+import ConfidenceCurve from "@/components/homepage/ConfidenceCurve";
 import {
-  stages,
   homepageRecommendationsForStage,
   type Stage,
 } from "@/data/journey/programs";
 
 // ---------------------------------------------------------------------------
-// StageRecommender — homepage companion to /journey. A stage picker sits on
-// top of three highlight cards; picking a stage swaps the cards to that
-// stage's curated recommendations (see homepageRecommendationsForStage,
-// data/journey/programs.ts). Both pieces share one full-bleed, full-strength
-// brand-soft-green strip background (same -mx-[50vw] w-screen break-out as
-// FirstYearProgramClient's FTPBanner) so they read as one connected
-// component, and so this section reads as clearly distinct from the cream
-// hero above it — hence plain white text throughout rather than a
-// light/dark-aware color.
+// StageRecommender — homepage companion to /journey. Reframes the problem
+// first (ConfidenceCurve: parental confidence follows a Dunning-Kruger
+// shape, not a straight line) before showing the solution (a list of
+// program recommendations for whichever point on the curve is selected).
+// The curve *is* the stage picker now — no separate pill row.
 //
-// Default stage is "newborn" so a visitor who never touches the picker sees
+// Default stage is "newborn" so a visitor who never touches the curve sees
 // exactly what the homepage always showed (Postpartum Post, First Year
 // Program, Groups Directory) — this replaces the old static HighlightSection.
 //
@@ -30,9 +26,10 @@ import {
 // side-by-side row there.
 //
 // First Year Program's accent was moved from brand-soft-green to
-// brand-green (data/journey/programs.ts) specifically so its footer band
-// doesn't disappear into this section's own brand-soft-green strip — same
-// fix applies wherever that accent shows up (SupportGrid, HighlightPill).
+// program-burnout-blue (data/journey/programs.ts) so its color doesn't
+// disappear into this section's own brand-soft-green strip, or get
+// confused with Season Group's charcoal — same fix applies wherever that
+// accent shows up (SupportGrid, HighlightPill, ConfidenceCurve's dots).
 // ---------------------------------------------------------------------------
 
 export default function StageRecommender() {
@@ -42,37 +39,20 @@ export default function StageRecommender() {
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-brand-sand/20 py-10 md:py-14">
       <div className="max-w-5xl mx-auto px-4">
-        <div className="text-center mb-10">
+        <div className="text-center mb-4">
           <h2 className="text-brand-soft-green font-bold text-2xl md:text-3xl mb-2">
-            Where are you in your parenthood journey?
+            Every new parent goes through this.
           </h2>
-          <p className="text-brand-soft-green dark:text-brand-white text-sm mb-6 max-w-lg mx-auto">
-            Tell us where your family is at and we'll show you how we support
-            you.
+          <p className="text-brand-soft-green dark:text-brand-white text-sm max-w-lg mx-auto">
+            The transition to parenthood has ups and downs. From the newborn
+            trenches to toddler playdates, APP is here to support you along the
+            way.
           </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {stages.map((s) => {
-              const active = s.key === stage;
-              return (
-                <button
-                  key={s.key}
-                  type="button"
-                  onClick={() => setStage(s.key)}
-                  data-umami-event={`Homepage recommender: Select stage ${s.label}`}
-                  className={`cursor-pointer px-4 py-2 rounded-full text-sm font-semibold border transition-colors ${
-                    active
-                      ? "bg-brand-soft-green text-brand-white border-brand-soft-green"
-                      : "bg-transparent text-brand-soft-green border-brand-soft-green/40 hover:border-brand-soft-green"
-                  }`}
-                >
-                  {s.label}
-                </button>
-              );
-            })}
-          </div>
         </div>
 
-        <div className="max-w-3xl mx-auto flex flex-col gap-3">
+        <ConfidenceCurve activeStage={stage} onSelectStage={setStage} />
+
+        <div className="max-w-3xl mx-auto flex flex-col mt-2 gap-3">
           {recommended.map((program) => (
             <div
               key={program.name}
