@@ -15,7 +15,7 @@ import { journeyPrograms } from "@/data/journey/programs";
 // in it.
 // ---------------------------------------------------------------------------
 
-const seasonGroup = journeyPrograms.find((p) => p.name === "Season Group")!;
+const seasonGroup = journeyPrograms.find((p) => p.name === "Season Groups")!;
 const postpartumPost = journeyPrograms.find(
   (p) => p.name === "Postpartum Post",
 )!;
@@ -29,8 +29,7 @@ const groupsDirectory = journeyPrograms.find(
 
 const proseStyle =
   "space-y-5 text-lg leading-relaxed text-brand-charcoal/90 dark:text-brand-white/85";
-const eyebrowStyle =
-  "text-xs font-bold uppercase tracking-widest text-brand-goldenrod mb-3";
+const eyebrowStyle = "font-bold text-2xl text-brand-charcoal mb-3";
 
 export default function JourneyStory() {
   return (
@@ -51,19 +50,23 @@ export default function JourneyStory() {
             <p>
               You find out you're expecting a baby here in Amsterdam, and
               immediately want to start building community. You join your{" "}
-              <HighlightPill program={seasonGroup} /> — a free WhatsApp
-              community with expecting families giving birth in Amsterdam around
-              the same time as you.
+              <HighlightPill program={seasonGroup} /> — a{" "}
+              <strong className={seasonGroup.accentText}>
+                free WhatsApp community with expecting families
+              </strong>{" "}
+              giving birth in Amsterdam around the same time as you.
             </p>
             <p>
-              As you start to build your village, you crave deeper connections
-              with local families around you — not just those due around the
-              same time. <HighlightPill program={postpartumPost} /> matches you
-              for coffee with the parent down the street who can share all the
-              neighborhood tips, or the new local mom who gave birth just a few
-              months ago and can hold your hand and answer your questions. As
-              your due date approaches, you feel grounded and ready for what's
-              to come.
+              As you start to build your village, you crave{" "}
+              <strong className={postpartumPost.accentText}>
+                deeper connections with local families around you
+              </strong>{" "}
+              — not just those due around the same time.{" "}
+              <HighlightPill program={postpartumPost} /> matches you for coffee
+              with the parent down the street who can share all the neighborhood
+              tips, or the new local mom who gave birth just a few months ago
+              and can hold your hand and answer your questions. As your due date
+              approaches, you feel grounded and ready for what's to come.
             </p>
           </div>
         </section>
@@ -83,11 +86,13 @@ export default function JourneyStory() {
               advice, and in return get hit with an overwhelming amount of info
               and opinions. It's hard to know what and whom to trust, and your
               energy is depleted. <HighlightPill program={firstYearProgram} />{" "}
-              is there to help you cut through the noise — local experts and
-              fellow parents coming together to hold your whole family
-              postpartum. Expert chats and fun socials with a core group of
-              committed families help you settle into new parenthood in
-              Amsterdam.
+              is there to help you{" "}
+              <strong className={firstYearProgram.accentText}>
+                cut through the noise — local experts and fellow parents coming
+                together to hold your whole family postpartum
+              </strong>
+              . Expert chats and fun socials with a core group of committed
+              families help you settle into new parenthood in Amsterdam.
             </p>
           </div>
         </section>
@@ -99,9 +104,11 @@ export default function JourneyStory() {
           <div className={proseStyle}>
             <p>
               Your baby gets a little older, and you find yourself wanting to
-              leave the house more and more — but where can you safely bring
-              your baby and have fun with them? The{" "}
-              <HighlightPill program={newsletter} /> lists local activities
+              leave the house more and more — but{" "}
+              <strong className={newsletter.accentText}>
+                where can you safely bring your baby and have fun with them?
+              </strong>{" "}
+              The <HighlightPill program={newsletter} /> lists local activities
               happening in Amsterdam for families with babies and toddlers every
               two weeks, so you always know what's available across the city.
             </p>
@@ -117,25 +124,30 @@ export default function JourneyStory() {
               As your baby grows into a toddler, you're on the move and want
               company. <HighlightPill program={postpartumPost} /> helps you plan
               playground dates with families around the corner with kids in the
-              same stage as yours — so you always have plans for your
-              mamadag/papadag afternoons.
+              same stage as yours — so you always have{" "}
+              <strong className={postpartumPost.accentText}>
+                plans for your mamadag/papadag afternoons
+              </strong>
+              .
             </p>
             <p>
               Your needs also keep changing, and the{" "}
-              <HighlightPill program={groupsDirectory} /> has over 100 groups to
-              help you navigate it all. Maybe you need new rain gear or
-              age-appropriate toys, so you graduate to the 2-3 year Buy/Sell
-              group. Or maybe you want to ask a bunch of neighborhood parents
-              about their experiences with the elementary schools in your area.
+              <HighlightPill program={groupsDirectory} /> has{" "}
+              <strong className={groupsDirectory.accentText}>
+                over 100 groups to help you navigate it all
+              </strong>
+              . Maybe you need new rain gear or age-appropriate toys, so you
+              graduate to the 2-3 year Buy/Sell group. Or maybe you want to ask
+              a bunch of neighborhood parents about their experiences with the
+              elementary schools in your area.
             </p>
           </div>
         </section>
       </div>
 
       <p className="text-center text-2xl md:text-3xl font-bold leading-snug text-brand-charcoal dark:text-brand-white max-w-xl mx-auto mt-16 px-4">
-        APP has created support for your family all along the journey of new
-        parenthood: from the first ultrasound picture to their first day of
-        school.
+        APP supports your family all along the journey of new parenthood: from
+        the first ultrasound picture to their first day of school.
       </p>
     </div>
   );

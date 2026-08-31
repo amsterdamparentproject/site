@@ -40,6 +40,17 @@ vi.mock("@/lib/stripe-client", () => ({
   },
 }));
 
+// Mock Resend — the webhook route sends a welcome email after activation
+// (non-fatal try/catch), which would otherwise hit the real Resend API with
+// a fake @example.com address and get rejected with a 422.
+vi.mock("@/lib/resend", () => ({
+  getResend: () => ({
+    emails: {
+      send: vi.fn().mockResolvedValue({ data: { id: "test" }, error: null }),
+    },
+  }),
+}));
+
 // Do NOT mock @/lib/supabase/server — the route handlers use createFirstYearClient()
 // which reads NEXT_PUBLIC_TEST_SUPABASE_URL from .env.test, hitting the real test DB.
 

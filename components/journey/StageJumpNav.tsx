@@ -18,7 +18,7 @@ export default function StageJumpNav() {
 
   return (
     <div className="mb-14 text-center">
-      <p className="text-xs font-bold uppercase tracking-widest text-brand-charcoal/50 dark:text-brand-white/40 mb-3">
+      <p className="text-sm font-bold text-brand-charcoal dark:text-brand-white/40 mb-3">
         Jump to where you are
       </p>
       <div className="flex flex-wrap justify-center gap-2">
@@ -27,7 +27,7 @@ export default function StageJumpNav() {
             key={stage.key}
             type="button"
             onClick={() => jumpTo(stage.key)}
-            className="cursor-pointer px-4 py-2 rounded-full text-sm font-semibold border border-brand-sand/60 text-brand-charcoal dark:text-brand-white hover:border-brand-soft-green dark:hover:border-brand-goldenrod hover:text-brand-soft-green dark:hover:text-brand-goldenrod transition-colors"
+            className="cursor-pointer px-4 py-2 rounded-full text-sm font-semibold border border-brand-sand/60 text-brand-charcoal dark:text-brand-white hover:border-brand-goldenrod hover:text-brand-goldenrod transition-colors"
           >
             {stage.label}
           </button>

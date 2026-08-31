@@ -20,8 +20,8 @@ export default function Page() {
           Your support journey
         </h1>
         <p className="mt-4 mb-2 text-lg max-w-xl">
-          APP isn't just one program — it's a set of overlapping supports that
-          shift as your family grows. Here's how they fit together.
+          APP isn't just one program — it's a set of overlapping services that
+          grow with your family. Here's how they fit together.
         </p>
       </div>
 
@@ -30,9 +30,6 @@ export default function Page() {
       </div>
 
       <div className="w-full max-w-4xl mx-auto px-4 mt-20 mb-16">
-        <h2 className="text-center text-3xl font-bold text-brand-charcoal dark:text-brand-goldenrod mb-10">
-          At a glance
-        </h2>
         <SupportGrid />
       </div>
     </div>

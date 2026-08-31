@@ -141,7 +141,7 @@ export const journeyPrograms: JourneyProgram[] = [
     name: "Groups Directory",
     href: "/groups-directory",
     description:
-      "Discover your local parent communities: 80+ groups and counting.",
+      "Discover your local parent communities: 100+ groups and counting.",
     cta: "Find your groups",
     stages: ["pregnancy", "newborn", "baby", "toddler"],
     pricing: "Free",
