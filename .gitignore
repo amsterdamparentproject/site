@@ -31,6 +31,7 @@ public/sitemap.xml
 # misc
 .DS_Store
 tsconfig*.tsbuildinfo
+_to_delete
 
 # debug
 *.log

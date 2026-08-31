@@ -84,6 +84,10 @@ export const postEvent = async (data: FormData) => {
   return postToWebhook(webhookUrl, { title, url, email, notes, file_url });
 };
 
+// Used by both /groups-directory/access (RequestAccessForm) and
+// /season-groups (SeasonGroupSignupForm, for first-time visitors with no
+// app_uid yet) — Season Groups joins through this same pipeline rather than
+// a bespoke one. See __claude__/season-groups-join-flow.md.
 export const postRequestDirectory = async (data) => {
   const url = isLocal
     ? process.env.TEST_N8N_REQUEST_DIRECTORY_WEBHOOK_URL
@@ -194,13 +198,6 @@ export const postManageDirectory = async (data, action = "add") => {
 
   const result = await postToWebhook(url, formData);
   return { ...result, userCreated };
-};
-
-export const postSeasonGroupSignup = async (data) => {
-  const url = isLocal
-    ? process.env.TEST_N8N_SEASON_GROUP_SIGNUP_WEBHOOK_URL
-    : process.env.N8N_SEASON_GROUP_SIGNUP_WEBHOOK_URL;
-  return postToWebhook(url, data);
 };
 
 export const postSpotlight = async (data) => {

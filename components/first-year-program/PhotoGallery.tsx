@@ -24,11 +24,27 @@ export interface PhotoGalleryItem {
   caption?: string;
 }
 
+const DEFAULT_CARD_WIDTH = "w-[calc(50%-0.5rem)] sm:w-[45%] md:w-[31%]";
+const DEFAULT_IMAGE_SIZES =
+  "(max-width: 640px) 50vw, (max-width: 768px) 45vw, 31vw";
+
 interface PhotoGalleryProps {
   items: PhotoGalleryItem[];
+  // Defaults show ~2 per view with a peek of a 3rd on desktop — a hint
+  // that more photos are scrollable, which is what the First Year
+  // Program's larger sets want. A small fixed set (e.g. season-groups'
+  // 2 photos) can instead fill the row completely by passing a wider
+  // value here (and a matching imageSizes, so images still load at the
+  // right resolution for their actual on-screen width).
+  cardWidthClassName?: string;
+  imageSizes?: string;
 }
 
-export default function PhotoGallery({ items }: PhotoGalleryProps) {
+export default function PhotoGallery({
+  items,
+  cardWidthClassName = DEFAULT_CARD_WIDTH,
+  imageSizes = DEFAULT_IMAGE_SIZES,
+}: PhotoGalleryProps) {
   const [selected, setSelected] = useState<PhotoLightboxImage | null>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
@@ -66,13 +82,13 @@ export default function PhotoGallery({ items }: PhotoGalleryProps) {
             key={index}
             type="button"
             onClick={() => setSelected(item)}
-            className="relative shrink-0 snap-start w-[calc(50%-0.5rem)] sm:w-[45%] md:w-[31%] aspect-[3/4] rounded-2xl overflow-hidden border border-brand-sand/60 cursor-zoom-in"
+            className={`relative shrink-0 snap-start ${cardWidthClassName} aspect-[3/4] rounded-2xl overflow-hidden border border-brand-sand/60 cursor-zoom-in`}
           >
             <Image
               src={item.src}
               alt={item.alt}
               fill
-              sizes="(max-width: 640px) 50vw, (max-width: 768px) 45vw, 31vw"
+              sizes={imageSizes}
               className="object-cover"
             />
             {item.caption && (

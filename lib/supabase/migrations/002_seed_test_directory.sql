@@ -15,7 +15,9 @@ CREATE TABLE directory.groups (
   platform    text,
   reported    boolean NOT NULL DEFAULT false,
   admin_name  text,
-  admin_email text
+  admin_email text,
+  due_start   date,
+  due_end     date
 );
 
 -- Seed groups
@@ -64,6 +66,29 @@ INSERT INTO directory.groups (name, categories, link, description, platform, adm
     'WhatsApp',
     null,
     null
+  );
+
+-- Season Groups test seed rows — due_start/due_end are what /season-groups
+-- filters and matches on; categories includes "Season" so they also behave
+-- like any other group when browsing the general directory by category.
+INSERT INTO directory.groups (name, categories, link, description, platform, due_start, due_end) VALUES
+  (
+    'Season Group — Due Apr–May 2026',
+    ARRAY['Season'],
+    'https://chat.whatsapp.com/testseasonlink001',
+    'For families in Amsterdam expecting between April and May 2026.',
+    'WhatsApp',
+    '2026-04-01',
+    '2026-05-31'
+  ),
+  (
+    'Season Group — Due Jun–Jul 2026',
+    ARRAY['Season'],
+    'https://chat.whatsapp.com/testseasonlink002',
+    'For families in Amsterdam expecting between June and July 2026.',
+    'WhatsApp',
+    '2026-06-01',
+    '2026-07-31'
   );
 
 -- Drop and recreate users
