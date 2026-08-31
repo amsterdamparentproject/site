@@ -22,8 +22,11 @@ import {
 //
 // Recommendations render as a vertical list of horizontal rows (photo block
 // left, header/description/CTA stacked to the right) rather than a 3-column
-// card grid — stacks flex-col on mobile since there's no room for a
-// side-by-side row there.
+// card grid. The photo is a narrow full-height strip on every breakpoint —
+// on mobile it used to be a full-width aspect-[2/1] banner stacked above
+// the text, which put more visual weight on the photo than the program
+// name; it's now a fixed 80px-wide column flush against the card's left
+// edge instead, the same treatment sm:+ already used just narrower.
 //
 // First Year Program's accent was moved from brand-soft-green to
 // program-burnout-blue (data/journey/programs.ts) so its color doesn't
@@ -40,7 +43,7 @@ export default function StageRecommender() {
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-brand-sand/20 py-10 md:py-14">
       <div className="max-w-5xl mx-auto px-4">
         <div className="text-center mb-4">
-          <h2 className="text-brand-soft-green font-bold text-2xl md:text-3xl mb-2">
+          <h2 className="text-brand-soft-green font-bold text-xl md:text-3xl mb-2">
             Every new parent goes through this.
           </h2>
           <p className="text-brand-soft-green dark:text-brand-white text-sm max-w-lg mx-auto">
@@ -56,18 +59,25 @@ export default function StageRecommender() {
           {recommended.map((program) => (
             <div
               key={program.name}
-              className={`bg-brand-white dark:bg-brand-charcoal rounded-3xl shadow-sm border ${program.accentSoftBorder} overflow-hidden flex flex-col sm:flex-row`}
+              className={`bg-brand-white dark:bg-brand-charcoal rounded-3xl shadow-sm border ${program.accentSoftBorder} overflow-hidden flex flex-row items-stretch`}
             >
-              <div className="relative aspect-[2/1] sm:aspect-auto sm:w-48 shrink-0">
+              <div className="relative w-20 sm:w-48 shrink-0">
+                {/* sizes is deliberately wider than the 80px mobile slot
+                    (w-20 above): it only tells Next how wide the crop is,
+                    not how tall — and object-cover stretches this strip to
+                    match the text column's height, which can run tall once
+                    the description wraps in a ~200px-wide column. A
+                    width-only-accurate hint here fetches a low-res crop
+                    that then gets visibly upscaled to cover that height. */}
                 <Image
                   src={program.photo}
                   alt={program.photoAlt}
                   fill
-                  sizes="(max-width: 640px) 100vw, 192px"
+                  sizes="(max-width: 640px) 200px, 192px"
                   className="object-cover"
                 />
               </div>
-              <div className="flex-1 p-4 sm:p-5 flex flex-col justify-center">
+              <div className="flex-1 min-w-0 p-4 sm:p-5 flex flex-col justify-center">
                 <h3 className="text-lg font-bold text-brand-charcoal dark:text-brand-white mb-1">
                   {program.name}
                 </h3>

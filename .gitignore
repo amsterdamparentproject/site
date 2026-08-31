@@ -53,6 +53,7 @@ yarn-error.log*
 
 # Claude
 __claude__
+.claude
 
 # FYP resource guide PDFs, staged locally before upload to Supabase Storage —
 # never committed/public, see scripts/update-fyp-guides.mjs
