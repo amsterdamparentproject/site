@@ -135,10 +135,6 @@ export default function SeasonGroupsClient({
           you — for peer guidance and free bi-monthly meetups run by APP. Open
           to all parents: moms, dads, and partners.
         </p>
-        <p className="text-sm text-brand-soft-charcoal dark:text-brand-sand max-w-xl">
-          You can find all Season Group links in APP's Amsterdam Parent Groups
-          Directory: 100+ local groups supporting parents in Amsterdam.
-        </p>
       </div>
 
       {/* Photo gallery */}
@@ -152,9 +148,23 @@ export default function SeasonGroupsClient({
 
       {/* Listing */}
       <section className="py-10 w-full max-w-4xl mx-auto">
-        <h2 className="text-center text-3xl font-bold text-brand-charcoal dark:text-brand-goldenrod mb-6">
+        <h2 className="text-center text-3xl font-bold text-brand-charcoal dark:text-brand-goldenrod mb-4">
           Find your Season Group
         </h2>
+
+        <p className="mb-6 text-sm text-center text-brand-soft-charcoal dark:text-brand-sand max-w-xl mx-auto">
+          Below are the official Season Groups — which from 2026 are managed by
+          APP. You can find other due date groups by neighborhood in APP's{" "}
+          <a
+            href="/groups-directory"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
+          >
+            Amsterdam Parent Groups Directory
+          </a>
+          : 100+ local groups supporting parents in Amsterdam.
+        </p>
 
         {/* Due-date filter */}
         <div className="mb-8 flex flex-col items-center gap-3">
