@@ -21,11 +21,11 @@ export const metadata = genPageMetadata({
 export const dynamic = "force-dynamic";
 
 interface PageProps {
-  searchParams: Promise<{ uid?: string }>;
+  searchParams: Promise<{ uid?: string; group?: string }>;
 }
 
 export default async function DirectoryPage({ searchParams }: PageProps) {
-  const { uid: urlUid } = await searchParams;
+  const { uid: urlUid, group: highlightGroupId } = await searchParams;
   const cookieStore = await cookies();
 
   const uid = urlUid || cookieStore.get("app_uid")?.value;
@@ -69,6 +69,7 @@ export default async function DirectoryPage({ searchParams }: PageProps) {
       userMaskedEmail={data.user_email_masked}
       userInterests={data.user_interests}
       uid={uid}
+      highlightGroupId={highlightGroupId}
     />
   );
 }

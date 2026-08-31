@@ -620,7 +620,7 @@ export default function FYPJoinForm({
 
             {/* Feature list */}
             <p className="mt-5 text-sm font-medium text-brand-charcoal dark:text-brand-white/80">
-              You immediately get:
+              After signup, you get:
             </p>
             <ul className="mt-2 space-y-2">
               {features.map((item, i) => (

@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "@/components/Link";
-import HighlightSection from "@/components/homepage/HighlightSection";
+import StageRecommender from "@/components/homepage/StageRecommender";
 import siteMetadata from "@/data/siteMetadata";
 import { CalendarEvent } from "@/lib/calendar";
 import {
@@ -90,7 +90,7 @@ export default function Home({
         </p>
       </section>
 
-      <HighlightSection />
+      <StageRecommender />
 
       {/* Next events + Resources */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

@@ -45,7 +45,7 @@ function buildStandingEvent(year: number, monthIdx: number): DisplayEvent {
     tagline: null,
     date: `${year}-${month}-${day}`,
     href: "https://postpartumpost.com",
-    linkLabel: "Learn more about Postpartum Post",
+    linkLabel: "Learn more about APP's Postpartum Post",
   };
 }
 

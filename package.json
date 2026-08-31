@@ -24,6 +24,8 @@
     "emails:preview": "tsx --env-file=.env.local scripts/send-preview-emails.mts",
     "ftp-legacy-transition:test": "tsx scripts/send-ftp-legacy-transition.mts test",
     "ftp-legacy-transition:prod": "tsx scripts/send-ftp-legacy-transition.mts prod",
+    "season-group-dates:test": "tsx scripts/populate-season-group-dates.mts test",
+    "season-group-dates:prod": "tsx scripts/populate-season-group-dates.mts prod",
     "prepare": "husky"
   },
   "dependencies": {

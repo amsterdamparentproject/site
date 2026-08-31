@@ -5,10 +5,10 @@ const highlightStyle =
 const headerNavLinks = [
   { href: "/", title: "Home", style: defaultStyle },
   {
-    href: "/programs/first-year",
-    title: "Newborn support",
+    href: "/journey",
+    title: "Your support journey",
     style: defaultStyle,
-    umamiEvent: "Header: First Year Program",
+    umamiEvent: "Header: Journey",
   },
   {
     href: "/newsletter",
