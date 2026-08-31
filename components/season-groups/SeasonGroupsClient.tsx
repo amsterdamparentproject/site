@@ -1,12 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Modal from "@/components/Modal";
 import PhotoGallery from "@/components/first-year-program/PhotoGallery";
 import SeasonGroupCard from "@/components/season-groups/SeasonGroupCard";
 import SeasonGroupSignupForm from "@/components/season-groups/SeasonGroupSignupForm";
+import { updateUserProfile } from "@/app/groups-directory/actions";
 import { MONTHS, situationYears } from "@/lib/fyp/situation";
-import { findMatchedSeasonGroup, sortByDueStart } from "@/lib/season-groups";
+import {
+  findMatchedSeasonGroups,
+  mergeSeasonCategory,
+  sortByDueStart,
+} from "@/lib/season-groups";
 import {
   SeasonGroup,
   SeasonGroupExistingProfile,
@@ -17,7 +23,7 @@ import {
 // exactly 2 photos) rather than building a second gallery component.
 const seasonGroupPhotos = [
   {
-    src: "/static/images/programs/season-groups/autumn-winter-2026-7-oba.webp",
+    src: "/static/images/programs/season-groups/autumn-winter-2026-2027-oba.webp",
     alt: "A large group of Season Groups parents posing together indoors at the OBA",
     caption: "Autumn/Winter 2026-2027 meetup at the OBA",
   },
@@ -49,24 +55,69 @@ export default function SeasonGroupsClient({
   const hasFilter = !!(filterMonth && filterYear);
 
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+  // The specific group a new visitor clicked "Join" on — the modal is
+  // scoped to exactly this group (title, and what gets submitted), no
+  // due-date re-asking inside it.
+  const [selectedGroupForJoin, setSelectedGroupForJoin] =
+    useState<SeasonGroup | null>(null);
+  const router = useRouter();
+  const [joiningGroupId, setJoiningGroupId] = useState<string | null>(null);
+  const [joinError, setJoinError] = useState<string | null>(null);
 
-  const matchedGroup = useMemo(
-    () => findMatchedSeasonGroup(seasonGroups, filterMonth, filterYear),
+  // Plural: the same season can have more than one row (e.g. a WhatsApp
+  // group and a Facebook group sharing identical due dates) — see
+  // findMatchedSeasonGroups. Both need their own card so a visitor can pick
+  // the platform they actually want; picking just one arbitrarily would
+  // silently join/highlight the wrong one.
+  const matchedGroups = useMemo(
+    () => findMatchedSeasonGroups(seasonGroups, filterMonth, filterYear),
     [seasonGroups, filterMonth, filterYear],
   );
 
-  // With a matched due date, show ONLY that group — no point listing
-  // everyone else's season once we know which one is theirs. With no
-  // filter (or a filter that matched nothing), fall back to the full list.
+  // With a matched due date, show ONLY the matching group(s) — no point
+  // listing everyone else's season once we know which one is theirs. With
+  // no filter (or a filter that matched nothing), fall back to the full
+  // list.
   const visibleGroups = useMemo(() => {
-    if (hasFilter && matchedGroup) return [matchedGroup];
+    if (hasFilter && matchedGroups.length > 0) return matchedGroups;
     return sortByDueStart(seasonGroups);
-  }, [seasonGroups, hasFilter, matchedGroup]);
+  }, [seasonGroups, hasFilter, matchedGroups]);
 
   const clearFilter = () => {
     setFilterMonth("");
     setFilterYear("");
   };
+
+  // Each card already tells us exactly which group a visitor wants — for
+  // an existing Directory member there's no ambiguity left to resolve, so
+  // skip the modal entirely: merge "Season" into their profile and take
+  // them straight to that group's highlighted entry in the Directory. A new
+  // visitor still needs the modal to collect a name/email, but it's scoped
+  // to this exact group too — no due-date picker inside it.
+  async function handleJoin(group: SeasonGroup) {
+    if (!existingProfile) {
+      setSelectedGroupForJoin(group);
+      setIsJoinModalOpen(true);
+      return;
+    }
+
+    setJoinError(null);
+    setJoiningGroupId(group.id);
+    const result = await updateUserProfile(
+      existingProfile.uid,
+      existingProfile.name,
+      existingProfile.email,
+      mergeSeasonCategory(existingProfile.categories),
+    );
+    if (!result.success) {
+      setJoinError(
+        "Something went wrong — please try again, or email hello@amsterdamparentproject.nl.",
+      );
+      setJoiningGroupId(null);
+      return;
+    }
+    router.push(`/groups-directory?group=${group.id}`);
+  }
 
   return (
     <div className="flex flex-col items-center px-2 w-full max-w-full">
@@ -83,6 +134,10 @@ export default function SeasonGroupsClient({
           village. Join the other Amsterdam families due around the same time as
           you — for peer guidance and free bi-monthly meetups run by APP. Open
           to all parents: moms, dads, and partners.
+        </p>
+        <p className="text-sm text-brand-soft-charcoal dark:text-brand-sand max-w-xl">
+          You can find all Season Group links in APP's Amsterdam Parent Groups
+          Directory: 100+ local groups supporting parents in Amsterdam.
         </p>
       </div>
 
@@ -150,7 +205,7 @@ export default function SeasonGroupsClient({
               </button>
             )}
           </div>
-          {hasFilter && !matchedGroup && (
+          {hasFilter && matchedGroups.length === 0 && (
             <p className="text-xs text-brand-soft-charcoal dark:text-brand-sand italic">
               We don't have a Season Group for that month yet — join anyway and
               we'll place you as soon as one opens.
@@ -165,9 +220,12 @@ export default function SeasonGroupsClient({
               <SeasonGroupCard
                 key={group.id}
                 group={group}
-                recommended={hasFilter && group.id === matchedGroup?.id}
-                hideBadge={hasFilter && !!matchedGroup}
-                onJoin={() => setIsJoinModalOpen(true)}
+                recommended={
+                  hasFilter && matchedGroups.some((m) => m.id === group.id)
+                }
+                hideBadge={hasFilter && matchedGroups.length > 0}
+                isJoining={joiningGroupId === group.id}
+                onJoin={handleJoin}
               />
             ))
           ) : (
@@ -179,20 +237,31 @@ export default function SeasonGroupsClient({
             </div>
           )}
         </div>
+
+        {joinError && (
+          <p className="mt-4 text-center text-sm text-red-500 dark:text-red-400">
+            {joinError}
+          </p>
+        )}
       </section>
 
-      {/* Join modal */}
+      {/* Join modal (new visitors only — an existing Directory member joins
+          directly from the card above, no form needed) */}
       <Modal
         isOpen={isJoinModalOpen}
-        onClose={() => setIsJoinModalOpen(false)}
-        title="Join your Season Group"
+        onClose={() => {
+          setIsJoinModalOpen(false);
+          setSelectedGroupForJoin(null);
+        }}
+        title={
+          selectedGroupForJoin
+            ? `Join ${selectedGroupForJoin.name}`
+            : "Join your Season Group"
+        }
       >
-        <SeasonGroupSignupForm
-          seasonGroups={seasonGroups}
-          existingProfile={existingProfile}
-          initialDueMonth={filterMonth}
-          initialDueYear={filterYear}
-        />
+        {selectedGroupForJoin && (
+          <SeasonGroupSignupForm group={selectedGroupForJoin} />
+        )}
       </Modal>
     </div>
   );

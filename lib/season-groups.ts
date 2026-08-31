@@ -21,22 +21,27 @@ export function dueDateFromMonthYear(month: string, year: string): Date | null {
   return new Date(yearNum, monthIdx, 15);
 }
 
-/** The Season Group whose due_start/due_end range contains the given due month/year, if any. */
-export function findMatchedSeasonGroup(
+/**
+ * Every Season Group whose due_start/due_end range contains the given due
+ * month/year — plural because the same season can have more than one row
+ * (e.g. a WhatsApp group and a Facebook group sharing identical dates; see
+ * populate-season-group-dates.mts). Callers must not assume there's only
+ * one match: silently picking the first would join/highlight whichever
+ * platform happened to sort first, not the one the visitor actually wants.
+ */
+export function findMatchedSeasonGroups(
   groups: SeasonGroup[],
   month: string,
   year: string,
-): SeasonGroup | null {
+): SeasonGroup[] {
   const dueDate = dueDateFromMonthYear(month, year);
-  if (!dueDate) return null;
-  return (
-    groups.find((g) => {
-      if (!g.due_start || !g.due_end) return false;
-      const start = new Date(g.due_start);
-      const end = new Date(g.due_end);
-      return dueDate >= start && dueDate <= end;
-    }) ?? null
-  );
+  if (!dueDate) return [];
+  return groups.filter((g) => {
+    if (!g.due_start || !g.due_end) return false;
+    const start = new Date(g.due_start);
+    const end = new Date(g.due_end);
+    return dueDate >= start && dueDate <= end;
+  });
 }
 
 const MONTH_SHORT = [
@@ -62,14 +67,21 @@ function shortMonthYear(iso: string): string {
   return `${MONTH_SHORT[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
-/** "Due Jun–Jul 2026" (or "Due Dec 2026 – Jan 2027" across a year boundary). */
+/**
+ * "For babies between Jun–Jul 2026" (or "For babies between Dec 2026–Jan
+ * 2027" across a year boundary) — plain descriptive copy, not a category
+ * label, so callers should render it like the group description rather
+ * than a tag/pill.
+ */
 export function formatDueRangeLabel(
   dueStart: string | null,
   dueEnd: string | null,
 ): string {
   if (!dueStart && !dueEnd) return "";
-  if (dueStart && !dueEnd) return `Due from ${shortMonthYear(dueStart)}`;
-  if (!dueStart && dueEnd) return `Due through ${shortMonthYear(dueEnd)}`;
+  if (dueStart && !dueEnd)
+    return `For babies due from ${shortMonthYear(dueStart)}`;
+  if (!dueStart && dueEnd)
+    return `For babies due through ${shortMonthYear(dueEnd)}`;
 
   const start = new Date(dueStart as string);
   const end = new Date(dueEnd as string);
@@ -77,7 +89,12 @@ export function formatDueRangeLabel(
   const startLabel = sameYear
     ? MONTH_SHORT[start.getUTCMonth()]
     : shortMonthYear(dueStart as string);
-  return `Due ${startLabel}–${shortMonthYear(dueEnd as string)}`;
+  return `For babies between ${startLabel}–${shortMonthYear(dueEnd as string)}`;
+}
+
+/** Adds "Season" to a member's existing categories without duplicating it. */
+export function mergeSeasonCategory(categories: string[]): string[] {
+  return categories.includes("Season") ? categories : [...categories, "Season"];
 }
 
 /** Ascending by due_start; groups with no due_start sort last. */

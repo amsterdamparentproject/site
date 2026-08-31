@@ -28,6 +28,7 @@ interface DirectoryClientProps {
   userEmail: string;
   userMaskedEmail: string;
   uid?: string;
+  highlightGroupId?: string;
 }
 
 export default function DirectoryClient({
@@ -38,6 +39,7 @@ export default function DirectoryClient({
   userName,
   userEmail,
   userMaskedEmail,
+  highlightGroupId,
 }: DirectoryClientProps) {
   // --- State ---
   const [activeTab, setActiveTab] = useState<"recommended" | "all">(
@@ -46,6 +48,7 @@ export default function DirectoryClient({
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -122,6 +125,48 @@ export default function DirectoryClient({
       window.history.replaceState({}, "", url.toString());
     }
   }, [uid]);
+
+  // A season-groups (or any future) join flow can deep-link here as
+  // /groups-directory?group=<id> to land the visitor on their specific
+  // entry instead of a generic "you're in" screen. Reveal it regardless
+  // of the current tab/filters, scroll it into view, and give it a
+  // temporary highlight ring so it's obvious which card is theirs.
+  useEffect(() => {
+    if (!highlightGroupId) return;
+
+    const target = [...recommended, ...allGroups].find(
+      (g) => g.id === highlightGroupId,
+    );
+    if (!target) return;
+
+    setActiveTab(
+      recommended.some((g) => g.id === highlightGroupId)
+        ? "recommended"
+        : "all",
+    );
+    setSelectedCategory("All");
+    setSelectedType("All");
+    setSearchTerm("");
+    setHighlightedId(highlightGroupId);
+
+    // Clean the URL so a later refresh doesn't re-trigger the highlight,
+    // matching the uid cleanup above.
+    const url = new URL(window.location.href);
+    url.searchParams.delete("group");
+    window.history.replaceState({}, "", url.toString());
+
+    const scrollTimer = setTimeout(() => {
+      document
+        .getElementById(`directory-group-${highlightGroupId}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 150);
+    const fadeTimer = setTimeout(() => setHighlightedId(null), 4000);
+
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(fadeTimer);
+    };
+  }, [highlightGroupId, recommended, allGroups]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -470,6 +515,7 @@ export default function DirectoryClient({
               key={`${group.name}-${group.platform}`}
               group={group}
               uid={uid}
+              highlighted={highlightedId === group.id}
               onEdit={handleEditGroup}
               onReport={handleReport}
             />

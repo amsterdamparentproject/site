@@ -16,6 +16,7 @@ interface Group {
 interface DirectoryGroupProps {
   group: Group;
   uid?: string;
+  highlighted?: boolean;
   onEdit: (group: Group) => void;
   onReport: (group: Group) => void;
 }
@@ -23,15 +24,19 @@ interface DirectoryGroupProps {
 export default function DirectoryGroupCard({
   group,
   uid,
+  highlighted = false,
   onEdit,
   onReport,
 }: DirectoryGroupProps) {
   return (
     <div
-      className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-all border ${
-        group.recommended
-          ? "border-brand-soft-green bg-brand-soft-green/5"
-          : "border-brand-sand/60 dark:border-brand-soft-charcoal"
+      id={`directory-group-${group.id}`}
+      className={`scroll-mt-32 p-4 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 transition-all duration-700 border ${
+        highlighted
+          ? "border-brand-goldenrod ring-4 ring-brand-goldenrod/50 bg-brand-goldenrod/10"
+          : group.recommended
+            ? "border-brand-soft-green bg-brand-soft-green/5"
+            : "border-brand-sand/60 dark:border-brand-soft-charcoal"
       }`}
     >
       <div className="flex-1">

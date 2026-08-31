@@ -2,6 +2,7 @@
 
 import { SeasonGroup } from "@/app/types/groups-directory";
 import { formatDueRangeLabel } from "@/lib/season-groups";
+import { CustomSocialIcon, components } from "@/components/social-icons";
 
 // Public-safe version of DirectoryGroupCard (components/groups-directory)
 // for the pre-access /season-groups listing: same visual language, but
@@ -16,6 +17,9 @@ interface SeasonGroupCardProps {
   // one group, the "Recommended for you" pill is redundant — there's
   // nothing left to compare it against.
   hideBadge?: boolean;
+  // Set while this specific card's join action (an already-known Directory
+  // member merging straight into this group, no modal) is in flight.
+  isJoining?: boolean;
   onJoin: (group: SeasonGroup) => void;
 }
 
@@ -23,6 +27,7 @@ export default function SeasonGroupCard({
   group,
   recommended = false,
   hideBadge = false,
+  isJoining = false,
   onJoin,
 }: SeasonGroupCardProps) {
   const dueRangeLabel = formatDueRangeLabel(group.due_start, group.due_end);
@@ -38,6 +43,12 @@ export default function SeasonGroupCard({
       <div className="flex-1">
         <h3 className="text-lg font-bold text-brand-charcoal dark:text-brand-white flex items-center gap-2 flex-wrap">
           {group.name}
+          {group.platform && (
+            <CustomSocialIcon
+              kind={group.platform.toLowerCase() as keyof typeof components}
+              size={4}
+            />
+          )}
           {recommended && !hideBadge && (
             <span className="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-soft-green dark:bg-brand-goldenrod dark:text-brand-charcoal px-2 py-0.5 rounded-full">
               Recommended for you
@@ -50,9 +61,9 @@ export default function SeasonGroupCard({
           </p>
         )}
         {dueRangeLabel && (
-          <span className="mt-2 inline-block text-[10px] font-bold uppercase tracking-widest text-brand-soft-green dark:text-brand-goldenrod bg-brand-sand/20 px-1.5 py-0.5 rounded">
+          <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 pt-1">
             {dueRangeLabel}
-          </span>
+          </p>
         )}
       </div>
 
@@ -60,11 +71,12 @@ export default function SeasonGroupCard({
         <button
           type="button"
           onClick={() => onJoin(group)}
-          className="cursor-pointer bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center"
+          disabled={isJoining}
+          className="cursor-pointer bg-brand-soft-green text-white px-10 py-2.5 rounded-full font-bold hover:bg-brand-goldenrod hover:text-brand-charcoal transition-all text-center disabled:opacity-50 disabled:cursor-not-allowed"
           data-umami-event="Season Groups: Join group"
           data-umami-event-group-id={group.id}
         >
-          Join
+          {isJoining ? "Joining…" : "Join"}
         </button>
       </div>
     </div>
