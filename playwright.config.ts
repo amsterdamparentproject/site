@@ -38,7 +38,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: "http://localhost:3001",
+    baseURL: "http://localhost:3100",
     trace: "on-first-retry",
     launchOptions: {
       // Disable Chromium site isolation so Playwright's frameLocator can
@@ -53,9 +53,13 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "NODE_ENV=test yarn dev --port 3001",
-    url: "http://localhost:3001",
-    reuseExistingServer: false,
+    command: "NODE_ENV=test yarn dev --port 3100",
+    url: "http://localhost:3100",
+    // Reuse a server already running on 3100 — lets `yarn start-site`
+    // (dev server + `stripe listen`, for fyp-checkout.spec.ts) stay up
+    // across test runs instead of Playwright spawning a second,
+    // stripe-less dev server on the same port and failing to bind it.
+    reuseExistingServer: true,
     timeout: 120_000,
   },
 });

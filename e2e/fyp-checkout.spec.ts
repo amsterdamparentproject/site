@@ -29,7 +29,7 @@
  * runtime, not coverage.
  *
  * Prerequisites:
- *   - `stripe listen --forward-to localhost:3001/api/webhooks/stripe/fyp` running
+ *   - `stripe listen --forward-to localhost:3100/api/webhooks/stripe/fyp` running
  *   - Stripe test mode prices fyp_monthly_single + fyp_monthly_multi must exist
  *   - Coupon STRIPE_FYP_DEPOSIT_COUPON_ID must exist in test mode
  *   - NEXT_PUBLIC_TEST_SUPABASE_URL + TEST_SUPABASE_SERVICE_ROLE_KEY in .env.test
@@ -215,7 +215,7 @@ const EMAILS = {
   baby_bundle: e2eTestEmail(`${BASE_EMAIL}-baby-bundle`),
 };
 
-const BASE_URL = "http://localhost:3001";
+const BASE_URL = "http://localhost:3100";
 const SKIP_CLEANUP = process.env.E2E_SKIP_CLEANUP === "1";
 
 /**

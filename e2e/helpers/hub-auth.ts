@@ -49,7 +49,7 @@ function adminClient() {
  */
 export async function generateHubMagicLink(email: string): Promise<string> {
   const supabase = adminClient();
-  const redirectTo = `${process.env.NEXT_PUBLIC_DOMAIN ?? "http://localhost:3001"}/hub/auth/confirm`;
+  const redirectTo = `${process.env.NEXT_PUBLIC_DOMAIN ?? "http://localhost:3100"}/hub/auth/confirm`;
 
   const maxAttempts = 3;
   let lastError: string | undefined;
