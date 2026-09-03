@@ -4,9 +4,13 @@
  * Tests the checkout flows end-to-end:
  *   expecting_monthly  — €25 deposit, deferred subscription
  *   expecting_bundle   — €305/€383 upfront
- *   baby_deposit       — €25 deposit, subscription deferred to PROGRAM_START (Sep 2026)
- *                        (replaces baby_monthly while current date < 2026-09-01)
- *   baby_bundle        — €305/€383 upfront; billing_start_date = 2026-09-01 before Sep 2026
+ *   baby_monthly       — Immediate subscription, billing_start_date = today
+ *                        (replaced baby_deposit once PROGRAM_START (2026-09-01) passed —
+ *                        see lib/fyp/program.ts's isBeforeProgramStart. baby_deposit's
+ *                        deferred-to-PROGRAM_START flow is dead once "now" is permanently
+ *                        past that date; not covered here anymore)
+ *   baby_bundle        — €305/€383 upfront; billing_start_date = today (was pinned to
+ *                        2026-09-01 while today < PROGRAM_START)
  *
  * Each test:
  *   1. Fills the on-page join form (name, email, month, year)
@@ -211,9 +215,22 @@ const EMAILS = {
   expecting_monthly: e2eTestEmail(`${BASE_EMAIL}-exp-monthly`),
   expecting_monthly_single: e2eTestEmail(`${BASE_EMAIL}-exp-monthly-single`),
   expecting_bundle: e2eTestEmail(`${BASE_EMAIL}-exp-bundle`),
-  baby_deposit: e2eTestEmail(`${BASE_EMAIL}-baby-deposit`),
+  baby_monthly: e2eTestEmail(`${BASE_EMAIL}-baby-monthly`),
   baby_bundle: e2eTestEmail(`${BASE_EMAIL}-baby-bundle`),
 };
+
+/** Today as "YYYY-MM-DD", matching the webhook's own `toISOString().slice(0, 10)`. */
+function todayIsoDate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/** Mirrors addSixMonths() in app/api/webhooks/stripe/fyp/route.ts. */
+function addSixMonthsIso(date: string): string {
+  const d = new Date(date);
+  d.setUTCMonth(d.getUTCMonth() + 6);
+  d.setUTCDate(1);
+  return d.toISOString().slice(0, 10);
+}
 
 const BASE_URL = "http://localhost:3100";
 const SKIP_CLEANUP = process.env.E2E_SKIP_CLEANUP === "1";
@@ -394,45 +411,46 @@ test("expecting_bundle (multi): upfront payment → account created with bundle_
 });
 
 // ---------------------------------------------------------------------------
-// baby_deposit (replaces baby_monthly before PROGRAM_START = 2026-09-01)
+// baby_monthly (the "Monthly" card for baby_here, now that PROGRAM_START
+// has passed — see lib/fyp/program.ts's isBeforeProgramStart)
 // ---------------------------------------------------------------------------
 
-test("baby_deposit (multi): deposit → subscription deferred to Sep 2026", async ({
+test("baby_monthly (multi): immediate subscription created", async ({
   page,
 }) => {
   await page.goto("/programs/first-year#join");
 
   await fillJoinForm(page, {
     firstName: "Test",
-    lastName: "BabyDeposit",
-    email: EMAILS.baby_deposit,
+    lastName: "BabyMonthly",
+    email: EMAILS.baby_monthly,
     monthLabel: BABY_MONTH,
     year: BABY_YEAR,
   });
-  // Default for baby_here is baby_bundle; switch to monthly (baby_deposit)
+  // Default for baby_here is baby_bundle; switch to the "Monthly" card
   const checkoutPage = await selectPlanAndCheckout(page, /monthly/i);
 
   await completeStripeCheckout(checkoutPage, {
-    email: EMAILS.baby_deposit,
+    email: EMAILS.baby_monthly,
   });
 
   await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
   await checkoutPage.waitForLoadState("domcontentloaded");
 
-  const account = await waitForAccount(EMAILS.baby_deposit);
+  const account = await waitForAccount(EMAILS.baby_monthly);
   expect(account).not.toBeNull();
-  expect(account?.flow).toBe("baby_deposit");
+  expect(account?.flow).toBe("baby_monthly");
   expect(account?.plan_type).toBe("monthly");
   expect(account?.family_type).toBe("multi");
   expect(account?.stripe_subscription_id).toBeTruthy();
-  expect(account?.billing_start_date).toBe("2026-09-01");
+  expect(account?.billing_start_date).toBe(todayIsoDate());
   expect(account?.status).toBe("active");
 
   const members = await getMembersByAccountId(account!.id);
   expect(members).toHaveLength(1);
   expect(members[0].first_name).toBe("Test");
-  expect(members[0].last_name).toBe("BabyDeposit");
-  expect(members[0].email).toBe(EMAILS.baby_deposit);
+  expect(members[0].last_name).toBe("BabyMonthly");
+  expect(members[0].email).toBe(EMAILS.baby_monthly);
   expect(members[0].status).toBe("active");
 });
 
@@ -440,7 +458,7 @@ test("baby_deposit (multi): deposit → subscription deferred to Sep 2026", asyn
 // baby_bundle
 // ---------------------------------------------------------------------------
 
-test("baby_bundle (multi): upfront payment → account with billing_start_date Sep 2026", async ({
+test("baby_bundle (multi): upfront payment → account with billing_start_date today", async ({
   page,
 }) => {
   await page.goto("/programs/first-year#join");
@@ -465,9 +483,10 @@ test("baby_bundle (multi): upfront payment → account with billing_start_date S
   const account = await waitForAccount(EMAILS.baby_bundle);
   expect(account?.flow).toBe("baby_bundle");
   expect(account?.plan_type).toBe("bundle");
-  // Before PROGRAM_START: billing deferred to Sep 2026, bundle runs 6 months from there
-  expect(account?.billing_start_date).toBe("2026-09-01");
-  expect(account?.bundle_expires_at).toBe("2027-03-01");
+  // PROGRAM_START has passed: billing starts today, bundle runs 6 months from there
+  const today = todayIsoDate();
+  expect(account?.billing_start_date).toBe(today);
+  expect(account?.bundle_expires_at).toBe(addSixMonthsIso(today));
   expect(account?.stripe_subscription_id).toBeNull();
 
   const members = await getMembersByAccountId(account!.id);
