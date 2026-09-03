@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Logo from "@/components/Logo";
-import { PROGRAM_START } from "@/lib/fyp/program";
 import {
   DEPOSIT_EUR,
   BUNDLE_MULTI_EUR,
@@ -26,12 +25,9 @@ import FamilyTypeToggle from "@/components/first-year-program/FamilyTypeToggle";
 type Flow =
   | "expecting_monthly"
   | "expecting_bundle"
-  | "baby_deposit"
   | "baby_monthly"
   | "baby_bundle";
 type FamilyType = "single" | "multi";
-
-const isBeforeProgramStart = new Date() < PROGRAM_START;
 
 interface Member {
   firstName: string;
@@ -300,7 +296,7 @@ export default function FYPJoinForm({
     "All 7 digital resource guides providing evidence-based context for every stage",
   ];
   const features =
-    !isBeforeProgramStart && situation === "baby_here"
+    situation === "baby_here"
       ? [...immediateFeatures, EVENTS_FEATURE]
       : immediateFeatures;
 
@@ -310,20 +306,6 @@ export default function FYPJoinForm({
       newSituation === "expecting" ? "expecting_bundle" : "baby_bundle",
     );
   }
-
-  // For expecting bundle: if the month after their due date is before PROGRAM_START,
-  // sessions still start in September (not earlier).
-  const expectingSessionsStart = (() => {
-    if (!month || !year) return "the month after your due date";
-    const dueIdx = MONTHS.findIndex((m) => m.value === month);
-    const dueYear = parseInt(year);
-    const billingIdx = (dueIdx + 1) % 12;
-    const billingYear = dueIdx + 1 >= 12 ? dueYear + 1 : dueYear;
-    const billingDate = new Date(Date.UTC(billingYear, billingIdx, 1));
-    return billingDate < PROGRAM_START
-      ? "September 2026"
-      : "the month after your due date";
-  })();
 
   const submitLabel = submitting ? "Redirecting…" : "Sign up →";
 
@@ -364,7 +346,7 @@ export default function FYPJoinForm({
             </h2>
             <p className="text-sm text-brand-soft-charcoal/70 dark:text-brand-white/60 italic text-center mt-1 max-w-sm">
               Open to families from pregnancy through your baby&apos;s first
-              year. Program starts September 2026.
+              year.
             </p>
           </div>
 
@@ -515,11 +497,7 @@ export default function FYPJoinForm({
                         ? `€${DEPOSIT_EUR} deposit, then €${MONTHLY_MULTI_EUR}/month`
                         : `€${DEPOSIT_EUR} deposit, then €${MONTHLY_SINGLE_EUR}/month`
                     }
-                    billing={
-                      expectingSessionsStart === "September 2026"
-                        ? "Monthly billing begins September 2026"
-                        : "Monthly billing begins after your due date"
-                    }
+                    billing="Monthly billing begins after your due date"
                     selected={selectedFlow === "expecting_monthly"}
                     onSelect={setSelectedFlow}
                     disabled={false}
@@ -540,37 +518,20 @@ export default function FYPJoinForm({
                 </>
               ) : (
                 <>
-                  {isBeforeProgramStart ? (
-                    <PlanCard
-                      flow="baby_deposit"
-                      icon="📅"
-                      name="Monthly"
-                      price={
-                        isMulti
-                          ? `€${DEPOSIT_EUR} deposit, then €${MONTHLY_MULTI_EUR}/month`
-                          : `€${DEPOSIT_EUR} deposit, then €${MONTHLY_SINGLE_EUR}/month`
-                      }
-                      billing="Monthly billing starts September 2026"
-                      selected={selectedFlow === "baby_deposit"}
-                      onSelect={setSelectedFlow}
-                      disabled={false}
-                    />
-                  ) : (
-                    <PlanCard
-                      flow="baby_monthly"
-                      icon="📅"
-                      name="Monthly"
-                      price={
-                        isMulti
-                          ? `€${MONTHLY_MULTI_EUR}/month`
-                          : `€${MONTHLY_SINGLE_EUR}/month`
-                      }
-                      billing="Billed monthly · Cancel anytime"
-                      selected={selectedFlow === "baby_monthly"}
-                      onSelect={setSelectedFlow}
-                      disabled={false}
-                    />
-                  )}
+                  <PlanCard
+                    flow="baby_monthly"
+                    icon="📅"
+                    name="Monthly"
+                    price={
+                      isMulti
+                        ? `€${MONTHLY_MULTI_EUR}/month`
+                        : `€${MONTHLY_SINGLE_EUR}/month`
+                    }
+                    billing="Billed monthly · Cancel anytime"
+                    selected={selectedFlow === "baby_monthly"}
+                    onSelect={setSelectedFlow}
+                    disabled={false}
+                  />
                   <PlanCard
                     flow="baby_bundle"
                     icon="📦"
@@ -604,8 +565,7 @@ export default function FYPJoinForm({
 
             {selectedFlow !== "baby_monthly" && (
               <p className="mt-2 text-xs text-brand-charcoal/50 dark:text-brand-white/40 text-center">
-                {selectedFlow === "expecting_monthly" ||
-                selectedFlow === "baby_deposit"
+                {selectedFlow === "expecting_monthly"
                   ? "Deposit credited to your first monthly invoice · "
                   : ""}
                 Fully refundable during pregnancy or before September 1.

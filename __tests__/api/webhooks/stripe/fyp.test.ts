@@ -25,7 +25,6 @@ vi.mock("next/server", () => ({
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
 import { deactivatePostpartumPost } from "@/lib/fyp/postpartum-post";
-import { PROGRAM_START_UNIX } from "@/lib/fyp/program";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -76,7 +75,7 @@ function mockStripeSubscription() {
   return create;
 }
 
-// ─── expecting_monthly trial_end clamping ─────────────────────────────────────
+// ─── expecting_monthly trial_end ──────────────────────────────────────────────
 
 describe("fyp webhook — expecting_monthly trial_end", () => {
   let POST: (req: any) => Promise<unknown>;
@@ -96,7 +95,7 @@ describe("fyp webhook — expecting_monthly trial_end", () => {
     vi.useRealTimers();
   });
 
-  it("clamps trial_end to PROGRAM_START for a July 2026 due date", async () => {
+  it("computes trial_end as the 1st of the month after a July 2026 due date", async () => {
     vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
       makeCheckoutEvent({
         product: "fyp_deposit",
@@ -113,12 +112,13 @@ describe("fyp webhook — expecting_monthly trial_end", () => {
 
     expect(sub).toHaveBeenCalledOnce();
     const args = sub.mock.calls[0][0] as any;
-    // Aug 1 2026 would be the natural trial_end for July due date,
-    // but it must be clamped to PROGRAM_START (Sep 1 2026)
-    expect(args.trial_end).toBe(PROGRAM_START_UNIX);
+    const aug1_2026 = Math.floor(
+      new Date("2026-08-01T00:00:00Z").getTime() / 1000,
+    );
+    expect(args.trial_end).toBe(aug1_2026);
   });
 
-  it("clamps trial_end to PROGRAM_START for an August 2026 due date", async () => {
+  it("computes trial_end as the 1st of the month after an August 2026 due date", async () => {
     vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
       makeCheckoutEvent({
         product: "fyp_deposit",
@@ -135,11 +135,13 @@ describe("fyp webhook — expecting_monthly trial_end", () => {
 
     expect(sub).toHaveBeenCalledOnce();
     const args = sub.mock.calls[0][0] as any;
-    // Sep 1 2026 = PROGRAM_START, so clamping is a no-op here — still correct
-    expect(args.trial_end).toBe(PROGRAM_START_UNIX);
+    const sep1_2026 = Math.floor(
+      new Date("2026-09-01T00:00:00Z").getTime() / 1000,
+    );
+    expect(args.trial_end).toBe(sep1_2026);
   });
 
-  it("does not clamp trial_end for a September 2026 due date (Oct 1 billing)", async () => {
+  it("computes trial_end for a September 2026 due date (Oct 1 billing)", async () => {
     vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
       makeCheckoutEvent({
         product: "fyp_deposit",
@@ -156,15 +158,13 @@ describe("fyp webhook — expecting_monthly trial_end", () => {
 
     expect(sub).toHaveBeenCalledOnce();
     const args = sub.mock.calls[0][0] as any;
-    // Oct 1 2026 > PROGRAM_START, so no clamping
     const oct1_2026 = Math.floor(
       new Date("2026-10-01T00:00:00Z").getTime() / 1000,
     );
     expect(args.trial_end).toBe(oct1_2026);
-    expect(args.trial_end).toBeGreaterThan(PROGRAM_START_UNIX);
   });
 
-  it("does not clamp trial_end for a December 2026 due date (Jan 2027 billing)", async () => {
+  it("computes trial_end for a December 2026 due date (Jan 2027 billing)", async () => {
     vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
       makeCheckoutEvent({
         product: "fyp_deposit",
@@ -216,33 +216,12 @@ describe("fyp webhook — baby_bundle", () => {
     vi.useRealTimers();
   });
 
-  it("uses billing_start_date from metadata when present (before PROGRAM_START)", async () => {
-    const accountUpdate = mockSupabaseWithAccountCapture();
-    vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
-      makeCheckoutEvent({
-        product: "fyp_bundle_baby",
-        family_type: "single",
-        billing_start_date: "2026-09-01",
-      }) as any,
-    );
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-06-15T00:00:00Z"));
-
-    await POST(makeRequest());
-
-    expect(accountUpdate).toHaveBeenCalledOnce();
-    const args = accountUpdate.mock.calls[0][0] as any;
-    expect(args.billing_start_date).toBe("2026-09-01");
-    expect(args.bundle_expires_at).toBe("2027-03-01");
-  });
-
-  it("falls back to today when billing_start_date is absent from metadata (after PROGRAM_START)", async () => {
+  it("sets billing_start_date and bundle_expires_at to today + 6 months", async () => {
     const accountUpdate = mockSupabaseWithAccountCapture();
     vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
       makeCheckoutEvent({
         product: "fyp_bundle_baby",
         family_type: "multi",
-        // no billing_start_date in metadata — program has already started
       }) as any,
     );
     vi.useFakeTimers();
@@ -254,36 +233,6 @@ describe("fyp webhook — baby_bundle", () => {
     const args = accountUpdate.mock.calls[0][0] as any;
     expect(args.billing_start_date).toBe("2026-10-15");
     expect(args.bundle_expires_at).toBe("2027-04-01");
-  });
-});
-
-// ─── baby_deposit trial_end ───────────────────────────────────────────────────
-
-describe("fyp webhook — baby_deposit", () => {
-  let POST: (req: any) => Promise<unknown>;
-
-  beforeEach(async () => {
-    vi.clearAllMocks();
-    vi.resetModules();
-    ({ POST } = await import("@/app/api/webhooks/stripe/fyp/route"));
-    mockSupabase();
-    mockStripePrice();
-  });
-
-  it("always uses PROGRAM_START_UNIX as trial_end", async () => {
-    vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
-      makeCheckoutEvent({
-        product: "fyp_baby_deposit",
-        family_type: "multi",
-      }) as any,
-    );
-    const sub = mockStripeSubscription();
-
-    await POST(makeRequest());
-
-    expect(sub).toHaveBeenCalledOnce();
-    const args = sub.mock.calls[0][0] as any;
-    expect(args.trial_end).toBe(PROGRAM_START_UNIX);
   });
 });
 
