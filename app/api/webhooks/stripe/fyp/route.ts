@@ -1,6 +1,5 @@
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
-import { PROGRAM_START_UNIX } from "@/lib/fyp/program";
 import { deactivatePostpartumPost } from "@/lib/fyp/postpartum-post";
 import { sendFypWelcomeEmail } from "@/lib/emails/fyp-welcome";
 import { NextRequest, NextResponse } from "next/server";
@@ -32,7 +31,6 @@ import Stripe from "stripe";
 const FYP_PLAN_LABELS: Record<string, string> = {
   fyp_deposit: "Monthly",
   fyp_bundle_expecting: "6-month bundle",
-  fyp_baby_deposit: "Monthly",
   fyp_monthly_baby: "Monthly",
   fyp_bundle_baby: "6-month bundle",
 };
@@ -145,10 +143,7 @@ export async function POST(req: NextRequest) {
         );
       } else {
         try {
-          const trialEnd = Math.max(
-            billingStartTimestamp(dueOrBirthMonth),
-            PROGRAM_START_UNIX,
-          );
+          const trialEnd = billingStartTimestamp(dueOrBirthMonth);
           billingStartDate = toDateString(trialEnd);
 
           const lookupKey =
@@ -197,9 +192,7 @@ export async function POST(req: NextRequest) {
       let bundleExpiresAt: string | null = null;
 
       if (dueOrBirthMonth) {
-        billingStartDate = toDateString(
-          Math.max(billingStartTimestamp(dueOrBirthMonth), PROGRAM_START_UNIX),
-        );
+        billingStartDate = toDateString(billingStartTimestamp(dueOrBirthMonth));
         bundleExpiresAt = addSixMonths(billingStartDate);
       }
 
@@ -215,57 +208,6 @@ export async function POST(req: NextRequest) {
       if (error)
         console.error(
           "[fyp webhook] update error (expecting_bundle):",
-          JSON.stringify(error),
-        );
-    }
-
-    // ── baby_deposit ───────────────────────────────────────────────────────────
-    // Baby families joining before PROGRAM_START. Identical to expecting_monthly
-    // except trial_end is fixed at PROGRAM_START rather than computed from due date.
-    if (product === "fyp_baby_deposit") {
-      let subscriptionId: string | null = null;
-      const billingStartDate = "2026-09-01";
-
-      if (!customerId) {
-        console.error("[fyp webhook] no customer on fyp_baby_deposit session");
-      } else {
-        try {
-          const lookupKey =
-            familyType === "multi" ? "fyp_monthly_multi" : "fyp_monthly_single";
-          const prices = await stripe.prices.list({ lookup_keys: [lookupKey] });
-          const price = prices.data[0];
-          if (!price) throw new Error(`Price not found: ${lookupKey}`);
-
-          const subscription = await stripe.subscriptions.create({
-            customer: customerId,
-            items: [{ price: price.id }],
-            trial_end: PROGRAM_START_UNIX,
-            discounts: [{ coupon: process.env.STRIPE_FYP_DEPOSIT_COUPON_ID! }],
-          });
-          subscriptionId = subscription.id;
-          console.log(
-            `[fyp webhook] baby_deposit subscription ${subscriptionId} deferred to ${billingStartDate}`,
-          );
-        } catch (err) {
-          console.error(
-            "[fyp webhook] failed to create deferred subscription (baby_deposit):",
-            err,
-          );
-        }
-      }
-
-      const { error } = await supabase
-        .from("accounts")
-        .update({
-          stripe_customer_id: customerId,
-          stripe_subscription_id: subscriptionId,
-          billing_start_date: billingStartDate,
-          status: "active",
-        })
-        .eq("stripe_session_id", session.id);
-      if (error)
-        console.error(
-          "[fyp webhook] update error (baby_deposit):",
           JSON.stringify(error),
         );
     }
@@ -294,16 +236,13 @@ export async function POST(req: NextRequest) {
     // ── baby_bundle ────────────────────────────────────────────────────────────
     if (product === "fyp_bundle_baby") {
       const today = new Date().toISOString().slice(0, 10);
-      // Before PROGRAM_START the checkout session embeds billing_start_date:"2026-09-01"
-      // in metadata so access doesn't begin before the program launches.
-      const billingStartDate = session.metadata?.billing_start_date ?? today;
 
       const { error } = await supabase
         .from("accounts")
         .update({
           stripe_customer_id: customerId,
-          billing_start_date: billingStartDate,
-          bundle_expires_at: addSixMonths(billingStartDate),
+          billing_start_date: today,
+          bundle_expires_at: addSixMonths(today),
           status: "active",
         })
         .eq("stripe_session_id", session.id);

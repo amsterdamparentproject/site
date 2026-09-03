@@ -1,6 +1,5 @@
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
-import { getBillingStartDate } from "@/lib/fyp/program";
 import { NextResponse } from "next/server";
 
 // FYP checkout flows:
@@ -8,10 +7,8 @@ import { NextResponse } from "next/server";
 //   expecting_monthly  — Step 1: €25 deposit (mode:payment, customer_creation:always)
 //                        Step 2: webhook creates subscription with trial_end=due+1mo + APP_FYP_DEPOSIT coupon
 //   expecting_bundle   — One-time payment: €305 (single) or €383 (multi)
-//   baby_deposit       — €25 deposit; webhook creates subscription with trial_end=PROGRAM_START + coupon
-//                        Used instead of baby_monthly while current date < PROGRAM_START
-//   baby_monthly       — Subscription starts immediately: €55 or €68/mo (used after PROGRAM_START)
-//   baby_bundle        — One-time payment: €305 or €383; billing_start_date=PROGRAM_START if before Sept 2026
+//   baby_monthly       — Subscription starts immediately: €55 or €68/mo
+//   baby_bundle        — One-time payment: €305 or €383, access begins immediately
 //
 // Stripe setup required:
 //   Recurring prices with lookup keys:
@@ -30,7 +27,6 @@ import { NextResponse } from "next/server";
 type Flow =
   | "expecting_monthly"
   | "expecting_bundle"
-  | "baby_deposit"
   | "baby_monthly"
   | "baby_bundle";
 type FamilyType = "single" | "multi";
@@ -52,7 +48,6 @@ const BUNDLE_AMOUNT: Record<FamilyType, number> = {
 const FLOW_META: Record<Flow, { flow: string; plan_type: string }> = {
   expecting_monthly: { flow: "expecting_monthly", plan_type: "monthly" },
   expecting_bundle: { flow: "expecting_bundle", plan_type: "bundle" },
-  baby_deposit: { flow: "baby_deposit", plan_type: "monthly" },
   baby_monthly: { flow: "baby_monthly", plan_type: "monthly" },
   baby_bundle: { flow: "baby_bundle", plan_type: "bundle" },
 };
@@ -96,7 +91,6 @@ export async function POST(req: Request) {
       ...(dueOrBirthYear ? { due_or_birth_year: dueOrBirthYear } : {}),
     };
 
-    const billingStartDate = getBillingStartDate();
     const customerEmail = members?.[0]?.email?.toLowerCase();
 
     let session: Awaited<
@@ -163,38 +157,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // ── Baby's here, deposit (before PROGRAM_START) ────────────────────────────
-    // Same as expecting_monthly but trial_end is fixed at PROGRAM_START.
-    // The webhook creates the subscription and applies the deposit coupon.
-    if (flow === "baby_deposit") {
-      session = await stripe.checkout.sessions.create({
-        payment_method_types: ["ideal", "card"],
-        automatic_tax: { enabled: true },
-        allow_promotion_codes: true,
-        customer_creation: "always",
-        ...(customerEmail ? { customer_email: customerEmail } : {}),
-        mode: "payment",
-        line_items: [
-          {
-            price_data: {
-              currency: "eur",
-              product_data: {
-                name: "First Year Program — Deposit",
-                images: PRODUCT_IMAGES,
-                description:
-                  "Reserve your spot in the First Year Program. The deposit is credited toward your first month of billing in September 2026. Refundable if you cancel before the program begins.",
-              },
-              unit_amount: 2500,
-            },
-            quantity: 1,
-          },
-        ],
-        metadata: { product: "fyp_baby_deposit", ...sharedMetadata },
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-      });
-    }
-
     // ── Baby's here, monthly ───────────────────────────────────────────────────
     if (flow === "baby_monthly") {
       const prices = await stripe.prices.list({
@@ -235,20 +197,15 @@ export async function POST(req: Request) {
               product_data: {
                 name: `First Year Program — 6-month bundle (${familyType === "multi" ? "2+ parent family" : "single parent family"})`,
                 images: PRODUCT_IMAGES,
-                description: billingStartDate
-                  ? "6 months of the First Year Program, paid upfront. Access period begins September 2026."
-                  : "6 months of the First Year Program, paid upfront. Access begins immediately.",
+                description:
+                  "6 months of the First Year Program, paid upfront. Access begins immediately.",
               },
               unit_amount: BUNDLE_AMOUNT[familyType],
             },
             quantity: 1,
           },
         ],
-        metadata: {
-          product: "fyp_bundle_baby",
-          ...(billingStartDate ? { billing_start_date: billingStartDate } : {}),
-          ...sharedMetadata,
-        },
+        metadata: { product: "fyp_bundle_baby", ...sharedMetadata },
         success_url: successUrl,
         cancel_url: cancelUrl,
       });
