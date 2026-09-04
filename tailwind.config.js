@@ -16,7 +16,13 @@ module.exports = {
                 color: theme("--color-brand-goldenrod"),
               },
             },
-            "h1,h2": {
+            h1: {
+              color: theme("--color-brand-charcoal"),
+              fontWeight: "500",
+              fontSize: "1.6em",
+              letterSpacing: theme("--tracking-tight"),
+            },
+            h2: {
               color: theme("--color-brand-charcoal"),
               fontWeight: "700",
               letterSpacing: theme("--tracking-tight"),
