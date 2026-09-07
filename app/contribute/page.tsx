@@ -2,12 +2,22 @@ import { allCoreContent, sortPosts } from "pliny/utils/contentlayer";
 import { allBlogs } from "contentlayer/generated";
 import { genPageMetadata } from "app/seo";
 import ContributeFlow from "@/components/ContributeFlow";
+import { spotlightTypeFromSlug } from "@/data/spotlights/questions";
 
 export const metadata = genPageMetadata({
-  title: "Contribute to Amsterdam Parent Project",
+  title: "Contribute",
 });
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  // ?type=expert-spotlight | community-spotlight | dear-dr-mom jumps
+  // straight into that type's form — see spotlightTypeSlug.
+  searchParams: Promise<{ type?: string }>;
+}) {
+  const { type } = await searchParams;
+  const initialType = spotlightTypeFromSlug(type);
+
   // Last 3 published Dear Dr. Mom articles, shown inline in the form so
   // contributors can reference recent house style — same fetch pattern as
   // app/advice/page.tsx.
@@ -36,7 +46,10 @@ export default async function Page() {
           of babies and toddlers in our community ❤️
         </p>
 
-        <ContributeFlow recentDearDrMom={recentDearDrMom} />
+        <ContributeFlow
+          recentDearDrMom={recentDearDrMom}
+          initialType={initialType}
+        />
 
         <div className="max-w-lg px-3 w-full">
           <p className="text-sm text-gray-500 italic mt-2">

@@ -29,11 +29,18 @@ const archiveLabel: Record<SpotlightType, string> = {
 
 const ContributeFlow = ({
   recentDearDrMom,
+  initialType,
 }: {
   recentDearDrMom: RecentPost[];
+  // Set when the page was reached via a type-specific link (e.g.
+  // /contribute?type=expert-spotlight) — jumps straight into that type's
+  // form instead of showing the picker + Start button first.
+  initialType?: SpotlightType;
 }) => {
-  const [type, setType] = useState<SpotlightType>(spotlightTypes[0]);
-  const [started, setStarted] = useState(false);
+  const [type, setType] = useState<SpotlightType>(
+    initialType ?? spotlightTypes[0],
+  );
+  const [started, setStarted] = useState(!!initialType);
 
   return (
     <>

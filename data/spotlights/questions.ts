@@ -19,6 +19,21 @@ export const spotlightTypes: SpotlightType[] = [
   "community",
 ];
 
+// Lets a link jump straight to one type, e.g. /contribute?type=expert-spotlight
+// — kebab-case and matching the `series` slugs used elsewhere (/stories?series=
+// expert-spotlight) rather than the internal camelCase SpotlightType values.
+export const spotlightTypeSlug: Record<SpotlightType, string> = {
+  dearDrMom: "dear-dr-mom",
+  expert: "expert-spotlight",
+  community: "community-spotlight",
+};
+
+export function spotlightTypeFromSlug(
+  slug: string | undefined,
+): SpotlightType | undefined {
+  return spotlightTypes.find((t) => spotlightTypeSlug[t] === slug);
+}
+
 export type SpotlightBioField = {
   key: string;
   label: string;
