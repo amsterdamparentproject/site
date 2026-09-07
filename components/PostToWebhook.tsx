@@ -4,6 +4,11 @@ import { randomInt } from "crypto";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
 import { isEmailBlocked } from "@/lib/supabase/queries/blocklist";
+import { sendSpotlightSubmissionEmail } from "@/lib/emails/spotlight-submission";
+import {
+  spotlightTypes,
+  type SpotlightType,
+} from "@/data/spotlights/questions";
 
 const isLocal =
   process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
@@ -227,8 +232,107 @@ export const postManageDirectory = async (data, action = "add") => {
   return { ...result, userCreated };
 };
 
-export const postSpotlight = async (data) => {
-  // TODO: Create submission flow for Expert & Community Spotlights
-  const url = process.env.N8N_EVENT_SUBMIT_WEBHOOK_URL;
-  return postToWebhook(url, data);
+// Expert & Community Spotlight submissions (app/spotlights/submit,
+// components/SpotlightSubmitForm) email Alex directly via Resend rather
+// than going through the n8n/Slack/Desk review pipeline postEvent uses —
+// spotlights are low-volume and curated by Alex personally, so a direct
+// email (with the photo(s) as real attachments, and — for the "answer
+// here" method — a copy-paste-ready .mdx block) is simpler than standing
+// up a new n8n workflow for this. Same bot-check as postEvent.
+export const postSpotlight = async (data: FormData) => {
+  const rawType = data.get("type") as string;
+  const type: SpotlightType = spotlightTypes.includes(rawType as SpotlightType)
+    ? (rawType as SpotlightType)
+    : "community";
+  const method: "doc" | "form" =
+    (data.get("method") as string) === "doc" ? "doc" : "form";
+  const name = ((data.get("name") as string) || "").trim();
+  const email = ((data.get("email") as string) || "").trim();
+  const docLink = ((data.get("docLink") as string) || "").trim();
+  const occupation = ((data.get("occupation") as string) || "").trim();
+  const company = ((data.get("company") as string) || "").trim();
+  const website = ((data.get("website") as string) || "").trim();
+  const instagram = ((data.get("instagram") as string) || "").trim();
+  const linkedin = ((data.get("linkedin") as string) || "").trim();
+  const oneAsk = ((data.get("oneAsk") as string) || "").trim();
+  const honeypot = data.get("hp_company") as string | null;
+  const renderedAt = Number(data.get("ts"));
+
+  // Bot check: honeypot field filled in, or submitted suspiciously fast
+  // after the form rendered. Blocklist check: known spam email/domain.
+  // Same rationale as postEvent — fake a success response so spam senders
+  // get no signal they were blocked, before any email is sent.
+  const isBot =
+    !!honeypot?.trim() ||
+    !renderedAt ||
+    Date.now() - renderedAt < MIN_SUBMIT_MS;
+
+  if (isBot || (await isEmailBlocked(email))) {
+    console.warn("postSpotlight: blocked spam submission", { isBot, email });
+    return { success: true };
+  }
+
+  let bio: { label: string; answer: string }[] = [];
+  let interview: { question: string; answer: string }[] = [];
+  try {
+    bio = JSON.parse((data.get("bioJSON") as string) || "[]");
+  } catch {
+    bio = [];
+  }
+  try {
+    interview = JSON.parse((data.get("interviewJSON") as string) || "[]");
+  } catch {
+    interview = [];
+  }
+
+  // Up to 3 photos, 4.5MB each, 5MB combined — mirrors the client-side caps
+  // in SpotlightSubmitForm (which is what actually keeps the request under
+  // next.config.js's serverActions.bodySizeLimit; by the time code here
+  // runs, an oversized body has already been rejected before it can reach
+  // this function). Re-checked here anyway since the server is the only
+  // real trust boundary.
+  const MAX_PHOTO_SIZE = 4.5 * 1024 * 1024;
+  const MAX_TOTAL_PHOTOS_SIZE = 5 * 1024 * 1024;
+  const photoFiles = data
+    .getAll("photos")
+    .filter((f): f is File => f instanceof File && f.size > 0)
+    .slice(0, 3);
+
+  const attachments: { filename: string; content: Buffer }[] = [];
+  let totalPhotoBytes = 0;
+  for (const file of photoFiles) {
+    if (file.size > MAX_PHOTO_SIZE) continue;
+    if (totalPhotoBytes + file.size > MAX_TOTAL_PHOTOS_SIZE) continue;
+    const arrayBuffer = await file.arrayBuffer();
+    attachments.push({
+      filename: file.name || "photo.jpg",
+      content: Buffer.from(arrayBuffer),
+    });
+    totalPhotoBytes += file.size;
+  }
+
+  try {
+    await sendSpotlightSubmissionEmail(
+      {
+        type,
+        method,
+        name,
+        email,
+        docLink: docLink || undefined,
+        bio,
+        interview,
+        photoCount: attachments.length,
+        oneAsk: oneAsk || undefined,
+        profile: { occupation, company, website, instagram, linkedin },
+      },
+      attachments,
+    );
+    return { success: true };
+  } catch (error) {
+    console.error("postSpotlight error:", error);
+    return {
+      success: false,
+      error: "Something went wrong sending your submission.",
+    };
+  }
 };
