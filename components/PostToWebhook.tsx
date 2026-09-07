@@ -232,7 +232,7 @@ export const postManageDirectory = async (data, action = "add") => {
   return { ...result, userCreated };
 };
 
-// Expert & Community Spotlight submissions (app/spotlights/submit,
+// Expert & Community Spotlight submissions (app/contribute,
 // components/SpotlightSubmitForm) email Alex directly via Resend rather
 // than going through the n8n/Slack/Desk review pipeline postEvent uses —
 // spotlights are low-volume and curated by Alex personally, so a direct

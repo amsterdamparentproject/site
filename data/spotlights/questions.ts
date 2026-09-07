@@ -1,5 +1,5 @@
 // Shared source of truth for the newsletter contribution page
-// (app/newsletter/contribute) and its form (components/SpotlightSubmitForm).
+// (app/contribute) and its form (components/SpotlightSubmitForm).
 // Three tracks: Expert Spotlight / Community Spotlight mirror
 // data/advice/templates/expert-spotlight.mdx and community-spotlight.mdx
 // exactly — if those templates change, update here too so the on-page form

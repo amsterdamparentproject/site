@@ -1,6 +1,6 @@
 /**
  * Internal notification email for Expert & Community Spotlight submissions
- * (app/spotlights/submit + components/SpotlightSubmitForm). Sent to Alex,
+ * (app/contribute + components/SpotlightSubmitForm). Sent to Alex,
  * not the submitter — so this deliberately does NOT use baseEmail()/
  * emailFooter() (those bake in FYP subscriber-facing copy — "you're
  * receiving this because you joined the First Year Program", a "Manage
