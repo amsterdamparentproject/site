@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { PROGRAM_START } from "@/lib/fyp/program";
 import {
   BUNDLE_MULTI_EUR,
   BUNDLE_MULTI_FULL_EUR,
@@ -13,8 +12,6 @@ import {
 } from "@/lib/fyp/pricing";
 import type { Situation } from "@/lib/fyp/situation";
 
-const isBeforeProgramStart = new Date() < PROGRAM_START;
-
 // Situation-aware billing notes shown on each plan card — mirrors the
 // (more precise, exact-due-date-aware) copy inside FYPJoinForm's own
 // PlanCard, but simplified here since this section previews pricing before
@@ -24,18 +21,14 @@ function monthlyNote(situation: Situation): string {
   if (situation === "expecting") {
     return `Reserve with a €${DEPOSIT_EUR} deposit — credited to your first invoice, refundable if you cancel during pregnancy.`;
   }
-  return isBeforeProgramStart
-    ? `€${DEPOSIT_EUR} deposit for now — billing starts once live sessions launch September 1, 2026.`
-    : "Billed monthly, cancel anytime.";
+  return "Billed monthly, cancel anytime.";
 }
 
 function bundleNote(situation: Situation): string {
   if (situation === "expecting") {
     return `Pay upfront for the program, save €${DEPOSIT_EUR}. Fully refundable if you cancel during pregnancy.`;
   }
-  return isBeforeProgramStart
-    ? `Pay upfront and save €${DEPOSIT_EUR} — the program starts September 1, 2026.`
-    : `Pay upfront for 6 months, save €${DEPOSIT_EUR}.`;
+  return `Pay upfront for 6 months, save €${DEPOSIT_EUR}.`;
 }
 
 const StackedCostBar = () => {
@@ -267,9 +260,7 @@ export default function CostsBreakdown({ situation }: CostsBreakdownProps) {
         <p className="text-[11px] text-brand-soft-charcoal dark:text-brand-white/80 leading-relaxed">
           {situation === "expecting"
             ? "All prices include 21% BTW (VAT). Monthly billing starts the calendar month after your due date."
-            : isBeforeProgramStart
-              ? "All prices include 21% BTW (VAT). Billing starts once live sessions launch on September 1, 2026."
-              : "All prices include 21% BTW (VAT). Billing starts immediately."}
+            : "All prices include 21% BTW (VAT). Billing starts immediately."}
         </p>
       </div>
 
