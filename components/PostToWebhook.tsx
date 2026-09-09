@@ -3,7 +3,10 @@
 import { randomInt } from "crypto";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
-import { isEmailBlocked } from "@/lib/supabase/queries/blocklist";
+import {
+  isEmailBlocked,
+  isNumericOnlyEmail,
+} from "@/lib/supabase/queries/blocklist";
 import { sendSpotlightSubmissionEmail } from "@/lib/emails/spotlight-submission";
 import {
   spotlightTypes,
@@ -120,7 +123,34 @@ export const postEvent = async (data: FormData) => {
 // /season-groups (SeasonGroupSignupForm, for first-time visitors with no
 // app_uid yet) — Season Groups joins through this same pipeline rather than
 // a bespoke one. See __claude__/season-groups-join-flow.md.
-export const postRequestDirectory = async (data) => {
+//
+// Both callers append the same hp_company/ts pair postEvent/postSpotlight
+// use, so the honeypot + submit-timing bot check below applies here too.
+export const postRequestDirectory = async (data: FormData) => {
+  const email = (data.get("email") as string) || "";
+  const honeypot = data.get("hp_company") as string | null;
+  const renderedAt = Number(data.get("ts"));
+
+  // Bot check: honeypot field filled in, submitted suspiciously fast after
+  // the form rendered, or an all-digits email local part (see
+  // isNumericOnlyEmail — the auto-assigned format mass-created signups on
+  // providers like QQ favor). Same silent-fake-success handling as
+  // postEvent/postSpotlight: the submission never reaches n8n or review,
+  // and the sender sees the same "Success!" screen either way.
+  const isBot =
+    !!honeypot?.trim() ||
+    !renderedAt ||
+    Date.now() - renderedAt < MIN_SUBMIT_MS ||
+    isNumericOnlyEmail(email);
+
+  if (isBot) {
+    console.warn("postRequestDirectory: blocked spam submission", {
+      isBot,
+      email,
+    });
+    return { success: true, status: 200, response: "ok" };
+  }
+
   const url = isLocal
     ? process.env.TEST_N8N_REQUEST_DIRECTORY_WEBHOOK_URL
     : process.env.N8N_REQUEST_DIRECTORY_WEBHOOK_URL;

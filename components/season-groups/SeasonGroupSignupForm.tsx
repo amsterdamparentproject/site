@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { postRequestDirectory } from "@/components/PostToWebhook";
 import subscribeToNewsletter from "@/components/Subscribe";
 import { SeasonGroup } from "@/app/types/groups-directory";
@@ -57,6 +57,9 @@ interface SeasonGroupSignupFormProps {
 export default function SeasonGroupSignupForm({
   group,
 }: SeasonGroupSignupFormProps) {
+  const renderedAtRef = useRef(Date.now());
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
@@ -103,6 +106,8 @@ export default function SeasonGroupSignupForm({
       // there's no ambiguity here — this is always the exact group they
       // clicked "Join" on.
       data.append("seasonGroupId", group.id);
+      data.append("hp_company", honeypotRef.current?.value ?? "");
+      data.append("ts", String(renderedAtRef.current));
 
       const response = await postRequestDirectory(data);
       if (!response.success) {
@@ -136,6 +141,23 @@ export default function SeasonGroupSignupForm({
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto space-y-5">
+      {/* Honeypot: hidden from real users, left for bots to fill in */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+        }}
+      />
+
       <p className="text-sm text-brand-charcoal dark:text-brand-white/80 bg-brand-sand/20 rounded-lg px-4 py-2.5">
         The Season Group links are managed through APP&apos;s Amsterdam Parent
         Groups Directory: 100+ local groups supporting parents in Amsterdam.

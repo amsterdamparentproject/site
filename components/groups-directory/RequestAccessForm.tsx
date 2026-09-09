@@ -1,10 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { postRequestDirectory } from "../PostToWebhook";
 import subscribeToNewsletter from "../Subscribe";
 import CategoryChipsFormField from "./CategoryChipsFormField";
 
 const RequestAccessForm = () => {
+  const renderedAtRef = useRef(Date.now());
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -83,6 +86,8 @@ const RequestAccessForm = () => {
         formData.subscribeNewsletter ? "Yes" : "No",
       );
       data.append("agreedToTerms", formData.agreedToTerms ? "Yes" : "No");
+      data.append("hp_company", honeypotRef.current?.value ?? "");
+      data.append("ts", String(renderedAtRef.current));
 
       const response = await postRequestDirectory(data);
       if (response.success) {
@@ -135,6 +140,23 @@ const RequestAccessForm = () => {
 
   return (
     <form className="w-full" onSubmit={submitEvent}>
+      {/* Honeypot: hidden from real users, left for bots to fill in */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+        }}
+      />
+
       {/* Person info */}
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
