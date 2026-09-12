@@ -7,6 +7,20 @@ import Image from "@/components/Image";
 import { coreContent } from "pliny/utils/contentlayer.js";
 import { allAuthors, Authors } from "@/.contentlayer/generated";
 
+// CurriculumData is a rotating list (Alex reorders it by hand each month as
+// topics come up, moving the just-completed one to the end — see
+// data/first-year-program/curriculum.ts) rather than a dated schedule, so
+// there's no stored date to read a month name from. Instead this derives
+// one from "today": index 0 is always the next upcoming topic, so it maps
+// to next calendar month, index 1 to the month after that, and so on. This
+// stays correct with zero upkeep as long as the rotation is kept current
+// (moving a topic to the back right around when its session happens) —
+// exactly the existing workflow.
+function upcomingMonthLabel(index: number, now: Date = new Date()): string {
+  const target = new Date(now.getFullYear(), now.getMonth() + index + 1, 1);
+  return target.toLocaleDateString("en-US", { month: "long" });
+}
+
 export default function MonthlyJourneyGrid() {
   const [openCard, setOpenCard] = useState<string | null>(null);
 
@@ -356,6 +370,9 @@ export default function MonthlyJourneyGrid() {
               <div className="flex items-baseline gap-3 flex-wrap">
                 <span className="text-lg font-bold text-brand-goldenrod">
                   Month {index + 1}: {theme}
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white bg-brand-soft-green dark:bg-brand-goldenrod dark:text-brand-charcoal px-2 py-0.5 rounded-full">
+                  {upcomingMonthLabel(index)}
                 </span>
               </div>
               <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">

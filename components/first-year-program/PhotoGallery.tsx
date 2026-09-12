@@ -74,8 +74,7 @@ export default function PhotoGallery({
       <div
         ref={scrollerRef}
         onScroll={updateEdges}
-        className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-4 px-4 pb-2 -mx-4 md:mx-0 md:px-0"
-        style={{ scrollbarWidth: "thin" }}
+        className="no-scrollbar flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-4 px-4 pb-2 -mx-4 md:mx-0 md:px-0"
       >
         {items.map((item, index) => (
           <button

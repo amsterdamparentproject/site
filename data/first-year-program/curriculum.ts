@@ -26,36 +26,6 @@ export interface CurriculumMonth {
 
 const firstYearCurriculum: CurriculumMonth[] = [
   {
-    theme: "What's around you",
-    session: {
-      title: "Building the Village",
-      subtitle: "Dutch postpartum care and building your support network",
-      description: `
-      We've all heard the phrase "It takes a village." For new parents — especially expats becoming parents abroad — the village doesn't come without effort.
-      But where to start? We cover local Dutch postpartum care and end with an exercise on finding and filling gaps in support, so you're not starting from scratch when you need it most.
-    `,
-      experts: ["alexSiega", "irenaDomachowska"],
-      guideFiles: ["Building the Village.pdf"],
-      components: [
-        "Overview of local Dutch systems: baby care, medical, and mental health",
-        "How to navigate the English-speaking network in Amsterdam",
-        "Experiential exercise on how to build a support network that actually works for your family",
-      ],
-    },
-    social: {
-      title: "Singing Mamas & Papas",
-      subtitle:
-        "A family circle of song — using shared voices to ground ourselves in parenthood",
-      description:
-        "A warm, singing circle for the whole family — a safe space to show up as you are and process parenthood together through shared harmonies. Little ones are free to crawl, play, nap, or simply take in the sound of the group singing around them.",
-      facilitators: ["danielleBensky"],
-      note: [
-        "No sheet music, no lyrics to memorize, and no pressure to perform — all levels and singing abilities welcome!",
-        "There's no such thing as being late — feel free to change diapers, feed, or wander as needed throughout.",
-      ],
-    },
-  },
-  {
     theme: "Baby basics",
     session: {
       title: "Newborn Feeding Strategies",
@@ -188,6 +158,36 @@ const firstYearCurriculum: CurriculumMonth[] = [
       description:
         "We'll swap what works to get your baby to sleep — your favorite lullaby, white-noise track, or shushing trick that works magic on them — while a certified sleep coach takes your bedtime routine and infant sleep questions.",
       facilitators: ["petraCubretovic", "alexSiega"],
+    },
+  },
+  {
+    theme: "What's around you",
+    session: {
+      title: "Building the Village",
+      subtitle: "Dutch postpartum care and building your support network",
+      description: `
+      We've all heard the phrase "It takes a village." For new parents — especially expats becoming parents abroad — the village doesn't come without effort.
+      But where to start? We cover local Dutch postpartum care and end with an exercise on finding and filling gaps in support, so you're not starting from scratch when you need it most.
+    `,
+      experts: ["alexSiega", "irenaDomachowska"],
+      guideFiles: ["Building the Village.pdf"],
+      components: [
+        "Overview of local Dutch systems: baby care, medical, and mental health",
+        "How to navigate the English-speaking network in Amsterdam",
+        "Experiential exercise on how to build a support network that actually works for your family",
+      ],
+    },
+    social: {
+      title: "Singing Mamas & Papas",
+      subtitle:
+        "A family circle of song — using shared voices to ground ourselves in parenthood",
+      description:
+        "A warm, singing circle for the whole family — a safe space to show up as you are and process parenthood together through shared harmonies. Little ones are free to crawl, play, nap, or simply take in the sound of the group singing around them.",
+      facilitators: ["danielleBensky"],
+      note: [
+        "No sheet music, no lyrics to memorize, and no pressure to perform — all levels and singing abilities welcome!",
+        "There's no such thing as being late — feel free to change diapers, feed, or wander as needed throughout.",
+      ],
     },
   },
 ];

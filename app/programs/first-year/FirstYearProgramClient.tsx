@@ -279,8 +279,17 @@ export default function FirstYearProgramClient({
             </p>
           </div>
 
+          {/* Community gallery */}
+          <section className="py-8 max-w-5xl mx-auto w-full">
+            <SectionHeader
+              header="Connecting real families"
+              subtitle="Not another giant group chat abyss. Real parents with newborns and babies in Amsterdam, eager to build the village with you."
+            />
+            <PhotoGallery items={communityPhotos} />
+          </section>
+
           {/* Highlights */}
-          <div className="mt-6 mb-12 px-4 w-full max-w-xl">
+          <div className="my-8 px-4 w-full max-w-xl">
             <h2 className="text-center text-3xl font-bold text-brand-charcoal dark:text-brand-goldenrod mb-6 md:mb-12">
               How we support you
             </h2>
@@ -312,19 +321,10 @@ export default function FirstYearProgramClient({
             </div>
           </div>
 
-          {/* Community gallery */}
-          <section className="py-8 max-w-5xl mx-auto w-full">
-            <SectionHeader
-              header="Connecting real families"
-              subtitle="Not another giant group chat abyss. Real parents with newborns and babies in Amsterdam, eager to build the village with you."
-            />
-            <PhotoGallery items={communityPhotos} />
-          </section>
-
           {/* ── How you experience the program ───────────────────────────
               Everything below is personalized to the situation picked in
               SituationSelector: what you get access to today, and pricing. */}
-          <section className="mt-16 mb-8 w-full max-w-4xl mx-auto px-4">
+          <section className="my-8 w-full max-w-4xl mx-auto px-4">
             <SectionHeader
               header="What happens when you join"
               subtitle="Tell us where you are, and we'll show you the support that's here for you — starting immediately ❤️"

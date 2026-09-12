@@ -98,6 +98,16 @@ function MonthGrid({ group }: { group: MonthGroup }) {
     year: "numeric",
   });
 
+  // Events (and days) strictly before today are grayed out rather than
+  // dropped — a month can mix already-happened and still-upcoming events
+  // (e.g. this month's community call already passed but its social
+  // hasn't), and hiding the past ones would make the grid's day-of-week
+  // layout confusing. Today itself is never treated as past, since dates
+  // carry no time-of-day — an event happening later today should still
+  // read as current, not passed.
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const displayEvents: DisplayEvent[] = [
     ...events,
     buildStandingEvent(year, monthIdx),
@@ -146,6 +156,8 @@ function MonthGrid({ group }: { group: MonthGroup }) {
           <div className="grid grid-cols-7 gap-1">
             {cells.map((day, i) => {
               const hasEvent = day !== null && eventsByDay.has(day);
+              const isPast =
+                day !== null && new Date(year, monthIdx, day) < today;
               return (
                 <div
                   key={i}
@@ -153,7 +165,7 @@ function MonthGrid({ group }: { group: MonthGroup }) {
                     day === null
                       ? ""
                       : hasEvent
-                        ? "bg-brand-soft-green text-white font-bold"
+                        ? `bg-brand-soft-green text-white font-bold ${isPast ? "opacity-40" : ""}`
                         : "text-brand-charcoal/60 dark:text-brand-white/50"
                   }`}
                 >
@@ -165,30 +177,35 @@ function MonthGrid({ group }: { group: MonthGroup }) {
         </div>
 
         <div className="flex-1 min-w-0 space-y-2 border-t md:border-t-0 md:border-l border-brand-sand/30 pt-4 md:pt-0 md:pl-8">
-          {displayEvents.map((event, i) => (
-            <a
-              key={i}
-              href={event.href}
-              target={event.href.startsWith("http") ? "_blank" : undefined}
-              rel={
-                event.href.startsWith("http")
-                  ? "noopener noreferrer"
-                  : undefined
-              }
-              className="block rounded-lg hover:bg-brand-soft-green/5 -mx-2 px-2 py-1.5 transition-colors"
-            >
-              <p className="text-[11px] font-bold text-brand-goldenrod">
-                {formatEventDate(event.date)}
-              </p>
-              <p className="text-xs font-medium text-brand-charcoal dark:text-brand-white leading-snug">
-                {event.title}
-              </p>
-              <p className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-brand-soft-green dark:text-brand-goldenrod">
-                {event.linkLabel ?? "Go to event"}
-                <ExternalLink size={11} className="shrink-0" />
-              </p>
-            </a>
-          ))}
+          {displayEvents.map((event, i) => {
+            const isPast = parseDateOnly(event.date) < today;
+            return (
+              <a
+                key={i}
+                href={event.href}
+                target={event.href.startsWith("http") ? "_blank" : undefined}
+                rel={
+                  event.href.startsWith("http")
+                    ? "noopener noreferrer"
+                    : undefined
+                }
+                className={`block rounded-lg hover:bg-brand-soft-green/5 -mx-2 px-2 py-1.5 transition-colors ${
+                  isPast ? "opacity-40" : ""
+                }`}
+              >
+                <p className="text-[11px] font-bold text-brand-goldenrod">
+                  {formatEventDate(event.date)}
+                </p>
+                <p className="text-xs font-medium text-brand-charcoal dark:text-brand-white leading-snug">
+                  {event.title}
+                </p>
+                <p className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-brand-soft-green dark:text-brand-goldenrod">
+                  {event.linkLabel ?? "Go to event"}
+                  <ExternalLink size={11} className="shrink-0" />
+                </p>
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>
