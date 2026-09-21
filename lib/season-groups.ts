@@ -97,12 +97,16 @@ export function mergeSeasonCategory(categories: string[]): string[] {
   return categories.includes("Season") ? categories : [...categories, "Season"];
 }
 
-/** Ascending by due_start; groups with no due_start sort last. */
-export function sortByDueStart(groups: SeasonGroup[]): SeasonGroup[] {
+/**
+ * Newest season first (descending by due_start); groups with no due_start
+ * sort last. This client-side sort is what /season-groups displays — it
+ * overrides get_season_groups' own ascending ORDER BY.
+ */
+export function sortByDueStartDesc(groups: SeasonGroup[]): SeasonGroup[] {
   return [...groups].sort((a, b) => {
     if (!a.due_start && !b.due_start) return 0;
     if (!a.due_start) return 1;
     if (!b.due_start) return -1;
-    return a.due_start.localeCompare(b.due_start);
+    return b.due_start.localeCompare(a.due_start);
   });
 }

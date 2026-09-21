@@ -55,11 +55,9 @@ export default function SeasonGroupCard({
             </span>
           )}
         </h3>
-        {group.description && (
-          <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 pt-1">
-            {group.description}
-          </p>
-        )}
+        {/* Only the auto-generated due-range line — group.description is
+            deliberately not shown here: it's free-text written for the
+            Directory and duplicates (or is missing/"null" next to) this. */}
         {dueRangeLabel && (
           <p className="text-sm text-brand-soft-charcoal dark:text-brand-white/80 pt-1">
             {dueRangeLabel}

@@ -11,7 +11,7 @@ import { MONTHS, situationYears } from "@/lib/fyp/situation";
 import {
   findMatchedSeasonGroups,
   mergeSeasonCategory,
-  sortByDueStart,
+  sortByDueStartDesc,
 } from "@/lib/season-groups";
 import {
   SeasonGroup,
@@ -80,7 +80,7 @@ export default function SeasonGroupsClient({
   // list.
   const visibleGroups = useMemo(() => {
     if (hasFilter && matchedGroups.length > 0) return matchedGroups;
-    return sortByDueStart(seasonGroups);
+    return sortByDueStartDesc(seasonGroups);
   }, [seasonGroups, hasFilter, matchedGroups]);
 
   const clearFilter = () => {
