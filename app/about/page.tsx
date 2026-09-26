@@ -16,8 +16,8 @@ export default function Page() {
       <p className="text-lg leading-7 text-gray-600 dark:text-gray-300">
         The Amsterdam Parent Project (APP) is a nonprofit organization that
         provides peer and professional support to parents of young children in
-        Amsterdam. We run a newsletter, events, and programs to connect the
-        local community with the help they need to thrive in early parenthood.
+        Amsterdam. We run a newsletter, events, and programs that connect local
+        parents with the peer and expert support they need in early parenthood.
       </p>
 
       {/* Team */}
@@ -43,8 +43,8 @@ export default function Page() {
           Our mission
         </h2>
         <p className="text-brand-white text-xl leading-8 max-w-2xl mx-auto">
-          Empower new parents in Amsterdam with peer and professional support,
-          so that they thrive in the early years of parenthood.
+          Bring Amsterdam's families and experts together so that no parent has
+          to power through postpartum alone.
         </p>
       </div>
 

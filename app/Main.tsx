@@ -68,7 +68,8 @@ export default function Home({
           >
             nonprofit community organization
           </Link>{" "}
-          helping parents with babies and toddlers thrive in Amsterdam
+          making sure no parent in Amsterdam has to power through postpartum
+          alone
         </p>
       </div>
 
@@ -86,7 +87,8 @@ export default function Home({
           >
             nonprofit community organization
           </Link>{" "}
-          helping parents with babies and toddlers thrive in Amsterdam
+          making sure no parent in Amsterdam has to power through postpartum
+          alone
         </p>
       </section>
 
