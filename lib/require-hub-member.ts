@@ -1,4 +1,5 @@
 import { createFirstYearClient } from "@/lib/supabase/server";
+import { findMemberByEmail } from "@/lib/fyp/member-lookup";
 
 export type HubMember = { memberId: string; accountId: string; email: string };
 
@@ -29,16 +30,14 @@ export async function requireHubMember(
   const email = data?.user?.email?.toLowerCase();
   if (error || !email) return null;
 
-  const { data: member } = await supabase
-    .from("members")
-    .select("id, account_id")
-    .eq("email", email)
-    .maybeSingle();
+  // Not a bare .maybeSingle(): duplicate rows for one email (e.g. a retried
+  // checkout's abandoned pending row) would make that lookup error out.
+  const member = await findMemberByEmail(supabase, email);
   if (!member) return null;
 
   return {
-    memberId: member.id as string,
-    accountId: member.account_id as string,
+    memberId: member.id,
+    accountId: member.account_id,
     email,
   };
 }

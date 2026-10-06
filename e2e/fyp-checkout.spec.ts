@@ -2,15 +2,11 @@
  * First Year Program checkout — E2E
  *
  * Tests the checkout flows end-to-end:
- *   expecting_monthly  — €25 deposit, deferred subscription
- *   expecting_bundle   — €305/€383 upfront
- *   baby_monthly       — Immediate subscription, billing_start_date = today
- *                        (replaced baby_deposit once PROGRAM_START (2026-09-01) passed —
- *                        see lib/fyp/program.ts's isBeforeProgramStart. baby_deposit's
- *                        deferred-to-PROGRAM_START flow is dead once "now" is permanently
- *                        past that date; not covered here anymore)
- *   baby_bundle        — €305/€383 upfront; billing_start_date = today (was pinned to
- *                        2026-09-01 while today < PROGRAM_START)
+ *   expecting_bundle   — €305/€383 upfront; billing starts the month after the due date
+ *   baby_bundle        — €305/€383 upfront; billing_start_date = today
+ *
+ * Checkout is bundle-only since Oct 2026; the monthly flows return 400 (covered
+ * by the unit tests in __tests__/api/checkout/fyp.test.ts).
  *
  * Each test:
  *   1. Fills the on-page join form (name, email, month, year)
@@ -20,22 +16,17 @@
  *   5. Lands on /programs/first-year/welcome
  *   6. Verifies the account record in firstyear.accounts
  *
- * The first test (expecting_monthly, multi) additionally continues the
- * journey one step further: the welcome page auto-signs in (no click, see
- * AutoHubRedirect — renamed from GoToHubButton 2026-07-31) and lands
- * authenticated on /hub/home. This is the one place that proves a
+ * The expecting_bundle test additionally continues the journey one step
+ * further: the welcome page auto-signs in (no click, see AutoHubRedirect) and
+ * lands authenticated on /hub/home. This is the one place that proves a
  * `stripe_session_id` written by a *real* checkout webhook — not a
  * directly-seeded one — actually resolves through getWelcomeHubSignInLink
  * (see hub-welcome-signin.spec.ts, which covers the same auto-redirect's
- * fallback paths via seeded accounts instead). Not repeated across the
- * other four variants — the sign-in step doesn't vary by plan type, so one
- * full round trip is enough; duplicating it five times would only add
- * runtime, not coverage.
+ * fallback paths via seeded accounts instead). Not repeated for baby_bundle —
+ * the sign-in step doesn't vary by plan, so one full round trip is enough.
  *
  * Prerequisites:
- *   - `stripe listen --forward-to localhost:3100/api/webhooks/stripe/fyp` running
- *   - Stripe test mode prices fyp_monthly_single + fyp_monthly_multi must exist
- *   - Coupon STRIPE_FYP_DEPOSIT_COUPON_ID must exist in test mode
+ *   - `stripe listen --forward-to localhost:3000/api/webhooks/stripe/fyp` running
  *   - NEXT_PUBLIC_TEST_SUPABASE_URL + TEST_SUPABASE_SERVICE_ROLE_KEY in .env.test
  */
 
@@ -201,23 +192,26 @@ async function waitForAccount(
 // Test data
 // ---------------------------------------------------------------------------
 
-// Expecting flows: use a future month (valid for "Still expecting")
-const EXPECTING_MONTH = "October";
-const EXPECTING_YEAR = "2026";
+// Expecting flows: a due date three months out, so it stays a valid "Still
+// expecting" date whenever the suite runs.
+const dueDate = new Date();
+dueDate.setUTCDate(1);
+dueDate.setUTCMonth(dueDate.getUTCMonth() + 3);
+const EXPECTING_MONTH = dueDate.toLocaleString("en-US", {
+  month: "long",
+  timeZone: "UTC",
+});
+const EXPECTING_YEAR = String(dueDate.getUTCFullYear());
+// The webhook starts billing on the 1st of the month after the due month.
+const EXPECTING_BILLING_START = new Date(
+  Date.UTC(dueDate.getUTCFullYear(), dueDate.getUTCMonth() + 1, 1),
+)
+  .toISOString()
+  .slice(0, 10);
 
 // Baby flows: use a past month (valid for "Baby's here")
 const BABY_MONTH = "May";
 const BABY_YEAR = "2026";
-
-const BASE_EMAIL = `e2e-fyp-${Date.now()}`;
-
-const EMAILS = {
-  expecting_monthly: e2eTestEmail(`${BASE_EMAIL}-exp-monthly`),
-  expecting_monthly_single: e2eTestEmail(`${BASE_EMAIL}-exp-monthly-single`),
-  expecting_bundle: e2eTestEmail(`${BASE_EMAIL}-exp-bundle`),
-  baby_monthly: e2eTestEmail(`${BASE_EMAIL}-baby-monthly`),
-  baby_bundle: e2eTestEmail(`${BASE_EMAIL}-baby-bundle`),
-};
 
 /** Today as "YYYY-MM-DD", matching the webhook's own `toISOString().slice(0, 10)`. */
 function todayIsoDate(): string {
@@ -232,7 +226,14 @@ function addSixMonthsIso(date: string): string {
   return d.toISOString().slice(0, 10);
 }
 
-const BASE_URL = "http://localhost:3100";
+const BASE_EMAIL = `e2e-fyp-${Date.now()}`;
+
+const EMAILS = {
+  expecting_bundle: e2eTestEmail(`${BASE_EMAIL}-exp-bundle`),
+  baby_bundle: e2eTestEmail(`${BASE_EMAIL}-baby-bundle`),
+};
+
+const BASE_URL = "http://localhost:3000";
 const SKIP_CLEANUP = process.env.E2E_SKIP_CLEANUP === "1";
 
 /**
@@ -269,107 +270,6 @@ test.afterAll(async () => {
 });
 
 // ---------------------------------------------------------------------------
-// expecting_monthly
-// ---------------------------------------------------------------------------
-
-test("expecting_monthly (multi): deposit → deferred subscription created", async ({
-  page,
-}) => {
-  await page.goto("/programs/first-year#join");
-
-  await fillJoinForm(page, {
-    firstName: "Test",
-    lastName: "Parent",
-    email: EMAILS.expecting_monthly,
-    monthLabel: EXPECTING_MONTH,
-    year: EXPECTING_YEAR,
-  });
-  // Default selected flow is expecting_bundle; switch to monthly
-  const checkoutPage = await selectPlanAndCheckout(page, /monthly/i);
-
-  await completeStripeCheckout(checkoutPage, {
-    email: EMAILS.expecting_monthly,
-  });
-
-  // ── Continue the journey: welcome page auto-signs in, no click, no
-  // email step — lands on /hub/home, then Account tab proves it's the
-  // right member ──
-  await checkoutPage.waitForURL(/\/hub\/home/, { timeout: 45_000 });
-
-  const account = await waitForAccount(EMAILS.expecting_monthly);
-  expect(account).not.toBeNull();
-  expect(account?.flow).toBe("expecting_monthly");
-  expect(account?.plan_type).toBe("monthly");
-  expect(account?.family_type).toBe("multi");
-  expect(account?.stripe_subscription_id).toBeTruthy();
-  expect(account?.billing_start_date).toBe("2026-11-01");
-  expect(account?.status).toBe("active");
-
-  const members = await getMembersByAccountId(account!.id);
-  expect(members).toHaveLength(1);
-  expect(members[0].first_name).toBe("Test");
-  expect(members[0].last_name).toBe("Parent");
-  expect(members[0].email).toBe(EMAILS.expecting_monthly);
-  expect(members[0].status).toBe("active");
-
-  // Scoped to the tab nav specifically — the ?welcome=1 banner shown for
-  // multi-parent families (see the (account) layout's WelcomeBanner) has
-  // its own inline "Account" link nudging the same tab, so a bare
-  // getByRole("link", { name: "Account" }) matches two elements here.
-  await checkoutPage
-    .getByRole("navigation")
-    .getByRole("link", { name: "Account" })
-    .click();
-  await expect(checkoutPage).toHaveURL(/\/hub\/account/, { timeout: 20_000 });
-  await expect(checkoutPage.getByText("Test Parent")).toBeVisible();
-  await expect(checkoutPage.getByText(EMAILS.expecting_monthly)).toBeVisible();
-});
-
-// ---------------------------------------------------------------------------
-// expecting_monthly (single parent)
-// ---------------------------------------------------------------------------
-
-test("expecting_monthly (single): deposit → deferred subscription created", async ({
-  page,
-}) => {
-  await page.goto("/programs/first-year#join");
-
-  await fillJoinForm(page, {
-    firstName: "Test",
-    lastName: "SingleParent",
-    email: EMAILS.expecting_monthly_single,
-    monthLabel: EXPECTING_MONTH,
-    year: EXPECTING_YEAR,
-  });
-
-  // Toggle single parent
-  await page
-    .locator("#join")
-    .getByRole("button", { name: /single parent/i })
-    .click();
-
-  const checkoutPage = await selectPlanAndCheckout(page, /monthly/i);
-
-  await completeStripeCheckout(checkoutPage, {
-    email: EMAILS.expecting_monthly_single,
-  });
-
-  await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
-  await checkoutPage.waitForLoadState("domcontentloaded");
-
-  const account = await waitForAccount(EMAILS.expecting_monthly_single);
-  expect(account?.family_type).toBe("single");
-  expect(account?.flow).toBe("expecting_monthly");
-
-  const members = await getMembersByAccountId(account!.id);
-  expect(members).toHaveLength(1);
-  expect(members[0].first_name).toBe("Test");
-  expect(members[0].last_name).toBe("SingleParent");
-  expect(members[0].email).toBe(EMAILS.expecting_monthly_single);
-  expect(members[0].status).toBe("active");
-});
-
-// ---------------------------------------------------------------------------
 // expecting_bundle
 // ---------------------------------------------------------------------------
 
@@ -395,11 +295,18 @@ test("expecting_bundle (multi): upfront payment → account created with bundle_
   await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
   await checkoutPage.waitForLoadState("domcontentloaded");
 
+  // ── Continue the journey: welcome page auto-signs in, no click, no
+  // email step — lands on /hub/home, then Account tab proves it's the
+  // right member ──
+  await checkoutPage.waitForURL(/\/hub\/home/, { timeout: 45_000 });
+
   const account = await waitForAccount(EMAILS.expecting_bundle);
   expect(account?.flow).toBe("expecting_bundle");
   expect(account?.plan_type).toBe("bundle");
-  expect(account?.billing_start_date).toBe("2026-11-01");
-  expect(account?.bundle_expires_at).toBe("2027-05-01");
+  expect(account?.billing_start_date).toBe(EXPECTING_BILLING_START);
+  expect(account?.bundle_expires_at).toBe(
+    addSixMonthsIso(EXPECTING_BILLING_START),
+  );
   expect(account?.stripe_subscription_id).toBeNull();
 
   const members = await getMembersByAccountId(account!.id);
@@ -408,50 +315,18 @@ test("expecting_bundle (multi): upfront payment → account created with bundle_
   expect(members[0].last_name).toBe("Bundle");
   expect(members[0].email).toBe(EMAILS.expecting_bundle);
   expect(members[0].status).toBe("active");
-});
 
-// ---------------------------------------------------------------------------
-// baby_monthly (the "Monthly" card for baby_here, now that PROGRAM_START
-// has passed — see lib/fyp/program.ts's isBeforeProgramStart)
-// ---------------------------------------------------------------------------
-
-test("baby_monthly (multi): immediate subscription created", async ({
-  page,
-}) => {
-  await page.goto("/programs/first-year#join");
-
-  await fillJoinForm(page, {
-    firstName: "Test",
-    lastName: "BabyMonthly",
-    email: EMAILS.baby_monthly,
-    monthLabel: BABY_MONTH,
-    year: BABY_YEAR,
-  });
-  // Default for baby_here is baby_bundle; switch to the "Monthly" card
-  const checkoutPage = await selectPlanAndCheckout(page, /monthly/i);
-
-  await completeStripeCheckout(checkoutPage, {
-    email: EMAILS.baby_monthly,
-  });
-
-  await checkoutPage.waitForURL(/first-year\/welcome/, { timeout: 30_000 });
-  await checkoutPage.waitForLoadState("domcontentloaded");
-
-  const account = await waitForAccount(EMAILS.baby_monthly);
-  expect(account).not.toBeNull();
-  expect(account?.flow).toBe("baby_monthly");
-  expect(account?.plan_type).toBe("monthly");
-  expect(account?.family_type).toBe("multi");
-  expect(account?.stripe_subscription_id).toBeTruthy();
-  expect(account?.billing_start_date).toBe(todayIsoDate());
-  expect(account?.status).toBe("active");
-
-  const members = await getMembersByAccountId(account!.id);
-  expect(members).toHaveLength(1);
-  expect(members[0].first_name).toBe("Test");
-  expect(members[0].last_name).toBe("BabyMonthly");
-  expect(members[0].email).toBe(EMAILS.baby_monthly);
-  expect(members[0].status).toBe("active");
+  // Scoped to the tab nav specifically — the ?welcome=1 banner shown for
+  // multi-parent families (see the (account) layout's WelcomeBanner) has
+  // its own inline "Account" link nudging the same tab, so a bare
+  // getByRole("link", { name: "Account" }) matches two elements here.
+  await checkoutPage
+    .getByRole("navigation")
+    .getByRole("link", { name: "Account" })
+    .click();
+  await expect(checkoutPage).toHaveURL(/\/hub\/account/, { timeout: 20_000 });
+  await expect(checkoutPage.getByText("Test Bundle")).toBeVisible();
+  await expect(checkoutPage.getByText(EMAILS.expecting_bundle)).toBeVisible();
 });
 
 // ---------------------------------------------------------------------------
@@ -483,7 +358,7 @@ test("baby_bundle (multi): upfront payment → account with billing_start_date t
   const account = await waitForAccount(EMAILS.baby_bundle);
   expect(account?.flow).toBe("baby_bundle");
   expect(account?.plan_type).toBe("bundle");
-  // PROGRAM_START has passed: billing starts today, bundle runs 6 months from there
+  // Baby's already here: access starts today and the bundle runs 6 months.
   const today = todayIsoDate();
   expect(account?.billing_start_date).toBe(today);
   expect(account?.bundle_expires_at).toBe(addSixMonthsIso(today));

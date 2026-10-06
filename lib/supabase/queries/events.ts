@@ -46,7 +46,7 @@ export async function getCalendarEvents(): Promise<CalendarEvent[]> {
 
 // MVP-style filter: "counts" as a First Year Program event if the title
 // contains "First Year Program" (case-insensitive). No services/tags
-// column yet — see lib/fyp/program.ts area for the more durable version of
+// column yet — see the lib/fyp/ area for the more durable version of
 // this once Desk grows a real FYP service flag. Deliberately narrow (title
 // only, next 5, upcoming only) since this is a quick test of whether
 // showing real dates actually helps the "what's happening now" problem

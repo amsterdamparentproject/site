@@ -9,24 +9,25 @@ interface FAQ {
   id?: string;
 }
 
+// Luma calendar filtered to the first-year-program tag, for pay-per-event.
+const LUMA_CALENDAR_URL = process.env.NEXT_PUBLIC_FYP_LUMA_CALENDAR_URL;
+
 export default function ProgramFAQ() {
   const faqs: FAQ[] = [
     {
       question: "When can I join?",
       answer:
-        "The program is open to families from pregnancy through baby's 12th month — join whenever you're ready. If you're pregnant, reserve with a €25 monthly deposit or pay for 6 months upfront (save €25); either way you get immediate access to your WhatsApp community, peer match, and the guides free until your due date. If your baby is already here (up to 12 months), you'll still pay the €25 deposit for now — billing starts once live sessions launch on September 1, 2026. After that date, baby-already-here signups start billing immediately, no deposit needed. Joining mid-cycle is completely fine too — the 6-month curriculum repeats, so you'll catch any topic you missed. We recommend joining as early as possible to get the most out of the full year.",
+        "The program is open to families from pregnancy through baby's 12th month — join whenever you're ready. If you're pregnant, you get immediate access to your WhatsApp community, peer match, and the guides, and live sessions begin after your due date. If your baby is already here (up to 12 months), everything is available from the moment you sign up. Joining mid-cycle is completely fine too — the 6-month curriculum repeats, so you'll catch any topic you missed. We recommend joining as early as possible to get the most out of the full year.",
     },
     {
       question: "How does billing work?",
       answer: (
         <>
-          If you joined in pregnancy on the monthly plan, your first invoice is
-          charged the calendar month after your due date — with your €25 deposit
-          credited, so you pay €30 (1-parent families) or €43 (2+ parent
-          families) for month 1, then full price from month 2. If you chose the
-          6-month bundle, you&apos;ve already paid upfront and the full program
-          begins after your due date. If you joined with a baby already, monthly
-          billing starts immediately. You can cancel any time from your{" "}
+          The program is a one-time 6-month bundle: you pay once at signup and
+          there are no recurring charges. If you joined in pregnancy, the full
+          program begins after your due date; if you joined with a baby already,
+          it starts immediately. Families who joined on a monthly plan before
+          October 2026 keep that plan and can cancel any time from your{" "}
           <Link
             href="/hub/account"
             className="underline hover:text-brand-soft-green"
@@ -41,12 +42,34 @@ export default function ProgramFAQ() {
     {
       question: "What is the 6-month bundle?",
       answer:
-        "The 6-month bundle lets you pay for the full program upfront at a discount — €305 for single parent families or €383 for 2+ parent families (saving €25 vs. monthly). If you're pregnant, the full program starts after your due date and the bundle is fully refundable if you cancel during pregnancy. If you already have a baby, the program starts immediately.",
+        "The 6-month bundle is the way to join the program: a single payment of €305 for single parent families or €383 for 2+ parent families. If you're pregnant, the full program starts after your due date and the bundle is fully refundable if you cancel during pregnancy. If you already have a baby, the program starts immediately.",
+    },
+    {
+      question: "Can I just attend individual events?",
+      answer: (
+        <>
+          Yes. If you&apos;re not ready for the full program, you can pay per
+          event — browse upcoming First Year events on our{" "}
+          {LUMA_CALENDAR_URL ? (
+            <a
+              href={LUMA_CALENDAR_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-brand-soft-green"
+            >
+              events calendar
+            </a>
+          ) : (
+            "events calendar"
+          )}{" "}
+          and register for the ones you want.
+        </>
+      ),
     },
     {
       question: "Are partners welcome?",
       answer:
-        "Yes — the program is built for the whole family. Whether you are a birthing parent, non-birthing parent, or co-parent, you are an equal part of this transition. 2+ parent families join at one family price (€68/month), so all partners are included.",
+        "Yes — the program is built for the whole family. Whether you are a birthing parent, non-birthing parent, or co-parent, you are an equal part of this transition. 2+ parent families join at one family price (€383 for the 6-month bundle), so all partners are included.",
     },
     {
       question: "Why do I need structured support? Can't I find this myself?",

@@ -2,14 +2,7 @@
 
 import { useState } from "react";
 import Logo from "@/components/Logo";
-import { PROGRAM_START } from "@/lib/fyp/program";
-import {
-  DEPOSIT_EUR,
-  BUNDLE_MULTI_EUR,
-  BUNDLE_SINGLE_EUR,
-  MONTHLY_MULTI_EUR,
-  MONTHLY_SINGLE_EUR,
-} from "@/lib/fyp/pricing";
+import { BUNDLE_MULTI_EUR, BUNDLE_SINGLE_EUR } from "@/lib/fyp/pricing";
 import {
   MONTHS,
   deriveSituation,
@@ -23,15 +16,10 @@ import FamilyTypeToggle from "@/components/first-year-program/FamilyTypeToggle";
 // Types
 // ---------------------------------------------------------------------------
 
-type Flow =
-  | "expecting_monthly"
-  | "expecting_bundle"
-  | "baby_deposit"
-  | "baby_monthly"
-  | "baby_bundle";
+// Bundle-only since October 2026: the monthly flows are retired (the checkout
+// API rejects them). Existing monthly families are grandfathered.
+type Flow = "expecting_bundle" | "baby_bundle";
 type FamilyType = "single" | "multi";
-
-const isBeforeProgramStart = new Date() < PROGRAM_START;
 
 interface Member {
   firstName: string;
@@ -42,6 +30,9 @@ interface Member {
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
+
+// Luma calendar filtered to the first-year-program tag, for pay-per-event.
+const LUMA_CALENDAR_URL = process.env.NEXT_PUBLIC_FYP_LUMA_CALENDAR_URL;
 
 // Immediate access for all plans on signup — everything except live event
 // invites. Confirmed with Alex 2026-08-02: the 2026-07-29 access-model
@@ -237,19 +228,13 @@ export default function FYPJoinForm({
   // experience the program" to drop it), so this is the only place a
   // visitor picks it.
   const [isSingleParent, setIsSingleParent] = useState(false);
-  // Mirrors onSituationChange()'s own expecting→bundle / baby_here→bundle
-  // default, computed once up front from the (possibly prefilled) date
-  // above — without this, a prefilled expecting date would render the
-  // "expecting" plan cards (situation, below, is derived from month/year)
-  // while selectedFlow was still stuck on "baby_bundle", leaving no card
-  // showing as selected.
-  const [selectedFlow, setSelectedFlow] = useState<Flow>(() =>
-    isFutureMonthYear(month, year, now) ? "expecting_bundle" : "baby_bundle",
-  );
   const [submitting, setSubmitting] = useState(false);
 
   // Derive situation from date. When no date selected, default to "expecting".
   const situation: Situation = deriveSituation(month, year);
+  // Only one plan exists now, so the flow follows from the situation.
+  const selectedFlow: Flow =
+    situation === "expecting" ? "expecting_bundle" : "baby_bundle";
 
   function updateMember(idx: number, field: keyof Member, value: string) {
     setMembers((prev) =>
@@ -300,30 +285,9 @@ export default function FYPJoinForm({
     "All 7 digital resource guides providing evidence-based context for every stage",
   ];
   const features =
-    !isBeforeProgramStart && situation === "baby_here"
+    situation === "baby_here"
       ? [...immediateFeatures, EVENTS_FEATURE]
       : immediateFeatures;
-
-  // Reset selected flow to the bundle when situation changes
-  function onSituationChange(newSituation: Situation) {
-    setSelectedFlow(
-      newSituation === "expecting" ? "expecting_bundle" : "baby_bundle",
-    );
-  }
-
-  // For expecting bundle: if the month after their due date is before PROGRAM_START,
-  // sessions still start in September (not earlier).
-  const expectingSessionsStart = (() => {
-    if (!month || !year) return "the month after your due date";
-    const dueIdx = MONTHS.findIndex((m) => m.value === month);
-    const dueYear = parseInt(year);
-    const billingIdx = (dueIdx + 1) % 12;
-    const billingYear = dueIdx + 1 >= 12 ? dueYear + 1 : dueYear;
-    const billingDate = new Date(Date.UTC(billingYear, billingIdx, 1));
-    return billingDate < PROGRAM_START
-      ? "September 2026"
-      : "the month after your due date";
-  })();
 
   const submitLabel = submitting ? "Redirecting…" : "Sign up →";
 
@@ -364,7 +328,7 @@ export default function FYPJoinForm({
             </h2>
             <p className="text-sm text-brand-soft-charcoal/70 dark:text-brand-white/60 italic text-center mt-1 max-w-sm">
               Open to families from pregnancy through your baby&apos;s first
-              year. Program starts September 2026.
+              year.
             </p>
           </div>
 
@@ -440,15 +404,7 @@ export default function FYPJoinForm({
                 id="due-month"
                 value={month}
                 onChange={(e) => {
-                  const newMonth = e.target.value;
-                  onMonthChange(newMonth);
-                  if (newMonth && year) {
-                    onSituationChange(
-                      isFutureMonthYear(newMonth, year)
-                        ? "expecting"
-                        : "baby_here",
-                    );
-                  }
+                  onMonthChange(e.target.value);
                 }}
                 required
                 className={selectClass}
@@ -463,15 +419,7 @@ export default function FYPJoinForm({
               <select
                 value={year}
                 onChange={(e) => {
-                  const newYear = e.target.value;
-                  onYearChange(newYear);
-                  if (month && newYear) {
-                    onSituationChange(
-                      isFutureMonthYear(month, newYear)
-                        ? "expecting"
-                        : "baby_here",
-                    );
-                  }
+                  onYearChange(e.target.value);
                 }}
                 required
                 className={selectClass}
@@ -502,113 +450,49 @@ export default function FYPJoinForm({
 
           {/* ── Plan cards — always shown, disabled until form is complete ── */}
           <div>
-            <p className={labelClass}>Choose your plan</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-              {situation === "expecting" ? (
-                <>
-                  <PlanCard
-                    flow="expecting_monthly"
-                    icon="📅"
-                    name="Monthly"
-                    price={
-                      isMulti
-                        ? `€${DEPOSIT_EUR} deposit, then €${MONTHLY_MULTI_EUR}/month`
-                        : `€${DEPOSIT_EUR} deposit, then €${MONTHLY_SINGLE_EUR}/month`
-                    }
-                    billing={
-                      expectingSessionsStart === "September 2026"
-                        ? "Monthly billing begins September 2026"
-                        : "Monthly billing begins after your due date"
-                    }
-                    selected={selectedFlow === "expecting_monthly"}
-                    onSelect={setSelectedFlow}
-                    disabled={false}
-                  />
-                  <PlanCard
-                    flow="expecting_bundle"
-                    icon="📦"
-                    name="6-month bundle"
-                    price={
-                      isMulti ? `€${BUNDLE_MULTI_EUR}` : `€${BUNDLE_SINGLE_EUR}`
-                    }
-                    billing={`Billed today · Save €${DEPOSIT_EUR}`}
-                    badge="Best value"
-                    selected={selectedFlow === "expecting_bundle"}
-                    onSelect={setSelectedFlow}
-                    disabled={false}
-                  />
-                </>
-              ) : (
-                <>
-                  {isBeforeProgramStart ? (
-                    <PlanCard
-                      flow="baby_deposit"
-                      icon="📅"
-                      name="Monthly"
-                      price={
-                        isMulti
-                          ? `€${DEPOSIT_EUR} deposit, then €${MONTHLY_MULTI_EUR}/month`
-                          : `€${DEPOSIT_EUR} deposit, then €${MONTHLY_SINGLE_EUR}/month`
-                      }
-                      billing="Monthly billing starts September 2026"
-                      selected={selectedFlow === "baby_deposit"}
-                      onSelect={setSelectedFlow}
-                      disabled={false}
-                    />
-                  ) : (
-                    <PlanCard
-                      flow="baby_monthly"
-                      icon="📅"
-                      name="Monthly"
-                      price={
-                        isMulti
-                          ? `€${MONTHLY_MULTI_EUR}/month`
-                          : `€${MONTHLY_SINGLE_EUR}/month`
-                      }
-                      billing="Billed monthly · Cancel anytime"
-                      selected={selectedFlow === "baby_monthly"}
-                      onSelect={setSelectedFlow}
-                      disabled={false}
-                    />
-                  )}
-                  <PlanCard
-                    flow="baby_bundle"
-                    icon="📦"
-                    name="6-month bundle"
-                    price={
-                      isMulti ? `€${BUNDLE_MULTI_EUR}` : `€${BUNDLE_SINGLE_EUR}`
-                    }
-                    billing={`Billed today · Save €${DEPOSIT_EUR}`}
-                    badge="Best value"
-                    selected={selectedFlow === "baby_bundle"}
-                    onSelect={setSelectedFlow}
-                    disabled={false}
-                  />
-                </>
-              )}
+            <p className={labelClass}>Your plan</p>
+            <div className="mt-2">
+              <PlanCard
+                flow={selectedFlow}
+                icon="📦"
+                name="6-month bundle"
+                price={
+                  isMulti ? `€${BUNDLE_MULTI_EUR}` : `€${BUNDLE_SINGLE_EUR}`
+                }
+                billing="One payment today"
+                selected
+                onSelect={() => {}}
+                disabled={false}
+              />
             </div>
 
             {/* Submit button */}
             <button
               type="submit"
               disabled={submitting}
-              data-umami-event={
-                selectedFlow?.includes("bundle")
-                  ? `First Year Program: Join ${situation === "expecting" ? "expecting" : "baby"} bundle`
-                  : `First Year Program: Join ${situation === "expecting" ? "expecting" : "baby"} monthly`
-              }
+              data-umami-event={`First Year Program: Join ${situation === "expecting" ? "expecting" : "baby"} bundle`}
               className="mt-4 w-full py-3 rounded-lg font-semibold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 dark:bg-brand-goldenrod dark:hover:bg-brand-goldenrod/90 dark:text-brand-charcoal transition-colors focus:outline-none focus:ring-2 focus:ring-brand-soft-green/40 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
               {submitLabel}
             </button>
 
-            {selectedFlow !== "baby_monthly" && (
-              <p className="mt-2 text-xs text-brand-charcoal/50 dark:text-brand-white/40 text-center">
-                {selectedFlow === "expecting_monthly" ||
-                selectedFlow === "baby_deposit"
-                  ? "Deposit credited to your first monthly invoice · "
-                  : ""}
-                Fully refundable during pregnancy or before September 1.
+            <p className="mt-2 text-xs text-brand-charcoal/50 dark:text-brand-white/40 text-center">
+              Fully refundable during pregnancy.
+            </p>
+
+            {LUMA_CALENDAR_URL && (
+              <p className="mt-2 text-xs text-brand-charcoal/60 dark:text-brand-white/50 text-center">
+                Not ready for six months? You can also join individual events on
+                our{" "}
+                <a
+                  href={LUMA_CALENDAR_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  events calendar
+                </a>
+                .
               </p>
             )}
 

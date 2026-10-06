@@ -19,7 +19,6 @@ vi.mock("next/server", () => ({
 
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
-import { PROGRAM_START, getBillingStartDate } from "@/lib/fyp/program";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -50,43 +49,9 @@ function mockStripeSession(url = "https://checkout.stripe.com/session") {
   return create;
 }
 
-function mockStripePrice() {
-  vi.mocked(stripe.prices.list).mockResolvedValue({
-    data: [{ id: "price_monthly_single" }],
-  } as any);
-}
-
 function makeRequest(body: object) {
   return { json: async () => body } as Request;
 }
-
-// ─── getBillingStartDate ──────────────────────────────────────────────────────
-
-describe("getBillingStartDate", () => {
-  it("returns '2026-09-01' when called before PROGRAM_START", () => {
-    const before = new Date("2026-06-01T00:00:00Z");
-    expect(getBillingStartDate(before)).toBe("2026-09-01");
-  });
-
-  it("returns null on PROGRAM_START itself", () => {
-    expect(getBillingStartDate(PROGRAM_START)).toBeNull();
-  });
-
-  it("returns null when called after PROGRAM_START", () => {
-    const after = new Date("2027-01-01T00:00:00Z");
-    expect(getBillingStartDate(after)).toBeNull();
-  });
-
-  it("returns null one millisecond after PROGRAM_START", () => {
-    const justAfter = new Date(PROGRAM_START.getTime() + 1);
-    expect(getBillingStartDate(justAfter)).toBeNull();
-  });
-
-  it("returns '2026-09-01' one millisecond before PROGRAM_START", () => {
-    const justBefore = new Date(PROGRAM_START.getTime() - 1);
-    expect(getBillingStartDate(justBefore)).toBe("2026-09-01");
-  });
-});
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 
@@ -103,106 +68,32 @@ describe("POST /api/checkout/fyp", () => {
     vi.useRealTimers();
   });
 
-  // ── baby_deposit ──────────────────────────────────────────────────────────
+  // ── retired monthly flows — checkout is bundle-only since Oct 2026 ────────
 
-  describe("baby_deposit", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date("2026-06-15T00:00:00Z"));
-      mockSupabase();
-    });
-
-    it("creates a mode:payment session for €25", async () => {
-      const create = mockStripeSession();
-      await POST(makeRequest({ flow: "baby_deposit", familyType: "single" }));
-
-      expect(create).toHaveBeenCalledOnce();
-      const args = create.mock.calls[0][0] as any;
-      expect(args.mode).toBe("payment");
-      expect(args.line_items[0].price_data.unit_amount).toBe(2500);
-    });
-
-    it("sets product metadata to fyp_baby_deposit", async () => {
-      const create = mockStripeSession();
-      await POST(makeRequest({ flow: "baby_deposit", familyType: "single" }));
-
-      const args = create.mock.calls[0][0] as any;
-      expect(args.metadata.product).toBe("fyp_baby_deposit");
-    });
-
-    it("does not include billing_start_date in session metadata (webhook handles that)", async () => {
-      const create = mockStripeSession();
-      await POST(makeRequest({ flow: "baby_deposit", familyType: "multi" }));
-
-      const args = create.mock.calls[0][0] as any;
-      expect(args.metadata.billing_start_date).toBeUndefined();
-    });
-  });
-
-  // ── baby_monthly — always starts immediately ───────────────────────────────
-
-  describe("baby_monthly", () => {
+  describe("retired monthly flows", () => {
     beforeEach(() => {
       mockSupabase();
-      mockStripePrice();
     });
 
-    it("creates a subscription with no trial_end", async () => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date("2026-10-01T00:00:00Z"));
-      const create = mockStripeSession();
-      await POST(makeRequest({ flow: "baby_monthly", familyType: "single" }));
+    it.each(["expecting_monthly", "baby_deposit", "baby_monthly"])(
+      "%s is rejected with a 400 and never reaches Stripe",
+      async (flow) => {
+        const create = mockStripeSession();
+        const res = (await POST(
+          makeRequest({ flow, familyType: "single" }),
+        )) as { body: { error: string }; status: number };
 
-      const args = create.mock.calls[0][0] as any;
-      expect(args.mode).toBe("subscription");
-      expect(args.subscription_data).toBeUndefined();
-    });
-
-    it("does not include billing_start_date in metadata", async () => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date("2026-10-01T00:00:00Z"));
-      const create = mockStripeSession();
-      await POST(makeRequest({ flow: "baby_monthly", familyType: "multi" }));
-
-      const args = create.mock.calls[0][0] as any;
-      expect(args.metadata.billing_start_date).toBeUndefined();
-    });
+        expect(res.status).toBe(400);
+        expect(res.body.error).toContain("Unsupported flow");
+        expect(create).not.toHaveBeenCalled();
+      },
+    );
   });
 
-  // ── baby_bundle — before program start ───────────────────────────────────
+  // ── baby_bundle — access begins immediately, no deferred billing ──────────
 
-  describe("baby_bundle before PROGRAM_START", () => {
+  describe("baby_bundle", () => {
     beforeEach(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date("2026-06-15T00:00:00Z"));
-      mockSupabase();
-    });
-
-    it("includes billing_start_date in metadata", async () => {
-      const create = mockStripeSession();
-      await POST(makeRequest({ flow: "baby_bundle", familyType: "single" }));
-
-      const args = create.mock.calls[0][0] as any;
-      expect(args.metadata.billing_start_date).toBe("2026-09-01");
-    });
-
-    it("describes September 2026 access start in product description", async () => {
-      const create = mockStripeSession();
-      await POST(makeRequest({ flow: "baby_bundle", familyType: "single" }));
-
-      const args = create.mock.calls[0][0] as any;
-      const description = args.line_items[0].price_data.product_data
-        .description as string;
-      expect(description).toContain("September 2026");
-    });
-  });
-
-  // ── baby_bundle — after program start ────────────────────────────────────
-
-  describe("baby_bundle after PROGRAM_START", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date("2027-01-01T00:00:00Z"));
       mockSupabase();
     });
 
@@ -225,12 +116,10 @@ describe("POST /api/checkout/fyp", () => {
     });
   });
 
-  // ── expecting flows are unaffected ───────────────────────────────────────
+  // ── expecting flows never include billing_start_date ──────────────────────
 
-  describe("expecting flows (unaffected by PROGRAM_START)", () => {
+  describe("expecting flows", () => {
     beforeEach(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date("2026-06-15T00:00:00Z"));
       mockSupabase();
     });
 
@@ -238,16 +127,6 @@ describe("POST /api/checkout/fyp", () => {
       const create = mockStripeSession();
       await POST(
         makeRequest({ flow: "expecting_bundle", familyType: "single" }),
-      );
-
-      const args = create.mock.calls[0][0] as any;
-      expect(args.metadata.billing_start_date).toBeUndefined();
-    });
-
-    it("expecting_monthly does not include billing_start_date", async () => {
-      const create = mockStripeSession();
-      await POST(
-        makeRequest({ flow: "expecting_monthly", familyType: "single" }),
       );
 
       const args = create.mock.calls[0][0] as any;
