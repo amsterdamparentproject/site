@@ -1,19 +1,11 @@
-import { DEPOSIT_EUR } from "@/lib/fyp/pricing";
 import type { Situation } from "@/lib/fyp/situation";
 
 // ---------------------------------------------------------------------------
 // PricingPreview
 //
 // The condensed "You sign up:" line for "How you experience the program".
-// Two variants, both just previews — the full breakdown (including exact
-// monthly rates and the 6-month bundle price) still lives in CostsBreakdown
-// further down the page:
-//   - Still expecting: the thing that's actually happening today is
-//     reserving a spot with a deposit.
-//   - Baby's here: there's no deposit step, so this used to just disappear.
-//     Alex wants it back for these families too — just the two ways to pay,
-//     not a specific amount, since which one's cheaper for their family
-//     type is what CostsBreakdown is for.
+// Just a preview — the exact bundle prices live in CostsBreakdown further
+// down the page. Bundle-only since October 2026.
 // ---------------------------------------------------------------------------
 
 interface PricingPreviewProps {
@@ -29,45 +21,22 @@ function Pill({ children }: { children: React.ReactNode }) {
 }
 
 export default function PricingPreview({ situation }: PricingPreviewProps) {
-  if (situation === "expecting") {
-    return (
-      <div className="w-full max-w-md mx-auto mt-8 text-center">
-        <h3 className="text-lg font-bold text-brand-soft-green dark:text-brand-goldenrod mb-3">
-          You sign up:
-        </h3>
-        <Pill>Reserve your spot with a €{DEPOSIT_EUR} deposit</Pill>
-        <p className="mt-3 text-xs text-brand-charcoal/50 dark:text-brand-white/40">
-          Monthly billing starts the month after your due date. Or get the{" "}
-          <a
-            href="#pricing"
-            className="underline hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
-          >
-            6-month bundle now and save €{DEPOSIT_EUR}!
-          </a>
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full max-w-md mx-auto mt-8 text-center">
       <h3 className="text-lg font-bold text-brand-soft-green dark:text-brand-goldenrod mb-3">
         You sign up:
       </h3>
-      <div className="flex flex-wrap items-center justify-center gap-3">
-        <Pill>6-month bundle</Pill>
-        <span className="text-xs font-medium text-brand-charcoal/40 dark:text-brand-white/40">
-          or
-        </span>
-        <Pill>Monthly plan</Pill>
-      </div>
+      <Pill>6-month bundle</Pill>
       <p className="mt-3 text-xs text-brand-charcoal/50 dark:text-brand-white/40">
-        Full access from the moment you sign up. Save €{DEPOSIT_EUR} with the{" "}
+        {situation === "expecting"
+          ? "One payment today. Live sessions begin after your due date, and it's fully refundable during pregnancy. "
+          : "One payment today, with full access from the moment you sign up. "}
+        See the{" "}
         <a
           href="#pricing"
           className="underline hover:text-brand-soft-green dark:hover:text-brand-goldenrod"
         >
-          6-month bundle
+          bundle prices
         </a>
         .
       </p>

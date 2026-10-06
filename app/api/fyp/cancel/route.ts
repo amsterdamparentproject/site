@@ -1,4 +1,5 @@
 import { createFirstYearClient } from "@/lib/supabase/server";
+import { findMemberByEmail } from "@/lib/fyp/member-lookup";
 import { cancelFypAccount } from "@/lib/fyp/subscription";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -55,13 +56,9 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = createFirstYearClient();
-  const { data: member, error: memberError } = await supabase
-    .from("members")
-    .select("account_id")
-    .eq("email", email.toLowerCase())
-    .maybeSingle();
+  const member = await findMemberByEmail(supabase, email);
 
-  if (memberError || !member) {
+  if (!member) {
     return NextResponse.json(
       { error: `No FYP member found for email: ${email}` },
       { status: 404 },

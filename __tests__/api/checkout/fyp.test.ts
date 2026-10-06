@@ -49,12 +49,6 @@ function mockStripeSession(url = "https://checkout.stripe.com/session") {
   return create;
 }
 
-function mockStripePrice() {
-  vi.mocked(stripe.prices.list).mockResolvedValue({
-    data: [{ id: "price_monthly_single" }],
-  } as any);
-}
-
 function makeRequest(body: object) {
   return { json: async () => body } as Request;
 }
@@ -74,34 +68,26 @@ describe("POST /api/checkout/fyp", () => {
     vi.useRealTimers();
   });
 
-  // ── baby_monthly — always starts immediately ───────────────────────────────
+  // ── retired monthly flows — checkout is bundle-only since Oct 2026 ────────
 
-  describe("baby_monthly", () => {
+  describe("retired monthly flows", () => {
     beforeEach(() => {
       mockSupabase();
-      mockStripePrice();
     });
 
-    it("creates a subscription with no trial_end", async () => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date("2026-10-01T00:00:00Z"));
-      const create = mockStripeSession();
-      await POST(makeRequest({ flow: "baby_monthly", familyType: "single" }));
+    it.each(["expecting_monthly", "baby_deposit", "baby_monthly"])(
+      "%s is rejected with a 400 and never reaches Stripe",
+      async (flow) => {
+        const create = mockStripeSession();
+        const res = (await POST(
+          makeRequest({ flow, familyType: "single" }),
+        )) as { body: { error: string }; status: number };
 
-      const args = create.mock.calls[0][0] as any;
-      expect(args.mode).toBe("subscription");
-      expect(args.subscription_data).toBeUndefined();
-    });
-
-    it("does not include billing_start_date in metadata", async () => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date("2026-10-01T00:00:00Z"));
-      const create = mockStripeSession();
-      await POST(makeRequest({ flow: "baby_monthly", familyType: "multi" }));
-
-      const args = create.mock.calls[0][0] as any;
-      expect(args.metadata.billing_start_date).toBeUndefined();
-    });
+        expect(res.status).toBe(400);
+        expect(res.body.error).toContain("Unsupported flow");
+        expect(create).not.toHaveBeenCalled();
+      },
+    );
   });
 
   // ── baby_bundle — access begins immediately, no deferred billing ──────────
@@ -141,16 +127,6 @@ describe("POST /api/checkout/fyp", () => {
       const create = mockStripeSession();
       await POST(
         makeRequest({ flow: "expecting_bundle", familyType: "single" }),
-      );
-
-      const args = create.mock.calls[0][0] as any;
-      expect(args.metadata.billing_start_date).toBeUndefined();
-    });
-
-    it("expecting_monthly does not include billing_start_date", async () => {
-      const create = mockStripeSession();
-      await POST(
-        makeRequest({ flow: "expecting_monthly", familyType: "single" }),
       );
 
       const args = create.mock.calls[0][0] as any;

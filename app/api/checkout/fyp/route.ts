@@ -1,34 +1,28 @@
 import { stripe } from "@/lib/stripe-client";
 import { createFirstYearClient } from "@/lib/supabase/server";
+import {
+  findReusableCheckoutUrl,
+  pruneExpiredPendingAccounts,
+} from "@/lib/fyp/checkout-dedupe";
 import { NextResponse } from "next/server";
 
-// FYP checkout flows:
+// FYP checkout flows (bundle-only since October 2026):
 //
-//   expecting_monthly  — Step 1: €25 deposit (mode:payment, customer_creation:always)
-//                        Step 2: webhook creates subscription with trial_end=due+1mo + APP_FYP_DEPOSIT coupon
 //   expecting_bundle   — One-time payment: €305 (single) or €383 (multi)
-//   baby_monthly       — Subscription starts immediately: €55 or €68/mo
 //   baby_bundle        — One-time payment: €305 or €383, access begins immediately
 //
-// Stripe setup required:
-//   Recurring prices with lookup keys:
-//     fyp_monthly_single  → €55/mo  (unit_amount: 5500)
-//     fyp_monthly_multi   → €68/mo  (unit_amount: 6800)
-//   Coupon:
-//     ID: APP_FYP_DEPOSIT — €25 fixed amount off, duration "once"
+// The monthly flows (expecting_monthly, baby_monthly) are retired; requests
+// for them get a 400. Existing monthly families keep their Stripe
+// subscriptions, and the webhook still handles those products so any checkout
+// session opened before the cutover completes normally. Individual events are
+// paid for on the Luma calendar, not here.
 //
-// Webhook: /api/webhooks/stripe/fyp
-//   Listens for checkout.session.completed where metadata.product === "fyp_deposit"
-//   Creates the subscription, sets trial_end from due_month, applies APP_FYP_DEPOSIT coupon.
+// Webhook: /api/webhooks/stripe/fyp activates the pending account created below.
 //
 // Month/year are collected via the on-page form and passed as metadata.
 // A pending firstyear.accounts record is created here; the webhook activates it.
 
-type Flow =
-  | "expecting_monthly"
-  | "expecting_bundle"
-  | "baby_monthly"
-  | "baby_bundle";
+type Flow = "expecting_bundle" | "baby_bundle";
 type FamilyType = "single" | "multi";
 
 const DOMAIN =
@@ -46,9 +40,7 @@ const BUNDLE_AMOUNT: Record<FamilyType, number> = {
 
 // Maps client-side flow name → DB flow + plan_type
 const FLOW_META: Record<Flow, { flow: string; plan_type: string }> = {
-  expecting_monthly: { flow: "expecting_monthly", plan_type: "monthly" },
   expecting_bundle: { flow: "expecting_bundle", plan_type: "bundle" },
-  baby_monthly: { flow: "baby_monthly", plan_type: "monthly" },
   baby_bundle: { flow: "baby_bundle", plan_type: "bundle" },
 };
 
@@ -81,6 +73,17 @@ export async function POST(req: Request) {
       );
     }
 
+    // Monthly plans (expecting_monthly, baby_deposit, baby_monthly) were retired
+    // in October 2026: only bundles can be bought now. Existing monthly
+    // families are grandfathered — their subscriptions and the webhook's
+    // handling of already-open sessions are untouched.
+    if (!Object.prototype.hasOwnProperty.call(FLOW_META, flow)) {
+      return NextResponse.json(
+        { error: `Unsupported flow: ${flow}` },
+        { status: 400 },
+      );
+    }
+
     const successUrl = `${DOMAIN}/programs/first-year/welcome?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${DOMAIN}/programs/first-year#join`;
 
@@ -93,39 +96,31 @@ export async function POST(req: Request) {
 
     const customerEmail = members?.[0]?.email?.toLowerCase();
 
+    const supabase = createFirstYearClient();
+
+    // Every checkout used to insert a fresh pending account + member rows, so
+    // a double-click or a retry left duplicate rows for one email (which broke
+    // Hub sign-in). Hand back the still-open session from an identical earlier
+    // attempt rather than creating another, and sweep out long-expired ones.
+    if (members?.length) {
+      const reusableUrl = await findReusableCheckoutUrl(supabase, {
+        dbFlow: FLOW_META[flow].flow,
+        familyType,
+        dueOrBirthMonth,
+        dueOrBirthYear,
+        members,
+      });
+      if (reusableUrl) return NextResponse.json({ url: reusableUrl });
+
+      await pruneExpiredPendingAccounts(
+        supabase,
+        members.map((m) => m.email),
+      );
+    }
+
     let session: Awaited<
       ReturnType<typeof stripe.checkout.sessions.create>
     > | null = null;
-
-    // ── Expecting, monthly ─────────────────────────────────────────────────────
-    if (flow === "expecting_monthly") {
-      session = await stripe.checkout.sessions.create({
-        payment_method_types: ["ideal", "card"],
-        automatic_tax: { enabled: true },
-        allow_promotion_codes: true,
-        customer_creation: "always",
-        ...(customerEmail ? { customer_email: customerEmail } : {}),
-        mode: "payment",
-        line_items: [
-          {
-            price_data: {
-              currency: "eur",
-              product_data: {
-                name: "First Year Program — Deposit",
-                images: PRODUCT_IMAGES,
-                description:
-                  "Reserve your spot in the First Year Program. The deposit is credited toward your first month of billing after your due date. Fully refundable if you cancel during pregnancy.",
-              },
-              unit_amount: 2500,
-            },
-            quantity: 1,
-          },
-        ],
-        metadata: { product: "fyp_deposit", ...sharedMetadata },
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-      });
-    }
 
     // ── Expecting, 6-month bundle ──────────────────────────────────────────────
     if (flow === "expecting_bundle") {
@@ -152,30 +147,6 @@ export async function POST(req: Request) {
           },
         ],
         metadata: { product: "fyp_bundle_expecting", ...sharedMetadata },
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-      });
-    }
-
-    // ── Baby's here, monthly ───────────────────────────────────────────────────
-    if (flow === "baby_monthly") {
-      const prices = await stripe.prices.list({
-        lookup_keys: [
-          familyType === "multi" ? "fyp_monthly_multi" : "fyp_monthly_single",
-        ],
-      });
-      const price = prices.data[0];
-      if (!price)
-        throw new Error(`FYP monthly price not found for ${familyType}`);
-
-      session = await stripe.checkout.sessions.create({
-        payment_method_types: ["ideal", "card"],
-        automatic_tax: { enabled: true },
-        allow_promotion_codes: true,
-        ...(customerEmail ? { customer_email: customerEmail } : {}),
-        mode: "subscription",
-        line_items: [{ price: price.id, quantity: 1 }],
-        metadata: { product: "fyp_monthly_baby", ...sharedMetadata },
         success_url: successUrl,
         cancel_url: cancelUrl,
       });
@@ -217,7 +188,6 @@ export async function POST(req: Request) {
 
     // Create pending account record — the webhook will activate it after payment
     const { flow: dbFlow, plan_type } = FLOW_META[flow];
-    const supabase = createFirstYearClient();
     const { data: accountData, error: insertError } = await supabase
       .from("accounts")
       .insert({

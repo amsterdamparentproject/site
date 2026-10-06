@@ -1,4 +1,5 @@
 import { createFirstYearClient } from "@/lib/supabase/server";
+import { findMemberByEmail } from "@/lib/fyp/member-lookup";
 import { deactivatePostpartumPost } from "@/lib/fyp/postpartum-post";
 
 // FYP Hub member-CRUD — pure, id-taking DB operations (no session/auth
@@ -79,12 +80,17 @@ export async function getFypMemberProfile(
 ): Promise<HubMemberProfile | null> {
   const supabase = createFirstYearClient();
 
+  // Resolve which row this email signs in as first (tolerates duplicate rows
+  // for one email), then load that row's full profile by id.
+  const ref = await findMemberByEmail(supabase, email);
+  if (!ref) return null;
+
   const { data: member, error: memberError } = await supabase
     .from("members")
     .select(
       "id, account_id, first_name, last_name, email, whatsapp, role, postpartumpost_member_id",
     )
-    .eq("email", email.toLowerCase())
+    .eq("id", ref.id)
     .maybeSingle();
 
   if (memberError || !member) return null;
@@ -239,12 +245,13 @@ export async function addFypMember(
   // this account or another) — members.email has no DB-level unique
   // constraint (see migration 006), so without this check a duplicate
   // would silently create two rows resolving to the same sign-in email,
-  // and getFypMemberProfile's .maybeSingle() lookup would become
-  // ambiguous.
+  // and the email lookup would become ambiguous (see
+  // lib/fyp/member-lookup.ts, which tolerates it but shouldn't have to).
   const { data: existing } = await supabase
     .from("members")
     .select("id")
     .eq("email", trimmedEmail)
+    .limit(1)
     .maybeSingle();
 
   if (existing) {

@@ -1,34 +1,20 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import {
-  BUNDLE_MULTI_EUR,
-  BUNDLE_MULTI_FULL_EUR,
-  BUNDLE_SINGLE_EUR,
-  BUNDLE_SINGLE_FULL_EUR,
-  DEPOSIT_EUR,
-  MONTHLY_MULTI_EUR,
-  MONTHLY_SINGLE_EUR,
-} from "@/lib/fyp/pricing";
+import React from "react";
+import { BUNDLE_MULTI_EUR, BUNDLE_SINGLE_EUR } from "@/lib/fyp/pricing";
 import type { Situation } from "@/lib/fyp/situation";
 
-// Situation-aware billing notes shown on each plan card — mirrors the
-// (more precise, exact-due-date-aware) copy inside FYPJoinForm's own
-// PlanCard, but simplified here since this section previews pricing before
-// a due/birth date's exact billing consequences matter — the join form
-// below is the source of truth for the precise number.
-function monthlyNote(situation: Situation): string {
-  if (situation === "expecting") {
-    return `Reserve with a €${DEPOSIT_EUR} deposit — credited to your first invoice, refundable if you cancel during pregnancy.`;
-  }
-  return "Billed monthly, cancel anytime.";
-}
+// Luma calendar filtered to the first-year-program tag, for pay-per-event.
+const LUMA_CALENDAR_URL = process.env.NEXT_PUBLIC_FYP_LUMA_CALENDAR_URL;
 
+// Situation-aware note shown on the bundle card — mirrors the (more precise)
+// copy inside FYPJoinForm's own PlanCard; the join form below is the source of
+// truth.
 function bundleNote(situation: Situation): string {
   if (situation === "expecting") {
-    return `Pay upfront for the program, save €${DEPOSIT_EUR}. Fully refundable if you cancel during pregnancy.`;
+    return "One payment for the program. Fully refundable if you cancel during pregnancy.";
   }
-  return `Pay upfront for 6 months, save €${DEPOSIT_EUR}.`;
+  return "One payment for 6 months of access.";
 }
 
 const StackedCostBar = () => {
@@ -87,54 +73,6 @@ const StackedCostBar = () => {
   );
 };
 
-const MonthlyCard = ({ note }: { note: string }) => (
-  <div className="rounded-2xl border border-brand-sand/60 overflow-hidden flex flex-col h-full">
-    <div className="bg-brand-soft-green px-6 py-4">
-      <p className="text-sm font-black text-white">Monthly</p>
-    </div>
-    <div className="bg-white dark:bg-brand-soft-charcoal p-6 flex flex-col flex-1">
-      <div className="space-y-3 flex-1">
-        <div className="flex items-baseline justify-between">
-          <span className="text-sm text-brand-charcoal dark:text-brand-white/80">
-            Single parent family
-          </span>
-          <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">
-              €{MONTHLY_SINGLE_EUR}
-            </span>
-            <span className="text-xs text-brand-charcoal/40 dark:text-brand-white/40">
-              /mo
-            </span>
-          </div>
-        </div>
-        <div className="flex items-baseline justify-between">
-          <span className="text-sm text-brand-soft-green dark:text-brand-goldenrod font-medium">
-            2+ parent family
-          </span>
-          <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
-              €{MONTHLY_MULTI_EUR}
-            </span>
-            <span className="text-xs text-brand-soft-green/50 dark:text-brand-goldenrod/50">
-              /mo
-            </span>
-          </div>
-        </div>
-        <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
-          {note}
-        </p>
-      </div>
-      <a
-        href="#join"
-        className="mt-6 block w-full text-center text-sm font-bold text-white bg-brand-soft-green hover:bg-brand-soft-green/90 transition-colors rounded-xl py-3"
-        data-umami-event="First Year Program: Costs: Monthly"
-      >
-        Join or reserve your spot
-      </a>
-    </div>
-  </div>
-);
-
 const BundleCard = ({ note }: { note: string }) => (
   <div className="rounded-2xl border border-brand-goldenrod/40 overflow-hidden flex flex-col h-full">
     <div className="bg-brand-goldenrod px-6 py-4">
@@ -147,9 +85,6 @@ const BundleCard = ({ note }: { note: string }) => (
             Single parent family
           </span>
           <div className="flex items-baseline gap-2">
-            <span className="text-xs line-through text-brand-charcoal/30">
-              €{BUNDLE_SINGLE_FULL_EUR}
-            </span>
             <span className="text-2xl font-bold text-brand-charcoal dark:text-brand-white">
               €{BUNDLE_SINGLE_EUR}
             </span>
@@ -160,9 +95,6 @@ const BundleCard = ({ note }: { note: string }) => (
             2+ parent family
           </span>
           <div className="flex items-baseline gap-2">
-            <span className="text-xs line-through text-brand-charcoal/30">
-              €{BUNDLE_MULTI_FULL_EUR}
-            </span>
             <span className="text-2xl font-bold text-brand-soft-green dark:text-brand-goldenrod">
               €{BUNDLE_MULTI_EUR}
             </span>
@@ -171,6 +103,21 @@ const BundleCard = ({ note }: { note: string }) => (
         <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 pt-2 leading-relaxed">
           {note}
         </p>
+        {LUMA_CALENDAR_URL && (
+          <p className="text-[10px] text-brand-charcoal/40 dark:text-brand-white/40 leading-relaxed">
+            Not ready for six months? You can also{" "}
+            <a
+              href={LUMA_CALENDAR_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+              data-umami-event="First Year Program: Costs: Pay per event"
+            >
+              pay per event on our calendar
+            </a>
+            .
+          </p>
+        )}
       </div>
       <a
         href="#join"
@@ -184,63 +131,9 @@ const BundleCard = ({ note }: { note: string }) => (
 );
 
 function PriceCards({ situation }: { situation: Situation }) {
-  const [activeCard, setActiveCard] = useState(0);
-  const touchStartX = useRef<number | null>(null);
-  const monthlyNoteText = monthlyNote(situation);
-  const bundleNoteText = bundleNote(situation);
-  const cards = [
-    <BundleCard key="bundle" note={bundleNoteText} />,
-    <MonthlyCard key="monthly" note={monthlyNoteText} />,
-  ];
-  const labels = ["6-month bundle", "Monthly"];
-  const dotColors = ["bg-brand-goldenrod", "bg-brand-soft-green"];
-
-  function handleTouchStart(e: React.TouchEvent) {
-    touchStartX.current = e.touches[0].clientX;
-  }
-  function handleTouchEnd(e: React.TouchEvent) {
-    if (touchStartX.current === null) return;
-    const delta = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(delta) > 40) {
-      if (delta > 0) setActiveCard((c) => Math.min(c + 1, cards.length - 1));
-      else setActiveCard((c) => Math.max(c - 1, 0));
-    }
-    touchStartX.current = null;
-  }
-
   return (
-    <div className="w-full max-w-2xl mb-8">
-      {/* Mobile carousel */}
-      <div className="md:hidden">
-        <div className="flex justify-center gap-3 mb-4">
-          {labels.map((label, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveCard(i)}
-              className={`cursor-pointer px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
-                i === activeCard
-                  ? `${dotColors[i]} text-white`
-                  : "bg-brand-sand/30 text-brand-charcoal/60 dark:text-brand-white/50"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <div
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          className="select-none"
-        >
-          {cards[activeCard]}
-        </div>
-      </div>
-
-      {/* Desktop grid */}
-      <div className="hidden md:grid grid-cols-2 gap-4">
-        <MonthlyCard note={monthlyNoteText} />
-        <BundleCard note={bundleNoteText} />
-      </div>
+    <div className="w-full max-w-sm mb-8">
+      <BundleCard note={bundleNote(situation)} />
     </div>
   );
 }
@@ -258,9 +151,7 @@ export default function CostsBreakdown({ situation }: CostsBreakdownProps) {
       {/* Billing note — personalized to the situation picked above */}
       <div className="max-w-md text-center mb-8 px-4">
         <p className="text-[11px] text-brand-soft-charcoal dark:text-brand-white/80 leading-relaxed">
-          {situation === "expecting"
-            ? "All prices include 21% BTW (VAT). Monthly billing starts the calendar month after your due date."
-            : "All prices include 21% BTW (VAT). Billing starts immediately."}
+          All prices include 21% BTW (VAT).
         </p>
       </div>
 
