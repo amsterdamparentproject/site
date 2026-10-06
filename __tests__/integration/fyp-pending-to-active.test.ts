@@ -135,7 +135,6 @@ describe("FYP pending → active state transition", () => {
 
   const SESSION_ID = `cs_int_${Date.now()}`;
   const CUSTOMER_ID = `cus_int_test_${Date.now()}`;
-  const SUBSCRIPTION_ID = `sub_int_test_${Date.now()}`;
 
   beforeEach(async () => {
     vi.spyOn(console, "log").mockImplementation(() => {});
@@ -151,9 +150,9 @@ describe("FYP pending → active state transition", () => {
     vi.restoreAllMocks();
   });
 
-  // ── expecting_monthly ───────────────────────────────────────────────────────
+  // ── expecting_bundle ───────────────────────────────────────────────────────
 
-  describe("expecting_monthly flow", () => {
+  describe("expecting_bundle flow", () => {
     const SESSION = `${SESSION_ID}_exp`;
     const EMAIL = `int-expecting-${Date.now()}@example.com`;
 
@@ -170,7 +169,7 @@ describe("FYP pending → active state transition", () => {
       // ── Step 1: checkout creates pending records ──────────────────────────
       const checkoutRes = await POST_checkout(
         makeCheckoutRequest({
-          flow: "expecting_monthly",
+          flow: "expecting_bundle",
           familyType: "multi",
           dueOrBirthMonth: "oct",
           dueOrBirthYear: "2026",
@@ -183,7 +182,7 @@ describe("FYP pending → active state transition", () => {
       const pendingAccount = await getAccountBySessionId(SESSION);
       expect(pendingAccount).not.toBeNull();
       expect(pendingAccount.status).toBe("pending");
-      expect(pendingAccount.flow).toBe("expecting_monthly");
+      expect(pendingAccount.flow).toBe("expecting_bundle");
       expect(pendingAccount.stripe_customer_id).toBeNull();
       expect(pendingAccount.stripe_subscription_id).toBeNull();
       expect(pendingAccount.billing_start_date).toBeNull();
@@ -208,7 +207,7 @@ describe("FYP pending → active state transition", () => {
             customer: CUSTOMER_ID,
             subscription: null,
             metadata: {
-              product: "fyp_deposit",
+              product: "fyp_bundle_expecting",
               family_type: "multi",
               due_or_birth_month: "oct",
               due_or_birth_year: "2026",
@@ -219,12 +218,6 @@ describe("FYP pending → active state transition", () => {
       vi.mocked(stripe.webhooks.constructEvent).mockReturnValue(
         webhookEvent as any,
       );
-      vi.mocked(stripe.prices.list).mockResolvedValue({
-        data: [{ id: "price_fyp_monthly_multi" }],
-      } as any);
-      vi.mocked(stripe.subscriptions.create).mockResolvedValue({
-        id: SUBSCRIPTION_ID,
-      } as any);
 
       const webhookRes = await POST_webhook(makeWebhookRequest(webhookEvent));
       expect(webhookRes.status).toBe(200);
@@ -233,9 +226,11 @@ describe("FYP pending → active state transition", () => {
       const activeAccount = await getAccountBySessionId(SESSION);
       expect(activeAccount.status).toBe("active");
       expect(activeAccount.stripe_customer_id).toBe(CUSTOMER_ID);
-      expect(activeAccount.stripe_subscription_id).toBe(SUBSCRIPTION_ID);
-      // Oct 2026 due date → billing starts Nov 1 2026
+      // Bundles are one-time payments: no subscription is ever created.
+      expect(activeAccount.stripe_subscription_id).toBeNull();
+      // Oct 2026 due date → billing starts Nov 1 2026, bundle runs 6 months
       expect(activeAccount.billing_start_date).toBe("2026-11-01");
+      expect(activeAccount.bundle_expires_at).toBe("2027-05-01");
 
       const activeMembers = await getMembersByAccountId(activeAccount.id);
       expect(activeMembers).toHaveLength(1);

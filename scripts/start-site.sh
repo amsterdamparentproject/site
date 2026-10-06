@@ -4,7 +4,7 @@
 #
 # Usage: yarn start-site            # .env.local + your CLI's default Stripe profile
 #        yarn start-site --test     # .env.test + the sandbox Stripe profile
-# Override the port with PORT=3005 yarn start-site (defaults to 3100, the
+# Override the port with PORT=3005 yarn start-site (defaults to 3000, the
 # e2e port — see playwright.config.ts).
 #
 # Assumes the Stripe CLI is installed and logged in (`stripe login`).
@@ -29,7 +29,7 @@
 # Written against plain /bin/bash (macOS ships 3.2, no `wait -n`) — polls
 # instead of using bash 4.3+'s wait -n, so it stops cleanly either way.
 
-PORT="${PORT:-3100}"
+PORT="${PORT:-3000}"
 
 TEST_MODE=false
 for arg in "$@"; do
