@@ -12181,12 +12181,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remark-github-blockquote-alert@npm:^1.2.1":
-  version: 1.3.1
-  resolution: "remark-github-blockquote-alert@npm:1.3.1"
+"remark-github-blockquote-alert@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "remark-github-blockquote-alert@npm:2.1.0"
   dependencies:
     unist-util-visit: ^5.0.0
-  checksum: 7627f5932673bf40f0a5b9da13983149709302d3e7ecdef2a4c7a13d973250c5d5168df5e045c5b8221724a63d08f28b3abb143c7062a32299921845af1d0599
+  checksum: 091c0cc88f30467931a49e228e908fb5a77788591fddc6df42bb4a6ae7c7eb6190326afa398ba45ea5ee98f28c5462699d67a33c02390604d2aa59a8f61a2a20
   languageName: node
   linkType: hard
 
@@ -13338,7 +13338,7 @@ __metadata:
     rehype-slug: ^6.0.0
     remark: ^15.0.0
     remark-gfm: ^4.0.0
-    remark-github-blockquote-alert: ^1.2.1
+    remark-github-blockquote-alert: ^2.1.0
     remark-math: ^6.0.0
     resend: ^6.12.3
     stripe: ^22.1.1
