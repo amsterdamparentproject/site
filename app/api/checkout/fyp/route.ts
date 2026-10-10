@@ -126,7 +126,8 @@ export async function POST(req: Request) {
     if (flow === "expecting_bundle") {
       session = await stripe.checkout.sessions.create({
         payment_method_types: ["ideal", "card"],
-        automatic_tax: { enabled: true },
+        // KOR (small-business VAT exemption) since 2026-07-01: no VAT on payments.
+        automatic_tax: { enabled: false },
         allow_promotion_codes: true,
         customer_creation: "always",
         ...(customerEmail ? { customer_email: customerEmail } : {}),
@@ -156,7 +157,8 @@ export async function POST(req: Request) {
     if (flow === "baby_bundle") {
       session = await stripe.checkout.sessions.create({
         payment_method_types: ["ideal", "card"],
-        automatic_tax: { enabled: true },
+        // KOR (small-business VAT exemption) since 2026-07-01: no VAT on payments.
+        automatic_tax: { enabled: false },
         allow_promotion_codes: true,
         customer_creation: "always",
         ...(customerEmail ? { customer_email: customerEmail } : {}),

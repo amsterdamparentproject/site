@@ -157,6 +157,8 @@ export async function POST(req: NextRequest) {
             items: [{ price: price.id }],
             trial_end: trialEnd,
             discounts: [{ coupon: process.env.STRIPE_FYP_DEPOSIT_COUPON_ID! }],
+            // KOR since 2026-07-01: no VAT on invoices; Stripe may default tax on.
+            automatic_tax: { enabled: false },
           });
           subscriptionId = subscription.id;
           console.log(
