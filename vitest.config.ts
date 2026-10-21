@@ -9,7 +9,9 @@ export default defineConfig(({ mode }) => ({
     environment: "jsdom",
     globals: true,
     exclude: ["node_modules/**", "e2e/**"],
-    env: loadEnv(mode, process.cwd(), ""),
+    // Blank Turnstile secret = check skipped, so action tests never depend on
+    // keys in a developer's .env.local. __tests__/lib/turnstile.test.ts opts in.
+    env: { ...loadEnv(mode, process.cwd(), ""), TURNSTILE_SECRET_KEY: "" },
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
