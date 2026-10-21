@@ -22,7 +22,7 @@ export default function Page() {
           Privacy Policy
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Last updated: June 2026
+          Last updated: October 2026
         </p>
       </div>
 
@@ -141,6 +141,12 @@ export default function Page() {
               <strong>Umami</strong> — privacy-first website analytics (no
               personal data shared)
             </li>
+            <li>
+              <strong>Cloudflare Turnstile</strong> — bot protection on our
+              sign-up and submission forms (checks that a form is being filled
+              in by a person; it receives technical details such as your IP
+              address and browser information)
+            </li>
           </ul>
           <p className="mb-2">
             Each of these providers processes data only as necessary to deliver
@@ -228,6 +234,8 @@ export default function Page() {
             Our website uses only essential cookies necessary for it to function
             and to process payments securely. We do not use tracking or
             advertising cookies, and our analytics tool (Umami) is cookieless.
+            The bot-protection check on our forms (Cloudflare Turnstile) may set
+            a cookie or use browser storage to tell people from bots.
           </p>
         </section>
 

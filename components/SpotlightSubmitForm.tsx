@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "@/components/Link";
 import { postSpotlight } from "./PostToWebhook";
+import { useTurnstile } from "@/components/TurnstileWidget";
 import {
   spotlightBioFields,
   spotlightInterviewQuestions,
@@ -121,6 +122,7 @@ const SpotlightSubmitForm = ({
   });
   const [bioTouched, setBioTouched] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const turnstile = useTurnstile("spotlight");
   const [isSuccess, setIsSuccess] = useState(false);
   const [fileError, setFileError] = useState("");
   const [copyLabel, setCopyLabel] = useState("Copy questions");
@@ -475,6 +477,7 @@ const SpotlightSubmitForm = ({
     );
     data.append("hp_company", honeypotRef.current?.value ?? "");
     data.append("ts", String(renderedAtRef.current));
+    data.append("turnstileToken", turnstile.token ?? "");
     photos.forEach((file) => data.append("photos", file));
 
     try {
@@ -496,6 +499,7 @@ const SpotlightSubmitForm = ({
       console.error(error);
     } finally {
       setIsSubmitting(false);
+      turnstile.reset(); // a token works once
     }
   };
 
@@ -542,10 +546,13 @@ const SpotlightSubmitForm = ({
   const submitSection = (
     <div className="flex flex-wrap mb-6 mt-2">
       <div className="w-full px-3">
+        {turnstile.widget}
         <button
           className={submitButtonStyle}
           type="submit"
-          disabled={!isFormValid || isSubmitting || !!fileError}
+          disabled={
+            !isFormValid || isSubmitting || !!fileError || turnstile.pending
+          }
         >
           {isSubmitting
             ? "Sending..."

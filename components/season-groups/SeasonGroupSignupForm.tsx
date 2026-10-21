@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { postRequestDirectory } from "@/components/PostToWebhook";
+import { useTurnstile } from "@/components/TurnstileWidget";
 import subscribeToNewsletter from "@/components/Subscribe";
 import { SeasonGroup } from "@/app/types/groups-directory";
 
@@ -65,6 +66,7 @@ export default function SeasonGroupSignupForm({
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const turnstile = useTurnstile("season_group");
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -108,6 +110,7 @@ export default function SeasonGroupSignupForm({
       data.append("seasonGroupId", group.id);
       data.append("hp_company", honeypotRef.current?.value ?? "");
       data.append("ts", String(renderedAtRef.current));
+      data.append("turnstileToken", turnstile.token ?? "");
 
       const response = await postRequestDirectory(data);
       if (!response.success) {
@@ -122,6 +125,7 @@ export default function SeasonGroupSignupForm({
       console.error(err);
     } finally {
       setIsSubmitting(false);
+      turnstile.reset(); // a token works once
     }
   }
 
@@ -211,9 +215,11 @@ export default function SeasonGroupSignupForm({
         <p className="text-sm text-red-500 dark:text-red-400">{error}</p>
       )}
 
+      {turnstile.widget}
+
       <button
         type="submit"
-        disabled={!isFormValid || isSubmitting}
+        disabled={!isFormValid || isSubmitting || turnstile.pending}
         className="w-full bg-brand-soft-green dark:bg-brand-goldenrod text-white dark:text-brand-charcoal font-bold text-lg px-6 py-3 rounded-lg transition-all cursor-pointer hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSubmitting ? "Joining…" : `Join ${group.name}`}
