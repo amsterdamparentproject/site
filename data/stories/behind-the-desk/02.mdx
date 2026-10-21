@@ -1,0 +1,109 @@
+---
+title: "Behind the Desk #2: My battle with spammers"
+date: "2026-10-22"
+authors: [alexSiega]
+tags: [work & career, technology]
+series: founder-notes
+draft: false
+summary:
+  "Fake conferences, fake signups, and crypto pitches in parent WhatsApp groups:
+  What spammers have thrown at APP, and the mix of software and human systems
+  that keeps them out"
+---
+
+> [!NOTE]
+>
+> 🪑 **Welcome to Behind the Desk**
+>
+> Think of Behind the Desk as founder's notes: a place for you to meet the human and the strategy behind Amsterdam Parent Project. One of APP's core values is transparency, and this is where you get it. Operating costs, marketing strategies, founder existential crises — building in the open.
+>
+> I'll share the highest highs and lowest lows that come with **engineering community infrastructure for Amsterdam's parents through APP — from my perspective as a local toddler mom with 10+ years of experience in tech**. (Always written by me, not AI 🤖)
+>
+> I'm on a mission to use my skills to create deeply integrated community care for local & expat postpartum families in Amsterdam. Join me ❤️
+
+Why write about spam? Because it's _relentless_, and I know that APP isn't alone in dealing with it. You've all seen the investment pitches, the rows of deleted messages, and the inflated event numbers. Today's my invitation to you to see what spam does behind the curtain — or the desk, as it were — and how it impacts my ability to run APP.
+
+So here's what's been happening, how it's affecting APP, and what I'm doing about it.
+
+## Where the spammers hit first: Newsletter event submissions
+
+Almost daily for a month, I got fake conference submissions to APP's new parent newsletter. (Think "2nd International Conference on Advances in Gravitation, Astrophysics and Cosmology". Not exactly toddler-friendly.) The spammers had found [amsterdamparentproject.nl/calendar](amsterdamparentproject.nl/calendar) and were very excited about it.
+
+![A fake conference submission in APP's Slack approval queue, with Decline and Approve buttons](/static/images/behind-the-desk/spam-event-submission.png)
+
+_A fake conference submission waiting in my Slack approval queue._
+
+**The good:** Submissions need my approval, so this spam never reached my internal newsletter tool. No clean-up needed.
+
+**The bad:** I was getting a personal notification for _every_ spam submission. Not only was it overwhelming, but it was hiding the good stuff that local organizations were submitting. Sandwiched between medical and science conferences I was getting real submissions to toddler music classes and nonprofit kids events — and I was more likely to miss them because of all of the spam notifications.
+
+## Then they came for Postpartum Post
+
+In just 2 days, through the website, we got:
+
+- 24 fake signups on [postpartumpost.com](postpartumpost.com)
+- 18 fake partner applications via [postpartumpost.com/partners](postpartumpost.com/partners)
+- 25 fake Post Perk ideas, plus giveaway entries at [postpartumpost.com/perks](postpartumpost.com/perks)
+
+![Twenty-four pending member signups with random-letter names, created between October 19 and 21](/static/images/behind-the-desk/spam-member-signups.png)
+
+_24 fake signups in about a day and a half. The names are random letters._
+
+![An inbox full of Post Partner submission emails with random-letter names](/static/images/behind-the-desk/spam-partner-emails.png)
+
+_And the partner applications, one email each._
+
+Honestly, it could have been worse. But the fake names and leads are only half of the mess: every one of those rows was attached to **someone's _real_ email address _and_ a real Stripe account**, the system that I use for payment. That's not 1 but 3 systems to clean up — plus the danger that I was removing someone real.
+
+## Let's not even start with WhatsApp
+
+Some spammer ring out there really wants parents to get investment and cryptocurrency advice. That means group admins do the heroic work of deleting every spam message by hand, and removing the account that sent it. This flavor of spam is super visible, annoying for the community, and degrades trust in what are supposed to be safe spaces.
+
+![A WhatsApp group admin log showing spam messages deleted and accounts removed, with names and numbers redacted](/static/images/behind-the-desk/spam-whatsapp-moderation.png)
+
+_What the admin log looks like after a spam run (names and numbers redacted)._
+
+## So what is APP doing about spam?
+
+### Hiding yo WhatsApp links
+
+- **Keep WhatsApp group links out of sight.** No links in the newsletter, on the website, in AI chats, or on Instagram, so spammers can't stumble upon live group links. Pages with group join links are hidden from search engines.
+- **Turn on WhatsApp's privacy settings**, like advanced chat privacy and admin-only message forwarding and group management. See [WhatsApp's privacy documentation](https://faq.whatsapp.com/3307102709559968) to learn more.
+- **Make it easy for group admins to manage their own groups** in the Groups Directory, including updating invite links.
+- **A human (me) reviews** new groups and changes to existing groups, invite links included. I also keep an eye on signups and weird join activity, which can mean removing suspicious accounts.
+- I also do the **uncomfortable, unglamorous work of asking people not to pass invite links around** in WhatsApp group messages, and to point friends to the Directory instead. To be honest, this makes me feel bad and I hate doing it, but it really does help to keep invite links out of public spaces 🥲 (And yes, many groups are public spaces!)
+
+### Cloudflare for website forms
+
+Before reaching for external solutions, I did some research on anti-spam measures that I could build myself. Here's what I made:
+
+- **A hidden form field.** A honeypot is a field only bots can see, because bots fill in everything. If it's filled, we reject the submission.
+- **Timeouts.** Fill out a form inhumanly fast and we reject it.
+- **Blocked emails and domains.** We catch common spam tells (like all-digit emails) and repeat offenders.
+
+> Sadly, **my in-house anti-spam solutions weren't 100% effective**. When Postpartum Post got hit by the spammers, I made the decision to reach for an external tool — Cloudflare Turnstile — instead.
+
+- **Cloudflare Turnstile**: A free, privacy-focused CAPTCHA alternative that checks whether a visitor is a real human. I like that I can largely hide from view unless your browser or behavior are suspicious — so you don't have to interact with it to be protected by it. [Learn more](https://www.cloudflare.com/products/turnstile/).
+
+I've now implemented Turnstile on all of our major forms: Groups Directory signup, newsletter submission, Postpartum Post signup, and more.
+
+To be honest, I wish that my in-house solutions were enough to mitigate the spam. Even though Turnstile is the industry standard and one of the most privacy-conscious free solutions out there, it still needs to receive technical details from your browser to work — very normal, but annoying. Plus, if you have an adblocker enabled, there's a chance the anti-spam verification won't work. Sadly, it was a tradeoff I had to make in order to stop the influx of spam.
+
+### Letting other systems verify humans for me
+
+> Most APP systems rely on email to ensure that you're a human. The **Groups Directory sends you a personalized access link tied to your email**. Postpartum Post explicitly asks to opt in to a match or perks via email every month.
+
+- **Lean on email.** The Groups Directory is tied to a real email address: you get a personal access link by email, which keeps fake accounts out. (Important side note: we never use that email for anything other than Directory access, unless you also sign up to get the newsletter.)
+- **Lean on payment.** Bots aren't going to pay. Postpartum Post requires payment at signup, so every member is a real person (relying on the bank here 😄) who's up for connection. Even a €1 fee on a service or an event keeps spammers out.
+
+## To recap
+
+> **Spam is a time-sink — fortunately not (yet) a money sink**. After some trial and error, the systems I've put in place have meaningfully reduced spam so that I once again focus on APP's priority: getting parents the support they need ❤️
+
+Spam is incredibly annoying, and it's shown up across WhatsApp and websites galore.
+
+For APP, dealing with it costs me **quite a lot of time, but fortunately not money**, thanks to a combination of approaches, software and systems that ensure only humans get in.
+
+What's worked best is existing software (like Cloudflare Turnstile) and existing systems (like email and banks) to confirm humanity and keep the bots away.
+
+**Have you experienced spam? What have you done to keep it away?** I'd genuinely like to hear it. You can reply to the newsletter, email hello@amsterdamparentproject.nl, or comment on Instagram.
