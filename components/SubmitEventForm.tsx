@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { postEvent } from "./PostToWebhook";
+import { useTurnstile } from "@/components/TurnstileWidget";
 
 const SubmitEventForm = () => {
   const renderedAtRef = useRef(Date.now());
@@ -20,6 +21,7 @@ const SubmitEventForm = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const turnstile = useTurnstile("event");
   const [isSuccess, setIsSuccess] = useState(false);
   const [fileError, setFileError] = useState("");
 
@@ -76,6 +78,7 @@ const SubmitEventForm = () => {
     data.append("notes", formData.notes);
     data.append("hp_company", honeypotRef.current?.value ?? "");
     data.append("ts", String(renderedAtRef.current));
+    data.append("turnstileToken", turnstile.token ?? "");
 
     if (fileInputRef.current?.files?.[0]) {
       data.append("image", fileInputRef.current.files[0]);
@@ -95,6 +98,7 @@ const SubmitEventForm = () => {
       console.error(error);
     } finally {
       setIsSubmitting(false);
+      turnstile.reset(); // a token works once
     }
   };
 
@@ -252,10 +256,11 @@ const SubmitEventForm = () => {
 
       <div className="flex flex-wrap mb-6">
         <div className="w-full px-3">
+          {turnstile.widget}
           <button
             className={submitButtonStyle}
             type="submit"
-            disabled={!isFormValid || isSubmitting}
+            disabled={!isFormValid || isSubmitting || turnstile.pending}
           >
             {isSubmitting ? "Sending..." : "Submit event"}
           </button>

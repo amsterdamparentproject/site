@@ -3,6 +3,7 @@
 import { randomInt } from "crypto";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
+import { TURNSTILE_FIELD, verifyTurnstileForm } from "@/lib/turnstile";
 import {
   isEmailBlocked,
   isNumericOnlyEmail,
@@ -92,6 +93,14 @@ export const postEvent = async (data: FormData) => {
     return { success: true, status: 200, response: "ok" };
   }
 
+  // Cloudflare Turnstile (lib/turnstile.ts). Unlike the silent checks above,
+  // this one tells the visitor — a real person whose token expired or whose
+  // browser blocked the widget needs to know to retry.
+  const human = await verifyTurnstileForm(data);
+  if (!human.ok) {
+    return { success: false, status: 403, error: human.error };
+  }
+
   // Upload image to Supabase storage before sending to n8n so that the
   // webhook receives a public URL rather than raw binary data. This URL
   // then flows through the Slack review message and on to the Desk card.
@@ -150,6 +159,13 @@ export const postRequestDirectory = async (data: FormData) => {
     });
     return { success: true, status: 200, response: "ok" };
   }
+
+  // Cloudflare Turnstile (see postEvent for why this one is not silent).
+  const human = await verifyTurnstileForm(data);
+  if (!human.ok) {
+    return { success: false, status: 403, error: human.error };
+  }
+  data.delete(TURNSTILE_FIELD); // single-use token; no need to forward to n8n
 
   const url = isLocal
     ? process.env.TEST_N8N_REQUEST_DIRECTORY_WEBHOOK_URL
@@ -300,6 +316,12 @@ export const postSpotlight = async (data: FormData) => {
   if (isBot || (await isEmailBlocked(email))) {
     console.warn("postSpotlight: blocked spam submission", { isBot, email });
     return { success: true };
+  }
+
+  // Cloudflare Turnstile (see postEvent for why this one is not silent).
+  const human = await verifyTurnstileForm(data);
+  if (!human.ok) {
+    return { success: false, error: human.error };
   }
 
   let bio: { label: string; answer: string }[] = [];

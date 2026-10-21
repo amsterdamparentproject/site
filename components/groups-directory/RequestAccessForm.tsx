@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { postRequestDirectory } from "../PostToWebhook";
+import { useTurnstile } from "@/components/TurnstileWidget";
 import subscribeToNewsletter from "../Subscribe";
 import CategoryChipsFormField from "./CategoryChipsFormField";
 
@@ -25,6 +26,7 @@ const RequestAccessForm = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const turnstile = useTurnstile("directory_request");
   const [isSuccess, setIsSuccess] = useState(false);
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
@@ -88,6 +90,7 @@ const RequestAccessForm = () => {
       data.append("agreedToTerms", formData.agreedToTerms ? "Yes" : "No");
       data.append("hp_company", honeypotRef.current?.value ?? "");
       data.append("ts", String(renderedAtRef.current));
+      data.append("turnstileToken", turnstile.token ?? "");
 
       const response = await postRequestDirectory(data);
       if (response.success) {
@@ -102,6 +105,7 @@ const RequestAccessForm = () => {
       console.error(error);
     } finally {
       setIsSubmitting(false);
+      turnstile.reset(); // a token works once
     }
   };
 
@@ -259,10 +263,11 @@ const RequestAccessForm = () => {
       </div>
 
       <div className="flex flex-wrap mb-6 px-3">
+        <div className="w-full">{turnstile.widget}</div>
         <button
           className={submitButtonStyle}
           type="submit"
-          disabled={!isFormValid || isSubmitting}
+          disabled={!isFormValid || isSubmitting || turnstile.pending}
         >
           {isSubmitting ? "Sending..." : "Request access"}
         </button>
