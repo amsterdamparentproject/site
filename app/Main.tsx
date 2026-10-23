@@ -23,9 +23,10 @@ type EventWithDate = CalendarEvent & { dateObj: Date };
 const createEventList = (events: CalendarEvent[], MAX_DISPLAY = 3) => {
   const today = new Date();
   const comingUp = events
-    .map(
-      (event): EventWithDate => ({ ...event, dateObj: new Date(event.date) }),
-    )
+    .map((event): EventWithDate => ({
+      ...event,
+      dateObj: new Date(event.date),
+    }))
     .filter((event) => event.dateObj >= today)
     .sort(
       (a: EventWithDate, b: EventWithDate) =>

@@ -159,9 +159,7 @@ Example test structure:
 
 ```typescript
 it("should [specific behavior description]", () => {
-  const input = {
-    /* test data */
-  };
+  const input = {/* test data */};
   const result = functionToTest(input);
   expect(result).toEqual(expectedOutput);
 });

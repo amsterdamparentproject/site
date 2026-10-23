@@ -13,11 +13,7 @@ import { BookOpen, Microscope } from "lucide-react";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type FilterDimension =
-  | "type"
-  | "series"
-  | "stage"
-  | "topic"
-  | "freeResource";
+  "type" | "series" | "stage" | "topic" | "freeResource";
 export type Primary = "all" | "stories" | "advice";
 
 export interface AuthorInfo {
