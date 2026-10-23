@@ -36,10 +36,7 @@ declare global {
 }
 
 export type TurnstileForm =
-  | "directory_request"
-  | "season_group"
-  | "event"
-  | "spotlight";
+  "directory_request" | "season_group" | "event" | "spotlight";
 
 const SCRIPT_SRC =
   "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";

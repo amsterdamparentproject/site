@@ -204,9 +204,8 @@ describe("FYP cancellation lifecycle", () => {
       expect(await getAccountStatus(accountId)).toBe("canceling");
 
       vi.resetModules();
-      const { POST: POST_webhook } = (await import(
-        "@/app/api/webhooks/stripe/fyp/route"
-      )) as any;
+      const { POST: POST_webhook } =
+        (await import("@/app/api/webhooks/stripe/fyp/route")) as any;
 
       const webhookEvent = {
         type: "customer.subscription.deleted",
@@ -264,9 +263,8 @@ describe("FYP cancellation lifecycle", () => {
         expect(await getAccountStatus(accountId)).toBe("canceling");
 
         vi.resetModules();
-        const { POST: POST_process } = (await import(
-          "@/app/api/fyp/process-bundle-cancellations/route"
-        )) as any;
+        const { POST: POST_process } =
+          (await import("@/app/api/fyp/process-bundle-cancellations/route")) as any;
         process.env.FYP_PROCESS_BUNDLE_CANCELLATIONS_API_SECRET = "test-secret";
 
         const res = await POST_process(makeApiRequest({}, "test-secret"));
@@ -293,9 +291,8 @@ describe("FYP cancellation lifecycle", () => {
         expect(await getAccountStatus(accountId)).toBe("canceling");
 
         vi.resetModules();
-        const { POST: POST_process } = (await import(
-          "@/app/api/fyp/process-bundle-cancellations/route"
-        )) as any;
+        const { POST: POST_process } =
+          (await import("@/app/api/fyp/process-bundle-cancellations/route")) as any;
         process.env.FYP_PROCESS_BUNDLE_CANCELLATIONS_API_SECRET = "test-secret";
 
         const res = await POST_process(makeApiRequest({}, "test-secret"));
@@ -333,9 +330,8 @@ describe("FYP cancellation lifecycle", () => {
         expect(await getAccountStatus(accountId)).toBe("canceling");
 
         vi.resetModules();
-        const { POST: POST_process } = (await import(
-          "@/app/api/fyp/process-bundle-cancellations/route"
-        )) as any;
+        const { POST: POST_process } =
+          (await import("@/app/api/fyp/process-bundle-cancellations/route")) as any;
         process.env.FYP_PROCESS_BUNDLE_CANCELLATIONS_API_SECRET = "test-secret";
 
         const res = await POST_process(makeApiRequest({}, "test-secret"));
@@ -357,9 +353,8 @@ describe("FYP cancellation lifecycle", () => {
 
       try {
         vi.resetModules();
-        const { POST: POST_process } = (await import(
-          "@/app/api/fyp/process-bundle-cancellations/route"
-        )) as any;
+        const { POST: POST_process } =
+          (await import("@/app/api/fyp/process-bundle-cancellations/route")) as any;
         process.env.FYP_PROCESS_BUNDLE_CANCELLATIONS_API_SECRET = "test-secret";
 
         await POST_process(makeApiRequest({}, "test-secret"));

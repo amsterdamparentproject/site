@@ -178,7 +178,7 @@ const homepageRecommendationNames: Record<Stage, string[]> = {
 export function homepageRecommendationsForStage(
   stage: Stage,
 ): JourneyProgram[] {
-  return homepageRecommendationNames[stage].map(
-    (name) => journeyPrograms.find((p) => p.name === name)!,
+  return homepageRecommendationNames[stage].map((name) =>
+    journeyPrograms.find((p) => p.name === name)!,
   );
 }
