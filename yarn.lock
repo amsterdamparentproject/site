@@ -3550,12 +3550,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/bundle-analyzer@npm:15.1.4":
-  version: 15.1.4
-  resolution: "@next/bundle-analyzer@npm:15.1.4"
+"@next/bundle-analyzer@npm:16.4.3":
+  version: 16.4.3
+  resolution: "@next/bundle-analyzer@npm:16.4.3"
   dependencies:
     webpack-bundle-analyzer: 4.10.1
-  checksum: 9077c64282003f39d33bcab0458a69a3e412f94f84c77ee0f057d31ca3ed79e50f201ecdd4ba9769c2eef504c2da1a753da90c6bad4bf2738dca3cea904c79dd
+  checksum: cc29a60472950a8c178af34f7e164f8b903455811aeb01b12ae3f2721124485cc20dcf4e941b509c2dbb82e8023174ea01a69d4a90735fd6c7657f35fb245a60
   languageName: node
   linkType: hard
 
@@ -14142,7 +14142,7 @@ __metadata:
     "@eslint/eslintrc": ^3.3.7
     "@eslint/js": ^9.16.0
     "@headlessui/react": 2.2.10
-    "@next/bundle-analyzer": 15.1.4
+    "@next/bundle-analyzer": 16.4.3
     "@playwright/test": ^1.64.1
     "@sentry/nextjs": ^11.9.0
     "@stripe/stripe-js": ^8.11.0
