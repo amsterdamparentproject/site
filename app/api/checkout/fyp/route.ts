@@ -5,6 +5,7 @@ import {
   pruneExpiredPendingAccounts,
 } from "@/lib/fyp/checkout-dedupe";
 import { NextResponse } from "next/server";
+import { logError } from "@/lib/log-error";
 
 // FYP checkout flows (bundle-only since October 2026):
 //
@@ -205,6 +206,12 @@ export async function POST(req: Request) {
       .single();
 
     if (insertError || !accountData) {
+      await logError(
+        "fyp.checkout.pending_account_failed",
+        new Error(
+          "accounts insert failed: " + (insertError?.code ?? "no row returned"),
+        ),
+      );
       console.error(
         "[fyp checkout] failed to create pending account:",
         JSON.stringify(insertError),
@@ -221,6 +228,10 @@ export async function POST(req: Request) {
         })),
       );
       if (memberError) {
+        await logError(
+          "fyp.checkout.pending_members_failed",
+          new Error("members insert failed: " + memberError.code),
+        );
         console.error(
           "[fyp checkout] failed to create pending members:",
           JSON.stringify(memberError),
@@ -230,6 +241,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (err: unknown) {
+    await logError("fyp.checkout.failed", err);
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
