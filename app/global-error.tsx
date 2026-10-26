@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
+import { useEffect, useState } from "react";
+import { buildReportHref } from "@/lib/sentry/report";
 
 /**
  * Global error boundary — last resort. Only catches errors thrown by the root
@@ -14,9 +16,24 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const [eventId, setEventId] = useState<string>();
+
   useEffect(() => {
     console.error(error);
+    setEventId(
+      Sentry.captureException(
+        error,
+        error.digest ? { tags: { digest: error.digest } } : undefined,
+      ),
+    );
   }, [error]);
+
+  const reportHref = buildReportHref({
+    to: "hello@amsterdamparentproject.nl",
+    product: "Amsterdam Parent Project",
+    eventId,
+    digest: error?.digest,
+  });
 
   return (
     <html lang="en">
@@ -39,7 +56,7 @@ export default function GlobalError({
           <p style={{ marginTop: "1rem", maxWidth: "28rem" }}>
             Sorry — an unexpected error occurred. Please try again.
           </p>
-          {error?.digest && (
+          {eventId && (
             <p
               style={{
                 marginTop: "0.5rem",
@@ -48,7 +65,7 @@ export default function GlobalError({
                 opacity: 0.7,
               }}
             >
-              Error reference: {error.digest}
+              Reference: {eventId.slice(0, 8)}
             </p>
           )}
           <button
@@ -67,6 +84,12 @@ export default function GlobalError({
           >
             Try again
           </button>
+          <a
+            href={reportHref}
+            style={{ marginTop: "1rem", fontSize: "0.875rem" }}
+          >
+            Email us about this
+          </a>
         </div>
       </body>
     </html>

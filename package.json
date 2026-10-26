@@ -33,6 +33,7 @@
     "@beehiiv/sdk": "^0.1.6",
     "@headlessui/react": "2.2.10",
     "@next/bundle-analyzer": "15.1.4",
+    "@sentry/nextjs": "^11.9.0",
     "@stripe/stripe-js": "^8.11.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
