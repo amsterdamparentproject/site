@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
+import { useEffect, useState } from "react";
 import Link from "@/components/Link";
+import { buildReportHref } from "@/lib/sentry/report";
 
 /**
  * Route-segment error boundary. Catches errors thrown while rendering any page
@@ -16,10 +18,25 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const [eventId, setEventId] = useState<string>();
+
   useEffect(() => {
     // Surface the real error in the console (and Playwright's captured logs).
     console.error(error);
+    setEventId(
+      Sentry.captureException(
+        error,
+        error.digest ? { tags: { digest: error.digest } } : undefined,
+      ),
+    );
   }, [error]);
+
+  const reportHref = buildReportHref({
+    to: "hello@amsterdamparentproject.nl",
+    product: "Amsterdam Parent Project",
+    eventId,
+    digest: error?.digest,
+  });
 
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -30,9 +47,9 @@ export default function Error({
         Sorry — an unexpected error occurred. Please try again, or head back to
         our homepage.
       </p>
-      {error?.digest && (
+      {eventId && (
         <p className="mb-8 font-mono text-xs text-brand-soft-charcoal dark:text-gray-400">
-          Error reference: {error.digest}
+          Reference: {eventId.slice(0, 8)}
         </p>
       )}
       <div className="flex gap-4">
@@ -48,6 +65,12 @@ export default function Error({
         >
           Back to homepage
         </Link>
+        <a
+          href={reportHref}
+          className="inline rounded-lg border border-brand-sand/60 px-4 py-2 text-sm leading-5 font-medium transition-colors duration-150 hover:bg-brand-sand/20"
+        >
+          Email us about this
+        </a>
       </div>
     </div>
   );
