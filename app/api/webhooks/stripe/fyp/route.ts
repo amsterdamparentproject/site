@@ -4,6 +4,7 @@ import { deactivatePostpartumPost } from "@/lib/fyp/postpartum-post";
 import { sendFypWelcomeEmail } from "@/lib/emails/fyp-welcome";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { logError } from "@/lib/log-error";
 
 // Webhook endpoint for First Year Program Stripe events.
 // Register in Stripe dashboard → Webhooks:
@@ -136,8 +137,16 @@ export async function POST(req: NextRequest) {
       let billingStartDate: string | null = null;
 
       if (!customerId) {
+        await logError(
+          "fyp.webhook.deposit_no_customer",
+          new Error("no customer on fyp_deposit session"),
+        );
         console.error("[fyp webhook] no customer on fyp_deposit session");
       } else if (!dueOrBirthMonth) {
+        await logError(
+          "fyp.webhook.deposit_missing_month",
+          new Error("missing due_or_birth_month in session metadata"),
+        );
         console.error(
           "[fyp webhook] missing due_or_birth_month in session metadata",
         );
@@ -165,6 +174,7 @@ export async function POST(req: NextRequest) {
             `[fyp webhook] subscription ${subscriptionId} deferred to ${billingStartDate}`,
           );
         } catch (err) {
+          await logError("fyp.webhook.deferred_subscription_failed", err);
           console.error(
             "[fyp webhook] failed to create deferred subscription:",
             err,
@@ -181,11 +191,18 @@ export async function POST(req: NextRequest) {
           status: "active",
         })
         .eq("stripe_session_id", session.id);
-      if (error)
+      if (error) {
+        await logError(
+          "fyp.webhook.account_update_failed",
+          new Error(
+            "accounts update failed (expecting_monthly): " + error.code,
+          ),
+        );
         console.error(
           "[fyp webhook] update error (expecting_monthly):",
           JSON.stringify(error),
         );
+      }
     }
 
     // ── expecting_bundle ───────────────────────────────────────────────────────
@@ -207,11 +224,16 @@ export async function POST(req: NextRequest) {
           status: "active",
         })
         .eq("stripe_session_id", session.id);
-      if (error)
+      if (error) {
+        await logError(
+          "fyp.webhook.account_update_failed",
+          new Error("accounts update failed (expecting_bundle): " + error.code),
+        );
         console.error(
           "[fyp webhook] update error (expecting_bundle):",
           JSON.stringify(error),
         );
+      }
     }
 
     // ── baby_monthly ───────────────────────────────────────────────────────────
@@ -228,11 +250,16 @@ export async function POST(req: NextRequest) {
           status: "active",
         })
         .eq("stripe_session_id", session.id);
-      if (error)
+      if (error) {
+        await logError(
+          "fyp.webhook.account_update_failed",
+          new Error("accounts update failed (baby_monthly): " + error.code),
+        );
         console.error(
           "[fyp webhook] update error (baby_monthly):",
           JSON.stringify(error),
         );
+      }
     }
 
     // ── baby_bundle ────────────────────────────────────────────────────────────
@@ -248,11 +275,16 @@ export async function POST(req: NextRequest) {
           status: "active",
         })
         .eq("stripe_session_id", session.id);
-      if (error)
+      if (error) {
+        await logError(
+          "fyp.webhook.account_update_failed",
+          new Error("accounts update failed (baby_bundle): " + error.code),
+        );
         console.error(
           "[fyp webhook] update error (baby_bundle):",
           JSON.stringify(error),
         );
+      }
     }
 
     // ── Routine welcome email ───────────────────────────────────────────────────
@@ -302,6 +334,10 @@ export async function POST(req: NextRequest) {
           );
           console.log("[fyp webhook] welcome email sent to", member.email);
         } else {
+          await logError(
+            "fyp.webhook.welcome_no_member",
+            new Error("no member found for welcome email"),
+          );
           console.error(
             "[fyp webhook] no member found for welcome email, session:",
             session.id,
@@ -310,6 +346,7 @@ export async function POST(req: NextRequest) {
       } catch (err) {
         // Non-fatal — the account/subscription work above already
         // succeeded; email failure shouldn't block the webhook response.
+        await logError("fyp.webhook.welcome_email_failed", err);
         console.error("[fyp webhook] welcome email failed (non-fatal):", err);
       }
     }
@@ -326,6 +363,10 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     if (fetchError || !account) {
+      await logError(
+        "fyp.webhook.cancel_no_account",
+        new Error("no account found for subscription.deleted"),
+      );
       console.error(
         "[fyp webhook] no account found for subscription (subscription.deleted):",
         subscription.id,
@@ -338,6 +379,12 @@ export async function POST(req: NextRequest) {
         .eq("id", account.id);
 
       if (error) {
+        await logError(
+          "fyp.webhook.account_update_failed",
+          new Error(
+            "accounts update failed (subscription.deleted): " + error.code,
+          ),
+        );
         console.error(
           "[fyp webhook] update error (subscription.deleted):",
           JSON.stringify(error),
@@ -362,6 +409,9 @@ export async function POST(req: NextRequest) {
         try {
           await deactivatePostpartumPost(member.id);
         } catch (err) {
+          await logError("fyp.webhook.deactivate_post_failed", err, {
+            memberId: member.id,
+          });
           console.error(
             `[fyp webhook] failed to deactivate Postpartum Post for member ${member.id}:`,
             err,
