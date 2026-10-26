@@ -1,4 +1,5 @@
 const { withContentlayer } = require("next-contentlayer2");
+const { withSentryConfig } = require("@sentry/nextjs/config");
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
@@ -63,7 +64,7 @@ const unoptimized = process.env.UNOPTIMIZED ? true : undefined;
  **/
 module.exports = () => {
   const plugins = [withContentlayer, withBundleAnalyzer];
-  return plugins.reduce((acc, next) => next(acc), {
+  const config = plugins.reduce((acc, next) => next(acc), {
     output,
     basePath,
     // Allow an isolated build directory (e.g. for Playwright's dev server) so
@@ -252,4 +253,39 @@ module.exports = () => {
       ]
     },
   });
+
+  // Sentry (EU region). Auth token and project come from env so nothing secret
+  // is committed. Without SENTRY_AUTH_TOKEN the build skips source-map upload.
+  return withSentryConfig(
+    {
+      ...config,
+      env: {
+        ...config.env,
+        // Netlify's CONTEXT is "production" | "deploy-preview" | "branch-deploy".
+        NEXT_PUBLIC_SENTRY_ENVIRONMENT:
+          process.env.CONTEXT || process.env.NODE_ENV || "development",
+      },
+    },
+    {
+      org: "amsterdam-parent-project",
+      project: process.env.SENTRY_PROJECT || "site",
+      sentryUrl: process.env.SENTRY_URL || "https://de.sentry.io",
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      silent: !process.env.CI,
+      telemetry: false,
+      widenClientFileUpload: true,
+
+      // Send browser events through our own /monitoring route so ad blockers
+      // don't drop them (the error-page reference depends on the event
+      // arriving). The auth middleware only matches /groups-directory/*, so it
+      // does not intercept this route. Not available in static export mode.
+      tunnelRoute: process.env.EXPORT ? undefined : "/monitoring",
+
+      webpack: {
+        treeshake: {
+          removeDebugLogging: true,
+        },
+      },
+    }
+  );
 };
