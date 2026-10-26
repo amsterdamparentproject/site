@@ -172,17 +172,19 @@ async function completeStripeCheckout(
 }
 
 /**
- * Poll the DB for an account by email until it appears or a timeout is reached.
+ * Poll the DB for an account by email until the webhook has activated it or a
+ * timeout is reached. /api/checkout/fyp creates the row as "pending" up front,
+ * so mere existence doesn't mean the webhook has filled in billing dates yet.
  * Webhook delivery can take several seconds.
  */
 async function waitForAccount(
   email: string,
-  timeoutMs = 20_000,
+  timeoutMs = 45_000,
 ): Promise<FYPAccount | null> {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     const account = await getAccountByEmail(email);
-    if (account) return account;
+    if (account?.status === "active") return account;
     await new Promise((r) => setTimeout(r, 1_000));
   }
   return null;
