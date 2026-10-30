@@ -217,6 +217,20 @@ html {
   margin-bottom: 0.625em;
 }
 
+/* Links in the callout: the default link color is the same soft green as this
+   box's background, so they vanish. Sand is readable on the green, stays
+   distinct from the goldenrod bold text, and the underline keeps them
+   recognizable as links. */
+.prose .markdown-alert-note a {
+  color: var(--color-brand-sand);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.prose .markdown-alert-note a:hover {
+  color: var(--color-brand-white);
+}
+
 /* Default: any regular emphasis in the body is bold and goldenrod, same
    accent color as the title, just at normal text size. */
 .prose .markdown-alert-note strong,

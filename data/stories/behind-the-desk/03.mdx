@@ -1,0 +1,100 @@
+---
+title: "Behind the Desk #3: Celebrating 1000 subscribers by throwing my hat into a $25,000 ring"
+date: "2026-10-30"
+authors: [alexSiega]
+tags: [work & career, technology]
+series: founder-notes
+draft: false
+summary:
+  "Two years of every-other-Monday newsletters, a Halloween Instagram carousel
+  that showed me what I'm missing, and why I'm building a tool for Buffer's
+  build contest"
+---
+
+> [!NOTE]
+>
+> 🪑 **Welcome to Behind the Desk**
+>
+> Think of Behind the Desk as founder's notes: a place for you to meet the human and the strategy behind Amsterdam Parent Project. One of APP's core values is transparency, and this is where you get it. Operating costs, marketing strategies, founder existential crises — building in the open.
+>
+> I'll share the highest highs and lowest lows that come with **engineering community infrastructure for Amsterdam's parents through APP — from my perspective as a local toddler mom with 10+ years of experience in tech**. (Always written by me, not AI 🤖)
+>
+> I'm on a mission to use my skills to create deeply integrated community care for local & expat postpartum families in Amsterdam. Join me ❤️
+>
+> 👉 [Read more Behind the Desk](/stories?series=founder-notes)
+
+Almost exactly 2 years after starting the newsletter, the newsletter crossed 1000 subscribers. I'm immensely proud of that achievement, because it's not only a reflection of the value local families and businesses get from my work, but of my own commitment — 2 years of showing up every other week with a digest and wisdom from the experts and parents in our community. Twice I had to post on a Tuesday and once I posted the week after. Every other time, **between baby blues and toddler chaos, back-to-work burnout to full-time with APP, I've published a newsletter issue every other Monday**, for 2 straight years.
+
+But behind every-other-Monday publish is an every-other-Sunday panic. It used to take me 6+ hours per issue to scour the Internet for activities, jot down details, and format them every other week — all coming to a head the Sunday before publish. Over the last 2 years, I've used my technical background to reduce the panic with automations that quick capture activities and format them for the newsletter.
+
+I'm happy to report that the newsletter doesn't take 6 hours per issue anymore — it takes about 2 hours. It even allows me to share more activities than ever before. Huge savings and benefit with a huge impact on my Sundays, for which I and my toddler are grateful.
+
+## What works, but never gets done
+
+> Every time I cross-post activities between the newsletter and Instagram, a) we reach even more parents, which also helps activity organizers, b) APP Instagram engagement and follows go up, and c) my newsletter subscriber base grows.
+
+There is a **_whole_ opportunity that I consistently pass up: cross-posting newsletter activities to Instagram**. It takes about 1.5 hours to put together a pretty post or reel — like this [free activity roundup](https://www.instagram.com/p/DL14cS5tts1) and [King's Day reel](https://www.instagram.com/p/DXYvs74FchG/) — with popular activities, and oftentimes other APP stuff takes priority. (The neverending "I only have so much toddler-free time" trap.) But every time I share on Instagram, parents find it very useful, and APP's reach benefits, too.
+
+Take the most recent [Halloween roundup](https://www.instagram.com/p/DetJCfolRGo) post. When I turned the newsletter Halloween roundup into an Instagram carousel, this all happened:
+
+- On the post itself: 3.3k+ views, 45 saves, and 16 new followers (about 3x the reach of other posts)
+- On the newsletter: 95 new subscribers (almost a 10% lift)
+
+![Chart of active newsletter subscribers from Oct 1 to Oct 24, 2026, rising from about 899 to 1,025, with a sharp jump after the Halloween roundup was published on Instagram](/static/images/behind-the-desk/subscriber-growth.png)
+
+_Active newsletter subscribers, Oct 1–24. The jump starts the week I posted the Halloween roundup on Instagram._
+
+But it's not just APP that benefits from cross-posting between the newsletter and Instagram — local businesses do, too. I already hear from businesses, organizations, and experts that the newsletter brings new families through their door. (The _best_ feedback to receive 🤩) **When I also post to Instagram, organizers' efforts get even more visibility.** Win-win for parents seeking things to do, as well as for the businesses and organizations putting those things on — without the advertising "ick."
+
+## Enter Buffer Commit: The contest for connecting the dots
+
+So here's the situation:
+
+1. I've got a **valuable biweekly activity roundup** in my newsletter driving real value to parents and local businesses alike
+2. I have data showing that **cross-posting the newsletter activity roundup to Instagram results in even more value**: for parents, businesses, and APP. Not just for the Halloween post, but consistently across every roundup.
+3. I **lack the time to routinely cross-post**, so I only realize this value every so often
+
+Enter my technical skills and a contest with a \$25,600 prize pool, split with anywhere from 1 to 16 winners. A winning share would cover APP's running costs for all of 2027 😎
+
+Buffer is the social media tool I use for scheduling content across my social channels (Instagram and LinkedIn). When you see a post going out on a Tuesday or Thursday — my mamadagen — Buffer is behind the scenes.
+
+Buffer is hosting a contest for people who want to build on their API — the way to programmatically post to socials through their service, as opposed to using their website. (Stay with me, non-technical folks 🙏🏼)
+
+> I'm not the only person who has a newsletter and wants to cross-post highlights to social media. This is my **chance to help APP, and a ton of other creators** in the process.
+
+### What's the plan?
+
+I host the newsletter on Beehiiv and post on socials with Buffer, so I'll build a web tool (which I'm calling "Pollen Picks" right now!) that connects the two platforms.
+
+Pollen Picks will:
+
+1. **Read** the latest published newsletter issue from Beehiiv
+2. **Identify** the top 4 most clicked links to upcoming activities, representing the most popular activities in the issue (with ~12 activities per issue, about the top 25% of activities)
+3. **Generate** the socials images by adding the relevant information from the popular activities into a pre-created template
+4. **Create** a draft post in Buffer for the social channels of choice (all by default), with each activity's organizer tagged — yay visibility for businesses!
+5. I review each draft in Buffer, tweak it if needed, then schedule it myself
+
+I'll schedule the tool to run on the Thursday after each newsletter issue is published, so I'll use the first 3-4 days of newsletter activity to ensure there's enough click data to identify what's popular.
+
+What's cool about this approach is that you — our community! — decide what gets featured, based on how you interact with the newsletter. It's crowdsourcing, without the WhatsApp notifications 🤩
+
+### Speaking of humans…
+
+Two rules I set for myself:
+
+- **No AI for running the tool or for socials content.** Every word in the post is already in the newsletter, written by me, a person. (Hello! 👋🏻)
+- **I read every draft before it goes out.** Nothing publishes by itself.
+
+I will use Claude (an AI platform) to generate the tool. Per APP's model, I donate 1% of all APP revenue to climate initiatives to offset my AI usage.
+
+But actually running the tool? No agents, no AI under the hood. Just old fashioned code at work ❤️ It'll be cheap to run, so I plan to keep it free for other newsletter creators to use.
+
+### The tool's first mission: 2 Nov newsletter
+
+The 2 Nov newsletter is what I'll use as my first test case in the open! Stay tuned later — around 7-8 Nov — for our first socials post from the tool 😎
+
+I'll share the build as I go, on Instagram and LinkedIn: the tools I picked, where AI did and didn't help, what I got wrong, whether I won or lost. If you run a newsletter (especially on Beehiiv) and post to socials, I'd love to hear whether something like this would save you time too. Get in touch at hello@amsterdamparentproject.nl.
+
+Wish me luck! 🫡
+
+_Part of #BufferCommit, Buffer's build contest for apps on its API._
