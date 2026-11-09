@@ -182,11 +182,17 @@ async function waitForAccount(
   timeoutMs = 45_000,
 ): Promise<FYPAccount | null> {
   const deadline = Date.now() + timeoutMs;
+  let last: FYPAccount | null = null;
   while (Date.now() < deadline) {
-    const account = await getAccountByEmail(email);
-    if (account?.status === "active") return account;
+    last = await getAccountByEmail(email);
+    if (last?.status === "active") return last;
     await new Promise((r) => setTimeout(r, 1_000));
   }
+  // Surface why we gave up (row missing vs. still pending) in the test output.
+  console.warn(
+    `[waitForAccount] ${email} not active after ${timeoutMs}ms; last row:`,
+    last ? { status: last.status, flow: last.flow } : "none",
+  );
   return null;
 }
 
