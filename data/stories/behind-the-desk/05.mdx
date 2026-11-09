@@ -67,7 +67,7 @@ _Highlight + pick, or press + to pick the whole paragraph — then let the parse
 - **Parsing is format-specific**, and keyed to my newsletter format (though tested with others). To solve this, I made manual mode delightful — highlight to pick, plus select full paragraph — so that it's still a good experience, instead of incorrectly guessing the structure of your source text.
 - **Just English**: It can't process non-English dates. Capitalization matters: 21 November (English) gets parsed, while 21 november (Dutch) does not.
 - **Drop ambiguous dates**: Relative dates like “next Friday”, recurring events, and ambiguous dates like 10/5 don't get parsed. An AI model would be great at this.
-- **Rely on human polish** to make it perfect: It's unlikely that your words don't need some editing before you hit "send" on a Pollen Post creation. AI could have done it for you, but we're betting that you'd rather spend more time editing YOUR draft, over an AI draft.
+- **Rely on human polish** to make it perfect: It's unlikely that your words don't need some editing before you hit "send" on a Pollen Picks creation. AI could have done it for you, but we're betting that you'd rather spend more time editing YOUR draft, over an AI draft.
 - **Instagram handles cost a real API call:** Finding the account behind a post link is something AI could do for free-ish, but I do it manually through Apify, which draws on a $5 monthly credit — which I also use for APP operations. So I only look up links you’ve picked, cache every result, and cap it at 20 lookups per account. After that, you have to bring your own Apify token.
 
 #### What I got
@@ -100,11 +100,11 @@ So my compromise was to include storage, but _very_ intentionally. Slides are dr
 
 #### What it cost
 
-Extra code, a public storage bucket (befitting a public newsletter → social media tool, but still open), and complexity to maintain and a limit to keep an eye on.
+A public storage bucket, befitting a public newsletter → social media tool, but still open. Extra code, meaning complexity to maintain. Yet another platform limit to keep an eye on.
 
 #### What I got
 
-Reliability that Buffer has what you created
+Reliability that Buffer has what you created.
 
 ## Trade 3: Rely on human triggers, not cron
 
