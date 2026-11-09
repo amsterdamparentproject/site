@@ -156,6 +156,30 @@ describe("FYP pending → active state transition", () => {
     const SESSION = `${SESSION_ID}_exp`;
     const EMAIL = `int-expecting-${Date.now()}@example.com`;
 
+    // A due date three months out, so billing start stays in the future (the
+    // webhook rolls a past billing month forward to next year) whenever this
+    // runs. Month keys are the webhook's lowercase three-letter form.
+    const due = new Date();
+    due.setUTCDate(1);
+    due.setUTCMonth(due.getUTCMonth() + 3);
+    const DUE_MONTH = due
+      .toLocaleString("en-US", { month: "short", timeZone: "UTC" })
+      .toLowerCase();
+    const DUE_YEAR = String(due.getUTCFullYear());
+    const billingStart = new Date(
+      Date.UTC(due.getUTCFullYear(), due.getUTCMonth() + 1, 1),
+    );
+    const BILLING_START = billingStart.toISOString().slice(0, 10);
+    const BUNDLE_EXPIRES = new Date(
+      Date.UTC(
+        billingStart.getUTCFullYear(),
+        billingStart.getUTCMonth() + 6,
+        1,
+      ),
+    )
+      .toISOString()
+      .slice(0, 10);
+
     beforeEach(() => {
       vi.mocked(stripe.checkout.sessions.create).mockResolvedValue({
         id: SESSION,
@@ -171,8 +195,8 @@ describe("FYP pending → active state transition", () => {
         makeCheckoutRequest({
           flow: "expecting_bundle",
           familyType: "multi",
-          dueOrBirthMonth: "oct",
-          dueOrBirthYear: "2026",
+          dueOrBirthMonth: DUE_MONTH,
+          dueOrBirthYear: DUE_YEAR,
           members: [{ firstName: "Test", lastName: "Expecting", email: EMAIL }],
         }),
       );
@@ -209,8 +233,8 @@ describe("FYP pending → active state transition", () => {
             metadata: {
               product: "fyp_bundle_expecting",
               family_type: "multi",
-              due_or_birth_month: "oct",
-              due_or_birth_year: "2026",
+              due_or_birth_month: DUE_MONTH,
+              due_or_birth_year: DUE_YEAR,
             },
           },
         },
@@ -228,9 +252,10 @@ describe("FYP pending → active state transition", () => {
       expect(activeAccount.stripe_customer_id).toBe(CUSTOMER_ID);
       // Bundles are one-time payments: no subscription is ever created.
       expect(activeAccount.stripe_subscription_id).toBeNull();
-      // Oct 2026 due date → billing starts Nov 1 2026, bundle runs 6 months
-      expect(activeAccount.billing_start_date).toBe("2026-11-01");
-      expect(activeAccount.bundle_expires_at).toBe("2027-05-01");
+      // Billing starts on the 1st of the month after the due month; the
+      // bundle runs 6 months from there.
+      expect(activeAccount.billing_start_date).toBe(BILLING_START);
+      expect(activeAccount.bundle_expires_at).toBe(BUNDLE_EXPIRES);
 
       const activeMembers = await getMembersByAccountId(activeAccount.id);
       expect(activeMembers).toHaveLength(1);
