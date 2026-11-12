@@ -1,0 +1,96 @@
+---
+title: "Behind the Desk #6: A health psychologist, toy store owner, and podcaster try out a newsletter-to-social tool…"
+date: "2026-11-12"
+authors: [alexSiega]
+tags: [work & career, technology, buffer commit]
+series: founder-notes
+draft: false
+summary:
+  "I asked people with real newsletters to try Pollen Picks. They loved how easy
+  it was, but the longer their source text, the more they wanted AI to help."
+---
+
+> [!NOTE]
+>
+> 🪑 **Behind the Desk: Pollen Picks edition**
+>
+> Behind the Desk is where I share founder’s notes from running Amsterdam Parent Project. This edition is about **Pollen Picks, the newsletter-to-socials tool I’m building for APP and entering in a contest called Buffer Commit**. Transparency is one of APP’s core values, and I'm sharing my Pollen Picks build journey like I do everything else: what worked, what broke, and what I got wrong.
+>
+> Pollen Picks solves my own pain point: turning APP's newsletter’s activity roundup into social posts without another every-other-Sunday panic. I’m a local toddler mom and run APP solo, so time is my greatest asset — making tools like Pollen Picks essential to APP.
+>
+> I'm on a mission to use my skills to create deeply integrated community care for local & expat postpartum families in Amsterdam. Join me ❤️
+>
+> 👉 [Read more Behind the Desk](/stories?series=founder-notes)
+
+A week ago I started asking people to try [Pollen Picks](https://pollenpicks.netlify.app), the tool I'm building for Buffer Commit that turns a newsletter into a carousel for social media posts. The tool works great for _my_ use case — a family activities digest — but I was ready to test it on other people’s real newsletters, eager to see whether they would find it as useful.
+
+12 people tried Pollen Picks, from all different backgrounds: a nutritionist, veterinarian, toy store owner, health psychologist & published author, freelancer, small-business owner, and podcast host, to name a few. Everyone was eager for something like Pollen Picks to help them bridge the newsletter-to-socials gap — it solves a recurring pain point they face every time they publish a newsletter or blog.
+
+What I found: They think Pollen Picks has a ton of potential, especially since it’s so easy to use. However, the longer their source text was, the more they wanted magic (e.g. AI) to help them get from text to carousel.
+
+## Where Pollen Picks is great right now: Ease of use.
+
+In response to “How easy was it?”, the testers’ average rating was 4.25/5. I’m especially proud of this, given the range of non-technical to technical users. I built Pollen Picks to be simple and delightful, and it was lovely to get feedback that the investment landed.
+
+“Super easy, very user friendly.”<br />
+“Turning a newsletter into sections and picks felt really smooth. I liked seeing my content pulled in straight away.”<br />
+“Really love the design, it was so cool. The picks all looked great.”<br />
+“The Instagram preview was exactly what I wanted.”<br />
+“The Buffer integration is great. The post showed up in Buffer looking exactly like it did in the app, which felt pretty magical.” (Obviously pretty chuffed about this one 😎)
+
+One person on what they loved most really summed it up: "The combination of simplicity of the process, and thoughtfulness behind the tool and what it's made to do."
+
+![Screenshot from Pollen Picks user testing](/static/images/behind-the-desk/pollen-picks-user-feedback.png)
+
+## Brand is a big deal
+
+Many early Pollen Picks users cited the importance of branding. For a tool where “your words” — i.e. your brand — is central, it makes sense that people would want the visuals to match their brand, too.
+
+Several people positively called out changing the colors of each slide and pick in the Design’s customize tab, and one loved being able to adjust to their brand's colors and "edit the content afterwards.”
+
+One tester has a branded journal and could match the colors, but couldn't change the fonts beyond the three I offer — which was a blocker to actually posting the end result. She said a one-time setup would be amazing; something to consider for a future onboarding flow.
+
+I adjusted my approach to brand after the earliest testers’ feedback — colors, fonts, organization, and logo used to be separate settings on the Settings page, and it wasn’t discoverable in the place they were thinking about it most: on the Design step. I implemented a “Brand” tab in settings and made it prominent in Design, so folks had an easy way to customize their slides to fit their brand.
+
+## Where it got hard: Narrative vs digest sources
+
+The “likeliness to use” score was a 3.75 — and there’s one factor that impacts it most, which is what your newsletter source actually looks like.
+
+My newsletter is an activities digest: a title, a date, a short description, all around a source link. Parsing the content and ranking by clicks is easy, because it’s already a structured list.
+
+I’ve also tried Pollen Picks on my own blog posts — see [here](https://www.linkedin.com/feed/update/urn:li:activity:7525560217485377536/) for an example. I found the process easy and the results worth posting, however as feedback came in, I realized that my approach to the newsletter-to-socials pipeline may be different from others’.
+
+I come into Pollen Picks knowing what I want out: The message I want to convey, the type of content I want to show. I just need to make the text → template → post process faster.
+
+Others come into Pollen Picks with way more narrative text, and way less clarity on what kind of carousel they wanted to create. It’s hard for them to select the words they wanted to highlight and share with the world.
+
+For example:
+
+- “I know your ideas are to use your own words and excerpts, but there was just too much information in my newsletter to do that conversion.”
+- “For someone like me with a more educational newsletter, I don't know if it's going to work unless I have very specific sentences I want to turn into a carousel.”
+
+Part of this is exacerbated by the fact that non-digest sources are dropped into a manual view to pick their content. Which brings me to…
+
+![Pollen Picks manual mode, where you highlight text from your source to pick it](/static/images/behind-the-desk/pollen-picks-manual-mode.png)
+
+_Manual mode requires a user to know which words of theirs they want to highlight_
+
+## The AI question
+
+Two different users asked me for the same thing without knowing it: let AI guide them through the Pick process. One wanted help trimming text ("I'm a professional waffler"), and another wanted it to find the key messages in a long newsletter so they didn't have to.
+
+It's a fair ask — however, it's counter to why I built Pollen Picks in the first place. Beyond my challenge that it [must run with no cost to me or anyone using it](/stories/behind-the-desk/05), I also wanted to create a tool that shared _your_ words, not words that sounded like yours. There are enough ways to generate AI text — and even carousels — given source material. With my high-trust community of parents, the AI’s output never cuts it.
+
+But the testers who'd benefit most from AI are exactly the ones my current design serves least. I don't have a clean answer yet. It could be that “no AI” is no AI writing — but I could use AI to suggest highlights, or parse your newsletter into recommended chunks for you to pick (a “smart” mode).
+
+I don’t have the funds to invest in a tool that costs money to run, but if anyone wants to explore this, do get in touch 😁
+
+## Early feedback is golden
+
+A huge thank you to the early users — I won’t call them all testers, because some genuinely used it to post content they wanted to get out there 🥹 Their feedback helped me make improvements to the app in usability and functionality alike: slide previews, describing a “pick” for first-time users, captions based on slide order, and more. All of this contributes to an even smoother, more supportive experience.
+
+A hackathon or build contest is an excellent way to prove a concept — and in my case, prove that my every-other-week pain point of sharing newsletter content to socials is something that others feel, too.
+
+I’m proud of what I’ve done with Pollen Picks in the last few weeks, and I’m excited to see where it goes next — once I recover from the sprint of building it 🙏🏻
+
+_Part of #BufferCommit, Buffer's build contest for apps on its API._
